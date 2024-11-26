@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GymLog</string>
+    <string name="start_gym">Start Gym</string>
+    <string name="history">History</string>
+    <string name="add_set">Add set</string>
+    <string name="repetitions">Repetitions</string>
+    <string name="weight">Weight</string>
+    <string name="exercise_name">Exercise Name</string>
+    <string name="gym_session">Gym Session</string>
+    <string name="workout_history">Workout History</string>
+</resources>
