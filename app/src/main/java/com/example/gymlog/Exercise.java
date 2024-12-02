@@ -73,18 +73,23 @@ public class Exercise {
         CHEST_LOWER("Chest Lower"),
         CHEST_UPPER("Chest Upper"),
         CHEST_FULL("Chest full"),
+
         TRICEPS("Triceps"),
         BICEPS_ARMS("Biceps Arms"),
+
         TRAPS_UPPER("Trapezius Upper"),
         TRAPS_MIDDLE("Trapezius Middle"),
         TRAPS_LOWER("Trapezius Lower"),
         LATS("Latissimus Dorsi"),
+
         HAMSTRINGS("Hamstrings"),
         QUADRICEPS("Quadriceps"),
         GLUTES("Glutes"),
+
         DELTS_REAR("Deltoids Rear"),
         DELTS_SIDE("Deltoids Side"),
         DELTS_FRONT("Deltoids Front"),
+
         LONGISSIMUS("Longissimus muscle ");
 
         private final String description;

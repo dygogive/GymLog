@@ -36,24 +36,8 @@ public class ExerciseListActivity extends AppCompatActivity {
         //назначити Layaut Manager
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        //список вправ
-        List<Exercise> exerciseList = Arrays.asList(
-                new Exercise("Жим штанги лежачи",
-                        Exercise.Motion.PRESS,
-                        Arrays.asList(Exercise.MuscleGroup.CHEST_FULL,Exercise.MuscleGroup.TRICEPS),
-                        Exercise.Equipment.BARBELL),
-                new Exercise("Підтягування",
-                        Exercise.Motion.PULL,
-                        Arrays.asList(Exercise.MuscleGroup.LATS,Exercise.MuscleGroup.BICEPS_ARMS),
-                        Exercise.Equipment.BODY_WEIGHT),
-                new Exercise("Присідання з штангою",
-                        Exercise.Motion.PRESS,
-                        Arrays.asList(Exercise.MuscleGroup.QUADRICEPS,Exercise.MuscleGroup.GLUTES),
-                        Exercise.Equipment.BODY_WEIGHT)
-        );
 
 
-        //        recyclerView.setAdapter(ExerciseAdapter(exercises));
 
 
     }
