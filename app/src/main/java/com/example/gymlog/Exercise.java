@@ -5,7 +5,7 @@ import java.util.List;
 public class Exercise {
 
     private String name;
-    private Motion motion;
+    private Motion motion; // Оновлений Motion
     private List<MuscleGroup> muscleGroupList;
     private Equipment equipment;
 
@@ -48,24 +48,12 @@ public class Exercise {
         return equipment;
     }
 
-    public enum HalfBody {
-        BODY("Pulls and presses with hands"),
-        LEGS("Pulls and presses with legs");
-
-        private final String description;
-
-        HalfBody(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
-
+    // define of motion - press or pull
     public enum Motion {
-        PRESS("press with arms or legs"),
-        PULL("pull with arms or legs");
+        PRESS_BY_ARMS("press with arms"),
+        PULL_BY_ARMS("pull with arms"),
+        PRESS_BY_LEGS("press with legs"),
+        PULL_BY_LEGS("pull with legs");
 
         private final String description;
 
@@ -78,6 +66,9 @@ public class Exercise {
         }
     }
 
+
+
+    //define muscles
     public enum MuscleGroup {
         CHEST_LOWER("Chest Lower"),
         CHEST_UPPER("Chest Upper"),
@@ -108,6 +99,7 @@ public class Exercise {
     }
 
 
+    //define equipment for sets
     public enum Equipment {
         BARBELL, DUMBBELLS, BODY_WEIGHT, TRAINER;
     }

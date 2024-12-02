@@ -20,7 +20,6 @@ public class ExerciseListActivity extends AppCompatActivity {
     //створити посилання RecyclerView
     private RecyclerView recyclerView = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +53,8 @@ public class ExerciseListActivity extends AppCompatActivity {
         );
 
 
-//        recyclerView.setAdapter(ExerciseAdapter(exercises));
+        //        recyclerView.setAdapter(ExerciseAdapter(exercises));
+
 
     }
 
