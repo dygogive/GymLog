@@ -57,5 +57,14 @@ public class ExercisesData {
         return exerciseList;
     }
 
+    public static List<String> getExeNames(){
+        List<String> namesExercises = new ArrayList<>(getExercisesData().size());
+
+        for (Exercise exercise : getExercisesData()) {
+            namesExercises.add(exercise.getName());
+        }
+
+        return namesExercises;
+    }
 
 }

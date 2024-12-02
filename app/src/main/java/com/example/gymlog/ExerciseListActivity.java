@@ -2,6 +2,8 @@ package com.example.gymlog;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +20,7 @@ import java.util.List;
 public class ExerciseListActivity extends AppCompatActivity {
 
     //створити посилання RecyclerView
-    private RecyclerView recyclerView = null;
+    private ListView listViewExercises = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +34,12 @@ public class ExerciseListActivity extends AppCompatActivity {
         });
 
         //знайти RecyclerView
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewExercises);
-        //назначити Layaut Manager
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        listViewExercises = (ListView) findViewById(R.id.listViewExercises);
 
 
 
-
+        ArrayAdapter<String> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ExercisesData.getExeNames());
+        listViewExercises.setAdapter(exeAdapter);
 
     }
 

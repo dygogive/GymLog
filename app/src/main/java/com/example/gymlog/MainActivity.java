@@ -15,7 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button
             buttonStartGym,
-            buttonHistory;
+            buttonHistory,
+            buttonExercises;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //find buttons
-        buttonStartGym = (Button) findViewById(R.id.buttonStartGym);
-        buttonHistory  = (Button) findViewById(R.id.buttonHistory );
+        buttonStartGym   = (Button) findViewById(R.id.buttonStartGym  );
+        buttonHistory    = (Button) findViewById(R.id.buttonHistory   );
+        buttonExercises  = (Button) findViewById(R.id.buttonExercises );
 
         //button listeners
         buttonStartGym.setOnClickListener(v -> {
@@ -43,7 +45,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
             startActivity(intent);
         });
-
+        buttonExercises.setOnClickListener(v -> {
+            Log.d("LogTag","test buttonExercises");
+            Intent intent = new Intent(MainActivity.this, ExerciseListActivity.class);
+            startActivity(intent);
+        });
 
 
 

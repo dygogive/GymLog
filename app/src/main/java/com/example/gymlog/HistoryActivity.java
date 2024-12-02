@@ -65,6 +65,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> listHistoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataHistory);
+
         listViewHistory.setAdapter(listHistoryAdapter);
     }
 
