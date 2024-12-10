@@ -1,6 +1,7 @@
 package com.example.gymlog;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -33,12 +34,17 @@ public class ExerciseListActivity extends AppCompatActivity {
             return insets;
         });
 
-        //знайти RecyclerView
+        //знайти ListView
         listViewExercises = (ListView) findViewById(R.id.listViewExercises);
 
+        //Назва групи м'язів
+        String muscleGroupName = getIntent().getStringExtra("MUSCLE_GROUP");
+        Exercise.MuscleGroup muscleGroup = Exercise.MuscleGroup.valueOf(muscleGroupName);
+
+        List<Exercise> sortedExercisesByMuscles = Exercise.MuscleGroup.getExercisesByMuscle(muscleGroup);
 
 
-        ArrayAdapter<String> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ExercisesData.getExeNames());
+        ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sortedExercisesByMuscles);
         listViewExercises.setAdapter(exeAdapter);
 
     }

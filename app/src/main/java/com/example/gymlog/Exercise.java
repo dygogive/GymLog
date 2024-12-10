@@ -1,5 +1,10 @@
 package com.example.gymlog;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Exercise {
@@ -14,6 +19,12 @@ public class Exercise {
         this.motion = motion;
         this.muscleGroupList = muscleGroupList;
         this.equipment = equipment;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
     }
 
     public void setName(String name) {
@@ -70,36 +81,52 @@ public class Exercise {
 
     //define muscles
     public enum MuscleGroup {
-        CHEST_LOWER("Chest Lower"),
-        CHEST_UPPER("Chest Upper"),
-        CHEST_FULL("Chest full"),
+        CHEST_LOWER(R.string.muscle_chest_lower),
+        CHEST_UPPER(R.string.muscle_chest_upper),
+        CHEST_FULL(R.string.muscle_chest_full),
 
-        TRICEPS("Triceps"),
-        BICEPS_ARMS("Biceps Arms"),
+        TRICEPS(R.string.muscle_triceps),
+        BICEPS_ARMS(R.string.muscle_biceps_arms),
 
-        TRAPS_UPPER("Trapezius Upper"),
-        TRAPS_MIDDLE("Trapezius Middle"),
-        TRAPS_LOWER("Trapezius Lower"),
-        LATS("Latissimus Dorsi"),
+        TRAPS_UPPER(R.string.muscle_traps_upper),
+        TRAPS_MIDDLE(R.string.muscle_traps_middle),
+        TRAPS_LOWER(R.string.muscle_traps_lower),
+        LATS(R.string.muscle_lats),
 
-        HAMSTRINGS("Hamstrings"),
-        QUADRICEPS("Quadriceps"),
-        GLUTES("Glutes"),
+        HAMSTRINGS(R.string.muscle_hamstrings),
+        QUADRICEPS(R.string.muscle_quadriceps),
+        GLUTES(R.string.muscle_glutes),
 
-        DELTS_REAR("Deltoids Rear"),
-        DELTS_SIDE("Deltoids Side"),
-        DELTS_FRONT("Deltoids Front"),
+        DELTS_REAR(R.string.muscle_delts_rear),
+        DELTS_SIDE(R.string.muscle_delts_side),
+        DELTS_FRONT(R.string.muscle_delts_front),
 
-        LONGISSIMUS("Longissimus muscle ");
+        LONGISSIMUS(R.string.muscle_longissimus);
 
-        private final String description;
+        private final int descriptionResId;
 
-        MuscleGroup(String description) {
-            this.description = description;
+        MuscleGroup(int descriptionResId) {
+            this.descriptionResId = descriptionResId;
         }
 
-        public String getDescription() {
-            return description;
+        public int getDescriptionResId() {
+            return descriptionResId;
+        }
+
+        public String getDescription(Context context) {
+            return context.getString(descriptionResId);
+        }
+
+
+        public static List<Exercise> getExercisesByMuscle(MuscleGroup muscleGroup){
+            List <Exercise> exerciseList = ExercisesData.getExercisesData();
+            List<Exercise> sortedExeList = new ArrayList<>();
+            for(Exercise exercise : exerciseList) {
+                if(exercise.muscleGroupList.contains(muscleGroup)){
+                    sortedExeList.add(exercise);
+                }
+            }
+            return sortedExeList;
         }
     }
 

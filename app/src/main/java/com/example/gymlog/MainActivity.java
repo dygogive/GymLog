@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         });
         buttonExercises.setOnClickListener(v -> {
             Log.d("LogTag","test buttonExercises");
-            Intent intent = new Intent(MainActivity.this, ExerciseListActivity.class);
+            Intent intent = new Intent(MainActivity.this, MuscleGroupActivity.class);
             startActivity(intent);
         });
 

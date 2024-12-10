@@ -9,4 +9,29 @@
     <string name="gym_session">Gym Session</string>
     <string name="workout_history">Workout History</string>
     <string name="exercises">Exercises</string>
+
+
+    <string name="muscle_chest_lower">Chest Lower</string>
+    <string name="muscle_chest_upper">Chest Upper</string>
+    <string name="muscle_chest_full">Chest Full</string>
+
+    <string name="muscle_triceps">Triceps</string>
+    <string name="muscle_biceps_arms">Biceps Arms</string>
+
+    <string name="muscle_traps_upper">Trapezius Upper</string>
+    <string name="muscle_traps_middle">Trapezius Middle</string>
+    <string name="muscle_traps_lower">Trapezius Lower</string>
+    <string name="muscle_lats">Latissimus Dorsi</string>
+
+    <string name="muscle_hamstrings">Hamstrings</string>
+    <string name="muscle_quadriceps">Quadriceps</string>
+    <string name="muscle_glutes">Glutes</string>
+
+    <string name="muscle_delts_rear">Deltoids Rear</string>
+    <string name="muscle_delts_side">Deltoids Side</string>
+    <string name="muscle_delts_front">Deltoids Front</string>
+
+    <string name="muscle_longissimus">Longissimus Muscle</string>
+    <string name="finish_workout">Finish Workout</string>
+    <string name="muscle_groups">Muscle Groups</string>
 </resources>

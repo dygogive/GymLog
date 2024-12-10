@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Щоденник жимів</string>
+    <string name="workout_history">Історія жимів</string>
+    <string name="exercises">Вправи</string>
+    <string name="muscle_chest_lower">Грудні низ</string>
+    <string name="muscle_chest_upper">Грудні верх</string>
+    <string name="muscle_chest_full">Грудні</string>
+    <string name="muscle_triceps">Трицепс</string>
+    <string name="muscle_biceps_arms">Біцепс руки</string>
+    <string name="muscle_traps_upper">Трапеції верх</string>
+    <string name="muscle_traps_middle">Трапеції середина</string>
+    <string name="muscle_traps_lower">Трапеції низ</string>
+    <string name="muscle_hamstrings">Біцепс стегна</string>
+    <string name="muscle_quadriceps">Квадрицепси</string>
+    <string name="muscle_glutes">Ікроножні</string>
+    <string name="muscle_delts_rear">Дельти задні</string>
+    <string name="muscle_delts_side">Дельти середні</string>
+    <string name="muscle_delts_front">Дельти передні</string>
+    <string name="muscle_longissimus">Довгі м\'язи спини</string>
+    <string name="muscle_lats">Широкі спини</string>
+    <string name="start_gym">Старт тренування</string>
+    <string name="history">Історія</string>
+    <string name="add_set">Додати підхід</string>
+    <string name="repetitions">Повторення</string>
+    <string name="weight">Вага</string>
+    <string name="exercise_name">Назва вправи</string>
+    <string name="gym_session">Сесія жиму</string>
+    <string name="finish_workout">Закінчити тренування</string>
+    <string name="muscle_groups">Групи м\'язів</string>
+</resources>
