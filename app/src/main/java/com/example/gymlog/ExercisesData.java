@@ -9,7 +9,7 @@ public class ExercisesData {
 
     public static List<Exercise> getExercisesData() {
 
-        //Get BASIC exercises
+        //Get BASIC exercises 87
         List<Exercise> exerciseList = new ArrayList<>();
 
         exerciseList.add( new Exercise(
