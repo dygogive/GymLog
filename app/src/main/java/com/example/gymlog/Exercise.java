@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-//test comit user1
+//test comit user2
 public class Exercise {
 
     private String name;
