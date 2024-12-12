@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+//test comit user1
 public class Exercise {
 
     private String name;
@@ -117,7 +118,7 @@ public class Exercise {
             return context.getString(descriptionResId);
         }
 
-
+        //test co
         public static List<Exercise> getExercisesByMuscle(MuscleGroup muscleGroup){
             List <Exercise> exerciseList = ExercisesData.getExercisesData();
             List<Exercise> sortedExeList = new ArrayList<>();
