@@ -1,11 +1,12 @@
-package com.example.gymlog.data;
+package com.example.gymlog.data.set;
 
 //Клас для зберігання виконаного підходу
 public class WorkoutSet {
     private String exercise;
+    private RepType repType;
     private int weight;
     private int reps;
-    private RepType repType;
+
 
     public enum RepType {
         STRENGTH,           //сИЛА - ДО 4-6 ПОІВТОРЕНЬ

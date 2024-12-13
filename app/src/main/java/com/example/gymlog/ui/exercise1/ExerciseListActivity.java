@@ -1,6 +1,6 @@
 package com.example.gymlog.ui.exercise1;
 
-import static com.example.gymlog.data.Exercise.getExercisesByMuscle;
+import static com.example.gymlog.data.exercise.Exercise.getExercisesByMuscle;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -12,9 +12,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.gymlog.data.Exercise;
+import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.R;
-import com.example.gymlog.data.MuscleGroup;
+import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.List;
 

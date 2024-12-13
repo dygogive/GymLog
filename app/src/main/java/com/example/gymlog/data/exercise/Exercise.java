@@ -1,9 +1,5 @@
-package com.example.gymlog.data;
+package com.example.gymlog.data.exercise;
 
-import android.content.Context;
-
-
-import com.example.gymlog.R;
 
 import java.util.ArrayList;
 import java.util.List;

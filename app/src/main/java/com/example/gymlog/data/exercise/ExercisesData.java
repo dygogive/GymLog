@@ -1,10 +1,8 @@
-package com.example.gymlog.data;
+package com.example.gymlog.data.exercise;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.example.gymlog.data.Exercise.*;
 
 public class ExercisesData {
 

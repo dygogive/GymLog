@@ -1,6 +1,7 @@
 package com.example.gymlog.ui.history;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -12,8 +13,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.gymlog.data.DBHelper;
+import com.example.gymlog.data.db.DBHelper;
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.WorkoutHistoryDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
     private ListView listViewHistory;
+    private WorkoutHistoryDAO workoutHistoryDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +38,16 @@ public class HistoryActivity extends AppCompatActivity {
         });
 
         dbHelper = new DBHelper(this);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        workoutHistoryDAO = new WorkoutHistoryDAO(database);
+
+
         listViewHistory = (ListView) findViewById(R.id.listViewHistory);
         showHistory();
     }
 
     private void showHistory() {
-        Cursor cursor = dbHelper.getWorkoutHistory();
+        Cursor cursor = workoutHistoryDAO.getWorkoutHistory();
         StringBuilder sb = new StringBuilder();
         List<String> dataHistory = new ArrayList<>();
 

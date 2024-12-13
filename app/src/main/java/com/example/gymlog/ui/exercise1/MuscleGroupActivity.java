@@ -13,9 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.gymlog.data.Exercise;
 import com.example.gymlog.R;
-import com.example.gymlog.data.MuscleGroup;
+import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.ArrayList;
 import java.util.List;

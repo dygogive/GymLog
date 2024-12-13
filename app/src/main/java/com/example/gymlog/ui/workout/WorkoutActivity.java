@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.workout;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,8 +15,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.DBHelper;
-import com.example.gymlog.data.WorkoutSet;
+import com.example.gymlog.data.db.DBHelper;
+import com.example.gymlog.data.db.WorkoutDAO;
+import com.example.gymlog.data.db.WorkoutHistoryDAO;
+import com.example.gymlog.data.db.WorkoutSetDAO;
+import com.example.gymlog.data.set.WorkoutSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +41,9 @@ public class WorkoutActivity extends AppCompatActivity {
     private List<String> listItems = new ArrayList<>();
 
     private DBHelper dbHelper;
+    private WorkoutDAO workoutDAO;
+    private WorkoutSetDAO workoutSetDAO;
+    private WorkoutHistoryDAO workoutHistoryDAO;
 
 
     @Override
@@ -54,6 +61,10 @@ public class WorkoutActivity extends AppCompatActivity {
         initUI();
 
         dbHelper = new DBHelper(this);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        workoutDAO = new WorkoutDAO(database);
+        workoutSetDAO = new WorkoutSetDAO(database);
+        workoutHistoryDAO = new WorkoutHistoryDAO(database);
     }
 
     private void initUI() {
@@ -106,7 +117,7 @@ public class WorkoutActivity extends AppCompatActivity {
         if(listItems.isEmpty()) {
             Toast.makeText(this,"List is Empty",Toast.LENGTH_LONG).show();
             //подивитися об'єднану таблицю
-            dbHelper.logJoinedTable();
+            workoutHistoryDAO.logJoinedTable();
             finish();
         }
 
@@ -132,10 +143,10 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
         //занести тренування в базу
-        dbHelper.addWorkoutWithSets(date,workoutname,listOfSets);
+        workoutSetDAO.addWorkoutWithSets(date,workoutname,listOfSets);
 
         //подивитися об'єднану таблицю в Лог
-        dbHelper.logJoinedTable();
+        workoutHistoryDAO.logJoinedTable();
 
         //вийти в MainActivity
         finish();
