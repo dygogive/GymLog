@@ -2,7 +2,6 @@ package com.example.gymlog;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class Exercise {
         this.equipment = equipment;
     }
 
-    @NonNull
+
     @Override
     public String toString() {
         return name;
