@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 public class MuscleGroupFragment extends BaseListFragment<String> {
 
 
+    //ресурс для ітема фрагмента
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_item_exercises;
     }
 
+    //власне самі ітеми
     @Override
     protected List<String> getItems() {
         Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
@@ -33,6 +35,7 @@ public class MuscleGroupFragment extends BaseListFragment<String> {
 
     }
 
+    //що робити якщо ітем вибраний
     @Override
     protected void onItemSelected(String muscleGroup) {
         MuscleGroup[] enums = MuscleGroup.values();
