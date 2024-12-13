@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class AttributeAdapter extends RecyclerView.Adapter<AttributeAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private final List<String> items; // Список атрибутів (наприклад, EquipmentType)
     private final OnItemClickListener listener; // Слухач для кліків по елементам
@@ -23,7 +23,7 @@ public class AttributeAdapter extends RecyclerView.Adapter<AttributeAdapter.View
 
 
 
-    public AttributeAdapter(List<String> items, OnItemClickListener listener) {
+    public RecyclerViewAdapter(List<String> items, OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }

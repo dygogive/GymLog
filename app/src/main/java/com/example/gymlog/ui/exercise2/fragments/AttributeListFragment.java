@@ -13,51 +13,41 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gymlog.R;
-import com.example.gymlog.ui.exercise2.adapters.AttributeAdapter;
+import com.example.gymlog.ui.exercise2.adapters.RecyclerViewAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
 
-public class AttributeListFragment extends Fragment {
+public class AttributeListFragment extends BaseListFragment<String> {
 
-    private RecyclerView recyclerView;
-    private AttributeAdapter adapter;
-
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_attribute_list, container, false);
-
-        recyclerView = view.findViewById(R.id.recycler_view_attributes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        List<String> attributes = Arrays.asList("Equipment Type", "Primary Muscle Group", "Secondary Muscle Group");
-        adapter = new AttributeAdapter(attributes, this::onAttributeSelected);
-        recyclerView.setAdapter(adapter);
-
-        return view;
+    protected int getLayoutResource() {
+        return R.layout.fragment_item_exercises;
     }
 
+    @Override
+    protected List<String> getItems() {
+        return Arrays.asList(
+                "Equipment Type",
+                "Muscle Group"
+        );
+    }
 
-    private void onAttributeSelected(String attribute) {
+    @Override
+    protected void onItemSelected(String attribute) {
         Fragment fragment;
         switch (attribute) {
             case "Equipment Type":
                 fragment = new EquipmentTypeFragment();
                 break;
-            case "Primary Muscle Group":
-                fragment = new MuscleGroupFragment(true); // true = primary group
-                break;
-            case "Secondary Muscle Group":
-                fragment = new MuscleGroupFragment(false); // false = secondary group
+            case "Muscle Group":
+                fragment = new MuscleGroupFragment();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attribute);
         }
 
-        // Замінюємо поточний Fragment на новий
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

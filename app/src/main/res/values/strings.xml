@@ -11,6 +11,21 @@
     <string name="exercises">Exercises</string>
 
 
+
+    <string name="equipment_barbell">Barbell</string>
+    <string name="equipment_dumbells">Dumbells</string>
+    <string name="equipment_bodyweight">Bodyweight</string>
+    <string name="equipment_machine">Machine</string>
+
+
+
+
+
+
+
+
+
+
     <string name="muscle_chest_lower">Chest Lower</string>
     <string name="muscle_chest_upper">Chest Upper</string>
     <string name="muscle_chest_full">Chest Full</string>
@@ -35,5 +50,5 @@
     <string name="finish_workout">Finish Workout</string>
     <string name="muscle_groups">Muscle Groups</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

@@ -3,6 +3,7 @@
     <string name="app_name">Щоденник жимів</string>
     <string name="workout_history">Історія жимів</string>
     <string name="exercises">Вправи</string>
+    <string name="equipment_machine">Тренажер</string>
     <string name="muscle_chest_lower">Грудні низ</string>
     <string name="muscle_chest_upper">Грудні верх</string>
     <string name="muscle_chest_full">Грудні</string>
@@ -28,4 +29,7 @@
     <string name="gym_session">Сесія жиму</string>
     <string name="finish_workout">Закінчити тренування</string>
     <string name="muscle_groups">Групи м\'язів</string>
+    <string name="equipment_barbell">Штанга</string>
+    <string name="equipment_dumbells">Гантелі</string>
+    <string name="equipment_bodyweight">Вага тіла</string>
 </resources>

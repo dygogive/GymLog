@@ -1,85 +1,56 @@
 package com.example.gymlog.ui.exercise2.fragments;
 
-import android.os.Bundle;
+import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.gymlog.R;
-import com.example.gymlog.ui.exercise2.adapters.AttributeAdapter;
+import com.example.gymlog.data.exercise.AttributeType;
+import com.example.gymlog.data.exercise.MuscleGroup;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-public class MuscleGroupFragment extends Fragment {
+// MuscleGroupFragment.java
+public class MuscleGroupFragment extends BaseListFragment<String> {
 
-    private RecyclerView recyclerView;
-    private AttributeAdapter adapter;
-    private List<String> muscleGroups;
 
-    private boolean isPrimaryMuscleGroup; // Визначає, primary чи secondary показуємо
-
-    public MuscleGroupFragment(boolean isPrimaryMuscleGroup) {
-        this.isPrimaryMuscleGroup = isPrimaryMuscleGroup;
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_muscle_group, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view);
-
-        // Ініціалізація списку м'язів
-        muscleGroups = isPrimaryMuscleGroup
-                ? getPrimaryMuscleGroups()
-                : getSecondaryMuscleGroups();
-
-        setupRecyclerView();
-
-        return view;
+    protected int getLayoutResource() {
+        return R.layout.fragment_item_exercises;
     }
 
-    private void setupRecyclerView() {
-        adapter = new AttributeAdapter(muscleGroups, this::onMuscleGroupClicked);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(adapter);
+    @Override
+    protected List<String> getItems() {
+        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
+
+        // Отримуємо список описів м'язових груп
+        return Arrays.stream(MuscleGroup.values())
+                .map(muscleGroup -> muscleGroup.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
+                .collect(Collectors.toList());
+
     }
 
+    @Override
+    protected void onItemSelected(String muscleGroup) {
+        MuscleGroup[] enums = MuscleGroup.values();
+        MuscleGroup enumMuscleGroup = null;
 
-    private void onMuscleGroupClicked(String muscleGroup) {
-        Toast.makeText(requireContext(), "Clicked: " + muscleGroup, Toast.LENGTH_SHORT).show();
+        int count = 0;
+        for(String item : getItems()) {
+            if(muscleGroup.equals(item)) enumMuscleGroup = enums[count];
+            else count++;
+        }
 
-        // Реалізація переходу до списку вправ для цієї м'язової групи
-        ExerciseListFragment exerciseListFragment = ExerciseListFragment.newInstance(muscleGroup);
+
+        Fragment fragment = ExerciseListFragment.newInstance(AttributeType.MUSCLE_GROUP, enumMuscleGroup);
+
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, exerciseListFragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
-
-    private List<String> getPrimaryMuscleGroups() {
-        // Замініть на отримання даних із Enum чи бази даних
-        return new ArrayList<>(List.of(
-                "Chest Upper", "Chest Lower", "Back Lats", "Quads", "Hamstrings"
-        ));
-    }
-
-    private List<String> getSecondaryMuscleGroups() {
-        // Замініть на отримання даних із Enum чи бази даних
-        return new ArrayList<>(List.of(
-                "Triceps", "Biceps", "Forearms", "Calves", "Deltoids"
-        ));
-    }
-
 }
