@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise2;
+package com.example.gymlog.ui.exercise2.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise2;
+package com.example.gymlog.ui.exercise2.fragments;
 
 import android.os.Bundle;
 
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gymlog.R;
+import com.example.gymlog.ui.exercise2.adapters.AttributeAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

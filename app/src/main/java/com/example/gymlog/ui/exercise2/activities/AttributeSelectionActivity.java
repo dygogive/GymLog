@@ -1,10 +1,11 @@
-package com.example.gymlog.ui.exercise2;
+package com.example.gymlog.ui.exercise2.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gymlog.R;
+import com.example.gymlog.ui.exercise2.fragments.AttributeListFragment;
 
 public class AttributeSelectionActivity extends AppCompatActivity {
 

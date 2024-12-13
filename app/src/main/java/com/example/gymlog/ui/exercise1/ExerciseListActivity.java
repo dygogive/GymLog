@@ -1,7 +1,7 @@
 package com.example.gymlog.ui.exercise1;
 
-import static com.example.gymlog.data.exercise.Exercise.getExercisesByMuscle;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.gymlog.data.db.DBHelper;
+import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.MuscleGroup;
@@ -19,6 +21,9 @@ import com.example.gymlog.data.exercise.MuscleGroup;
 import java.util.List;
 
 public class ExerciseListActivity extends AppCompatActivity {
+
+
+
 
     //створити посилання RecyclerView
     private ListView listViewExercises = null;
@@ -39,9 +44,16 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         //Назва групи м'язів
         String muscleGroupName = getIntent().getStringExtra("MUSCLE_GROUP");
-        MuscleGroup muscleGroup = MuscleGroup.valueOf(muscleGroupName);
+        MuscleGroup targetMuscle = MuscleGroup.valueOf(muscleGroupName);
 
-        List<Exercise> sortedExercisesByMuscles = getExercisesByMuscle(muscleGroup);
+
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ExerciseDAO exerciseDAO = new ExerciseDAO(db);
+
+
+
+        List<Exercise> sortedExercisesByMuscles = exerciseDAO.getExercisesByMuscle(targetMuscle);
 
 
         ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sortedExercisesByMuscles);
