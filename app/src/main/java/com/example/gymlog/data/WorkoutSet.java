@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.data;
 
 //Клас для зберігання виконаного підходу
 public class WorkoutSet {

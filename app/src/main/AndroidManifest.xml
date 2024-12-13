@@ -13,16 +13,16 @@
         android:theme="@style/Theme.GymLog"
         tools:targetApi="31">
         <activity
-            android:name=".AttributeSelectionActivity"
+            android:name=".ui.exercise2.AttributeSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".MuscleGroupActivity"
+            android:name=".ui.exercise1.MuscleGroupActivity"
             android:exported="false" />
         <activity
-            android:name=".ExerciseListActivity"
+            android:name=".ui.exercise1.ExerciseListActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,8 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WorkoutActivity" />
-        <activity android:name=".HistoryActivity" />
+        <activity android:name=".ui.workout.WorkoutActivity" />
+        <activity android:name=".ui.history.HistoryActivity" />
     </application>
 
 </manifest>

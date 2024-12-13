@@ -1,15 +1,10 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.exercise2;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gymlog.R;
 
 public class AttributeSelectionActivity extends AppCompatActivity {
 

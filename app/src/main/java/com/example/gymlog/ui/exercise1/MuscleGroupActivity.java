@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.exercise1;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.gymlog.data.Exercise;
+import com.example.gymlog.R;
+import com.example.gymlog.data.MuscleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +42,11 @@ public class MuscleGroupActivity extends AppCompatActivity {
         listMuscles = (ListView) findViewById(R.id.listMuscles);
 
         //список груп м'язів
-        Exercise.MuscleGroup [] muscleGroups = Exercise.MuscleGroup.values();
+        MuscleGroup[] muscleGroups = MuscleGroup.values();
 
         //список назв груп
         List<String> muscleDescriptions = new ArrayList<>(muscleGroups.length);
-        for(Exercise.MuscleGroup muscleGroup : muscleGroups) {
+        for(MuscleGroup muscleGroup : muscleGroups) {
             muscleDescriptions.add(muscleGroup.getDescription(this));
         }
 
@@ -60,7 +64,7 @@ public class MuscleGroupActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //визначити яка група вибрана
-                Exercise.MuscleGroup selectedMuscleGroup = muscleGroups[position];
+                MuscleGroup selectedMuscleGroup = muscleGroups[position];
                 //інтент для переходу на ExerciseList Activity
                 Intent intent = new Intent(MuscleGroupActivity.this, ExerciseListActivity.class);
                 //екстра назва групи

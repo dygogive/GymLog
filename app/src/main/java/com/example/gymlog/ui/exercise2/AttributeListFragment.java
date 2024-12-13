@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.exercise2;
 
 import android.os.Bundle;
 
@@ -12,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.example.gymlog.R;
+
 import java.util.Arrays;
 import java.util.List;
 

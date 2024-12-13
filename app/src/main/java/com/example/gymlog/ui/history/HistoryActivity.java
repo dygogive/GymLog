@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.history;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.gymlog.data.DBHelper;
+import com.example.gymlog.R;
 
 import java.util.ArrayList;
 import java.util.List;

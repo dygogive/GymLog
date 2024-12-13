@@ -1,9 +1,10 @@
-package com.example.gymlog;
+package com.example.gymlog.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.example.gymlog.Exercise.*;
+
+import com.example.gymlog.data.Exercise.*;
 
 public class ExercisesData {
 
@@ -66,5 +67,8 @@ public class ExercisesData {
 
         return namesExercises;
     }
+
+
+
 
 }

@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,6 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.gymlog.ui.exercise2.AttributeSelectionActivity;
+import com.example.gymlog.R;
+import com.example.gymlog.ui.exercise1.MuscleGroupActivity;
+import com.example.gymlog.ui.history.HistoryActivity;
+import com.example.gymlog.ui.workout.WorkoutActivity;
 
 public class MainActivity extends AppCompatActivity {
 

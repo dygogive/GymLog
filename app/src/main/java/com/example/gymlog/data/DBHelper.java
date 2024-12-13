@@ -1,4 +1,4 @@
-package com.example.gymlog;
+package com.example.gymlog.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //додати сет в таблицю Workout
-    Long addWorkout(String date, String name) {
+    public Long addWorkout(String date, String name) {
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("date", date);
@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //додати сет в таблицю WorkoutSet
-    void addWorkoutSet(Long workoutId, String exercise, String reptype, String weight, String reps) {
+    public void addWorkoutSet(Long workoutId, String exercise, String reptype, String weight, String reps) {
         ContentValues values = new ContentValues();
         values.put("workoutId", workoutId);
         values.put("exercise", exercise);
@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //додати дані в 2 таблиці - додати ціле тренування з сетами
-    void addWorkoutWithSets(String date, String name, List<WorkoutSet> setList) {
+    public void addWorkoutWithSets(String date, String name, List<WorkoutSet> setList) {
         //Додати в таблицю Workout
         ContentValues values = new ContentValues();
         values.put("name", name);
@@ -80,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //отримати історію тренувань
-    Cursor getWorkoutHistory(){
+    public Cursor getWorkoutHistory(){
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT w.name, s.exercise, s.reptype, s.weight, s.reps," +
                 " w.date FROM Workout w INNER JOIN WorkoutSet s ON w.id = s.workoutId",

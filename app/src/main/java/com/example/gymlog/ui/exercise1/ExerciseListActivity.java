@@ -1,7 +1,7 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.exercise1;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import static com.example.gymlog.data.Exercise.getExercisesByMuscle;
+
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.example.gymlog.data.Exercise;
+import com.example.gymlog.R;
+import com.example.gymlog.data.MuscleGroup;
+
 import java.util.List;
 
 public class ExerciseListActivity extends AppCompatActivity {
@@ -39,9 +39,9 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         //Назва групи м'язів
         String muscleGroupName = getIntent().getStringExtra("MUSCLE_GROUP");
-        Exercise.MuscleGroup muscleGroup = Exercise.MuscleGroup.valueOf(muscleGroupName);
+        MuscleGroup muscleGroup = MuscleGroup.valueOf(muscleGroupName);
 
-        List<Exercise> sortedExercisesByMuscles = Exercise.MuscleGroup.getExercisesByMuscle(muscleGroup);
+        List<Exercise> sortedExercisesByMuscles = getExercisesByMuscle(muscleGroup);
 
 
         ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sortedExercisesByMuscles);

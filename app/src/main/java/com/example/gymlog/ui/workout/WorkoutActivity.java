@@ -1,7 +1,6 @@
-package com.example.gymlog;
+package com.example.gymlog.ui.workout;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.gymlog.R;
+import com.example.gymlog.data.DBHelper;
+import com.example.gymlog.data.WorkoutSet;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
