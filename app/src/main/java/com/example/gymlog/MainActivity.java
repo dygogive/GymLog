@@ -1,5 +1,6 @@
 package com.example.gymlog;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +17,10 @@ public class MainActivity extends AppCompatActivity {
     private Button
             buttonStartGym,
             buttonHistory,
-            buttonExercises;
+            buttonExercises,
+            exercicesNew;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         buttonStartGym   = (Button) findViewById(R.id.buttonStartGym  );
         buttonHistory    = (Button) findViewById(R.id.buttonHistory   );
         buttonExercises  = (Button) findViewById(R.id.buttonExercises );
+        exercicesNew     = (Button) findViewById(R.id.exercicesNew   );
 
         //button listeners
         buttonStartGym.setOnClickListener(v -> {
@@ -48,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
         buttonExercises.setOnClickListener(v -> {
             Log.d("LogTag","test buttonExercises");
             Intent intent = new Intent(MainActivity.this, MuscleGroupActivity.class);
+            startActivity(intent);
+        });
+
+        exercicesNew.setOnClickListener(v -> {
+            Log.d("LogTag","test buttonExercises");
+            Intent intent = new Intent(MainActivity.this, AttributeSelectionActivity.class);
             startActivity(intent);
         });
 
