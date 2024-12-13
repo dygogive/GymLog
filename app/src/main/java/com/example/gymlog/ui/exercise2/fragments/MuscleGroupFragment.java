@@ -48,7 +48,7 @@ public class MuscleGroupFragment extends BaseListFragment<String> {
         }
 
 
-        Fragment fragment = ExerciseListFragment.newInstance(AttributeType.MUSCLE_GROUP, enumMuscleGroup);
+        Fragment fragment = ExercisesFragment.newInstance(AttributeType.MUSCLE_GROUP, enumMuscleGroup);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

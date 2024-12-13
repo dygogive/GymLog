@@ -31,12 +31,16 @@ public abstract class BaseListFragment<T> extends Fragment {
         View view = inflater.inflate(getLayoutResource(), container, false);
 
         //ініціалізація recyclerView
+        setupRecyclerView(view);
+
+        return view;
+    }
+
+    private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new RecyclerViewAdapter(getItems(), this::onItemSelected);
         recyclerView.setAdapter(adapter);
-
-        return view;
     }
 
     //взяти ресурс - це канва на якій буде прорисовано елемент списку

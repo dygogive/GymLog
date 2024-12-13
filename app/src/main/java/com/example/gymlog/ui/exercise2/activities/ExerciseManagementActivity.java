@@ -7,12 +7,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.gymlog.R;
 import com.example.gymlog.ui.exercise2.fragments.AttributeListFragment;
 
-public class AttributeSelectionActivity extends AppCompatActivity {
+public class ExerciseManagementActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attribute_selection);
+        setContentView(R.layout.activity_exercise_management);
+
+
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        dbHelper.initializeDatabase(database);
+
 
         // Відображення початкового списку атрибутів у Fragment
         if (savedInstanceState == null) {
