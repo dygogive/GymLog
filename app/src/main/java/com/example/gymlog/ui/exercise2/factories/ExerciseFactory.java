@@ -1,9 +1,13 @@
 package com.example.gymlog.ui.exercise2.factories;
 
 
-import android.util.Log;
+import android.content.Context;
 
+import com.example.gymlog.R;
+import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.exercise.AttributeType;
+import com.example.gymlog.data.exercise.Equipment;
+import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.Arrays;
@@ -11,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ExerciseFactory {
+
     public static List<String> getExercisesForAttribute(AttributeType attributeType, String attribute) {
 
 
@@ -37,4 +42,58 @@ public class ExerciseFactory {
                 return Collections.emptyList();
         }
     }
+
+
+
+
+    // Метод для створення базових вправ
+    public static void initializeDefaultExercises(Context context, ExerciseDAO exerciseDAO) {
+        if (exerciseDAO.getAllExercises().isEmpty()) {
+            // Додати базові вправи до бази
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_dip_weighted), // Отримуємо назву з ресурсів
+                    Motion.PRESS_BY_ARMS,
+                    Arrays.asList(MuscleGroup.CHEST_LOWER, MuscleGroup.TRICEPS),
+                    Equipment.WEIGHT
+            );
+
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_incline_db_press),
+                    Motion.PRESS_BY_ARMS,
+                    Arrays.asList(MuscleGroup.CHEST_UPPER, MuscleGroup.TRICEPS),
+                    Equipment.DUMBBELLS
+            );
+
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_pullup_weighted),
+                    Motion.PULL_BY_ARMS,
+                    Arrays.asList(MuscleGroup.LATS, MuscleGroup.BICEPS),
+                    Equipment.WEIGHT
+            );
+
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_db_row),
+                    Motion.PULL_BY_ARMS,
+                    Arrays.asList(MuscleGroup.TRAPS_MIDDLE, MuscleGroup.BICEPS),
+                    Equipment.DUMBBELLS
+            );
+
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_squat_barbell),
+                    Motion.PRESS_BY_LEGS,
+                    Arrays.asList(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES, MuscleGroup.LONGISSIMUS),
+                    Equipment.BARBELL
+            );
+
+            exerciseDAO.addExercise(
+                    context.getString(R.string.exercise_deadlift),
+                    Motion.PULL_BY_LEGS,
+                    Arrays.asList(MuscleGroup.HAMSTRINGS, MuscleGroup.TRAPS_LOWER, MuscleGroup.LONGISSIMUS),
+                    Equipment.BARBELL
+            );
+        }
+    }
+
+
+
 }

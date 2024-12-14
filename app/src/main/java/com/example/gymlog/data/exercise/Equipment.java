@@ -10,7 +10,8 @@ public enum Equipment {
     BARBELL(R.string.equipment_barbell),
     DUMBBELLS(R.string.equipment_dumbells),
     BODY_WEIGHT(R.string.equipment_bodyweight),
-    MACHINE(R.string.equipment_machine);
+    MACHINE(R.string.equipment_machine),
+    WEIGHT(R.string.weight);
 
 
     //посилання на строку що описує обладнання

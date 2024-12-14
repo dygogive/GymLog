@@ -22,11 +22,11 @@ public class ExerciseDAO {
     }
 
     // Додати вправу
-    public long addExercise(String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
+    public long addExercise(String id, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
         ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("motion", motion.name()); // Зберігаємо ім'я enum як String
-        values.put("muscleGroups", TextUtils.join(",", muscleGroups.stream().map(Enum::name).toArray(String[]::new))); // Зберігаємо список як рядок
+        values.put("name", id); // Зберігаємо ідентифікатор з ресурсів
+        values.put("motion", motion.name());
+        values.put("muscleGroups", TextUtils.join(",", muscleGroups.stream().map(Enum::name).toArray(String[]::new)));
         values.put("equipment", equipment.name());
         return database.insert("Exercise", null, values);
     }

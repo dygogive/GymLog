@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
 
+
     //Версія бази
     private static final String DATABASE_NAME = "GymLog.db";
     private static final int version = 3;
@@ -20,16 +21,19 @@ public class DBHelper extends SQLiteOpenHelper {
     //створення таблиць
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Workout   (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT," +
+        db.execSQL("CREATE TABLE Workout (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT," +
                 " date TEXT)");
-        db.execSQL("CREATE TABLE WorkoutSet(id INTEGER PRIMARY KEY AUTOINCREMENT, workoutId INTEGER," +
+        db.execSQL("CREATE TABLE WorkoutSet (id INTEGER PRIMARY KEY AUTOINCREMENT, workoutId INTEGER," +
                 " exercise TEXT, reptype TEXT, weight REAL, reps INTEGER)");
         db.execSQL("CREATE TABLE Exercise (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +   // Унікальний ідентифікатор, наприклад "exercise_dip_weighted"
+                "exerciseId TEXT UNIQUE, " +  // Локалізована назва, якщо це вправа користувача
                 "name TEXT, " +
                 "motion TEXT, " +
-                "muscleGroups TEXT, " +  // зберігаємо список у вигляді рядка
-                "equipment TEXT)");
+                "muscleGroups TEXT, " +
+                "equipment TEXT, " +
+                "isCustom INTEGER DEFAULT 0 " + //  0: вбудована вправа, 1: створена користувачем
+                ");");
     }
 
     //оновлення таблиць

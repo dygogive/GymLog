@@ -26,6 +26,7 @@
 
 
 
+
     <string name="muscle_chest_lower">Chest Lower</string>
     <string name="muscle_chest_upper">Chest Upper</string>
     <string name="muscle_chest_full">Chest Full</string>
@@ -51,4 +52,13 @@
     <string name="muscle_groups">Muscle Groups</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+
+    <string name="exercise_dip_weighted">Weighted Dips on Parallel Bars</string>
+    <string name="exercise_incline_db_press">Incline Dumbbell Press</string>
+    <string name="exercise_pullup_weighted">Weighted Pull-Ups</string>
+    <string name="exercise_db_row">Dumbbell Row</string>
+    <string name="exercise_squat_barbell">Barbell Squat</string>
+    <string name="exercise_deadlift">Deadlift</string>
+
+
 </resources>

@@ -14,7 +14,7 @@ public enum MuscleGroup {
 
     //руки
     TRICEPS(R.string.muscle_triceps),
-    BICEPS_ARMS(R.string.muscle_biceps_arms),
+    BICEPS(R.string.muscle_biceps_arms),
 
     //спина
     TRAPS_UPPER(R.string.muscle_traps_upper),

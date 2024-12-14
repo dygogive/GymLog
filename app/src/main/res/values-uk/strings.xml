@@ -32,4 +32,11 @@
     <string name="equipment_barbell">Штанга</string>
     <string name="equipment_dumbells">Гантелі</string>
     <string name="equipment_bodyweight">Вага тіла</string>
+
+    <string name="exercise_dip_weighted">Жим на брусах з гирею</string>
+    <string name="exercise_incline_db_press">Жим гантелей лежачи на нахилній лаві</string>
+    <string name="exercise_pullup_weighted">Підтягування на турніку з гирею</string>
+    <string name="exercise_db_row">Тяга гантелей у нахилі</string>
+    <string name="exercise_squat_barbell">Присідання зі штангою</string>
+    <string name="exercise_deadlift">Мертва тяга</string>
 </resources>
