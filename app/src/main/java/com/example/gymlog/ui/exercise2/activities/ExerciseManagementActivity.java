@@ -1,13 +1,19 @@
 package com.example.gymlog.ui.exercise2.activities;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.DBHelper;
+import com.example.gymlog.data.db.ExerciseDAO;
+import com.example.gymlog.ui.exercise2.factories.ExerciseFactory;
 import com.example.gymlog.ui.exercise2.fragments.AttributeListFragment;
 
 public class ExerciseManagementActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,9 +21,13 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise_management);
 
 
+        // Ініціалізація бази даних
         DBHelper dbHelper = new DBHelper(this);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        dbHelper.initializeDatabase(database);
+        ExerciseDAO exerciseDAO = new ExerciseDAO(dbHelper.getWritableDatabase());
+
+        // Додавання базових вправ, якщо їх ще немає
+        ExerciseFactory.initializeDefaultExercises(this, exerciseDAO);
+
 
 
         // Відображення початкового списку атрибутів у Fragment

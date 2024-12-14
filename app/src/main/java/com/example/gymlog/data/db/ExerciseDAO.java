@@ -1,6 +1,7 @@
 package com.example.gymlog.data.db;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
@@ -22,32 +23,43 @@ public class ExerciseDAO {
     }
 
     // Додати вправу
-    public long addExercise(String id, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
+    public long addExercise(String exerciseId, Motion motion, List<MuscleGroup> muscleGroups,
+                            Equipment equipment, boolean isCustom) {
         ContentValues values = new ContentValues();
-        values.put("name", id); // Зберігаємо ідентифікатор з ресурсів
+        values.put("exerciseId", exerciseId);
         values.put("motion", motion.name());
         values.put("muscleGroups", TextUtils.join(",", muscleGroups.stream().map(Enum::name).toArray(String[]::new)));
         values.put("equipment", equipment.name());
+        values.put("isCustom", isCustom ? 1 : 0);
+
+        if (isCustom) {
+            values.put("name", exerciseId); // Користувацька назва (можна з UI)
+        }
+
         return database.insert("Exercise", null, values);
     }
 
 
     // Отримати всі вправи
-    public List<Exercise> getAllExercises() {
+    public List<Exercise> getAllExercises(Context context) {
         List<Exercise> exerciseList = new ArrayList<>();
-        Cursor cursor = database.query("Exercise", null, null, null, null, null, "name ASC");
+        Cursor cursor = database.query("Exercise", null, null, null, null, null, "exerciseId ASC");
 
         if (cursor.moveToFirst()) {
             do {
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion"))); // Перетворення String у Motion
-                String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
-                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment"))); // Перетворення String у Equipment
+                String exerciseId = cursor.getString(cursor.getColumnIndexOrThrow("exerciseId"));
+                boolean isCustom = cursor.getInt(cursor.getColumnIndexOrThrow("isCustom")) == 1;
+                String name = isCustom
+                        ? cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                        : context.getString(context.getResources().getIdentifier(exerciseId, "string", context.getPackageName()));
 
-                // Перетворення muscleGroups із рядка на список
+                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
+                String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
+                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
+
                 List<MuscleGroup> muscleGroups = new ArrayList<>();
                 for (String muscle : muscleGroupsString.split(",")) {
-                    muscleGroups.add(MuscleGroup.valueOf(muscle)); // Перетворення кожного String у MuscleGroup
+                    muscleGroups.add(MuscleGroup.valueOf(muscle));
                 }
 
                 exerciseList.add(new Exercise(name, motion, muscleGroups, equipment));
