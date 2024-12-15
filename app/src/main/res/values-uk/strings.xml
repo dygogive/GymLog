@@ -46,4 +46,8 @@
     <string name="motion_press_by_arms">Жими руками</string>
     <string name="motion_pull_by_arms">Тяги руками</string>
     <string name="motion_press_by_legs">Жими ногами</string>
+    <string name="head_sorting_exercises">Сортування вправ по:</string>
+    <string name="head_weight_type">Вибрати тип ваги:</string>
+    <string name="head_muscle_group">Вибрати групу м\'язів:</string>
+    <string name="head_motion">Вибрати тип руху:</string>
 </resources>

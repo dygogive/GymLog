@@ -60,4 +60,10 @@
     <string name="muscle_group">Muscle Group</string>
     <string name="equipment_type">Equipment Type</string>
 
+
+    <string name="head_sorting_exercises">Sort exercises by:</string>
+    <string name="head_weight_type">Choice of weight type:</string>
+    <string name="head_muscle_group">Choice muscle:</string>
+    <string name="head_motion">Choice motion type:</string>
+
 </resources>

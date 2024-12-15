@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.exercise2.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,12 +13,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.exercise.AttributeType;
+import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.Motion;
+import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
 import com.example.gymlog.ui.exercise2.factories.ExerciseFactory;
 
@@ -41,6 +46,8 @@ public class ExercisesFragment extends Fragment {
         return fragment;
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +59,57 @@ public class ExercisesFragment extends Fragment {
         return view;
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Отримуємо аргументи
+        AttributeType attributeType = AttributeType.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
+        String attributeName = requireArguments().getString(BundleKeys.ATTRIBUTE);
+
+        TextView title = view.findViewById(R.id.textViewTitle);
+
+        // Отримуємо опис enum
+        String description = getEnumDescription(attributeType, attributeName);
+
+        // Встановлюємо заголовок
+        title.setText(getString(R.string.exercises) + " - " + description);
+    }
+
+    // Метод для отримання опису елемента enum
+    private String getEnumDescription(AttributeType attributeType, String attributeName) {
+        Context context = requireContext();
+
+        switch (attributeType) {
+            case MOTION:
+                for (Motion motion : Motion.values()) {
+                    if (motion.name().equals(attributeName)) {
+                        return motion.getDescription(context);
+                    }
+                }
+                break;
+
+            case MUSCLE_GROUP:
+                for (MuscleGroup muscleGroup : MuscleGroup.values()) {
+                    if (muscleGroup.name().equals(attributeName)) {
+                        return muscleGroup.getDescription(context);
+                    }
+                }
+                break;
+
+            case EQUIPMENT:
+                for (Equipment equipment : Equipment.values()) {
+                    if (equipment.name().equals(attributeName)) {
+                        return equipment.getDescription(context);
+                    }
+                }
+                break;
+        }
+
+        return attributeName; // Якщо опис не знайдено, повертаємо назву константи
+    }
+
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -60,7 +118,18 @@ public class ExercisesFragment extends Fragment {
         List<Exercise> exercises = getExercises();
 
         // Ініціалізуємо адаптер і встановлюємо його в RecyclerView
-        adapter = new ExerciseAdapter(exercises, this::onExerciseSelected);
+        adapter = new ExerciseAdapter(exercises, new ExerciseAdapter.OnExerciseClickListener() {
+            @Override
+            public void onExerciseClick(Exercise exercise) {
+                Toast.makeText(getContext(), "Selected: " + exercise.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onEditClick(Exercise exercise) {
+                // Обробка редагування
+                openEditExerciseDialog(exercise);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -86,8 +155,5 @@ public class ExercisesFragment extends Fragment {
         return exercises;
     }
 
-    private void onExerciseSelected(Exercise exercise) {
-        // Обробка натискання на елемент
-        Toast.makeText(getContext(), "Selected: " + exercise.getName(), Toast.LENGTH_SHORT).show();
-    }
+    private void openEditExerciseDialog(Exercise exercise){};
 }

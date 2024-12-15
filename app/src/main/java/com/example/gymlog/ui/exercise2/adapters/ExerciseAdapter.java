@@ -3,6 +3,7 @@ package com.example.gymlog.ui.exercise2.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,15 +17,16 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
     private final List<Exercise> exercises;
-    private final OnItemClickListener listener;
+    private final OnExerciseClickListener listener;
 
     // Інтерфейс для обробки кліків
-    public interface OnItemClickListener {
-        void onItemClick(Exercise exercise);
+    public interface OnExerciseClickListener {
+        void onExerciseClick(Exercise exercise);
+        void onEditClick(Exercise exercise);
     }
 
     // Конструктор адаптера
-    public ExerciseAdapter(List<Exercise> exercises, OnItemClickListener listener) {
+    public ExerciseAdapter(List<Exercise> exercises, OnExerciseClickListener listener) {
         this.exercises = exercises;
         this.listener = listener;
     }
@@ -33,7 +35,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public ExerciseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_exercise2, parent, false);
+                .inflate(R.layout.item_exercise, parent, false);
         return new ExerciseViewHolder(view);
     }
 
@@ -41,25 +43,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(@NonNull ExerciseViewHolder holder, int position) {
         Exercise exercise = exercises.get(position);
 
-        if (exercise != null) {
-            holder.nameTextView.setText(exercise.getName());
-            holder.motionTextView.setText("Motion: " + exercise.getMotion().name());
-            holder.equipmentTextView.setText("Equipment: " + exercise.getEquipment().name());
+        holder.exerciseName.setText(exercise.getName());
+        holder.exerciseDetails.setText("Motion: " + exercise.getMotion() +
+                "\nEquipment: " + exercise.getEquipment());
 
-            // Форматуємо м'язові групи у рядок
-            StringBuilder muscleGroups = new StringBuilder();
-            for (int i = 0; i < exercise.getMuscleGroupList().size(); i++) {
-                muscleGroups.append(exercise.getMuscleGroupList().get(i).name());
-                if (i < exercise.getMuscleGroupList().size() - 1) {
-                    muscleGroups.append(", ");
-                }
-            }
-            holder.muscleGroupsTextView.setText("Muscle Groups: " + muscleGroups);
-
-            // Обробка кліка по елементу
-            holder.itemView.setOnClickListener(v -> listener.onItemClick(exercise));
-        }
+        holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
+        holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -68,17 +60,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     // ViewHolder клас для адаптера
     static class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView motionTextView;
-        TextView equipmentTextView;
-        TextView muscleGroupsTextView;
+        TextView exerciseName, exerciseDetails;
+        ImageButton editButton;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.exercise_name);
-            motionTextView = itemView.findViewById(R.id.exercise_motion);
-            equipmentTextView = itemView.findViewById(R.id.exercise_equipment);
-            muscleGroupsTextView = itemView.findViewById(R.id.exercise_muscle_groups);
+            exerciseName = itemView.findViewById(R.id.textViewExerciseName);
+            exerciseDetails = itemView.findViewById(R.id.textViewExerciseDetails);
+            editButton = itemView.findViewById(R.id.buttonEditExercise);
         }
     }
 }

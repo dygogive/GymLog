@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
 
+    <!-- Назва вправи -->
     <TextView
-        android:id="@+id/exercise_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewExerciseName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Exercise Name"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Деталі вправи -->
     <TextView
-        android:id="@+id/exercise_motion"
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewExerciseDetails"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Motion: "
-        android:textSize="14sp" />
+        android:text="Details about the exercise"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewExerciseName"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/exercise_equipment"
+    <!-- Кнопка для редагування/додавання -->
+    <ImageButton
+        android:id="@+id/buttonEditExercise"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Equipment: "
-        android:textSize="14sp" />
+        android:layout_height="0dp"
+        android:contentDescription="Edit Exercise"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/exercise_muscle_groups"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Muscle Groups: "
-        android:textSize="14sp" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
