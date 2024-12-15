@@ -11,20 +11,15 @@
     <string name="exercises">Exercises</string>
 
 
-
     <string name="equipment_barbell">Barbell</string>
     <string name="equipment_dumbells">Dumbells</string>
     <string name="equipment_bodyweight">Bodyweight</string>
     <string name="equipment_machine">Machine</string>
 
-
-
-
-
-
-
-
-
+    <string name="motion_press_by_arms">Press by arms</string>
+    <string name="motion_pull_by_arms">Pull by arms</string>
+    <string name="motion_press_by_legs">Press by legs</string>
+    <string name="motion_pull_by_legs">Pull by legs</string>
 
 
     <string name="muscle_chest_lower">Chest Lower</string>
@@ -60,5 +55,9 @@
     <string name="exercise_squat_barbell">Barbell Squat</string>
     <string name="exercise_deadlift">Deadlift</string>
 
+
+    <string name="motion">Motion</string>
+    <string name="muscle_group">Muscle Group</string>
+    <string name="equipment_type">Equipment Type</string>
 
 </resources>

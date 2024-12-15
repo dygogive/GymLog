@@ -4,6 +4,7 @@
     <string name="workout_history">Історія жимів</string>
     <string name="exercises">Вправи</string>
     <string name="equipment_machine">Тренажер</string>
+    <string name="motion_pull_by_legs">Тяги ногами</string>
     <string name="muscle_chest_lower">Грудні низ</string>
     <string name="muscle_chest_upper">Грудні верх</string>
     <string name="muscle_chest_full">Грудні</string>
@@ -39,4 +40,10 @@
     <string name="exercise_db_row">Тяга гантелей у нахилі</string>
     <string name="exercise_squat_barbell">Присідання зі штангою</string>
     <string name="exercise_deadlift">Мертва тяга</string>
+    <string name="motion">Тип руху</string>
+    <string name="muscle_group">Група м\'язів</string>
+    <string name="equipment_type">Тип ваги</string>
+    <string name="motion_press_by_arms">Жими руками</string>
+    <string name="motion_pull_by_arms">Тяги руками</string>
+    <string name="motion_press_by_legs">Жими ногами</string>
 </resources>

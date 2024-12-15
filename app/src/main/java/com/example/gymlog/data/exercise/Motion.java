@@ -1,23 +1,32 @@
 package com.example.gymlog.data.exercise;
 
+import android.content.Context;
+
+import com.example.gymlog.R;
+
 public enum Motion {
 
     //ОСНОВНІ РУХИ ПРИ ВИКОНАННІ ВПРАВ
-    PRESS_BY_ARMS("press with arms"),
-    PULL_BY_ARMS("pull with arms"),
-    PRESS_BY_LEGS("press with legs"),
-    PULL_BY_LEGS("pull with legs");
+    PRESS_BY_ARMS(R.string.motion_press_by_arms),
+    PULL_BY_ARMS(R.string.motion_pull_by_arms),
+    PRESS_BY_LEGS(R.string.motion_press_by_legs),
+    PULL_BY_LEGS(R.string.motion_pull_by_legs);
 
-    //ОПИС
-    private final String description;
+    //посилання на строку що описує м'язеву групу
+    private final int descriptionResId;
 
-    //конструктор створнення екземпляра руху
-    Motion(String description) {
-        this.description = description;
+    //конструктор
+    Motion(int descriptionResId) {
+        this.descriptionResId = descriptionResId;
     }
 
-    //метод видає опис
-    public String getDescription() {
-        return description;
+    //видати ідентифікатор опису м'язевої групи
+    public int getDescriptionResId() {
+        return descriptionResId;
+    }
+
+    //видати текст опису м'язевої групи
+    public String getDescription(Context context) {
+        return context.getString(descriptionResId);
     }
 }

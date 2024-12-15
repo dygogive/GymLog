@@ -6,15 +6,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.AttributeType;
+import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-// MuscleGroupFragment.java
-public class MuscleGroupFragment extends BaseListFragment<String> {
+public class MotionFragment extends BaseListFragment<String> {
 
 
     //ресурс для ітема фрагмента
@@ -29,8 +28,8 @@ public class MuscleGroupFragment extends BaseListFragment<String> {
         Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
 
         // Отримуємо список описів м'язових груп
-        return Arrays.stream(MuscleGroup.values())
-                .map(muscleGroup -> muscleGroup.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
+        return Arrays.stream(Motion.values())
+                .map(motion -> motion.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
                 .collect(Collectors.toList());
 
     }
@@ -38,8 +37,8 @@ public class MuscleGroupFragment extends BaseListFragment<String> {
     //що робити якщо ітем вибраний
     @Override
     protected void onItemSelected(String muscleGroup) {
-        MuscleGroup[] enums = MuscleGroup.values();
-        MuscleGroup enumMuscleGroup = null;
+        Motion[] enums = Motion.values();
+        Motion enumMuscleGroup = null;
 
         int count = 0;
         for(String item : getItems()) {

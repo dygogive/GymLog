@@ -1,25 +1,20 @@
 package com.example.gymlog.ui.exercise2.fragments;
 
-import android.os.Bundle;
+import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.gymlog.R;
-import com.example.gymlog.ui.exercise2.adapters.RecyclerViewAdapter;
+import com.example.gymlog.data.exercise.AttributeType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AttributeListFragment extends BaseListFragment<String> {
+
+
 
     @Override
     protected int getLayoutResource() {
@@ -28,21 +23,28 @@ public class AttributeListFragment extends BaseListFragment<String> {
 
     @Override
     protected List<String> getItems() {
-        return Arrays.asList(
-                "Equipment Type",
-                "Muscle Group"
-        );
+        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
+
+        // Отримуємо список описів м'язових груп
+        return Arrays.stream(AttributeType.values())
+                .map(attributeType -> attributeType.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
+                .collect(Collectors.toList());
     }
 
     @Override
     protected void onItemSelected(String attribute) {
-        Fragment fragment;
-        switch (attribute) {
-            case "Equipment Type":
+        AttributeType attributeType = AttributeType.valueOf(attribute); // Перетворення String на AttributeType
+        Fragment fragment = null;
+
+        switch (attributeType) {
+            case EQUIPMENT:
                 fragment = new EquipmentTypeFragment();
                 break;
-            case "Muscle Group":
-                fragment = new MuscleGroupFragment();
+            case MUSCLE_GROUP:
+                fragment = new MuscleFragment();
+                break;
+            case MOTION:
+                fragment = new MotionFragment();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attribute);
