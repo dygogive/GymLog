@@ -2,8 +2,8 @@ package com.example.gymlog.ui.exercise2.factories;
 
 
 import android.content.Context;
+import android.util.Log;
 
-import com.example.gymlog.R;
 import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.exercise.AttributeType;
 import com.example.gymlog.data.exercise.Equipment;
@@ -17,7 +17,6 @@ import java.util.List;
 public class ExerciseFactory {
 
     public static List<String> getExercisesForAttribute(AttributeType attributeType, String attribute) {
-
 
         switch (attributeType) {
             case EQUIPMENT:
@@ -48,18 +47,21 @@ public class ExerciseFactory {
 
     // Метод для створення базових вправ
     public static void initializeDefaultExercises(Context context, ExerciseDAO exerciseDAO) {
-        if (exerciseDAO.getAllExercises(context).isEmpty()) {
-            // Додати базові вправи до бази
+
+
+        if(exerciseDAO.getAllExercises(context).isEmpty()) {
+
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_dip_weighted), // Отримуємо назву з ресурсів
+                    "exercise_dip_weighted", // Отримуємо назву з ресурсів
                     Motion.PRESS_BY_ARMS,
                     Arrays.asList(MuscleGroup.CHEST_LOWER, MuscleGroup.TRICEPS),
                     Equipment.WEIGHT,
                     false
             );
 
+
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_incline_db_press),
+                    "exercise_incline_db_press",
                     Motion.PRESS_BY_ARMS,
                     Arrays.asList(MuscleGroup.CHEST_UPPER, MuscleGroup.TRICEPS),
                     Equipment.DUMBBELLS,
@@ -67,7 +69,7 @@ public class ExerciseFactory {
             );
 
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_pullup_weighted),
+                    "exercise_pullup_weighted",
                     Motion.PULL_BY_ARMS,
                     Arrays.asList(MuscleGroup.LATS, MuscleGroup.BICEPS),
                     Equipment.WEIGHT,
@@ -75,7 +77,7 @@ public class ExerciseFactory {
             );
 
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_db_row),
+                    "exercise_db_row",
                     Motion.PULL_BY_ARMS,
                     Arrays.asList(MuscleGroup.TRAPS_MIDDLE, MuscleGroup.BICEPS),
                     Equipment.DUMBBELLS,
@@ -83,7 +85,7 @@ public class ExerciseFactory {
             );
 
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_squat_barbell),
+                    "exercise_squat_barbell",
                     Motion.PRESS_BY_LEGS,
                     Arrays.asList(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES, MuscleGroup.LONGISSIMUS),
                     Equipment.BARBELL,
@@ -91,15 +93,14 @@ public class ExerciseFactory {
             );
 
             exerciseDAO.addExercise(
-                    context.getString(R.string.exercise_deadlift),
+                    "exercise_deadlift",
                     Motion.PULL_BY_LEGS,
                     Arrays.asList(MuscleGroup.HAMSTRINGS, MuscleGroup.TRAPS_LOWER, MuscleGroup.LONGISSIMUS),
                     Equipment.BARBELL,
                     false
             );
         }
+        
     }
-
-
 
 }

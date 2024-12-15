@@ -47,9 +47,8 @@ public class ExerciseListActivity extends AppCompatActivity {
         MuscleGroup targetMuscle = MuscleGroup.valueOf(muscleGroupName);
 
 
-        DBHelper dbHelper = new DBHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ExerciseDAO exerciseDAO = new ExerciseDAO(db);
+
+        ExerciseDAO exerciseDAO = new ExerciseDAO(this);
 
 
 

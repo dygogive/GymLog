@@ -22,12 +22,11 @@ public class ExerciseManagementActivity extends AppCompatActivity {
 
 
         // Ініціалізація бази даних
-        DBHelper dbHelper = new DBHelper(this);
-        ExerciseDAO exerciseDAO = new ExerciseDAO(dbHelper.getWritableDatabase());
+        ExerciseDAO exerciseDAO = new ExerciseDAO(this);
 
         // Додавання базових вправ, якщо їх ще немає
         ExerciseFactory.initializeDefaultExercises(this, exerciseDAO);
-
+        exerciseDAO.allExercisesInLog(this);
 
 
         // Відображення початкового списку атрибутів у Fragment

@@ -26,13 +26,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE WorkoutSet (id INTEGER PRIMARY KEY AUTOINCREMENT, workoutId INTEGER," +
                 " exercise TEXT, reptype TEXT, weight REAL, reps INTEGER)");
         db.execSQL("CREATE TABLE Exercise (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +   // Унікальний ідентифікатор, наприклад "exercise_dip_weighted"
-                "exerciseId TEXT UNIQUE, " +  // Локалізована назва, якщо це вправа користувача
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
                 "motion TEXT, " +
                 "muscleGroups TEXT, " +
                 "equipment TEXT, " +
-                "isCustom INTEGER DEFAULT 0 " + //  0: вбудована вправа, 1: створена користувачем
+                "isCustom INTEGER DEFAULT 0" + //  0: вбудована вправа, 1: створена користувачем
                 ");");
     }
 
