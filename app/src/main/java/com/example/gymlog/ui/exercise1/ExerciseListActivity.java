@@ -48,7 +48,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
 
 
-        ExerciseDAO exerciseDAO = new ExerciseDAO(this);
+        ExerciseDAO exerciseDAO = new ExerciseDAO(this); //
 
 
 
