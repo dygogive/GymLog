@@ -44,6 +44,7 @@ public class ExercisesFragment extends Fragment {
 
         fragment.setArguments(args);
         return fragment;
+
     }
 
 
