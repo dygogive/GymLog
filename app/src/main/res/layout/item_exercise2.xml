@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
+
+    <!-- Назва вправи -->
+    <TextView
+        android:id="@+id/textViewExerciseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Exercise Name"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Деталі вправи -->
+    <TextView
+        android:id="@+id/textViewExerciseDetails"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Details about the exercise"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewExerciseName"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Кнопка для редагування/додавання -->
+    <ImageButton
+        android:id="@+id/buttonEditExercise"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_edit"
+        android:contentDescription="Edit Exercise"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

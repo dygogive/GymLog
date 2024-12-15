@@ -33,7 +33,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public ExerciseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_exercise, parent, false);
+                .inflate(R.layout.item_exercise2, parent, false);
         return new ExerciseViewHolder(view);
     }
 

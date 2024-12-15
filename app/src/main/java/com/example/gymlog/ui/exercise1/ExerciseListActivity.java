@@ -55,11 +55,10 @@ public class ExerciseListActivity extends AppCompatActivity {
         List<Exercise> sortedExercisesByMuscles = exerciseDAO.getExercisesByMuscle(targetMuscle);
 
 
+
         ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sortedExercisesByMuscles);
         listViewExercises.setAdapter(exeAdapter);
 
     }
-
-
 
 }
