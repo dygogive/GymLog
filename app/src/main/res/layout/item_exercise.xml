@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/exercise_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exercise Name"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/exercise_motion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Motion: "
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/exercise_equipment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Equipment: "
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/exercise_muscle_groups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Muscle Groups: "
+        android:textSize="14sp" />
+
+</LinearLayout>

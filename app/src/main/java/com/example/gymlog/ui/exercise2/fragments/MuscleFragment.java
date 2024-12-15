@@ -23,6 +23,8 @@ public class MuscleFragment extends BaseListFragment<String> {
         return R.layout.fragment_item_exercises;
     }
 
+
+
     //власне самі ітеми
     @Override
     protected List<String> getItems() {
@@ -34,6 +36,9 @@ public class MuscleFragment extends BaseListFragment<String> {
                 .collect(Collectors.toList());
 
     }
+
+
+
 
     //що робити якщо ітем вибраний
     @Override

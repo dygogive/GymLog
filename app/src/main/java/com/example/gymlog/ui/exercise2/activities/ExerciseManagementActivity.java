@@ -25,8 +25,8 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         ExerciseDAO exerciseDAO = new ExerciseDAO(this);
 
         // Додавання базових вправ, якщо їх ще немає
-        ExerciseFactory.initializeDefaultExercises(this, exerciseDAO);
-        exerciseDAO.allExercisesInLog(this);
+        ExerciseFactory.initializeDefaultExercises(exerciseDAO);
+        exerciseDAO.logAllExercises();
 
 
         // Відображення початкового списку атрибутів у Fragment

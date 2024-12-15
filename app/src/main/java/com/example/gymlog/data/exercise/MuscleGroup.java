@@ -10,7 +10,7 @@ public enum MuscleGroup {
     //грудні м'язи
     CHEST_LOWER(R.string.muscle_chest_lower),
     CHEST_UPPER(R.string.muscle_chest_upper),
-    CHEST_FULL(R.string.muscle_chest_full),
+    CHEST(R.string.muscle_chest),
 
     //руки
     TRICEPS(R.string.muscle_triceps),

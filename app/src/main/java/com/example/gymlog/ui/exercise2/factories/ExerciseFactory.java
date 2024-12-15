@@ -1,69 +1,61 @@
 package com.example.gymlog.ui.exercise2.factories;
 
 
-import android.content.Context;
-import android.util.Log;
-
 import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.exercise.AttributeType;
 import com.example.gymlog.data.exercise.Equipment;
+import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ExerciseFactory {
 
-    public static List<String> getExercisesForAttribute(AttributeType attributeType, String attribute) {
+    public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeType attributeType, String attribute) {
+        // Отримуємо список вправ за атрибутом через ExerciseDAO
+        return exerciseDAO.getExercisesByAttribute(attributeType, attribute);
+    }
 
-        switch (attributeType) {
-            case EQUIPMENT:
-                switch (attribute) {
-                    case "BARBELL":
-                        return Arrays.asList("Dumbbell Press", "Dumbbell Row");
-                    case "DUMBBELLS":
-                        return Arrays.asList("Barbell Squat", "Barbell Deadlift");
-                    default:
-                        return Collections.emptyList();
-                }
-            case MUSCLE_GROUP:
-                switch (attribute) {
-                    case "CHEST_UPPER":
-                        return Arrays.asList("Bench Press", "Incline Press");
-                    case "TRAPS_LOWER":
-                        return Arrays.asList("Pull-Up", "Deadlift");
-                    default:
-                        return Collections.emptyList();
-                }
-            default:
-                return Collections.emptyList();
+
+    public static List<String> getNamesExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeType attributeType, String attribute) {
+        // Отримуємо список вправ за атрибутом через ExerciseDAO
+        List<Exercise> exercises = getExercisesForAttribute(exerciseDAO, attributeType, attribute);
+
+        // Перетворюємо список Exercise на список назв вправ
+        List<String> exerciseNames = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exerciseNames.add(exercise.getName());
         }
+
+        return exerciseNames;
     }
 
 
 
 
+
     // Метод для створення базових вправ
-    public static void initializeDefaultExercises(Context context, ExerciseDAO exerciseDAO) {
+    public static void initializeDefaultExercises(ExerciseDAO exerciseDAO) {
 
 
-        if(exerciseDAO.getAllExercises(context).isEmpty()) {
+        if(exerciseDAO.getAllExercises().isEmpty()) {
 
             exerciseDAO.addExercise(
-                    "exercise_dip_weighted", // Отримуємо назву з ресурсів
+                    "exercise_dip_weighted", // Жим на брусах
                     Motion.PRESS_BY_ARMS,
-                    Arrays.asList(MuscleGroup.CHEST_LOWER, MuscleGroup.TRICEPS),
+                    Arrays.asList(MuscleGroup.CHEST_LOWER, MuscleGroup.TRICEPS, MuscleGroup.CHEST),
                     Equipment.WEIGHT,
                     false
             );
 
 
             exerciseDAO.addExercise(
-                    "exercise_incline_db_press",
+                    "exercise_incline_db_press",  // жим гантелей на наклонній лаві
                     Motion.PRESS_BY_ARMS,
-                    Arrays.asList(MuscleGroup.CHEST_UPPER, MuscleGroup.TRICEPS),
+                    Arrays.asList(MuscleGroup.CHEST_UPPER, MuscleGroup.CHEST, MuscleGroup.TRICEPS),
                     Equipment.DUMBBELLS,
                     false
             );

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class EquipmentTypeFragment extends BaseListFragment<String> {
+public class EquipmentFragment extends BaseListFragment<String> {
 
     @Override
     protected int getLayoutResource() {

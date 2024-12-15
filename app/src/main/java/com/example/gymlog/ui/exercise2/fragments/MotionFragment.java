@@ -36,18 +36,18 @@ public class MotionFragment extends BaseListFragment<String> {
 
     //що робити якщо ітем вибраний
     @Override
-    protected void onItemSelected(String muscleGroup) {
+    protected void onItemSelected(String motion) {
         Motion[] enums = Motion.values();
-        Motion enumMuscleGroup = null;
+        Motion enumMotion = null;
 
         int count = 0;
         for(String item : getItems()) {
-            if(muscleGroup.equals(item)) enumMuscleGroup = enums[count];
+            if(motion.equals(item)) enumMotion = enums[count];
             else count++;
         }
 
 
-        Fragment fragment = ExercisesFragment.newInstance(AttributeType.MUSCLE_GROUP, enumMuscleGroup);
+        Fragment fragment = ExercisesFragment.newInstance(AttributeType.MOTION, enumMotion);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

@@ -16,18 +16,16 @@ import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExerciseDAO {
-    private SQLiteDatabase database;
-    private DBHelper dbHelper;
-    Context context;
+    private final SQLiteDatabase database;
+    private final Context context;
 
     public ExerciseDAO(Context context) {
         this.context = context;
-        dbHelper = new DBHelper(context);
-        database = dbHelper.getReadableDatabase();
+        this.database = new DBHelper(context).getReadableDatabase();
     }
-
 
     // Додати вправу
     public void addExercise(String exerciseName, Motion motion, List<MuscleGroup> muscleGroups,
@@ -38,23 +36,52 @@ public class ExerciseDAO {
         values.put("muscleGroups", TextUtils.join(",", muscleGroups.stream().map(Enum::name).toArray(String[]::new)));
         values.put("equipment", equipment.name());
         values.put("isCustom", isCustom ? 1 : 0);
-
         database.insert("Exercise", null, values);
     }
 
-
-    //отримати курсор
-    public Cursor getCursor(){
-        Cursor cursor = database.query("Exercise", null, null, null, null, null, null);
-        return cursor;
+    // Отримати всі вправи
+    public List<Exercise> getAllExercises() {
+        return getExercisesFromCursor(database.query("Exercise", null, null, null, null, null, null));
     }
 
+    // Отримати вправи за атрибутом
+    public List<Exercise> getExercisesByAttribute(AttributeType attributeType, String attribute) {
+        String query;
+        switch (attributeType) {
+            case EQUIPMENT:
+                query = "SELECT * FROM Exercise WHERE equipment = ?";
+                break;
+            case MOTION:
+                query = "SELECT * FROM Exercise WHERE motion = ?";
+                break;
+            case MUSCLE_GROUP:
+                query = "SELECT * FROM Exercise WHERE muscleGroups LIKE ?";
+                attribute = "%" + attribute + "%";
+                break;
+            default:
+                return new ArrayList<>();
+        }
+        return getExercisesFromCursor(database.rawQuery(query, new String[]{attribute}));
+    }
 
+    // Отримати вправи за типом м'язів
+    public List<Exercise> getExercisesByMuscle(MuscleGroup muscleGroup) {
+        return getExercisesByAttribute(AttributeType.MUSCLE_GROUP, muscleGroup.name());
+    }
 
-    // Отримати всі вправи
-    public List<Exercise> getAllExercises(Context context) {
+    // Логування всіх вправ у таблиці
+    public void logAllExercises() {
+        for (Exercise exercise : getAllExercises()) {
+            Log.d("ExerciseLog", "Name: " + exercise.getName() + "---" +
+                    "Motion: " + exercise.getMotion() + "---" +
+                    "Equipment: " + exercise.getEquipment() + "---" +
+                    "Muscle Groups: " + exercise.getMuscleGroupList());
+        }
+    }
+
+    // Універсальний метод для отримання вправ із курсора
+    private List<Exercise> getExercisesFromCursor(Cursor cursor) {
         List<Exercise> exerciseList = new ArrayList<>();
-        Cursor cursor = database.query("Exercise", null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 boolean isCustom = cursor.getInt(cursor.getColumnIndexOrThrow("isCustom")) == 1;
@@ -63,108 +90,20 @@ public class ExerciseDAO {
                 String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
                 Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
 
-                List<MuscleGroup> muscleGroups = new ArrayList<>();
-                for (String muscle : muscleGroupsString.split(",")) {
-                    muscleGroups.add(MuscleGroup.valueOf(muscle));
-                }
-                if(!isCustom) {
+                List<MuscleGroup> muscleGroups = muscleGroupsString == null || muscleGroupsString.isEmpty() ?
+                        new ArrayList<>() :
+                        List.of(muscleGroupsString.split(",")).stream().map(MuscleGroup::valueOf).collect(Collectors.toList());
+
+                if (!isCustom) {
                     int resId = context.getResources().getIdentifier(name, "string", context.getPackageName());
-                    name = context.getString(resId);
+                    name = resId != 0 ? context.getString(resId) : name;
                 }
 
                 exerciseList.add(new Exercise(name, motion, muscleGroups, equipment));
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         return exerciseList;
-    }
-
-
-
-    public List<Exercise> getExercisesByMuscle(MuscleGroup muscleGroup) {
-        List<Exercise> exerciseList = new ArrayList<>();
-        Cursor cursor = database.query("Exercise", null, null, null, null, null, "name ASC");
-
-        if (cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
-                String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
-                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
-
-                // Перетворення muscleGroups із рядка на список
-                List<MuscleGroup> muscleGroups = new ArrayList<>();
-                for (String muscle : muscleGroupsString.split(",")) {
-                    muscleGroups.add(MuscleGroup.valueOf(muscle));
-                }
-
-                // Додати вправу, якщо вона містить потрібну групу м'язів
-                if (muscleGroups.contains(muscleGroup)) {
-                    exerciseList.add(new Exercise(name, motion, muscleGroups, equipment));
-                }
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        return exerciseList;
-    }
-
-
-    // Отримуємо вправи за атрибутом
-    public List<Exercise> getExercisesByAttribute(AttributeType attributeType, String attribute) {
-        List<Exercise> exercises = new ArrayList<>();
-        String query;
-
-        // Визначаємо запит на основі типу атрибуту
-        switch (attributeType) {
-            case EQUIPMENT:
-                query = "SELECT * FROM Exercise WHERE equipment = ?";
-                break;
-            case MUSCLE_GROUP:
-                query = "SELECT * FROM Exercise WHERE muscleGroups LIKE ?";
-                attribute = "%" + attribute + "%"; // Додаємо символи для пошуку підрядка
-                break;
-            default:
-                return exercises; // Порожній список, якщо тип атрибуту невідомий
-        }
-
-        // Виконуємо запит
-        Cursor cursor = database.rawQuery(query, new String[]{attribute});
-        if (cursor.moveToFirst()) {
-            do {
-                // Створення об'єкта Exercise
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
-                String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
-                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
-
-                // Перетворюємо muscleGroupsString у список
-                List<MuscleGroup> muscleGroups = new ArrayList<>();
-                for (String group : muscleGroupsString.split(",")) {
-                    muscleGroups.add(MuscleGroup.valueOf(group.trim()));
-                }
-
-                // Додаємо вправу до списку
-                exercises.add(new Exercise(name, motion, muscleGroups, equipment));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        return exercises;
-    }
-
-
-
-    // Логування всіх вправ у таблиці
-    public void allExercisesInLog(Context context) {
-        List<Exercise> exercises = getAllExercises(context);
-        for (Exercise exercise : exercises) {
-            Log.d("ExerciseLog", "Name: " + exercise.getName() + "---" +
-                    "Motion: " + exercise.getMotion() + "---" +
-                    "Equipment: " + exercise.getEquipment() + "---" +
-                    "Muscle Groups: " + exercise.getMuscleGroupList());
-        }
     }
 
 }

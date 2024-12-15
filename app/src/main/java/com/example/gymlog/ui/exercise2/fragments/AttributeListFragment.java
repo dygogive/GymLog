@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.AttributeType;
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,23 +33,33 @@ public class AttributeListFragment extends BaseListFragment<String> {
     }
 
     @Override
-    protected void onItemSelected(String attribute) {
-        AttributeType attributeType = AttributeType.valueOf(attribute); // Перетворення String на AttributeType
-        Fragment fragment = null;
+    protected void onItemSelected(String attributeType) {
+        AttributeType[] enums = AttributeType.values();
+        AttributeType enumAttributeType = null;
 
-        switch (attributeType) {
-            case EQUIPMENT:
-                fragment = new EquipmentTypeFragment();
-                break;
+        int count = 0;
+        for(String item : getItems()) {
+            if(attributeType.equals(item)) enumAttributeType = enums[count];
+            else count++;
+        }
+
+        Fragment fragment;
+
+        switch (enumAttributeType){
             case MUSCLE_GROUP:
                 fragment = new MuscleFragment();
+                break;
+            case EQUIPMENT:
+                fragment = new EquipmentFragment();
                 break;
             case MOTION:
                 fragment = new MotionFragment();
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + attribute);
+                throw new IllegalStateException("Unexpected value: " + attributeType);
         }
+
+
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
