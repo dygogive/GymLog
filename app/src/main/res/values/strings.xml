@@ -66,4 +66,14 @@
     <string name="head_muscle_group">Choice muscle:</string>
     <string name="head_motion">Choice motion type:</string>
 
+
+    <string name="edit_exercise">Edit Exercise</string>
+    <string name="exercise_description">Exercise Description</string>
+    <string name="name_required">Name is required</string>
+    <string name="exercise_updated">Exercise updated successfully</string>
+    <string name="update_failed">Failed to update exercise</string>
+    <string name="equipment">Equipment</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

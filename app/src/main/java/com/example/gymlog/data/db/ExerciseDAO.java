@@ -39,6 +39,35 @@ public class ExerciseDAO {
         database.insert("Exercise", null, values);
     }
 
+
+    // Метод для оновлення вправи
+    public boolean updateExercise(Exercise exercise) {
+
+        ContentValues values = new ContentValues();
+        values.put("name", exercise.getName());
+        values.put("motion", exercise.getMotion().name());
+        values.put("muscleGroups", TextUtils.join(",", exercise.getMuscleGroupList()
+                .stream()
+                .map(Enum::name)
+                .toArray(String[]::new)));
+        values.put("equipment", exercise.getEquipment().name());
+        values.put("isCustom", 1); // Позначаємо як кастомну вправу
+
+
+
+        // Оновлюємо запис у таблиці за старою назвою
+        int rowsAffected = database.update(
+                "Exercise",
+                values,
+                "id = ?",
+                new String[]{String.valueOf(exercise.getId())}
+        );
+
+
+        return rowsAffected > 0; // Повертає true, якщо запис було оновлено
+    }
+
+
     // Отримати всі вправи
     public List<Exercise> getAllExercises() {
         return getExercisesFromCursor(database.query("Exercise", null, null, null, null, null, null));
@@ -85,6 +114,7 @@ public class ExerciseDAO {
         if (cursor.moveToFirst()) {
             do {
                 boolean isCustom = cursor.getInt(cursor.getColumnIndexOrThrow("isCustom")) == 1;
+                Long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
                 String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
@@ -99,7 +129,7 @@ public class ExerciseDAO {
                     name = resId != 0 ? context.getString(resId) : name;
                 }
 
-                exerciseList.add(new Exercise(name, motion, muscleGroups, equipment));
+                exerciseList.add(new Exercise(id, name, motion, muscleGroups, equipment));
             } while (cursor.moveToNext());
         }
         cursor.close();

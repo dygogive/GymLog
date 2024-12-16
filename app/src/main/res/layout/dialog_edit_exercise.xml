@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Назва вправи -->
+        <EditText
+            android:id="@+id/editTextExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/exercise_name" />
+
+        <!-- Motion -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/motion" />
+        <Spinner
+            android:id="@+id/spinnerMotion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Muscle Groups -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/muscle_groups" />
+        <ListView
+            android:id="@+id/listViewMuscleGroups"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:choiceMode="multipleChoice" />
+
+        <!-- Equipment -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/equipment" />
+        <Spinner
+            android:id="@+id/spinnerEquipment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</ScrollView>

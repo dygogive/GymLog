@@ -25,6 +25,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         void onEditClick(Exercise exercise);
     }
 
+    public void updateExercises(List<Exercise> newExercises) {
+        this.exercises.clear();
+        this.exercises.addAll(newExercises);
+        notifyDataSetChanged();
+    }
+
     // Конструктор адаптера
     public ExerciseAdapter(List<Exercise> exercises, OnExerciseClickListener listener) {
         this.exercises = exercises;
