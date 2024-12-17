@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.exercise2.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.List;
 
@@ -23,6 +25,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public interface OnExerciseClickListener {
         void onExerciseClick(Exercise exercise);
         void onEditClick(Exercise exercise);
+    }
+
+    public void updateExercises(List<Exercise> newExercises) {
+        this.exercises.clear();
+        this.exercises.addAll(newExercises);
+        notifyDataSetChanged();
     }
 
     // Конструктор адаптера
@@ -39,13 +47,33 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         return new ExerciseViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder holder, int position) {
         Exercise exercise = exercises.get(position);
+        Context context = holder.itemView.getContext();
+
+        // Використання getDescription для отримання ресурсних рядків
+        String motionDescription = exercise.getMotion().getDescription(context);
+        String equipmentDescription = exercise.getEquipment().getDescription(context);
+        List<MuscleGroup> muscles = exercise.getMuscleGroupList();
+        StringBuilder musclesTxt = new StringBuilder();
+        for(MuscleGroup muscleGroup : muscles){
+            musclesTxt.append(muscleGroup.getDescription(context)).append("; \n    ");
+        }
+
+
+        String equipment = context.getString(R.string.equipment);
+        String motion = context.getString(R.string.motion);
+        String muscleGroup = context.getString(R.string.muscle_group);
 
         holder.exerciseName.setText(exercise.getName());
-        holder.exerciseDetails.setText("Motion: " + exercise.getMotion() +
-                "\nEquipment: " + exercise.getEquipment());
+        holder.exerciseDetails.setText(motion + ": " +
+                "\n    " + motionDescription +
+                "\n" + equipment + ": " +
+                "\n    " + equipmentDescription +
+                "\n" + muscleGroup + ": " +
+                "\n    " + musclesTxt.toString());
 
         holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
         holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));

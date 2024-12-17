@@ -26,6 +26,7 @@
     <string name="add_set">Додати підхід</string>
     <string name="repetitions">Повторення</string>
     <string name="weight">Вага</string>
+    <string name="edit_exercise">Редагувати вправу</string>
     <string name="exercise_name">Назва вправи</string>
     <string name="gym_session">Сесія жиму</string>
     <string name="finish_workout">Закінчити тренування</string>
@@ -50,4 +51,12 @@
     <string name="head_weight_type">Вибрати тип ваги:</string>
     <string name="head_muscle_group">Вибрати групу м\'язів:</string>
     <string name="head_motion">Вибрати тип руху:</string>
+    <string name="exercise_description">Опис вправи</string>
+    <string name="name_required">Потрібна назва</string>
+    <string name="exercise_updated">Успішно оновлено!</string>
+    <string name="update_failed">Не оновлено</string>
+    <string name="equipment">Спорядження</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Скасувати</string>
+    <string name="add_exercise">Створити вправу</string>
 </resources>
