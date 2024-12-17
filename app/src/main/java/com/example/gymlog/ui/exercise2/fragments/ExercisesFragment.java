@@ -133,7 +133,7 @@ public class ExercisesFragment extends Fragment {
             @Override
             public void onEditClick(Exercise exercise) {
                 // Обробка редагування
-                openEditExerciseDialog(exercise);
+                openExerciseDialog(exercise);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -161,7 +161,17 @@ public class ExercisesFragment extends Fragment {
         return exercises;
     }
 
-    private void openEditExerciseDialog(Exercise exercise){
+
+    private void openExerciseDialog(@Nullable Exercise exercise) {
+        ui.exercise2.dialogs.ExerciseDialog dialog = new ui.exercise2.dialogs.ExerciseDialog(getContext(), () -> {
+            refreshExerciseList(); // Оновлення списку після збереження
+        });
+
+        dialog.show(exercise);
+    }
+
+
+/*    private void openEditExerciseDialog(Exercise exercise){
         //створити в'ю діалогу
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView         = inflater.inflate(R.layout.dialog_edit_exercise, null);
@@ -223,7 +233,8 @@ public class ExercisesFragment extends Fragment {
                 .setNegativeButton(R.string.cancel, null)
                 .show();
 
-    };
+    };*/
+
 
 
     private void updateExercise(Exercise exercise, String newName, Motion newMotion, List<MuscleGroup> newMuscleGroups, Equipment newEquipment) {

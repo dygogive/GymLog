@@ -16,12 +16,6 @@ public class Exercise {
     private Equipment equipment;
     private boolean isCustom = false;
 
-    public Exercise(String name, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
-        this.name = name;
-        this.motion = motion;
-        this.muscleGroupList = muscleGroupList;
-        this.equipment = equipment;
-    }
 
     public Exercise(Long id, String name, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
         this.id = id;

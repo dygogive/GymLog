@@ -75,5 +75,8 @@
     <string name="equipment">Equipment</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="add_exercise">Create exercise</string>
+    <string name="exercise_added">Exercise added</string>
+    <string name="add_failed">Adding failed</string>
 
 </resources>

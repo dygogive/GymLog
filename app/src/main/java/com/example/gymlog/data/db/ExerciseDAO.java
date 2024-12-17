@@ -28,7 +28,7 @@ public class ExerciseDAO {
     }
 
     // Додати вправу
-    public void addExercise(String exerciseName, Motion motion, List<MuscleGroup> muscleGroups,
+    public long addExercise(String exerciseName, Motion motion, List<MuscleGroup> muscleGroups,
                             Equipment equipment, boolean isCustom) {
         ContentValues values = new ContentValues();
         values.put("name", exerciseName);
@@ -36,8 +36,22 @@ public class ExerciseDAO {
         values.put("muscleGroups", TextUtils.join(",", muscleGroups.stream().map(Enum::name).toArray(String[]::new)));
         values.put("equipment", equipment.name());
         values.put("isCustom", isCustom ? 1 : 0);
-        database.insert("Exercise", null, values);
+
+        // Вставляємо запис і повертаємо результат
+        return database.insert("Exercise", null, values);
     }
+
+    // Перевантажений метод для додавання вправи через об'єкт Exercise
+    public long addExercise(Exercise exercise) {
+        return addExercise(
+                exercise.getName(),
+                exercise.getMotion(),
+                exercise.getMuscleGroupList(),
+                exercise.getEquipment(),
+                true // Вважаємо, що це кастомна вправа
+        );
+    }
+
 
 
     // Метод для оновлення вправи

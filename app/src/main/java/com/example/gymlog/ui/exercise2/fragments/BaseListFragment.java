@@ -33,8 +33,10 @@ public abstract class BaseListFragment<T> extends Fragment {
         //ініціалізація recyclerView
         setupRecyclerView(view);
 
+
         return view;
     }
+
 
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
