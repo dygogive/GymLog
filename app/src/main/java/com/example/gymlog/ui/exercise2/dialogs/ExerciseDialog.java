@@ -49,9 +49,9 @@ public class ExerciseDialog {
         ListView listViewMuscleGroups = dialogView.findViewById(R.id.listViewMuscleGroups);
 
         // Адаптери для списків
-        spinnerMotion.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Motion.values()));
-        spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Equipment.values()));
-        listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.values()));
+        spinnerMotion.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Motion.getMotionDescriptions(context)));
+        spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Equipment.getEquipmentDescriptions(context)));
+        listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.getMuscleGroupDescriptions(context)));
 
         // Заповнення полів, якщо це редагування
         if (exercise != null) {

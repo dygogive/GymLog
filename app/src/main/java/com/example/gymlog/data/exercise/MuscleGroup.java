@@ -52,4 +52,17 @@ public enum MuscleGroup {
         return context.getString(descriptionResId);
     }
 
+    //Щоб сформувати масив String[] з описів для кожного елемента перерахування MuscleGroup
+    public static String[] getMuscleGroupDescriptions(Context context) {
+        MuscleGroup[] muscleGroups = MuscleGroup.values();  // Отримуємо всі елементи перерахування
+        String[] descriptions = new String[muscleGroups.length];  // Створюємо масив для зберігання описів
+
+        // Заповнюємо масив описами для кожного руху
+        for (int i = 0; i < muscleGroups.length; i++) {
+            descriptions[i] = muscleGroups[i].getDescription(context);
+        }
+
+        return descriptions;  // Повертаємо масив з описами
+    }
+
 }
