@@ -43,4 +43,18 @@ public enum Motion {
         return descriptions;  // Повертаємо масив з описами
     }
 
+    public static Motion getMotionByDescription(Context context, String description) {
+        Motion[] motions = Motion.values();  // Отримуємо всі елементи перерахування
+
+        // Проходимо по всіх елементах перерахування
+        for (Motion motion : motions) {
+            // Порівнюємо опис кожного елемента з переданим рядком
+            if (motion.getDescription(context).equals(description)) {
+                return motion;  // Повертаємо відповідний елемент enum
+            }
+        }
+
+        return null;  // Якщо не знайдено відповідного опису, повертаємо null
+    }
+
 }
