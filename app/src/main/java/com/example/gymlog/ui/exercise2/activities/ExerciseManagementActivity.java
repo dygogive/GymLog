@@ -19,6 +19,13 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_management);
 
+
+        // Ініціалізація бази даних
+        ExerciseDAO exerciseDAO = new ExerciseDAO(this);
+
+        // Ініціалізація базових вправ
+        ExerciseFactory.initializeDefaultExercises(exerciseDAO);
+
         // Відображення фрагмента
         if (savedInstanceState == null) {
             getSupportFragmentManager()

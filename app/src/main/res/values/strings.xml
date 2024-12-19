@@ -11,13 +11,40 @@
     <string name="exercises">Exercises</string>
 
 
-    <string name="equipment_barbell">Barbell</string>
-    <string name="equipment_dumbells">Dumbells</string>
-    <string name="equipment_bodyweight">Bodyweight</string>
-    <string name="equipment_machine">Machine</string>
 
-    <string name="motion_press_by_arms">Press by arms</string>
-    <string name="motion_pull_by_arms">Pull by arms</string>
+    <!-- Вільна вага -->
+    <string name="equipment_barbell">Barbell</string> <!-- Штанга -->
+    <string name="equipment_dumbbells">Dumbbells</string> <!-- Гантелі -->
+    <string name="equipment_kettlebell">Kettlebell</string> <!-- Гиря -->
+    <string name="equipment_weight_plate">Weight Plate</string> <!-- Млинці -->
+
+    <!-- Тренажери -->
+    <string name="equipment_bodyweight">Bodyweight</string> <!-- Вага тіла -->
+    <string name="equipment_machine">Machine</string> <!-- Тренажер (стаціонарний, наприклад, гакк-машина) -->
+    <string name="equipment_cable_machine">Cable Machine</string> <!-- Блочний тренажер -->
+    <string name="equipment_plate_loaded_machine">Plate-Loaded Machine</string> <!-- Тренажер з млинцями -->
+
+    <!-- Інші види -->
+    <string name="equipment_resistance_band">Resistance Band</string> <!-- Резина (еспандер) -->
+    <string name="equipment_sandbag">Sandbag</string> <!-- Мішок з піском -->
+    <string name="equipment_medicine_ball">Medicine Ball</string> <!-- Медичний м'яч -->
+    <string name="equipment_suspension_trainer">Suspension Trainer</string> <!-- Петлі TRX -->
+
+
+    <!-- Жими руками -->
+    <string name="motion_press_upwards">Press Upwards</string> <!-- Жим вгору -->
+    <string name="motion_press_downwards">Press Downwards</string> <!-- Жим вниз -->
+    <string name="motion_press_middle">Press Middle</string> <!-- Жим горизонтальний -->
+    <string name="motion_press_up_middle">Press Up to Middle</string> <!-- Жим між верхом і серединою -->
+    <string name="motion_press_down_middle">Press Down to Middle</string> <!-- Жим між низом і серединою -->
+
+    <!-- Тяги руками -->
+    <string name="motion_pull_upwards">Pull Upwards</string> <!-- Тяга вгору -->
+    <string name="motion_pull_downwards">Pull Downwards</string> <!-- Тяга вниз -->
+    <string name="motion_pull_middle">Pull Middle</string> <!-- Тяга горизонтальна -->
+    <string name="motion_pull_up_middle">Pull Up to Middle</string> <!-- Тяга між верхом і серединою -->
+    <string name="motion_pull_down_middle">Pull Down to Middle</string> <!-- Тяга між низом і серединою -->
+
     <string name="motion_press_by_legs">Press by legs</string>
     <string name="motion_pull_by_legs">Pull by legs</string>
 
