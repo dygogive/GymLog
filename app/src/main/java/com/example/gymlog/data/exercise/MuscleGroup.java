@@ -65,4 +65,19 @@ public enum MuscleGroup {
         return descriptions;  // Повертаємо масив з описами
     }
 
+
+    public static MuscleGroup getMuscleGroupByDescription(Context context, String description) {
+        MuscleGroup[] muscleGroups = MuscleGroup.values();  // Отримуємо всі елементи перерахування
+
+        // Проходимо по всіх елементах перерахування
+        for (MuscleGroup muscleGroup : muscleGroups) {
+            // Порівнюємо опис кожного елемента з переданим рядком
+            if (muscleGroup.getDescription(context).equals(description)) {
+                return muscleGroup;  // Повертаємо відповідний елемент enum
+            }
+        }
+
+        return null;  // Якщо не знайдено відповідного опису, повертаємо null
+    }
+
 }

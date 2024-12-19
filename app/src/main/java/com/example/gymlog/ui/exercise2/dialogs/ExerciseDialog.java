@@ -2,6 +2,7 @@ package ui.exercise2.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -48,17 +49,19 @@ public class ExerciseDialog {
         Spinner spinnerEquipment = dialogView.findViewById(R.id.spinnerEquipment);
         ListView listViewMuscleGroups = dialogView.findViewById(R.id.listViewMuscleGroups);
 
+        Log.d("log7", "test1");
+
         // Адаптери для списків
         spinnerMotion.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Motion.getMotionDescriptions(context)));
         spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Equipment.getEquipmentDescriptions(context)));
         listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.getMuscleGroupDescriptions(context)));
-
+        Log.d("log7", "test2");
         // Заповнення полів, якщо це редагування
         if (exercise != null) {
             editTextName.setText(exercise.getName());
-            spinnerMotion.setSelection(((ArrayAdapter) spinnerMotion.getAdapter()).getPosition(exercise.getMotion()));
-            spinnerEquipment.setSelection(((ArrayAdapter) spinnerEquipment.getAdapter()).getPosition(exercise.getEquipment()));
-
+            spinnerMotion.setSelection(((ArrayAdapter) spinnerMotion.getAdapter()).getPosition(exercise.getMotion().getDescription(context)));
+            spinnerEquipment.setSelection(((ArrayAdapter) spinnerEquipment.getAdapter()).getPosition(exercise.getEquipment().getDescription(context)));
+            Log.d("log7", "test3");
             for (int i = 0; i < MuscleGroup.values().length; i++) {
                 if (exercise.getMuscleGroupList().contains(MuscleGroup.values()[i])) {
                     listViewMuscleGroups.setItemChecked(i, true);
@@ -66,19 +69,21 @@ public class ExerciseDialog {
             }
         }
 
+        Log.d("log7", "test4");
+
         // Побудова діалогу
         new AlertDialog.Builder(context)
                 .setTitle(exercise == null ? R.string.add_exercise : R.string.edit_exercise)
                 .setView(dialogView)
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
                     String name = editTextName.getText().toString().trim();
-                    Motion motion = (Motion) spinnerMotion.getSelectedItem();
-                    Equipment equipment = (Equipment) spinnerEquipment.getSelectedItem();
+                    Motion motion = (Motion) Motion.getMotionByDescription(context, (String) spinnerMotion.getSelectedItem());
+                    Equipment equipment = (Equipment) Equipment.getEquipmentByDescription(context, (String) spinnerEquipment.getSelectedItem());
 
                     List<MuscleGroup> selectedMuscleGroups = new ArrayList<>();
                     for (int i = 0; i < listViewMuscleGroups.getCount(); i++) {
                         if (listViewMuscleGroups.isItemChecked(i)) {
-                            selectedMuscleGroups.add((MuscleGroup) listViewMuscleGroups.getItemAtPosition(i));
+                            selectedMuscleGroups.add((MuscleGroup) MuscleGroup.getMuscleGroupByDescription(context , (String) listViewMuscleGroups.getItemAtPosition(i)) );
                         }
                     }
 

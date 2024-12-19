@@ -44,4 +44,20 @@ public enum Equipment {
 
         return descriptions;  // Повертаємо масив з описами
     }
+
+
+    public static Equipment getEquipmentByDescription(Context context, String description) {
+        Equipment[] equipments = Equipment.values();  // Отримуємо всі елементи перерахування
+
+        // Проходимо по всіх елементах перерахування
+        for (Equipment equipment : equipments) {
+            // Порівнюємо опис кожного елемента з переданим рядком
+            if (equipment.getDescription(context).equals(description)) {
+                return equipment;  // Повертаємо відповідний елемент enum
+            }
+        }
+
+        return null;  // Якщо не знайдено відповідного опису, повертаємо null
+    }
+
 }
