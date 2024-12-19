@@ -31,4 +31,33 @@ public enum Equipment {
     public String getDescription(Context context) {
         return context.getString(descriptionResId);
     }
+
+    //Щоб сформувати масив String[] з описів для кожного елемента перерахування Equipment
+    public static String[] getEquipmentDescriptions(Context context) {
+        Equipment[] equipments = Equipment.values();  // Отримуємо всі елементи перерахування
+        String[] descriptions = new String[equipments.length];  // Створюємо масив для зберігання описів
+
+        // Заповнюємо масив описами для кожного руху
+        for (int i = 0; i < equipments.length; i++) {
+            descriptions[i] = equipments[i].getDescription(context);
+        }
+
+        return descriptions;  // Повертаємо масив з описами
+    }
+
+
+    public static Equipment getEquipmentByDescription(Context context, String description) {
+        Equipment[] equipments = Equipment.values();  // Отримуємо всі елементи перерахування
+
+        // Проходимо по всіх елементах перерахування
+        for (Equipment equipment : equipments) {
+            // Порівнюємо опис кожного елемента з переданим рядком
+            if (equipment.getDescription(context).equals(description)) {
+                return equipment;  // Повертаємо відповідний елемент enum
+            }
+        }
+
+        return null;  // Якщо не знайдено відповідного опису, повертаємо null
+    }
+
 }

@@ -59,4 +59,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Скасувати</string>
     <string name="add_exercise">Створити вправу</string>
+    <string name="exercise_added">Успішно створено!</string>
+    <string name="add_failed">Помилка створення!</string>
 </resources>

@@ -29,4 +29,32 @@ public enum Motion {
     public String getDescription(Context context) {
         return context.getString(descriptionResId);
     }
+
+    //Щоб сформувати масив String[] з описів для кожного елемента перерахування Motion
+    public static String[] getMotionDescriptions(Context context) {
+        Motion[] motions = Motion.values();  // Отримуємо всі елементи перерахування
+        String[] descriptions = new String[motions.length];  // Створюємо масив для зберігання описів
+
+        // Заповнюємо масив описами для кожного руху
+        for (int i = 0; i < motions.length; i++) {
+            descriptions[i] = motions[i].getDescription(context);
+        }
+
+        return descriptions;  // Повертаємо масив з описами
+    }
+
+    public static Motion getMotionByDescription(Context context, String description) {
+        Motion[] motions = Motion.values();  // Отримуємо всі елементи перерахування
+
+        // Проходимо по всіх елементах перерахування
+        for (Motion motion : motions) {
+            // Порівнюємо опис кожного елемента з переданим рядком
+            if (motion.getDescription(context).equals(description)) {
+                return motion;  // Повертаємо відповідний елемент enum
+            }
+        }
+
+        return null;  // Якщо не знайдено відповідного опису, повертаємо null
+    }
+
 }
