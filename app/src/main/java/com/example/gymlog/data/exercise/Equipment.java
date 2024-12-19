@@ -6,12 +6,23 @@ import com.example.gymlog.R;
 
 public enum Equipment {
 
-    //вага що допомагає тренуватися
-    BARBELL(R.string.equipment_barbell),
-    DUMBBELLS(R.string.equipment_dumbells),
-    BODY_WEIGHT(R.string.equipment_bodyweight),
-    MACHINE(R.string.equipment_machine),
-    WEIGHT(R.string.weight);
+    // Вільна вага
+    BARBELL(R.string.equipment_barbell), // Штанга
+    DUMBBELLS(R.string.equipment_dumbbells), // Гантелі
+    KETTLEBELL(R.string.equipment_kettlebell), // Гиря
+    WEIGHT_PLATE(R.string.equipment_weight_plate), // Млинець
+
+    // Тренажери
+    BODYWEIGHT(R.string.equipment_bodyweight), // Вага тіла
+    MACHINE(R.string.equipment_machine), // Стаціонарний тренажер
+    CABLE_MACHINE(R.string.equipment_cable_machine), // Блочний тренажер
+    PLATE_LOADED_MACHINE(R.string.equipment_plate_loaded_machine), // Тренажер із млинцями
+
+    // Інші види
+    RESISTANCE_BAND(R.string.equipment_resistance_band), // Резина (еспандер)
+    SANDBAG(R.string.equipment_sandbag), // Мішок з піском
+    MEDICINE_BALL(R.string.equipment_medicine_ball), // Медичний м'яч
+    SUSPENSION_TRAINER(R.string.equipment_suspension_trainer); // Петлі TRX
 
 
     //посилання на строку що описує обладнання
