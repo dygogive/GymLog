@@ -3,7 +3,7 @@
     <string name="app_name">Щоденник жимів</string>
     <string name="workout_history">Історія жимів</string>
     <string name="exercises">Вправи</string>
-    <string name="equipment_machine">Тренажер</string>
+
     <string name="motion_pull_by_legs">Тяги ногами</string>
     <string name="muscle_chest_lower">Грудні низ</string>
     <string name="muscle_chest_upper">Грудні верх</string>
@@ -31,9 +31,26 @@
     <string name="gym_session">Сесія жиму</string>
     <string name="finish_workout">Закінчити тренування</string>
     <string name="muscle_groups">Групи м\'язів</string>
+
+
+    <!-- Вільна вага -->
     <string name="equipment_barbell">Штанга</string>
-    <string name="equipment_dumbells">Гантелі</string>
+    <string name="equipment_dumbbells">Гантелі</string>
+    <string name="equipment_kettlebell">Гиря</string>
+    <string name="equipment_weight_plate">Млинець</string>
+
+    <!-- Тренажери -->
     <string name="equipment_bodyweight">Вага тіла</string>
+    <string name="equipment_machine">Стаціонарний тренажер</string>
+    <string name="equipment_cable_machine">Блочний тренажер</string>
+    <string name="equipment_plate_loaded_machine">Тренажер із млинцями</string>
+
+    <!-- Інші види -->
+    <string name="equipment_resistance_band">Резина (еспандер)</string>
+    <string name="equipment_sandbag">Мішок з піском</string>
+    <string name="equipment_medicine_ball">Медичний м\'яч</string>
+    <string name="equipment_suspension_trainer">Петлі TRX</string>
+
 
     <string name="exercise_dip_weighted">Жим на брусах з гирею</string>
     <string name="exercise_incline_db_press">Жим гантелей лежачи на нахилній лаві</string>
@@ -44,8 +61,8 @@
     <string name="motion">Тип руху</string>
     <string name="muscle_group">Група м\'язів</string>
     <string name="equipment_type">Тип ваги</string>
-    <string name="motion_press_by_arms">Жими руками</string>
-    <string name="motion_pull_by_arms">Тяги руками</string>
+
+    <string name="motion_pull_down_middle">Тяги руками нижче середнього</string>
     <string name="motion_press_by_legs">Жими ногами</string>
     <string name="head_sorting_exercises">Сортування вправ по:</string>
     <string name="head_weight_type">Вибрати тип ваги:</string>
@@ -61,4 +78,13 @@
     <string name="add_exercise">Створити вправу</string>
     <string name="exercise_added">Успішно створено!</string>
     <string name="add_failed">Помилка створення!</string>
+    <string name="motion_press_upwards">Жими руками вгору</string>
+    <string name="motion_press_downwards">Жими руками вниз</string>
+    <string name="motion_press_middle">Жими руками горизонтальні</string>
+    <string name="motion_press_up_middle">Жими руками вище середнього</string>
+    <string name="motion_press_down_middle">Жими руками нижче середнього</string>
+    <string name="motion_pull_upwards">Тяги руками зверху</string>
+    <string name="motion_pull_downwards">Тяги руками знизу</string>
+    <string name="motion_pull_middle">Тяги руками середні</string>
+    <string name="motion_pull_up_middle">Тяги руками вище середнього</string>
 </resources>
