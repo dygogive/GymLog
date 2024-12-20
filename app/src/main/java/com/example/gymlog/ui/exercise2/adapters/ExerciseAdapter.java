@@ -77,6 +77,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
         holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));
+
+        // Передача тексту і стану в ViewHolder
+        holder.bindExpandableDetails(holder.exerciseDetails.getText().toString());
     }
 
 
@@ -90,12 +93,38 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         TextView exerciseName, exerciseDetails;
         ImageButton editButton;
+        private final ImageButton expandButton;
+        private boolean isExpanded = false; // Початковий стан
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseName = itemView.findViewById(R.id.textViewExerciseName);
             exerciseDetails = itemView.findViewById(R.id.textViewExerciseDetails);
             editButton = itemView.findViewById(R.id.buttonEditExercise);
+            expandButton = itemView.findViewById(R.id.buttonExpandDetails); // Кнопка розширення
+        }
+
+        public void bindExpandableDetails(String fullDetails) {
+            // Встановлення початкового стану
+            setExpandableState();
+
+            // Обробка кліку на кнопку розширення
+            expandButton.setOnClickListener(v -> {
+                isExpanded = !isExpanded;
+                setExpandableState();
+            });
+        }
+
+        private void setExpandableState() {
+            if (isExpanded) {
+                // Показуємо повний текст
+                exerciseDetails.setMaxLines(Integer.MAX_VALUE);
+                expandButton.setImageResource(R.drawable.ic_collapse); // Іконка для згортання
+            } else {
+                // Обмежуємо кількість рядків
+                exerciseDetails.setMaxLines(2);
+                expandButton.setImageResource(R.drawable.ic_expand); // Іконка для розширення
+            }
         }
     }
 }
