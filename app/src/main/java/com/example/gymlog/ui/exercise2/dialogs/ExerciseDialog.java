@@ -25,43 +25,66 @@ import java.util.List;
 
 public class ExerciseDialog {
 
+    // Інтерфейс для зворотного виклику після збереження вправи
     public interface ExerciseDialogListener {
-        void onExerciseSaved();
+        void onExerciseSaved(); // Викликається при успішному збереженні або видаленні вправи
     }
 
-    private final Context context;
-    private final ExerciseDAO exerciseDAO;
-    private final ExerciseDialogListener listener;
+    // Поля класу
+    private final Context context; // Контекст для доступу до ресурсів та відображення UI
+    private final ExerciseDAO exerciseDAO; // DAO для взаємодії з базою даних
+    private final ExerciseDialogListener listener; // Слухач для подій діалогу
 
+    // Конструктор, ініціалізує необхідні залежності
     public ExerciseDialog(Context context, ExerciseDialogListener listener) {
         this.context = context;
         this.exerciseDAO = new ExerciseDAO(context);
         this.listener = listener;
     }
 
+    // Метод для відображення діалогу (додає або редагує вправу залежно від переданого об'єкта Exercise)
     public void show(@Nullable Exercise exercise) {
-        // Створення діалогу
+        // Інфлейтинг макета діалогу
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_edit_exercise, null);
 
-        EditText editTextName = dialogView.findViewById(R.id.editTextExerciseName);
-        Spinner spinnerMotion = dialogView.findViewById(R.id.spinnerMotion);
-        Spinner spinnerEquipment = dialogView.findViewById(R.id.spinnerEquipment);
-        ListView listViewMuscleGroups = dialogView.findViewById(R.id.listViewMuscleGroups);
+        // Пошук елементів інтерфейсу
+        EditText editTextName = dialogView.findViewById(R.id.editTextExerciseName); // Поле для введення назви вправи
+        Spinner spinnerMotion = dialogView.findViewById(R.id.spinnerMotion); // Спінер для вибору руху
+        Spinner spinnerEquipment = dialogView.findViewById(R.id.spinnerEquipment); // Спінер для вибору обладнання
+        ListView listViewMuscleGroups = dialogView.findViewById(R.id.listViewMuscleGroups); // Список для вибору м'язевих груп
 
-        Log.d("log7", "test1");
+        // Отримання описів для Motion та Equipment (перекладені строки)
+        String[] motionDescriptions = Motion.getMotionDescriptions(context);
+        String[] equipmentDescriptions = Equipment.getEquipmentDescriptions(context);
 
-        // Адаптери для списків
-        spinnerMotion.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Motion.getMotionDescriptions(context)));
-        spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Equipment.getEquipmentDescriptions(context)));
+        // Налаштування адаптерів для спінерів
+        spinnerMotion.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, motionDescriptions));
+        spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, equipmentDescriptions));
+
+        // Адаптер для списку м'язевих груп
         listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.getMuscleGroupDescriptions(context)));
-        Log.d("log7", "test2");
-        // Заповнення полів, якщо це редагування
+
+        // Якщо передано об'єкт Exercise (режим редагування)
         if (exercise != null) {
+            // Заповнення назви вправи
             editTextName.setText(exercise.getName());
-            spinnerMotion.setSelection(((ArrayAdapter) spinnerMotion.getAdapter()).getPosition(exercise.getMotion().getDescription(context)));
-            spinnerEquipment.setSelection(((ArrayAdapter) spinnerEquipment.getAdapter()).getPosition(exercise.getEquipment().getDescription(context)));
-            Log.d("log7", "test3");
+
+            // Встановлення обраного значення для Motion
+            Motion motion = exercise.getMotion();
+            if (motion != null) {
+                int motionPosition = Motion.getMotionByDescription(context, motion.getDescription(context)).ordinal();
+                spinnerMotion.setSelection(motionPosition);
+            }
+
+            // Встановлення обраного значення для Equipment
+            Equipment equipment = exercise.getEquipment();
+            if (equipment != null) {
+                int equipmentPosition = Equipment.getEquipmentByDescription(context, equipment.getDescription(context)).ordinal();
+                spinnerEquipment.setSelection(equipmentPosition);
+            }
+
+            // Встановлення виділення для м'язевих груп
             for (int i = 0; i < MuscleGroup.values().length; i++) {
                 if (exercise.getMuscleGroupList().contains(MuscleGroup.values()[i])) {
                     listViewMuscleGroups.setItemChecked(i, true);
@@ -69,49 +92,82 @@ public class ExerciseDialog {
             }
         }
 
-        Log.d("log7", "test4");
-
         // Побудова діалогу
-        new AlertDialog.Builder(context)
-                .setTitle(exercise == null ? R.string.add_exercise : R.string.edit_exercise)
-                .setView(dialogView)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(exercise == null ? R.string.add_exercise : R.string.edit_exercise) // Назва залежить від режиму
+                .setView(dialogView) // Встановлення кастомного вигляду
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    // Отримання введених користувачем даних
                     String name = editTextName.getText().toString().trim();
-                    Motion motion = (Motion) Motion.getMotionByDescription(context, (String) spinnerMotion.getSelectedItem());
-                    Equipment equipment = (Equipment) Equipment.getEquipmentByDescription(context, (String) spinnerEquipment.getSelectedItem());
+                    String motionDescription = (String) spinnerMotion.getSelectedItem();
+                    String equipmentDescription = (String) spinnerEquipment.getSelectedItem();
+
+                    Motion selectedMotion = Motion.getMotionByDescription(context, motionDescription);
+                    Equipment selectedEquipment = Equipment.getEquipmentByDescription(context, equipmentDescription);
 
                     List<MuscleGroup> selectedMuscleGroups = new ArrayList<>();
                     for (int i = 0; i < listViewMuscleGroups.getCount(); i++) {
                         if (listViewMuscleGroups.isItemChecked(i)) {
-                            selectedMuscleGroups.add((MuscleGroup) MuscleGroup.getMuscleGroupByDescription(context , (String) listViewMuscleGroups.getItemAtPosition(i)) );
+                            String muscleGroupDescription = (String) listViewMuscleGroups.getItemAtPosition(i);
+                            MuscleGroup selectedMuscleGroup = MuscleGroup.getMuscleGroupByDescription(context, muscleGroupDescription);
+                            selectedMuscleGroups.add(selectedMuscleGroup);
                         }
                     }
 
+                    // Перевірка наявності назви та додавання/оновлення вправи
                     if (!name.isEmpty()) {
                         if (exercise == null) {
-                            addNewExercise(name, motion, selectedMuscleGroups, equipment);
+                            addNewExercise(name, selectedMotion, selectedMuscleGroups, selectedEquipment);
                         } else {
-                            updateExercise(exercise, name, motion, selectedMuscleGroups, equipment);
+                            updateExercise(exercise, name, selectedMotion, selectedMuscleGroups, selectedEquipment);
                         }
                     } else {
-                        Toast.makeText(context, R.string.name_required, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.name_required, Toast.LENGTH_SHORT).show(); // Повідомлення про помилку
                     }
                 })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+                .setNegativeButton(R.string.cancel, null); // Закриття діалогу без дій
+
+        // Додавання кнопки видалення у режимі редагування
+        if (exercise != null) {
+            builder.setNeutralButton(R.string.delete, (dialog, which) -> {
+                deleteExerciseWithConfirmation(exercise); // Виклик підтвердження видалення
+            });
+        }
+
+        builder.show(); // Відображення діалогу
     }
 
+    // Метод для видалення вправи з підтвердженням
+    private void deleteExerciseWithConfirmation(Exercise exercise) {
+        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.confirm_delete_title)
+                .setMessage(R.string.confirm_delete_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    if (exerciseDAO.deleteExercise(exercise)) {
+                        Toast.makeText(context, R.string.exercise_deleted, Toast.LENGTH_SHORT).show();
+                        listener.onExerciseSaved(); // Виклик після успішного видалення
+                    } else {
+                        Toast.makeText(context, R.string.delete_failed, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.no, null); // Нічого не робимо, якщо "Ні"
+
+        confirmationDialog.show();
+    }
+
+    // Метод для додавання нової вправи
     private void addNewExercise(String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
         Exercise newExercise = new Exercise((long) -1, name, motion, muscleGroups, equipment);
         long result = exerciseDAO.addExercise(newExercise);
         if (result != -1) {
             Toast.makeText(context, R.string.exercise_added, Toast.LENGTH_SHORT).show();
-            listener.onExerciseSaved();
+            listener.onExerciseSaved(); // Оновлення списку
         } else {
             Toast.makeText(context, R.string.add_failed, Toast.LENGTH_SHORT).show();
         }
     }
 
+    // Метод для оновлення існуючої вправи
     private void updateExercise(Exercise exercise, String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
         exercise.setName(name);
         exercise.setMotion(motion);
@@ -120,7 +176,7 @@ public class ExerciseDialog {
 
         if (exerciseDAO.updateExercise(exercise)) {
             Toast.makeText(context, R.string.exercise_updated, Toast.LENGTH_SHORT).show();
-            listener.onExerciseSaved();
+            listener.onExerciseSaved(); // Оновлення списку
         } else {
             Toast.makeText(context, R.string.update_failed, Toast.LENGTH_SHORT).show();
         }

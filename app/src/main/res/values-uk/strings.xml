@@ -87,4 +87,15 @@
     <string name="motion_pull_downwards">Тяги руками знизу</string>
     <string name="motion_pull_middle">Тяги руками середні</string>
     <string name="motion_pull_up_middle">Тяги руками вище середнього</string>
+    <string name="delete">Видалення</string>
+    <string name="exercise_deleted">Успішно видалено</string>
+    <string name="delete_failed">Помилка видалення</string>
+
+    <string name="confirm_delete_title">Підтвердіть видалення</string>
+    <string name="confirm_delete_message">Ви впевнені, що хочете видалити цю вправу? Цю дію не можна буде скасувати.</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="expand_details">Показати деталі</string>
+
+
 </resources>
