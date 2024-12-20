@@ -150,4 +150,13 @@ public class ExerciseDAO {
         return exerciseList;
     }
 
+
+    //видалити вправу
+    public boolean deleteExercise(Exercise exercise) {
+        int rowsDeleted = database.delete("Exercise", "id = ?", new String[]{String.valueOf(exercise.getId())});
+        database.close();
+        return rowsDeleted > 0;
+    }
+
+
 }

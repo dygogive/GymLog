@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise2.fragments;
+package com.example.gymlog.data.exercise;
 
 public class BundleKeys {
     public static final String ATTRIBUTE_TYPE = "attribute_type";
