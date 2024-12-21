@@ -20,13 +20,7 @@ import com.example.gymlog.ui.workout.WorkoutActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button
-            buttonStartGym,
-            buttonHistory,
-            buttonExercises,
-            exercicesNew;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,33 +32,25 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        //find buttons
-        buttonStartGym   = (Button) findViewById(R.id.buttonStartGym  );
-        buttonHistory    = (Button) findViewById(R.id.buttonHistory   );
-        buttonExercises  = (Button) findViewById(R.id.buttonExercises );
-        exercicesNew     = (Button) findViewById(R.id.exercicesNew   );
-
-        //button listeners
-        buttonStartGym.setOnClickListener(v -> {
-            Log.d("LogTag","test buttonStartGym");
-            Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-            startActivity(intent);
-        });
-        buttonHistory.setOnClickListener(v -> {
-            Log.d("LogTag","test buttonHistory");
-            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-            startActivity(intent);
-        });
-        buttonExercises.setOnClickListener(v -> {
-            Log.d("LogTag","test buttonExercises");
-            Intent intent = new Intent(MainActivity.this, MuscleGroupActivity.class);
-            startActivity(intent);
+        // Плитки
+        findViewById(R.id.cardStartGym).setOnClickListener(v -> {
+            Log.d("LogTag", "Start Gym clicked");
+            startActivity(new Intent(MainActivity.this, WorkoutActivity.class));
         });
 
-        exercicesNew.setOnClickListener(v -> {
-            Log.d("LogTag","test buttonExercises");
-            Intent intent = new Intent(MainActivity.this, ExerciseManagementActivity.class);
-            startActivity(intent);
+        findViewById(R.id.cardHistory).setOnClickListener(v -> {
+            Log.d("LogTag", "History clicked");
+            startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+        });
+
+        findViewById(R.id.cardExercises).setOnClickListener(v -> {
+            Log.d("LogTag", "Exercises clicked");
+            startActivity(new Intent(MainActivity.this, MuscleGroupActivity.class));
+        });
+
+        findViewById(R.id.cardNewExercises).setOnClickListener(v -> {
+            Log.d("LogTag", "New Exercises clicked");
+            startActivity(new Intent(MainActivity.this, ExerciseManagementActivity.class));
         });
 
 

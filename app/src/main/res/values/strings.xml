@@ -116,6 +116,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="expand_details">Show details</string>
+    <string name="exe_editor">Exercises manager</string>
 
 
 </resources>
