@@ -6,7 +6,7 @@ public class WorkoutDay {
     private int id; // Унікальний ідентифікатор дня
     private int planId; // Ідентифікатор програми, до якої належить день
     private String date; // Дата тренування
-    private List<WorkoutExercise> exercises; // Список вправ
+    private List<WorkoutGoal> workoutGoals; // Список вправ
 
     // Конструктори
     public WorkoutDay() {}
@@ -15,7 +15,7 @@ public class WorkoutDay {
         this.id = id;
         this.planId = planId;
         this.date = date;
-        this.exercises = exercises;
+        this.workoutGoals = workoutGoals;
     }
 
     // Геттери та сеттери
@@ -43,11 +43,11 @@ public class WorkoutDay {
         this.date = date;
     }
 
-    public List<WorkoutExercise> getExercises() {
-        return exercises;
+    public List<WorkoutGoal> getWorkoutGoals() {
+        return workoutGoals;
     }
 
-    public void setExercises(List<WorkoutExercise> exercises) {
-        this.exercises = exercises;
+    public void setWorkoutGoals(List<WorkoutGoal> workoutGoals) {
+        this.workoutGoals = workoutGoals;
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WorkoutExercise {
     private int id; // Унікальний ідентифікатор вправи у програмі
-    private int dayId; // Ідентифікатор дня тренування
+    private int goalId; // Ідентифікатор цілі тренування
     private int exerciseId; // Ідентифікатор базової вправи
     private Exercise exercise; // Об'єкт Exercise для опису
     private List<WorkoutSet> sets; // Список підходів
@@ -15,9 +15,9 @@ public class WorkoutExercise {
     // Конструктори
     public WorkoutExercise() {}
 
-    public WorkoutExercise(int id, int dayId, int exerciseId, Exercise exercise, List<WorkoutSet> sets) {
+    public WorkoutExercise(int id, int goalId, int exerciseId, Exercise exercise, List<WorkoutSet> sets) {
         this.id = id;
-        this.dayId = dayId;
+        this.goalId = goalId;
         this.exerciseId = exerciseId;
         this.exercise = exercise;
         this.sets = sets;
@@ -32,12 +32,12 @@ public class WorkoutExercise {
         this.id = id;
     }
 
-    public int getDayId() {
-        return dayId;
+    public int getGoalId() {
+        return goalId;
     }
 
-    public void setDayId(int dayId) {
-        this.dayId = dayId;
+    public void setGoalId(int goalId) {
+        this.goalId = goalId;
     }
 
     public int getExerciseId() {
