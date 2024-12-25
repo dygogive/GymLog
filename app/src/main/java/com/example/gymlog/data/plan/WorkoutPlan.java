@@ -3,21 +3,21 @@ package com.example.gymlog.data.plan;
 import java.util.List;
 
 public class WorkoutPlan {
-    private int id; // Унікальний ідентифікатор програми
+    private long id; // Унікальний ідентифікатор програми
     private String name; // Назва програми
     private List<WorkoutDay> days; // Список тренувальних днів
 
     // Конструктори
     public WorkoutPlan() {}
 
-    public WorkoutPlan(int id, String name, List<WorkoutDay> days) {
+    public WorkoutPlan(long id, String name, List<WorkoutDay> days) {
         this.id = id;
         this.name = name;
         this.days = days;
     }
 
     // Геттери та сеттери
-    public int getId() {
+    public long getId() {
         return id;
     }
 

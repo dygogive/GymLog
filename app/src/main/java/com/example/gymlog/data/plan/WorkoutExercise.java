@@ -1,51 +1,22 @@
 package com.example.gymlog.data.plan;
 
+import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.Motion;
+import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.data.set.WorkoutSet;
 
 import java.util.List;
 
 public class WorkoutExercise {
-    private int id; // Унікальний ідентифікатор вправи у програмі
-    private int goalId; // Ідентифікатор цілі тренування
-    private int exerciseId; // Ідентифікатор базової вправи
-    private Exercise exercise; // Об'єкт Exercise для опису
-    private List<WorkoutSet> sets; // Список підходів
+    private Exercise exercise; // Базова вправа
+    private int exercisesGroupId;
+    private List<WorkoutSet> sets;
 
-    // Конструктори
-    public WorkoutExercise() {}
-
-    public WorkoutExercise(int id, int goalId, int exerciseId, Exercise exercise, List<WorkoutSet> sets) {
-        this.id = id;
-        this.goalId = goalId;
-        this.exerciseId = exerciseId;
+    public WorkoutExercise(Exercise exercise, int exercisesGroupId, List<WorkoutSet> sets) {
         this.exercise = exercise;
+        this.exercisesGroupId = exercisesGroupId;
         this.sets = sets;
-    }
-
-    // Геттери та сеттери
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getGoalId() {
-        return goalId;
-    }
-
-    public void setGoalId(int goalId) {
-        this.goalId = goalId;
-    }
-
-    public int getExerciseId() {
-        return exerciseId;
-    }
-
-    public void setExerciseId(int exerciseId) {
-        this.exerciseId = exerciseId;
     }
 
     public Exercise getExercise() {
@@ -56,11 +27,7 @@ public class WorkoutExercise {
         this.exercise = exercise;
     }
 
-    public List<WorkoutSet> getSets() {
-        return sets;
-    }
+    // Інші геттери та сеттери
 
-    public void setSets(List<WorkoutSet> sets) {
-        this.sets = sets;
-    }
 }
+
