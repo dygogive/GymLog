@@ -35,10 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");");
 
 
-        //створення таблиць для планів
-
-        //таблиця WorkoutPlans
-        db.execSQL("CREATE TABLE WorkoutPlans (\n" +
+        // Створення таблиць для планів
+        db.execSQL("CREATE TABLE PlanCycles (\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    name TEXT NOT NULL,\n" +
                 "    description TEXT,\n" +
@@ -46,33 +44,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 "    is_active INTEGER DEFAULT 0\n" +
                 ");");
 
-        //таблиця WorkoutDays
-        db.execSQL("CREATE TABLE WorkoutDays (\n" +
+        db.execSQL("CREATE TABLE GymDays (\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    plan_id INTEGER NOT NULL,\n" +
                 "    day_order INTEGER NOT NULL,\n" +
-                "    name TEXT,\n" +
                 "    description TEXT,\n" +
-                "    FOREIGN KEY (plan_id) REFERENCES WorkoutPlans(id) ON DELETE CASCADE\n" +
+                "    FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE\n" +
                 ");");
 
-        //таблиця ExerciseGroups
-        db.execSQL("CREATE TABLE ExerciseGroups (\n" +
+        db.execSQL("CREATE TABLE ExercisesGroups (\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "    workout_day_id INTEGER NOT NULL,\n" +
+                "    gym_day_id INTEGER NOT NULL,\n" +
                 "    name TEXT NOT NULL,\n" +
                 "    description TEXT,\n" +
                 "    priority INTEGER NOT NULL CHECK (priority IN (1, 2, 3)),\n" +
-                "    FOREIGN KEY (workout_day_id) REFERENCES WorkoutDays(id) ON DELETE CASCADE\n" +
+                "    FOREIGN KEY (gym_day_id) REFERENCES GymDays(id) ON DELETE CASCADE\n" +
                 ");");
 
-        //таблиця ExerciseGroupExercises
-        db.execSQL("CREATE TABLE ExerciseGroupExercises (\n" +
+        db.execSQL("CREATE TABLE ExercisesGroupExercises (\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    group_id INTEGER NOT NULL,\n" +
                 "    exercise_id INTEGER NOT NULL,\n" +
                 "    exercise_order INTEGER NOT NULL,\n" +
-                "    FOREIGN KEY (group_id) REFERENCES ExerciseGroups(id) ON DELETE CASCADE,\n" +
+                "    FOREIGN KEY (group_id) REFERENCES ExercisesGroups(id) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY (exercise_id) REFERENCES Exercise(id)\n" +
                 ");");
     }
