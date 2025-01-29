@@ -2,19 +2,19 @@ package com.example.gymlog.data.plan;
 
 import java.util.List;
 
-public class WorkoutPlan {
+public class PlanCycle {
     private long id; // Унікальний ідентифікатор програми
     private String name; // Назва програми
-    private String description;
-    private List<WorkoutDay> days; // Список тренувальних днів
+    private String description; //опис
+    private List<GymDay> gymDays; // Список тренувальних днів
 
     // Конструктори
-    public WorkoutPlan() {}
+    public PlanCycle() {}
 
-    public WorkoutPlan(long id, String name, String description, List<WorkoutDay> days) {
+    public PlanCycle(long id, String name, String description, List<GymDay> gymDays) {
         this.id = id;
         this.name = name;
-        this.days = days;
+        this.gymDays = gymDays;
         this.description = description;
     }
 
