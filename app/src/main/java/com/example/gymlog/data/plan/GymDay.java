@@ -15,8 +15,9 @@ public class GymDay {
     }
 
 
-
-
+    public List<ExercisesGroup> getExercisesGroups() {
+        return exercisesGroups;
+    }
 }
 
 
