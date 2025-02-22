@@ -1,25 +1,16 @@
-package com.example.gymlog.ui.programs;
+package com.example.gymlog.ui.plan;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.gymlog.data.plan.PlanCycle;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.gymlog.databinding.ActivityPlanManagementBinding;
 
 import com.example.gymlog.R;
 
@@ -38,11 +29,14 @@ public class PlanManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_management);
 
+        //знайти екранні елементи
         recyclerView = findViewById(R.id.recyclerViewPlans);
         addPlanButton = findViewById(R.id.buttonAddPlan);
 
+        //список планів
         planCycles = new ArrayList<>();
 
+        //ініціалізація адаптера з слухачем у ньому
         planAdapter = new PlanAdapter(planCycles, new PlanAdapter.OnPlanCycleClickListener() {
             @Override
             public void onEditClick(PlanCycle planCycle) {
@@ -68,10 +62,12 @@ public class PlanManagementActivity extends AppCompatActivity {
         loadPlanCycles();
     }
 
+    //оновити список планів і оновити екран
     private void loadPlanCycles() {
         // Placeholder для отримання даних з бази даних
         planCycles.add(new PlanCycle(1, "Strength Training", "A plan focused on strength gains", new ArrayList<>()));
         planCycles.add(new PlanCycle(2, "Endurance Training", "Build stamina and endurance", new ArrayList<>()));
+        //оновити екран
         planAdapter.notifyDataSetChanged();
     }
 

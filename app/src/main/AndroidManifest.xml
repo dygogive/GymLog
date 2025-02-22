@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GymLog"
         tools:targetApi="31">
         <activity
-            android:name=".ui.programs.PlanManagementActivity"
+            android:name=".ui.plan.PlanManagementActivity"
             android:exported="false"
             android:theme="@style/Theme.GymLog" />
         <activity

@@ -106,14 +106,17 @@ public class WorkoutActivity extends AppCompatActivity {
         listItems.add(sb.append(exercise).append("; ").append(weight).append("; ")
                 .append(repetitions).append("; ").toString());
 
-        //додати в адаптер строку
+        //оновити адаптер
         arrayAdapter.notifyDataSetChanged();
+        //очистити текстові строки
         editTextWeight.getText().clear();
         editTextRepetitions.getText().clear();
     }
 
     //при натисканні кнопки Закінчити тренування
     private void onClickFinishWorkout() {
+
+        //якщо немає записів то закінчити
         if(listItems.isEmpty()) {
             Toast.makeText(this,"List is Empty",Toast.LENGTH_LONG).show();
             //подивитися об'єднану таблицю

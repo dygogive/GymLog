@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.programs;
+package com.example.gymlog.ui.plan;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.plan.GymDay;
 import com.example.gymlog.data.plan.PlanCycle;
 
 import java.util.List;

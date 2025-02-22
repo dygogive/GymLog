@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.gymlog.R;
 
 public enum AttributeType {
+
     EQUIPMENT(R.string.equipment_type),
     MUSCLE_GROUP(R.string.muscle_group),
     MOTION(R.string.motion);

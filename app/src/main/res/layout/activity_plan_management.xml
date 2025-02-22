@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.programs.PlanManagementActivity"
+    tools:context=".ui.plan.PlanManagementActivity"
     android:background="@color/background_color">
 
     <!-- Заголовок -->
