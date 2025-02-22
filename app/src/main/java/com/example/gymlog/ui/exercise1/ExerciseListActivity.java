@@ -56,7 +56,10 @@ public class ExerciseListActivity extends AppCompatActivity {
 
 
 
-        ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sortedExercisesByMuscles);
+        ArrayAdapter<Exercise> exeAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                sortedExercisesByMuscles);
+
         listViewExercises.setAdapter(exeAdapter);
 
     }

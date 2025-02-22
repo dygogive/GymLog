@@ -21,10 +21,22 @@ public class DBHelper extends SQLiteOpenHelper {
     //створення таблиць
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Workout (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT," +
+
+
+        db.execSQL("CREATE TABLE Workout (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " name TEXT," +
                 " date TEXT)");
-        db.execSQL("CREATE TABLE WorkoutSet (id INTEGER PRIMARY KEY AUTOINCREMENT, workoutId INTEGER," +
-                " exercise TEXT, reptype TEXT, weight REAL, reps INTEGER)");
+
+
+        db.execSQL("CREATE TABLE WorkoutSet (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " workoutId INTEGER," +
+                " exercise TEXT," +
+                " reptype TEXT," +
+                " weight REAL," +
+                " reps INTEGER)");
+
+
+        //вправи
         db.execSQL("CREATE TABLE Exercise (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
@@ -77,6 +89,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Workout");
         db.execSQL("DROP TABLE IF EXISTS WorkoutSet");
         db.execSQL("DROP TABLE IF EXISTS Exercise");
+        db.execSQL("DROP TABLE IF EXISTS PlanCycles");
+        db.execSQL("DROP TABLE IF EXISTS GymDays");
+        db.execSQL("DROP TABLE IF EXISTS ExercisesGroups");
+        db.execSQL("DROP TABLE IF EXISTS ExercisesGroupExercises");
         onCreate(db);
     }
 

@@ -28,8 +28,12 @@ public class ExerciseDAO {
     }
 
     // Додати вправу
-    public long addExercise(String exerciseName, Motion motion, List<MuscleGroup> muscleGroups,
-                            Equipment equipment, boolean isCustom) {
+    public long addExercise(
+            String exerciseName,
+            Motion motion,
+            List<MuscleGroup> muscleGroups,
+            Equipment equipment, boolean isCustom) {
+        //
         ContentValues values = new ContentValues();
         values.put("name", exerciseName);
         values.put("motion", motion.name());

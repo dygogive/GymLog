@@ -39,13 +39,13 @@ public class WorkoutSetDAO {
 
         //Додати в таблицю WorkoutSet
         for(WorkoutSet workoutSet : setList){
-            values.clear();
-            values.put("workoutId", id);
-            values.put("exercise", workoutSet.getExercise());
-            values.put("reptype", workoutSet.getRepType());
-            values.put("weight", String.valueOf(workoutSet.getWeight()));
-            values.put("reps", String.valueOf(workoutSet.getReps()));
-            database.insert("WorkoutSet", null, values);
+            addWorkoutSet(
+                    id,
+                    workoutSet.getExercise(),
+                    workoutSet.getRepType(),
+                    String.valueOf(workoutSet.getWeight()),
+                    String.valueOf(workoutSet.getReps())
+            );
         }
 
     }

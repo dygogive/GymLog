@@ -1,10 +1,8 @@
 package com.example.gymlog.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +14,7 @@ import com.example.gymlog.ui.exercise2.activities.ExerciseManagementActivity;
 import com.example.gymlog.R;
 import com.example.gymlog.ui.exercise1.MuscleGroupActivity;
 import com.example.gymlog.ui.history.HistoryActivity;
+import com.example.gymlog.ui.plan.PlanManagementActivity;
 import com.example.gymlog.ui.workout.WorkoutActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.cardNewExercises).setOnClickListener(v -> {
             Log.d("LogTag", "New Exercises clicked");
             startActivity(new Intent(MainActivity.this, ExerciseManagementActivity.class));
+        });
+
+        findViewById(R.id.cardPrograms).setOnClickListener(v -> {
+            Log.d("LogTag", "New Exercises clicked");
+            startActivity(new Intent(MainActivity.this, PlanManagementActivity.class));
         });
 
 
