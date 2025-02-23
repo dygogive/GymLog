@@ -2,6 +2,7 @@ package com.example.gymlog.ui.plan;
 
 import android.os.Bundle;
 
+import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.PlanCycle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanManagementActivity extends AppCompatActivity {
+    private PlanManagerDAO planManagerDAO;
 
     private RecyclerView recyclerView;
     private Button addPlanButton;
@@ -32,6 +34,9 @@ public class PlanManagementActivity extends AppCompatActivity {
         //знайти екранні елементи
         recyclerView = findViewById(R.id.recyclerViewPlans);
         addPlanButton = findViewById(R.id.buttonAddPlan);
+
+        //ініціалізація ДАО для доступу до бази
+        planManagerDAO = new PlanManagerDAO(this);
 
         //список планів
         planCycles = new ArrayList<>();
@@ -54,8 +59,25 @@ public class PlanManagementActivity extends AppCompatActivity {
 
         addPlanButton.setOnClickListener(v -> {
             // Логіка для додавання нового плану
-            Toast.makeText(this, "Add Plan clicked", Toast.LENGTH_SHORT).show();
-            // startActivity(new Intent(this, PlanCreationActivity.class));
+
+            PlanCycle newPlan = new PlanCycle(
+                    0,
+                    "New Plan",
+                    "New training program",
+                    new ArrayList<>()
+            );
+
+            long newPlanId = planManagerDAO.addPlan(newPlan); // Додаємо у базу
+
+            if (newPlanId != -1) {
+                newPlan = new PlanCycle(newPlanId, newPlan.getName(), newPlan.getDescription(), new ArrayList<>());
+                planCycles.add(newPlan); // Додаємо у список
+                planAdapter.notifyDataSetChanged(); // Оновлюємо UI
+                Toast.makeText(this, "Plan added!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error adding plan", Toast.LENGTH_SHORT).show();
+            }
+
         });
 
         // Завантаження даних
@@ -64,11 +86,9 @@ public class PlanManagementActivity extends AppCompatActivity {
 
     //оновити список планів і оновити екран
     private void loadPlanCycles() {
-        // Placeholder для отримання даних з бази даних
-        planCycles.add(new PlanCycle(1, "Strength Training", "A plan focused on strength gains", new ArrayList<>()));
-        planCycles.add(new PlanCycle(2, "Endurance Training", "Build stamina and endurance", new ArrayList<>()));
-        //оновити екран
-        planAdapter.notifyDataSetChanged();
+        planCycles.clear(); // Очистимо список перед завантаженням з бази
+        planCycles.addAll(planManagerDAO.getAllPlans()); // Завантажуємо реальні дані
+        planAdapter.notifyDataSetChanged(); // Оновлюємо UI
     }
 
     private void onEditPlan(PlanCycle planCycle) {
@@ -78,8 +98,9 @@ public class PlanManagementActivity extends AppCompatActivity {
 
     private void onDeletePlan(PlanCycle planCycle) {
         // Логіка для видалення плану
-        planCycles.remove(planCycle);
-        planAdapter.notifyDataSetChanged();
+        planManagerDAO.deletePlan(planCycle.getId()); // Видаляємо з бази
+        planCycles.remove(planCycle); // Видаляємо зі списку
+        planAdapter.notifyDataSetChanged(); // Оновлюємо UI
         Toast.makeText(this, "Deleted Plan: " + planCycle.getName(), Toast.LENGTH_SHORT).show();
     }
 }

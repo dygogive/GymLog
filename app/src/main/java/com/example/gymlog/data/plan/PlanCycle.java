@@ -25,4 +25,8 @@ public class PlanCycle {
     public String getDescription() {
         return description;
     }
+
+    public long getId() {
+        return id;
+    }
 }
