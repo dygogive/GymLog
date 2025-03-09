@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.plan.TrainingBlockEditActivity"
+    android:background="@color/background_color">
+
+    <!-- Заголовок екрана -->
+    <TextView
+        android:id="@+id/textViewBlockTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/train_block_edit"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Поле назви блоку -->
+    <EditText
+        android:id="@+id/editTextBlockName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/training_block_name"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary_variant"
+        app:layout_constraintTop_toBottomOf="@id/textViewBlockTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Поле опису блоку -->
+    <EditText
+        android:id="@+id/editTextBlockDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/descr_block"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary_variant"
+        app:layout_constraintTop_toBottomOf="@id/editTextBlockName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Кнопка збереження блоку -->
+    <Button
+        android:id="@+id/buttonSaveBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_save_block"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/editTextBlockDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

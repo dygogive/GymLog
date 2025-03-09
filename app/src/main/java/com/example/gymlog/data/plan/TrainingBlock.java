@@ -11,6 +11,7 @@ public class TrainingBlock {
     private String description; // Опис або мета групи
     private List<Exercise> exercises; // Список вправ
 
+
     // Конструктори
     public TrainingBlock() {}
 
@@ -23,6 +24,7 @@ public class TrainingBlock {
     }
 
 
-
-
+    public String getName() {
+        return name;
+    }
 }

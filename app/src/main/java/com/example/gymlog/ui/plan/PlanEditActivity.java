@@ -1,6 +1,7 @@
 package com.example.gymlog.ui.plan;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,8 +65,10 @@ public class PlanEditActivity extends AppCompatActivity {
 
             @Override
             public void onAddTrainingBlockClick(GymDay gymDay) {
-                Toast.makeText(PlanEditActivity.this, "Додаємо блок до дня: " + gymDay.getId(), Toast.LENGTH_SHORT).show();
-                // тут відкриємо редактор тренувального блоку
+                // Відкриваємо редактор тренувального блоку
+                Intent intent = new Intent(PlanEditActivity.this, TrainingBlockEditActivity.class);
+                intent.putExtra("gym_day_id", gymDay.getId());
+                startActivity(intent);
             }
         });
         recyclerViewDays.setAdapter(gymDayAdapter);
