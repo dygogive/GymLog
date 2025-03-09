@@ -1,26 +1,23 @@
 package com.example.gymlog.ui.plan;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.plan.PlanCycle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.PlanManagerDAO;
+import com.example.gymlog.data.plan.PlanCycle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlanManagementActivity extends AppCompatActivity {
     private PlanManagerDAO planManagerDAO;
-
     private RecyclerView recyclerView;
     private Button addPlanButton;
     private PlanAdapter planAdapter;
@@ -31,76 +28,71 @@ public class PlanManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_management);
 
-        //знайти екранні елементи
+        initializeUI(); // Ініціалізація елементів інтерфейсу
+        planManagerDAO = new PlanManagerDAO(this); // Ініціалізація об'єкта для роботи з базою даних
+        planCycles = new ArrayList<>(); // Створення списку планів
+        setupRecyclerView(); // Налаштування списку планів
+        loadPlanCycles(); // Завантаження списку планів з бази даних
+    }
+
+    // Метод для ініціалізації UI елементів
+    private void initializeUI() {
         recyclerView = findViewById(R.id.recyclerViewPlans);
         addPlanButton = findViewById(R.id.buttonAddPlan);
+        addPlanButton.setOnClickListener(v -> addNewPlan());
+    }
 
-        //ініціалізація ДАО для доступу до бази
-        planManagerDAO = new PlanManagerDAO(this);
-
-        //список планів
-        planCycles = new ArrayList<>();
-
-        //ініціалізація адаптера з слухачем у ньому
+    // Метод для налаштування RecyclerView (списку планів)
+    private void setupRecyclerView() {
         planAdapter = new PlanAdapter(planCycles, new PlanAdapter.OnPlanCycleClickListener() {
             @Override
             public void onEditClick(PlanCycle planCycle) {
-                onEditPlan(planCycle);
+                openEditPlanActivity(planCycle); // Відкриття екрану редагування
             }
 
             @Override
             public void onDeleteClick(PlanCycle planCycle) {
-                onDeletePlan(planCycle);
+                deletePlan(planCycle); // Видалення плану
             }
         });
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(planAdapter);
-
-        addPlanButton.setOnClickListener(v -> {
-            // Логіка для додавання нового плану
-
-            PlanCycle newPlan = new PlanCycle(
-                    0,
-                    "New Plan",
-                    "New training program",
-                    new ArrayList<>()
-            );
-
-            long newPlanId = planManagerDAO.addPlan(newPlan); // Додаємо у базу
-
-            if (newPlanId != -1) {
-                newPlan = new PlanCycle(newPlanId, newPlan.getName(), newPlan.getDescription(), new ArrayList<>());
-                planCycles.add(newPlan); // Додаємо у список
-                planAdapter.notifyDataSetChanged(); // Оновлюємо UI
-                Toast.makeText(this, "Plan added!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Error adding plan", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
-        // Завантаження даних
-        loadPlanCycles();
     }
 
-    //оновити список планів і оновити екран
+    // Метод для завантаження планів з бази даних
     private void loadPlanCycles() {
-        planCycles.clear(); // Очистимо список перед завантаженням з бази
-        planCycles.addAll(planManagerDAO.getAllPlans()); // Завантажуємо реальні дані
-        planAdapter.notifyDataSetChanged(); // Оновлюємо UI
+        planCycles.clear(); // Очистимо список перед оновленням
+        planCycles.addAll(planManagerDAO.getAllPlans()); // Додаємо плани з бази даних
+        planAdapter.notifyDataSetChanged(); // Оновлюємо відображення
     }
 
-    private void onEditPlan(PlanCycle planCycle) {
-        // Логіка для редагування плану
-        Toast.makeText(this, "Edit Plan: " + planCycle.getName(), Toast.LENGTH_SHORT).show();
+    // Метод для додавання нового плану
+    private void addNewPlan() {
+        PlanCycle newPlan = new PlanCycle(0, getString(R.string.new_plan), getString(R.string.new_program), new ArrayList<>());
+        long newPlanId = planManagerDAO.addPlan(newPlan);
+
+        if (newPlanId != -1) {
+            newPlan = new PlanCycle(newPlanId, newPlan.getName(), newPlan.getDescription(), new ArrayList<>());
+            planCycles.add(newPlan);
+            planAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "План додано!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Помилка при додаванні плану", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void onDeletePlan(PlanCycle planCycle) {
-        // Логіка для видалення плану
-        planManagerDAO.deletePlan(planCycle.getId()); // Видаляємо з бази
-        planCycles.remove(planCycle); // Видаляємо зі списку
+    // Метод для відкриття екрану редагування плану
+    private void openEditPlanActivity(PlanCycle planCycle) {
+        Intent intent = new Intent(this, PlanEditActivity.class);
+        intent.putExtra("plan_id", planCycle.getId());
+        startActivity(intent);
+    }
+
+    // Метод для видалення плану
+    private void deletePlan(PlanCycle planCycle) {
+        planManagerDAO.deletePlan(planCycle.getId()); // Видаляємо план з бази даних
+        planCycles.remove(planCycle); // Видаляємо з локального списку
         planAdapter.notifyDataSetChanged(); // Оновлюємо UI
-        Toast.makeText(this, "Deleted Plan: " + planCycle.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "План видалено: " + planCycle.getName(), Toast.LENGTH_SHORT).show();
     }
 }

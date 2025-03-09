@@ -29,4 +29,8 @@ public class PlanCycle {
     public long getId() {
         return id;
     }
+
+    public List<GymDay> getGymDays() {
+        return gymDays;
+    }
 }

@@ -168,6 +168,12 @@
     <string name="description" translatable="false">Description</string>
     <string name="plan_management_title">Plans Management</string>
     <string name="add_new_plan">Add New</string>
+    <string name="edit_plan">Edit Plan</string>
+    <string name="enter_plan_name">Enter plan name</string>
+    <string name="enter_plan_description">Enter plan description</string>
+    <string name="add_new_day">Add new day</string>
+    <string name="new_plan">New Plan</string>
+    <string name="new_program">A new plan training</string>
 
 
 </resources>

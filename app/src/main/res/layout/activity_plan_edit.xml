@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.plan.PlanEditActivity"
+    android:background="@color/background_color">
+
+    <!-- Заголовок екрану -->
+    <TextView
+        android:id="@+id/textViewEditPlanTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Редагування плану"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Поле введення назви плану -->
+    <EditText
+        android:id="@+id/editTextPlanName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Назва плану"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary_variant"
+        app:layout_constraintTop_toBottomOf="@id/textViewEditPlanTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Поле введення опису плану -->
+    <EditText
+        android:id="@+id/editTextPlanDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Опис плану"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary_variant"
+        app:layout_constraintTop_toBottomOf="@id/editTextPlanName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Кнопка додавання тренувального дня -->
+    <Button
+        android:id="@+id/buttonAddDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Додати тренувальний день"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary_variant"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/editTextPlanDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Список тренувальних днів -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDays"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/buttonAddDay"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSavePlan"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        android:scrollbars="vertical" />
+
+    <!-- Кнопка збереження плану -->
+    <Button
+        android:id="@+id/buttonSavePlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Зберегти план"
+        android:textSize="16sp"
+        android:backgroundTint="@color/primary"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

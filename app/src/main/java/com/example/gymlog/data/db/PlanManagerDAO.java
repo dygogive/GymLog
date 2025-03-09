@@ -5,15 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.gymlog.data.plan.ExercisesGroup;
-import com.example.gymlog.data.plan.GymDay;
 import com.example.gymlog.data.plan.PlanCycle;
+import com.example.gymlog.data.plan.GymDay;
+import com.example.gymlog.data.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlanManagerDAO {
-
     private final DBHelper dbHelper;
 
     public PlanManagerDAO(Context context) {
@@ -45,7 +44,8 @@ public class PlanManagerDAO {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 String description = cursor.getString(2);
-                plans.add(new PlanCycle(id, name, description, new ArrayList<>()));
+                List<GymDay> gymDays = getGymDaysByPlanId(id);
+                plans.add(new PlanCycle(id, name, description, gymDays));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -53,17 +53,36 @@ public class PlanManagerDAO {
         return plans;
     }
 
-    // Отримуємо всі тренувальні дні для конкретного плану
+    // Отримуємо план за ID
+    public PlanCycle getPlanById(long planId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        PlanCycle planCycle = null;
+
+        Cursor cursor = db.rawQuery("SELECT id, name, description FROM PlanCycles WHERE id = ?", new String[]{String.valueOf(planId)});
+        if (cursor.moveToFirst()) {
+            String name = cursor.getString(1);
+            String description = cursor.getString(2);
+            List<GymDay> gymDays = getGymDaysByPlanId(planId);
+            planCycle = new PlanCycle(planId, name, description, gymDays);
+        }
+        cursor.close();
+        db.close();
+        return planCycle;
+    }
+
+
+    // Отримуємо список тренувальних днів для плану
     public List<GymDay> getGymDaysByPlanId(long planId) {
         List<GymDay> gymDays = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT id FROM GymDays WHERE plan_id = ?", new String[]{String.valueOf(planId)});
+        Cursor cursor = db.rawQuery("SELECT id FROM GymDays WHERE plan_id = ?",
+                new String[]{String.valueOf(planId)});
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(0);
-                List<ExercisesGroup> exercisesGroups = getExerciseGroupsByDayId(id);
-                gymDays.add(new GymDay(id, (int) planId, exercisesGroups));
+                List<TrainingBlock> trainingBlocks = getExerciseGroupsByDayId(id);
+                gymDays.add(new GymDay(id, (int) planId, trainingBlocks));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -71,26 +90,43 @@ public class PlanManagerDAO {
         return gymDays;
     }
 
-    // Отримуємо всі групи вправ для дня
-    public List<ExercisesGroup> getExerciseGroupsByDayId(int gymDayId) {
-        List<ExercisesGroup> exercisesGroups = new ArrayList<>();
+
+    // Отримуємо всі тренувальні блоки для конкретного дня
+    public List<TrainingBlock> getExerciseGroupsByDayId(int gymDayId) {
+        List<TrainingBlock> trainingBlocks = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT id, name, description FROM ExercisesGroups WHERE gym_day_id = ?", new String[]{String.valueOf(gymDayId)});
+        Cursor cursor = db.rawQuery(
+                "SELECT id, name, description FROM ExercisesGroups WHERE gym_day_id = ?",
+                new String[]{String.valueOf(gymDayId)}
+        );
+
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 String description = cursor.getString(2);
-                exercisesGroups.add(new ExercisesGroup(id, gymDayId, name, description, new ArrayList<>()));
+
+                trainingBlocks.add(new TrainingBlock(id, gymDayId, name, description, new ArrayList<>()));
             } while (cursor.moveToNext());
         }
+
         cursor.close();
         db.close();
-        return exercisesGroups;
+        return trainingBlocks;
     }
 
 
+    // Оновлюємо план у базі даних
+    public void updatePlan(PlanCycle planCycle) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", planCycle.getName());
+        values.put("description", planCycle.getDescription());
+
+        db.update("PlanCycles", values, "id = ?", new String[]{String.valueOf(planCycle.getId())});
+        db.close();
+    }
 
     // Видаляємо план
     public void deletePlan(long planId) {
@@ -99,4 +135,47 @@ public class PlanManagerDAO {
         db.close();
     }
 
+
+    // Додаємо новий тренувальний день
+    public long addGymDay(long planId, int dayOrder, String description) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("plan_id", planId);
+        values.put("day_order", dayOrder);
+        values.put("description", description);
+
+        long gymDayId = db.insert("GymDays", null, values);
+        db.close();
+        return gymDayId;
+    }
+
+
+    // Видаляємо всі дні плану (для заміни оновленим списком)
+    public void deleteGymDaysByPlanId(long planId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("GymDays", "plan_id = ?", new String[]{String.valueOf(planId)});
+        db.close();
+    }
+
+    // Додаємо список днів у план
+    public void addGymDays(long planId, List<GymDay> gymDays) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        for (int i = 0; i < gymDays.size(); i++) {
+            GymDay day = gymDays.get(i);
+            ContentValues values = new ContentValues();
+            values.put("plan_id", planId);
+            values.put("day_order", i + 1);
+            values.put("description", day.getDescription());
+
+            long dayId = db.insert("GymDays", null, values);
+            // тут можна оновлювати також TrainingBlocks
+        }
+
+        db.close();
+    }
+
+
+
+    // Додаткові методи для завантаження днів і блоків...
 }

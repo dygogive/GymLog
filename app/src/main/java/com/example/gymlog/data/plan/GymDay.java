@@ -5,18 +5,32 @@ import java.util.List;
 public class GymDay {
     private int id;
     private int planId;
-    private List<ExercisesGroup> exercisesGroups;
+    private List<TrainingBlock> trainingBlocks;
+
+    private String description;
 
 
-    public GymDay(int id, int planId, List<ExercisesGroup> exercisesGroups) {
+    public GymDay(int id, int planId, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = planId;
-        this.exercisesGroups = exercisesGroups;
+        this.trainingBlocks = trainingBlocks;
     }
 
 
-    public List<ExercisesGroup> getExercisesGroups() {
-        return exercisesGroups;
+    public List<TrainingBlock> getExercisesGroups() {
+        return trainingBlocks;
+    }
+
+    public String getId() {
+        return String.valueOf(id);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
 

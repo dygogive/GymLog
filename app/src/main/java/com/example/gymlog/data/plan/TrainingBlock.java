@@ -4,7 +4,7 @@ import com.example.gymlog.data.exercise.Exercise;
 
 import java.util.List;
 
-public class ExercisesGroup {
+public class TrainingBlock {
     private long id; // Унікальний ідентифікатор групи
     private long gymDayId; // Ідентифікатор дня тренування
     private String name; // Назва групи
@@ -12,9 +12,9 @@ public class ExercisesGroup {
     private List<Exercise> exercises; // Список вправ
 
     // Конструктори
-    public ExercisesGroup() {}
+    public TrainingBlock() {}
 
-    public ExercisesGroup(long id, long gymDayId, String name, String description, List<Exercise> exercises) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, List<Exercise> exercises) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
