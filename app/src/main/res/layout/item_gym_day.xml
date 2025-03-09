@@ -23,10 +23,22 @@
             android:textColor="@color/primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonDeleteGymDay"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/buttonAddTrainingBlock" />
 
-        <!-- Кнопка для видалення дня -->
+        <!-- Кнопка додати тренувальний блок -->
+        <ImageButton
+            android:id="@+id/buttonAddTrainingBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
+            android:background="@android:color/transparent"
+            app:tint="@color/secondary"
+            app:layout_constraintEnd_toStartOf="@id/buttonDeleteGymDay"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Додати тренувальний блок"/>
+
+        <!-- Кнопка видалення дня -->
         <ImageButton
             android:id="@+id/buttonDeleteGymDay"
             android:layout_width="wrap_content"
@@ -36,7 +48,8 @@
             app:tint="@color/secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="Видалити день"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

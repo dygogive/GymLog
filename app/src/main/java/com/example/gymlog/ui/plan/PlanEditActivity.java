@@ -61,6 +61,12 @@ public class PlanEditActivity extends AppCompatActivity {
                 gymDayAdapter.notifyDataSetChanged();
                 Toast.makeText(PlanEditActivity.this, "День видалено", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onAddTrainingBlockClick(GymDay gymDay) {
+                Toast.makeText(PlanEditActivity.this, "Додаємо блок до дня: " + gymDay.getId(), Toast.LENGTH_SHORT).show();
+                // тут відкриємо редактор тренувального блоку
+            }
         });
         recyclerViewDays.setAdapter(gymDayAdapter);
 

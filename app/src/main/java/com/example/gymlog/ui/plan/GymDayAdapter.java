@@ -24,6 +24,7 @@ public class GymDayAdapter extends RecyclerView.Adapter<GymDayAdapter.GymDayView
     public interface OnGymDayClickListener {
         void onDayClick(GymDay gymDay);
         void onDeleteDayClick(GymDay gymDay);
+        void onAddTrainingBlockClick(GymDay gymDay);
     }
 
     // Конструктор
@@ -50,6 +51,9 @@ public class GymDayAdapter extends RecyclerView.Adapter<GymDayAdapter.GymDayView
 
         // Натискання на кнопку видалення дня
         holder.buttonDeleteDay.setOnClickListener(v -> listener.onDeleteDayClick(gymDay));
+
+        // Додаємо обробку кнопки «Додати тренувальний блок»
+        holder.buttonAddTrainingBlock.setOnClickListener(v -> listener.onAddTrainingBlockClick(gymDay));
     }
 
     @Override
@@ -60,12 +64,15 @@ public class GymDayAdapter extends RecyclerView.Adapter<GymDayAdapter.GymDayView
     // ViewHolder для тренувальних днів
     static class GymDayViewHolder extends RecyclerView.ViewHolder {
         TextView dayName;
-        ImageButton buttonDeleteDay;
+        ImageButton
+                buttonDeleteDay,
+                buttonAddTrainingBlock;
 
         public GymDayViewHolder(@NonNull View itemView) {
             super(itemView);
             dayName = itemView.findViewById(R.id.textViewGymDayName);
             buttonDeleteDay = itemView.findViewById(R.id.buttonDeleteGymDay);
+            buttonAddTrainingBlock = itemView.findViewById(R.id.buttonAddTrainingBlock);
         }
     }
 }
