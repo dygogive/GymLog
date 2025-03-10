@@ -13,53 +13,38 @@
         android:id="@+id/textViewBlockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/train_block_edit"
+        android:text="@string/editing_training_blocks"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/primary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        tools:ignore="HardcodedText" />
 
-    <!-- Поле назви блоку -->
-    <EditText
-        android:id="@+id/editTextBlockName"
+    <!-- Список тренувальних блоків -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTrainingBlocks"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/training_block_name"
-        android:textSize="16sp"
-        android:backgroundTint="@color/primary_variant"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/textViewBlockTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="8dp" />
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
 
-    <!-- Поле опису блоку -->
-    <EditText
-        android:id="@+id/editTextBlockDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/descr_block"
-        android:textSize="16sp"
-        android:backgroundTint="@color/primary_variant"
-        app:layout_constraintTop_toBottomOf="@id/editTextBlockName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Кнопка збереження блоку -->
-    <Button
-        android:id="@+id/buttonSaveBlock"
+    <!-- Кнопка додавання тренувального блоку -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonAddTrainingBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/_save_block"
-        android:textSize="16sp"
-        android:backgroundTint="@color/primary"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/editTextBlockDescription"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_add"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_margin="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

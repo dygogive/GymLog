@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Назва тренувального блоку -->
+        <TextView
+            android:id="@+id/textViewBlockName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Назва блоку"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonDeleteBlock" />
+
+        <!-- Опис блоку -->
+        <TextView
+            android:id="@+id/textViewBlockDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Опис блоку"
+            android:textSize="14sp"
+            android:textColor="@color/secondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewBlockName"
+            app:layout_constraintEnd_toStartOf="@id/buttonDeleteBlock" />
+
+        <!-- Кнопка видалення блоку -->
+        <ImageButton
+            android:id="@+id/buttonDeleteBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:background="@android:color/transparent"
+            app:tint="@color/secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

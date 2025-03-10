@@ -1,50 +1,69 @@
 package com.example.gymlog.ui.plan;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
 import com.example.gymlog.data.plan.TrainingBlock;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
+import java.util.List;
 
-// Активність для створення та редагування тренувального блоку
+// Активність для редагування тренувальних блоків
 public class TrainingBlockEditActivity extends AppCompatActivity {
 
-    private EditText editTextBlockName, editTextBlockDescription;
-    private Button buttonSaveBlock;
+    private RecyclerView recyclerViewTrainingBlocks;
+    private FloatingActionButton buttonAddTrainingBlock;
+    private TrainingBlockAdapter trainingBlockAdapter;
+    private List<TrainingBlock> trainingBlocks;
+    private long gymDayId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_block_edit);
 
-        // Ініціалізація елементів UI
-        editTextBlockName = findViewById(R.id.editTextBlockName);
-        editTextBlockDescription = findViewById(R.id.editTextBlockDescription);
-        buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
-
-        // Обробник натискання кнопки "Зберегти блок"
-        buttonSaveBlock.setOnClickListener(v -> saveTrainingBlock());
-    }
-
-    // Збереження тренувального блоку
-    private void saveTrainingBlock() {
-        String blockName = editTextBlockName.getText().toString();
-        String blockDescription = editTextBlockDescription.getText().toString();
-
-        if (blockName.isEmpty()) {
-            Toast.makeText(this, "Введіть назву тренувального блоку!", Toast.LENGTH_SHORT).show();
+        // Отримуємо переданий gymDayId
+        gymDayId = getIntent().getLongExtra("gym_day_id", -1);
+        if (gymDayId == -1) {
+            Toast.makeText(this, "Помилка: Невідомий день тренування", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        TrainingBlock newBlock = new TrainingBlock(-1, -1, blockName, blockDescription, null);
+        // Ініціалізація UI елементів
+        recyclerViewTrainingBlocks = findViewById(R.id.recyclerViewTrainingBlocks);
+        buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
 
-        // Поки що просто показуємо повідомлення (пізніше додамо в базу)
-        Toast.makeText(this, "Блок '" + newBlock.getName() + "' створено!", Toast.LENGTH_SHORT).show();
+        // Налаштування RecyclerView
+        recyclerViewTrainingBlocks.setLayoutManager(new LinearLayoutManager(this));
+        trainingBlocks = new ArrayList<>();
+        trainingBlockAdapter = new TrainingBlockAdapter(trainingBlocks, new TrainingBlockAdapter.OnTrainingBlockClickListener() {
+            @Override
+            public void onBlockClick(TrainingBlock block) {
+                // Логіка відкриття блоку для редагування
+                Toast.makeText(TrainingBlockEditActivity.this, "Редагування блоку: " + block.getName(), Toast.LENGTH_SHORT).show();
+            }
 
-        finish();
+            @Override
+            public void onDeleteBlockClick(TrainingBlock block) {
+                trainingBlocks.remove(block);
+                trainingBlockAdapter.notifyDataSetChanged();
+                Toast.makeText(TrainingBlockEditActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
+
+        // Обробник натискання кнопки "Додати тренувальний блок"
+        buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialog());
+    }
+
+    // Метод для відкриття діалогу створення блоку
+    private void openBlockCreationDialog() {
+        // Пізніше тут буде реальний діалог
+        Toast.makeText(this, "Діалог створення блоку (ще не реалізовано)", Toast.LENGTH_SHORT).show();
     }
 }

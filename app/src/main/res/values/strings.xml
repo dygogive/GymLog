@@ -178,6 +178,12 @@
     <string name="descr_block">Training block description</string>
     <string name="training_block_name">Name of training block</string>
     <string name="train_block_edit">Edit of training block</string>
+    <string name="editing_training_blocks">Editing training blocks</string>
+    <string name="editing_the_plan">Editing the plan</string>
+    <string name="name_of_the_plan">Name of the plan</string>
+    <string name="description_of_the_plan">Description of the plan</string>
+    <string name="add_a_training_day">Add a training day</string>
+    <string name="save_the_plan">Save the plan</string>
 
 
 </resources>
