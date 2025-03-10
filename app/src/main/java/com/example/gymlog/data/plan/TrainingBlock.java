@@ -31,4 +31,8 @@ public class TrainingBlock {
     public String getDescription() {
         return description;
     }
+
+    public long getGymDayId() {
+        return gymDayId;
+    }
 }

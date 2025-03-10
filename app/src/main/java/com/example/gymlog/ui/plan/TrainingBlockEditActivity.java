@@ -2,6 +2,7 @@ package com.example.gymlog.ui.plan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,8 +27,11 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_training_block_edit);
 
+
         // Отримуємо переданий gymDayId
         gymDayId = getIntent().getLongExtra("gym_day_id", -1);
+
+
         if (gymDayId == -1) {
             Toast.makeText(this, "Помилка: Невідомий день тренування", Toast.LENGTH_SHORT).show();
             finish();
@@ -63,7 +67,15 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
 
     // Метод для відкриття діалогу створення блоку
     private void openBlockCreationDialog() {
-        // Пізніше тут буде реальний діалог
-        Toast.makeText(this, "Діалог створення блоку (ще не реалізовано)", Toast.LENGTH_SHORT).show();
+        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, new TrainingBlockDialog.OnTrainingBlockCreatedListener() {
+            @Override
+            public void onTrainingBlockCreated(TrainingBlock block) {
+                // Додаємо блок у список
+                trainingBlocks.add(block);
+                trainingBlockAdapter.notifyDataSetChanged();
+                Toast.makeText(TrainingBlockEditActivity.this, "Новий блок додано!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show();
     }
 }

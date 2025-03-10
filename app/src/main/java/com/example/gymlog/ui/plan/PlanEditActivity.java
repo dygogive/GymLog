@@ -3,6 +3,7 @@ package com.example.gymlog.ui.plan;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -52,8 +53,10 @@ public class PlanEditActivity extends AppCompatActivity {
         gymDayAdapter = new GymDayAdapter(gymDays, new GymDayAdapter.OnGymDayClickListener() {
             @Override
             public void onDayClick(GymDay gymDay) {
-                Toast.makeText(PlanEditActivity.this, "Редагування дня: " + gymDay.getId(), Toast.LENGTH_SHORT).show();
-                // Тут буде логіка редагування тренувального дня
+                // Відкриваємо редактор тренувального блоку
+                Intent intent = new Intent(PlanEditActivity.this, TrainingBlockEditActivity.class);
+                intent.putExtra("gym_day_id", Long.valueOf(gymDay.getId()));// Переконайся, що передаєш як long
+                startActivity(intent);
             }
 
             @Override
@@ -65,10 +68,7 @@ public class PlanEditActivity extends AppCompatActivity {
 
             @Override
             public void onAddTrainingBlockClick(GymDay gymDay) {
-                // Відкриваємо редактор тренувального блоку
-                Intent intent = new Intent(PlanEditActivity.this, TrainingBlockEditActivity.class);
-                intent.putExtra("gym_day_id", gymDay.getId());
-                startActivity(intent);
+                Toast.makeText(PlanEditActivity.this, "Кнопка +", Toast.LENGTH_SHORT).show();
             }
         });
         recyclerViewDays.setAdapter(gymDayAdapter);

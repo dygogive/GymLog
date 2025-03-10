@@ -177,5 +177,80 @@ public class PlanManagerDAO {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Додаємо тренувальний блок
+    public long addTrainingBlock(TrainingBlock block) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("gym_day_id", block.getGymDayId());
+        values.put("name", block.getName());
+        values.put("description", block.getDescription());
+
+        long id = db.insert("TrainingBlock", null, values);
+        db.close();
+        return id;
+    }
+
+    // Отримуємо всі тренувальні блоки для дня
+    public List<TrainingBlock> getTrainingBlocksByDayId(long gymDayId) {
+        List<TrainingBlock> blocks = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?",
+                new String[]{String.valueOf(gymDayId)});
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String description = cursor.getString(2);
+                blocks.add(new TrainingBlock(id, gymDayId, name, description, new ArrayList<>()));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return blocks;
+    }
+
+    // Додаємо фільтр до тренувального блоку (motion, muscle, equipment)
+    public void addTrainingBlockFilter(long trainingBlockId, String filterType, String value) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("trainingBlockId", trainingBlockId);
+        values.put(filterType, value);
+
+        String tableName = "";
+        if (filterType.equals("motionType")) tableName = "TrainingBlockMotion";
+        if (filterType.equals("muscleGroup")) tableName = "TrainingBlockMuscleGroup";
+        if (filterType.equals("equipment")) tableName = "TrainingBlockEquipment";
+
+        db.insert(tableName, null, values);
+        db.close();
+    }
+
+    // Видаляємо тренувальний блок
+    public void deleteTrainingBlock(long blockId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("TrainingBlockMotion", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+        db.delete("TrainingBlockMuscleGroup", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+        db.delete("TrainingBlockEquipment", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+        db.delete("TrainingBlock", "id = ?", new String[]{String.valueOf(blockId)});
+        db.close();
+    }
+
+
+
+
     // Додаткові методи для завантаження днів і блоків...
 }
