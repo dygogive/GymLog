@@ -47,4 +47,14 @@ public class TrainingBlock {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
+
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
+
 }

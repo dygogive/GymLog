@@ -1,10 +1,16 @@
 package com.example.gymlog.data.db;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.example.gymlog.data.exercise.Equipment;
+import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.Motion;
+import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.data.plan.PlanCycle;
 import com.example.gymlog.data.plan.GymDay;
 import com.example.gymlog.data.plan.TrainingBlock;
@@ -14,9 +20,12 @@ import java.util.List;
 
 public class PlanManagerDAO {
     private final DBHelper dbHelper;
+    private final Context context;
+
 
     public PlanManagerDAO(Context context) {
         this.dbHelper = new DBHelper(context);
+        this.context = context;
     }
 
     // Додаємо новий план у базу
@@ -72,23 +81,35 @@ public class PlanManagerDAO {
 
 
     // Отримуємо список тренувальних днів для плану
+// Отримуємо список тренувальних днів для плану
     public List<GymDay> getGymDaysByPlanId(long planId) {
         List<GymDay> gymDays = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT id FROM GymDays WHERE plan_id = ?",
+        Cursor cursor = db.rawQuery("SELECT id, day_name, description FROM GymDays WHERE plan_id = ?",
                 new String[]{String.valueOf(planId)});
+
         if (cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(0);
-                List<TrainingBlock> trainingBlocks = getExerciseGroupsByDayId(id);
-                gymDays.add(new GymDay(id, (int) planId, trainingBlocks));
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String dayName = cursor.getString(cursor.getColumnIndex("day_name"));
+                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
+
+                List<TrainingBlock> trainingBlocks = getTrainingBlocksByDayId(id);
+
+                GymDay gymDay = new GymDay(id, (int) planId, trainingBlocks);
+                gymDay.setName(dayName); // Якщо є метод setName()
+                gymDay.setDescription(description); // Якщо є метод setDescription()
+
+                gymDays.add(gymDay);
             } while (cursor.moveToNext());
         }
+
         cursor.close();
         db.close();
         return gymDays;
     }
+
 
 
     // Отримуємо всі тренувальні блоки для конкретного дня
@@ -137,17 +158,20 @@ public class PlanManagerDAO {
 
 
     // Додаємо новий тренувальний день
-    public long addGymDay(long planId, int dayOrder, String description) {
+    public long addGymDay(long planId, String dayName, String description) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("plan_id", planId);
-        values.put("day_order", dayOrder);
+        values.put("day_name", dayName);
         values.put("description", description);
 
         long gymDayId = db.insert("GymDays", null, values);
         db.close();
         return gymDayId;
     }
+
+
+
 
 
     // Видаляємо всі дні плану (для заміни оновленим списком)
@@ -165,7 +189,7 @@ public class PlanManagerDAO {
             GymDay day = gymDays.get(i);
             ContentValues values = new ContentValues();
             values.put("plan_id", planId);
-            values.put("day_order", i + 1);
+            values.put("day_name", i + 1);
             values.put("description", day.getDescription());
 
             long dayId = db.insert("GymDays", null, values);
@@ -263,6 +287,113 @@ public class PlanManagerDAO {
     }
 
 
+
+
+
+
+
+
+    // Отримуємо список вправ для тренувального блоку за фільтрами
+    public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
+        List<Exercise> exercises = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String query = "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
+                "FROM Exercise e " +
+                "LEFT JOIN TrainingBlockMotion tm ON e.motion = tm.motionType " +
+                "LEFT JOIN TrainingBlockMuscleGroup tmg ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
+                "LEFT JOIN TrainingBlockEquipment te ON e.equipment = te.equipment " +
+                "WHERE tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(trainingBlockId),
+                String.valueOf(trainingBlockId),
+                String.valueOf(trainingBlockId)
+        });
+
+        Log.d("DB_DEBUG_QUERY", "Executing query for Block ID: " + trainingBlockId);
+        Log.d("DB_DEBUG_QUERY", "SQL: " + query);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                @SuppressLint("Range") String motionStr = cursor.getString(cursor.getColumnIndex("motion"));
+                @SuppressLint("Range") String muscleGroupsString = cursor.getString(cursor.getColumnIndex("muscleGroups"));
+                @SuppressLint("Range") String equipmentStr = cursor.getString(cursor.getColumnIndex("equipment"));
+
+                Log.d("DB_DEBUG_EXERCISES", "Exercise: " + name + ", Motion: " + motionStr + ", Muscles: " + muscleGroupsString + ", Equipment: " + equipmentStr);
+
+                Motion motion = Motion.getMotionByDescription(context, motionStr);
+                Equipment equipment = Equipment.getEquipmentByDescription(context, equipmentStr);
+
+                List<MuscleGroup> muscleGroups = new ArrayList<>();
+                for (String muscleName : muscleGroupsString.split(",")) {
+                    MuscleGroup muscleGroup = MuscleGroup.getMuscleGroupByDescription(context, muscleName.trim());
+                    if (muscleGroup != null) {
+                        muscleGroups.add(muscleGroup);
+                    }
+                }
+
+                exercises.add(new Exercise(id, name, motion, muscleGroups, equipment));
+
+            } while (cursor.moveToNext());
+        } else {
+            Log.d("DB_DEBUG_EXERCISES", "No exercises found for Block ID: " + trainingBlockId);
+        }
+
+        cursor.close();
+        db.close();
+        return exercises;
+    }
+
+
+
+
+
+
+
+
+
+    // Отримує список фільтрів для тренувального блоку за категорією (motionType, muscleGroup, equipment)
+    public List<String> getTrainingBlockFilters(long trainingBlockId, String filterType) {
+        List<String> filters = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String tableName = "";
+        if (filterType.equals("motionType")) tableName = "TrainingBlockMotion";
+        if (filterType.equals("muscleGroup")) tableName = "TrainingBlockMuscleGroup";
+        if (filterType.equals("equipment")) tableName = "TrainingBlockEquipment";
+
+        Cursor cursor = db.rawQuery(
+                "SELECT " + filterType + " FROM " + tableName + " WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(trainingBlockId)}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String value = cursor.getString(cursor.getColumnIndex(filterType));
+                filters.add(value);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return filters;
+    }
+
+
+
+
+
+    // Видаляє всі фільтри тренувального блоку перед оновленням
+    public void clearTrainingBlockFilters(long trainingBlockId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("TrainingBlockMotion", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
+        db.delete("TrainingBlockMuscleGroup", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
+        db.delete("TrainingBlockEquipment", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
+        db.close();
+    }
 
 
     // Додаткові методи для завантаження днів і блоків...

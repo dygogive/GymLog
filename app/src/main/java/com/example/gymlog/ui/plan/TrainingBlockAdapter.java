@@ -7,29 +7,35 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.PlanManagerDAO;
+import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.plan.TrainingBlock;
+import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
+import com.example.gymlog.ui.exercise2.adapters.RecyclerViewAdapter;
 
 import java.util.List;
 
 public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdapter.TrainingBlockViewHolder> {
 
 
-    private final List<TrainingBlock> trainingBlocks;
-    private final OnTrainingBlockClickListener listener;
-
-    // Інтерфейс для обробки натискань
     public interface OnTrainingBlockClickListener {
         void onBlockClick(TrainingBlock block);
         void onDeleteBlockClick(TrainingBlock block);
     }
 
+    private final List<TrainingBlock> trainingBlocks;
+    private final OnTrainingBlockClickListener listener;
+    private final PlanManagerDAO planManagerDAO;
+
     // Конструктор
-    public TrainingBlockAdapter(List<TrainingBlock> trainingBlocks, OnTrainingBlockClickListener listener) {
+    public TrainingBlockAdapter(List<TrainingBlock> trainingBlocks, PlanManagerDAO planManagerDAO, OnTrainingBlockClickListener listener) {
         this.trainingBlocks = trainingBlocks;
         this.listener = listener;
+        this.planManagerDAO = planManagerDAO;
     }
 
     @NonNull
@@ -43,14 +49,41 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
     @Override
     public void onBindViewHolder(@NonNull TrainingBlockAdapter.TrainingBlockViewHolder holder, int position) {
         TrainingBlock block = trainingBlocks.get(position);
-        holder.blockName.setText(block.getName());
-        holder.blockDescription.setText(block.getDescription());
+        holder.textViewBlockName.setText(block.getName());
+        holder.textViewBlockDescription.setText(block.getDescription());
 
-        // Натискання на блок для редагування
-        holder.itemView.setOnClickListener(v -> listener.onBlockClick(block));
+        holder.buttonEdit.setOnClickListener(v -> listener.onBlockClick(block));
+        holder.buttonDelete.setOnClickListener(v -> listener.onDeleteBlockClick(block));
 
-        // Натискання на кнопку видалення
-        holder.buttonDeleteBlock.setOnClickListener(v -> listener.onDeleteBlockClick(block));
+        // Завантажуємо вправи для блоку
+        List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
+        ExerciseAdapter exerciseAdapter = new ExerciseAdapter(exercises, new ExerciseAdapter.OnExerciseClickListener() {
+            @Override
+            public void onExerciseClick(Exercise exercise) {
+
+            }
+
+            @Override
+            public void onEditClick(Exercise exercise) {
+
+            }
+        });
+        holder.recyclerViewExercises.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+        holder.recyclerViewExercises.setAdapter(exerciseAdapter);
+        holder.recyclerViewExercises.setVisibility(View.GONE);
+
+
+        // Кнопка розгортання списку вправ
+        holder.buttonExpand.setOnClickListener(v -> {
+            if (holder.recyclerViewExercises.getVisibility() == View.GONE) {
+                holder.recyclerViewExercises.setVisibility(View.VISIBLE);
+                holder.buttonExpand.setImageResource(R.drawable.ic_collapse);
+            } else {
+                holder.recyclerViewExercises.setVisibility(View.GONE);
+                holder.buttonExpand.setImageResource(R.drawable.ic_expand);
+            }
+        });
+
     }
 
     @Override
@@ -61,14 +94,18 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
     // ViewHolder для тренувальних блоків
     static class TrainingBlockViewHolder extends RecyclerView.ViewHolder {
-        TextView blockName, blockDescription;
-        ImageButton buttonDeleteBlock;
+        TextView textViewBlockName, textViewBlockDescription;
+        ImageButton buttonEdit, buttonDelete, buttonExpand;
+        RecyclerView recyclerViewExercises;
 
         public TrainingBlockViewHolder(@NonNull View itemView) {
             super(itemView);
-            blockName = itemView.findViewById(R.id.textViewBlockName);
-            blockDescription = itemView.findViewById(R.id.textViewBlockDescription);
-            buttonDeleteBlock = itemView.findViewById(R.id.buttonDeleteBlock);
+            textViewBlockName = itemView.findViewById(R.id.textViewBlockName);
+            textViewBlockDescription = itemView.findViewById(R.id.textViewBlockDescription);
+            buttonEdit = itemView.findViewById(R.id.buttonEditBlock);
+            buttonDelete = itemView.findViewById(R.id.buttonDeleteBlock);
+            buttonExpand = itemView.findViewById(R.id.buttonExpand);
+            recyclerViewExercises = itemView.findViewById(R.id.recyclerViewExercises);
         }
     }
 }

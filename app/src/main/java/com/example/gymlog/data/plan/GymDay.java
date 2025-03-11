@@ -5,6 +5,9 @@ import java.util.List;
 public class GymDay {
     private int id;
     private int planId;
+
+    private String name = " ";
+
     private List<TrainingBlock> trainingBlocks;
 
     private String description;
@@ -31,6 +34,10 @@ public class GymDay {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setName(String dayName) {
+        name = dayName;
     }
 }
 

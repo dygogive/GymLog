@@ -10,11 +10,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    private static final int version = 7;
+    private static final int version = 8;
+    private final Context context;
 
     // Конструктор
     public DBHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, version);
+        this.context = context;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     // Створення таблиць
@@ -28,7 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Створення таблиць для планів
         db.execSQL("CREATE TABLE PlanCycles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, creation_date TEXT NOT NULL, is_active INTEGER DEFAULT 0)");
-        db.execSQL("CREATE TABLE GymDays (id INTEGER PRIMARY KEY AUTOINCREMENT, plan_id INTEGER NOT NULL, day_order INTEGER NOT NULL, description TEXT, FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE)");
+        db.execSQL("CREATE TABLE GymDays (id INTEGER PRIMARY KEY AUTOINCREMENT, plan_id INTEGER NOT NULL, day_name TEXT NOT NULL, description TEXT, FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE)");
 
         // Нова таблиця TrainingBlock замість ExercisesGroups
         db.execSQL("CREATE TABLE TrainingBlock (id INTEGER PRIMARY KEY AUTOINCREMENT, gym_day_id INTEGER NOT NULL, name TEXT NOT NULL, description TEXT, FOREIGN KEY (gym_day_id) REFERENCES GymDays(id) ON DELETE CASCADE)");
