@@ -251,6 +251,19 @@ public class PlanManagerDAO {
 
 
 
+    // Оновлюємо тренувальний блок у базі
+    public void updateTrainingBlock(TrainingBlock block) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", block.getName());
+        values.put("description", block.getDescription());
+
+        db.update("TrainingBlock", values, "id = ?", new String[]{String.valueOf(block.getId())});
+        db.close();
+    }
+
+
+
 
     // Додаткові методи для завантаження днів і блоків...
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.TrainingBlock;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
     private FloatingActionButton buttonAddTrainingBlock;
     private TrainingBlockAdapter trainingBlockAdapter;
     private List<TrainingBlock> trainingBlocks;
+    private PlanManagerDAO planManagerDAO;
     private long gymDayId;
 
     @Override
@@ -38,6 +40,11 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
             return;
         }
 
+
+        planManagerDAO = new PlanManagerDAO(this);
+        trainingBlocks = new ArrayList<>();
+
+
         // Ініціалізація UI елементів
         recyclerViewTrainingBlocks = findViewById(R.id.recyclerViewTrainingBlocks);
         buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
@@ -49,11 +56,12 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
             @Override
             public void onBlockClick(TrainingBlock block) {
                 // Логіка відкриття блоку для редагування
-                Toast.makeText(TrainingBlockEditActivity.this, "Редагування блоку: " + block.getName(), Toast.LENGTH_SHORT).show();
+                openBlockEditDialog(block);
             }
 
             @Override
             public void onDeleteBlockClick(TrainingBlock block) {
+                planManagerDAO.deleteTrainingBlock(block.getId());
                 trainingBlocks.remove(block);
                 trainingBlockAdapter.notifyDataSetChanged();
                 Toast.makeText(TrainingBlockEditActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
@@ -61,21 +69,31 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
         });
         recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
 
+        //Завантажити блоки з бази
+        loadTrainingBlocks();
+
         // Обробник натискання кнопки "Додати тренувальний блок"
         buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialog());
     }
 
     // Метод для відкриття діалогу створення блоку
     private void openBlockCreationDialog() {
-        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, new TrainingBlockDialog.OnTrainingBlockCreatedListener() {
-            @Override
-            public void onTrainingBlockCreated(TrainingBlock block) {
-                // Додаємо блок у список
-                trainingBlocks.add(block);
-                trainingBlockAdapter.notifyDataSetChanged();
-                Toast.makeText(TrainingBlockEditActivity.this, "Новий блок додано!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, this::loadTrainingBlocks);
         dialog.show();
+    }
+
+
+    // Метод для відкриття діалогу редагування блоку
+    private void openBlockEditDialog(TrainingBlock block) {
+        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, block, this::loadTrainingBlocks);
+        dialog.show();
+    }
+
+
+    // Метод для завантаження списку тренувальних блоків
+    private void loadTrainingBlocks() {
+        trainingBlocks.clear();
+        trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
+        trainingBlockAdapter.notifyDataSetChanged();
     }
 }
