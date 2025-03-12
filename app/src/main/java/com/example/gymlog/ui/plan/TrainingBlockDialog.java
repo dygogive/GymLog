@@ -28,6 +28,7 @@ import java.util.List;
 
 // Діалог для створення/редагування тренувального блоку
 public class TrainingBlockDialog extends Dialog {
+    Context context;
 
     private EditText editTextBlockName, editTextBlockDescription;
     private CheckBox checkBoxFilterMotion, checkBoxFilterMuscle, checkBoxFilterEquipment;
@@ -51,12 +52,14 @@ public class TrainingBlockDialog extends Dialog {
 
     public TrainingBlockDialog(@NonNull Context context, long gymDayId, OnTrainingBlockCreatedListener listener) {
         super(context);
+        this.context = context;
         this.gymDayId = gymDayId;
         this.listener = listener;
     }
 
     public TrainingBlockDialog(@NonNull Context context, long gymDayId, TrainingBlock block, OnTrainingBlockCreatedListener listener) {
         super(context);
+        this.context = context;
         this.gymDayId = gymDayId;
         this.blockToEdit = block;
         this.listener = listener;
@@ -268,12 +271,11 @@ public class TrainingBlockDialog extends Dialog {
 
 
         // ✅ Додаємо логування для перевірки
-        for (Exercise e : blockToEdit.getExercises()) {
-            Log.d("DB_DEBUG_BLOCK_EXERCISES", "Block ID: " + blockId +
-                    " | Exercise: " + e.getName() +
-                    " | Motion: " + e.getMotion() +
-                    " | Muscles: " + e.getMuscleGroupList() +
-                    " | Equipment: " + e.getEquipment());
+        for (Exercise exercise : blockToEdit.getExercises()) {
+            Log.d("ExerciseLog", "Name: " + exercise.getName() + "---" +
+                    "Motion: " + exercise.getMotion() + "---" +
+                    "Equipment: " + exercise.getEquipment() + "---" +
+                    "Muscle Groups: " + exercise.getMuscleGroupList());
         }
 
 

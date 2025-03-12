@@ -294,16 +294,25 @@ public class PlanManagerDAO {
 
 
     // Отримуємо список вправ для тренувального блоку за фільтрами
+    // Отримуємо список вправ для тренувального блоку за фільтрами
     public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        // Для зручності додаємо логування запиту
         String query = "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                 "FROM Exercise e " +
+                // Зв'язуємо Exercise.motion з TrainingBlockMotion.motionType
                 "LEFT JOIN TrainingBlockMotion tm ON e.motion = tm.motionType " +
+                // Для muscleGroups використовуємо LIKE, адже можуть бути кілька груп
                 "LEFT JOIN TrainingBlockMuscleGroup tmg ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
+                // Зв'язуємо Exercise.equipment з TrainingBlockEquipment.equipment
                 "LEFT JOIN TrainingBlockEquipment te ON e.equipment = te.equipment " +
+                // Має співпадати хоч один фільтр
                 "WHERE tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?";
+
+        Log.d("DB_DEBUG_SQL", "Executing SQL for Block ID: " + trainingBlockId);
+        Log.d("DB_DEBUG_SQL", "SQL Query: " + query);
 
         Cursor cursor = db.rawQuery(query, new String[]{
                 String.valueOf(trainingBlockId),
@@ -311,31 +320,60 @@ public class PlanManagerDAO {
                 String.valueOf(trainingBlockId)
         });
 
-        Log.d("DB_DEBUG_QUERY", "Executing query for Block ID: " + trainingBlockId);
-        Log.d("DB_DEBUG_QUERY", "SQL: " + query);
-
         if (cursor.moveToFirst()) {
             do {
+                // Зчитуємо основні поля
                 @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex("id"));
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                @SuppressLint("Range") String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
                 @SuppressLint("Range") String motionStr = cursor.getString(cursor.getColumnIndex("motion"));
-                @SuppressLint("Range") String muscleGroupsString = cursor.getString(cursor.getColumnIndex("muscleGroups"));
+                @SuppressLint("Range") String muscleGroupsStr = cursor.getString(cursor.getColumnIndex("muscleGroups"));
                 @SuppressLint("Range") String equipmentStr = cursor.getString(cursor.getColumnIndex("equipment"));
 
-                Log.d("DB_DEBUG_EXERCISES", "Exercise: " + name + ", Motion: " + motionStr + ", Muscles: " + muscleGroupsString + ", Equipment: " + equipmentStr);
+                Log.d("DB_DEBUG_CURSOR", "Exercise: " + exerciseName +
+                        " | motion=" + motionStr +
+                        " | muscleGroups=" + muscleGroupsStr +
+                        " | equipment=" + equipmentStr);
 
-                Motion motion = Motion.getMotionByDescription(context, motionStr);
-                Equipment equipment = Equipment.getEquipmentByDescription(context, equipmentStr);
-
-                List<MuscleGroup> muscleGroups = new ArrayList<>();
-                for (String muscleName : muscleGroupsString.split(",")) {
-                    MuscleGroup muscleGroup = MuscleGroup.getMuscleGroupByDescription(context, muscleName.trim());
-                    if (muscleGroup != null) {
-                        muscleGroups.add(muscleGroup);
+                // 1) Конвертуємо motionStr -> Motion (ENUM)
+                Motion motion = null;
+                if (motionStr != null && !motionStr.isEmpty()) {
+                    try {
+                        motion = Motion.valueOf(motionStr);
+                    } catch (IllegalArgumentException e) {
+                        // Якщо в БД лишився старий локалізований текст
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Motion enum name: " + motionStr, e);
                     }
                 }
 
-                exercises.add(new Exercise(id, name, motion, muscleGroups, equipment));
+                // 2) Конвертуємо equipmentStr -> Equipment (ENUM)
+                Equipment equipment = null;
+                if (equipmentStr != null && !equipmentStr.isEmpty()) {
+                    try {
+                        equipment = Equipment.valueOf(equipmentStr);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Equipment enum name: " + equipmentStr, e);
+                    }
+                }
+
+                // 3) Конвертуємо muscleGroupsStr -> List<MuscleGroup>
+                List<MuscleGroup> muscleGroups = new ArrayList<>();
+                if (muscleGroupsStr != null && !muscleGroupsStr.isEmpty()) {
+                    // Припускаємо, що зберігається як 'CHEST_LOWER,CHEST_UPPER'
+                    String[] mgArray = muscleGroupsStr.split(",");
+                    for (String mg : mgArray) {
+                        mg = mg.trim();
+                        try {
+                            MuscleGroup mgEnum = MuscleGroup.valueOf(mg);
+                            muscleGroups.add(mgEnum);
+                        } catch (IllegalArgumentException e) {
+                            Log.e("DB_DEBUG_CURSOR", "Unknown MuscleGroup enum name: " + mg, e);
+                        }
+                    }
+                }
+
+                // Створюємо об'єкт Exercise
+                Exercise exercise = new Exercise(id, exerciseName, motion, muscleGroups, equipment);
+                exercises.add(exercise);
 
             } while (cursor.moveToNext());
         } else {
@@ -346,6 +384,7 @@ public class PlanManagerDAO {
         db.close();
         return exercises;
     }
+
 
 
 

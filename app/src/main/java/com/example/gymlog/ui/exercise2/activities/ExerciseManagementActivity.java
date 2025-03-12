@@ -37,6 +37,8 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         // Ініціалізація кнопки FAB
         FloatingActionButton fabAddExercise = findViewById(R.id.fab_add_exercise);
         fabAddExercise.setOnClickListener(view -> openAddExerciseDialog());
+
+        exerciseDAO.logAllExercises();
     }
 
     private void openAddExerciseDialog() {
