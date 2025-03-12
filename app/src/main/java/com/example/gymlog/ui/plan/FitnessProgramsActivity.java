@@ -53,24 +53,31 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
     // Метод для налаштування RecyclerView (списку планів)
     private void setupRecyclerView() {
-        fitnessProgramAdapter = new FitnessProgramAdapter(fitnessPrograms, new FitnessProgramAdapter.OnPlanCycleClickListener() {
-            @Override
-            public void onEditClick(FitnessProgram fitnessProgram) {
-                openEditPlanActivity(fitnessProgram); // Відкриття екрану редагування
-            }
+        fitnessProgramAdapter = new FitnessProgramAdapter(
+                fitnessPrograms,
+                new FitnessProgramAdapter.OnPlanCycleClickListener() {
+                    @Override
+                    public void onEditClick(FitnessProgram fitnessProgram) {
+                        // діалог для редагування програми тренувань
+                    }
 
-            @Override
-            public void onDeleteClick(FitnessProgram fitnessProgram) {
-                ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
+                    @Override
+                    public void onDeleteClick(FitnessProgram fitnessProgram) {
+                        ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
                     deletePlan(fitnessProgram); // Видалення плану
                 };
-                ConfirmDeleteDialog.show(
+                        ConfirmDeleteDialog.show(
                         FitnessProgramsActivity.this,
                         fitnessProgram.getName(),
                         onDeleteConfirmedListener
                         );
-            }
-        });
+                    }
+
+                    @Override
+                    public void onItemClick(FitnessProgram fitnessProgram) {
+                        openEditPlanActivity(fitnessProgram); // Відкриття екрану редагування
+                    }
+                });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(fitnessProgramAdapter);
     }

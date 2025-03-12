@@ -20,6 +20,7 @@ public class FitnessProgramAdapter extends RecyclerView.Adapter<FitnessProgramAd
     public interface OnPlanCycleClickListener {
         void onEditClick(FitnessProgram fitnessProgram);
         void onDeleteClick(FitnessProgram fitnessProgram);
+        void onItemClick(FitnessProgram fitnessProgram);
     }
 
     private final List<FitnessProgram> fitnessPrograms;
@@ -43,6 +44,8 @@ public class FitnessProgramAdapter extends RecyclerView.Adapter<FitnessProgramAd
     public void onBindViewHolder(@NonNull PlanCycleViewHolder holder, int position) {
         FitnessProgram fitnessProgram = fitnessPrograms.get(position);
         Context context = holder.itemView.getContext();
+
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(fitnessProgram));
 
         // Заповнення даних
         holder.textViewDayName.setText(fitnessProgram.getName());
