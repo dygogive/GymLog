@@ -1,8 +1,6 @@
 package com.example.gymlog.ui.plan;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Активність для редагування тренувальних блоків
-public class TrainingBlockEditActivity extends AppCompatActivity {
+public class TrainingBlocksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrainingBlocks;
     private FloatingActionButton buttonAddTrainingBlock;
@@ -64,7 +62,7 @@ public class TrainingBlockEditActivity extends AppCompatActivity {
                 planManagerDAO.deleteTrainingBlock(block.getId());
                 trainingBlocks.remove(block);
                 trainingBlockAdapter.notifyDataSetChanged();
-                Toast.makeText(TrainingBlockEditActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TrainingBlocksActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
             }
         });
         recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExerciseFactory {
+public class DefaultExercisesFactory {
 
     public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeType attributeType, String attribute) {
         // Отримуємо список вправ за атрибутом через ExerciseDAO

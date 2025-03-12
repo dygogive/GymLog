@@ -24,6 +24,25 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Створення таблиць
+    /*Розбір кожного елемента:
+id INTEGER PRIMARY KEY AUTOINCREMENT
+→ Унікальний ідентифікатор кожного дня тренувань.
+
+plan_id INTEGER NOT NULL
+→ Посилання на програму тренувань (PlanCycles), до якої належить цей день.
+→ INTEGER NOT NULL означає, що значення обов’язкове (день обов’язково належить до певної програми).
+
+day_name TEXT NOT NULL
+→ Назва дня тренувань (наприклад, "День грудей та трицепсу").
+→ TEXT NOT NULL означає, що значення обов’язкове.
+
+description TEXT
+→ Опис цього дня (наприклад, "Фокус на жимові вправи").
+→ TEXT (може бути порожнім).
+
+FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
+→ plan_id є зовнішнім ключем (Foreign Key) і посилається на поле id таблиці PlanCycles.
+→ ON DELETE CASCADE означає, що якщо запис у PlanCycles буде видалений, то всі GymDays, пов’язані з ним, теж видаляються автоматично.*/
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Workout (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, date TEXT)");

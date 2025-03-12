@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-// MuscleFragment.java
-public class MuscleFragment extends BaseListFragment<String> {
+// MusclesFragment.java
+public class MusclesFragment extends BaseListFragment<String> {
 
 
     @Override

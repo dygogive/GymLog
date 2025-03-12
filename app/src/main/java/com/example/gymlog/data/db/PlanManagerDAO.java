@@ -11,8 +11,8 @@ import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
-import com.example.gymlog.data.plan.PlanCycle;
-import com.example.gymlog.data.plan.GymDay;
+import com.example.gymlog.data.plan.FitnessProgram;
+import com.example.gymlog.data.plan.GymSession;
 import com.example.gymlog.data.plan.TrainingBlock;
 
 import java.util.ArrayList;
@@ -29,11 +29,11 @@ public class PlanManagerDAO {
     }
 
     // Додаємо новий план у базу
-    public long addPlan(PlanCycle planCycle) {
+    public long addPlan(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", planCycle.getName());
-        values.put("description", planCycle.getDescription());
+        values.put("name", fitnessProgram.getName());
+        values.put("description", fitnessProgram.getDescription());
         values.put("creation_date", System.currentTimeMillis());
         values.put("is_active", 0);
 
@@ -43,8 +43,8 @@ public class PlanManagerDAO {
     }
 
     // Отримуємо всі плани з бази
-    public List<PlanCycle> getAllPlans() {
-        List<PlanCycle> plans = new ArrayList<>();
+    public List<FitnessProgram> getAllPlans() {
+        List<FitnessProgram> plans = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT id, name, description FROM PlanCycles", null);
@@ -53,8 +53,8 @@ public class PlanManagerDAO {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 String description = cursor.getString(2);
-                List<GymDay> gymDays = getGymDaysByPlanId(id);
-                plans.add(new PlanCycle(id, name, description, gymDays));
+                List<GymSession> gymSessions = getGymDaysByPlanId(id);
+                plans.add(new FitnessProgram(id, name, description, gymSessions));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -63,27 +63,27 @@ public class PlanManagerDAO {
     }
 
     // Отримуємо план за ID
-    public PlanCycle getPlanById(long planId) {
+    public FitnessProgram getPlanById(long planId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        PlanCycle planCycle = null;
+        FitnessProgram fitnessProgram = null;
 
         Cursor cursor = db.rawQuery("SELECT id, name, description FROM PlanCycles WHERE id = ?", new String[]{String.valueOf(planId)});
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
             String description = cursor.getString(2);
-            List<GymDay> gymDays = getGymDaysByPlanId(planId);
-            planCycle = new PlanCycle(planId, name, description, gymDays);
+            List<GymSession> gymSessions = getGymDaysByPlanId(planId);
+            fitnessProgram = new FitnessProgram(planId, name, description, gymSessions);
         }
         cursor.close();
         db.close();
-        return planCycle;
+        return fitnessProgram;
     }
 
 
     // Отримуємо список тренувальних днів для плану
 // Отримуємо список тренувальних днів для плану
-    public List<GymDay> getGymDaysByPlanId(long planId) {
-        List<GymDay> gymDays = new ArrayList<>();
+    public List<GymSession> getGymDaysByPlanId(long planId) {
+        List<GymSession> gymSessions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT id, day_name, description FROM GymDays WHERE plan_id = ?",
@@ -97,17 +97,17 @@ public class PlanManagerDAO {
 
                 List<TrainingBlock> trainingBlocks = getTrainingBlocksByDayId(id);
 
-                GymDay gymDay = new GymDay(id, (int) planId, trainingBlocks);
-                gymDay.setName(dayName); // Якщо є метод setName()
-                gymDay.setDescription(description); // Якщо є метод setDescription()
+                GymSession gymSession = new GymSession(id, (int) planId, trainingBlocks);
+                gymSession.setName(dayName); // Якщо є метод setName()
+                gymSession.setDescription(description); // Якщо є метод setDescription()
 
-                gymDays.add(gymDay);
+                gymSessions.add(gymSession);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
-        return gymDays;
+        return gymSessions;
     }
 
 
@@ -139,13 +139,13 @@ public class PlanManagerDAO {
 
 
     // Оновлюємо план у базі даних
-    public void updatePlan(PlanCycle planCycle) {
+    public void updatePlan(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("name", planCycle.getName());
-        values.put("description", planCycle.getDescription());
+        values.put("name", fitnessProgram.getName());
+        values.put("description", fitnessProgram.getDescription());
 
-        db.update("PlanCycles", values, "id = ?", new String[]{String.valueOf(planCycle.getId())});
+        db.update("PlanCycles", values, "id = ?", new String[]{String.valueOf(fitnessProgram.getId())});
         db.close();
     }
 
@@ -182,11 +182,11 @@ public class PlanManagerDAO {
     }
 
     // Додаємо список днів у план
-    public void addGymDays(long planId, List<GymDay> gymDays) {
+    public void addGymDays(long planId, List<GymSession> gymSessions) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        for (int i = 0; i < gymDays.size(); i++) {
-            GymDay day = gymDays.get(i);
+        for (int i = 0; i < gymSessions.size(); i++) {
+            GymSession day = gymSessions.get(i);
             ContentValues values = new ContentValues();
             values.put("plan_id", planId);
             values.put("day_name", i + 1);

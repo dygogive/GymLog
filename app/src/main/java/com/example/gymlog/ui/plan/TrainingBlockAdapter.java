@@ -15,7 +15,6 @@ import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.plan.TrainingBlock;
 import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
-import com.example.gymlog.ui.exercise2.adapters.RecyclerViewAdapter;
 
 import java.util.List;
 

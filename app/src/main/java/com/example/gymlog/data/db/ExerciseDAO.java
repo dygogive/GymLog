@@ -126,7 +126,7 @@ public class ExerciseDAO {
         }
     }
 
-    // Універсальний метод для отримання вправ із курсора
+    // Універсальний метод для отримання вправ із курсора таблиці Exercise
     private List<Exercise> getExercisesFromCursor(Cursor cursor) {
         List<Exercise> exerciseList = new ArrayList<>();
         if (cursor.moveToFirst()) {

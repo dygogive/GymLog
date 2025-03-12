@@ -97,6 +97,7 @@
     <string name="no">Ні</string>
     <string name="expand_details">Показати деталі</string>
     <string name="exe_editor">Менеджер вправ</string>
+    <string name="plan_management_title">Програми тренувань</string>
 
 
 </resources>

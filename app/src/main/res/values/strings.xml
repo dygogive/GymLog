@@ -166,7 +166,7 @@
     <string name="edit_day" translatable="false">Edit day</string>
     <string name="delete_day" translatable="false">Delete day</string>
     <string name="description" translatable="false">Description</string>
-    <string name="plan_management_title">Plans Management</string>
+    <string name="plan_management_title">Fitness Programs</string>
     <string name="add_new_plan">Add New</string>
     <string name="edit_plan">Edit Plan</string>
     <string name="enter_plan_name">Enter plan name</string>

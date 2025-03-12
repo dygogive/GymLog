@@ -10,26 +10,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.plan.GymDay;
+import com.example.gymlog.data.plan.GymSession;
 
 import java.util.List;
 
 // Адаптер для списку тренувальних днів
-public class GymDayAdapter extends RecyclerView.Adapter<GymDayAdapter.GymDayViewHolder> {
+public class GymSessionAdapter extends RecyclerView.Adapter<GymSessionAdapter.GymDayViewHolder> {
 
-    private final List<GymDay> gymDays;
+    private final List<GymSession> gymSessions;
     private final OnGymDayClickListener listener;
 
     // Інтерфейс для обробки натискань
     public interface OnGymDayClickListener {
-        void onDayClick(GymDay gymDay);
-        void onDeleteDayClick(GymDay gymDay);
-        void onAddTrainingBlockClick(GymDay gymDay);
+        void onDayClick(GymSession gymSession);
+        void onDeleteDayClick(GymSession gymSession);
+        void onAddTrainingBlockClick(GymSession gymSession);
     }
 
     // Конструктор
-    public GymDayAdapter(List<GymDay> gymDays, OnGymDayClickListener listener) {
-        this.gymDays = gymDays;
+    public GymSessionAdapter(List<GymSession> gymSessions, OnGymDayClickListener listener) {
+        this.gymSessions = gymSessions;
         this.listener = listener;
     }
 
@@ -43,22 +43,22 @@ public class GymDayAdapter extends RecyclerView.Adapter<GymDayAdapter.GymDayView
 
     @Override
     public void onBindViewHolder(@NonNull GymDayViewHolder holder, int position) {
-        GymDay gymDay = gymDays.get(position);
-        holder.dayName.setText("День тренування №" + gymDay.getId());
+        GymSession gymSession = gymSessions.get(position);
+        holder.dayName.setText("День тренування №" + gymSession.getId());
 
         // Натискання на елемент для редагування дня
-        holder.itemView.setOnClickListener(v -> listener.onDayClick(gymDay));
+        holder.itemView.setOnClickListener(v -> listener.onDayClick(gymSession));
 
         // Натискання на кнопку видалення дня
-        holder.buttonDeleteDay.setOnClickListener(v -> listener.onDeleteDayClick(gymDay));
+        holder.buttonDeleteDay.setOnClickListener(v -> listener.onDeleteDayClick(gymSession));
 
         // Додаємо обробку кнопки «Додати тренувальний блок»
-        holder.buttonAddTrainingBlock.setOnClickListener(v -> listener.onAddTrainingBlockClick(gymDay));
+        holder.buttonAddTrainingBlock.setOnClickListener(v -> listener.onAddTrainingBlockClick(gymSession));
     }
 
     @Override
     public int getItemCount() {
-        return gymDays.size();
+        return gymSessions.size();
     }
 
     // ViewHolder для тренувальних днів

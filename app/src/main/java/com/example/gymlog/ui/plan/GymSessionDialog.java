@@ -14,12 +14,9 @@ import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.plan.GymDay;
-
-import java.util.ArrayList;
 
 // Діалог для створення нового тренувального дня
-public class GymDayDialog extends Dialog {
+public class GymSessionDialog extends Dialog {
 
     private final long planId;
     private final OnGymDayCreatedListener listener;
@@ -34,7 +31,7 @@ public class GymDayDialog extends Dialog {
         void onGymDayCreated();
     }
 
-    public GymDayDialog(@NonNull Context context, long planId, OnGymDayCreatedListener listener) {
+    public GymSessionDialog(@NonNull Context context, long planId, OnGymDayCreatedListener listener) {
         super(context);
         this.planId = planId;
         this.listener = listener;
@@ -76,7 +73,7 @@ public class GymDayDialog extends Dialog {
             return;
         }
 
-        Log.d("DB_DEBUG", "Намагаємося додати GymDay: planId=" + planId + ", Name=" + dayName + ", Desc=" + description);
+        Log.d("DB_DEBUG", "Намагаємося додати GymSession: planId=" + planId + ", Name=" + dayName + ", Desc=" + description);
 
         long gymDayId = planManagerDAO.addGymDay(planId, dayName, description);
 

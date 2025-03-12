@@ -6,14 +6,14 @@
     <color name="gray">#757575</color>
     <color name="background">#FFFFFF</color>
     <color name="text_primary">#000000</color>
-    <color name="text_secondary">#757575</color>
+    <color name="text_secondary">#B5B1B1</color>
 
 
 
-    <color name="card_background">#262626</color>
-    <color name="background_color">#838282</color>
+    <color name="card_background">#000000</color>
+    <color name="background_color">#000000</color>
 
 
-    <color name="dialog_background">#303030</color> <!-- Темний фон -->
+    <color name="dialog_background">#000000</color> <!-- Темний фон -->
 
 </resources>

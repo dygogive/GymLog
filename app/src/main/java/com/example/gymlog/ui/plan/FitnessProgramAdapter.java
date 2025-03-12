@@ -11,23 +11,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.plan.PlanCycle;
+import com.example.gymlog.data.plan.FitnessProgram;
 
 import java.util.List;
 
-public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanCycleViewHolder> {
+public class FitnessProgramAdapter extends RecyclerView.Adapter<FitnessProgramAdapter.PlanCycleViewHolder> {
 
     public interface OnPlanCycleClickListener {
-        void onEditClick(PlanCycle planCycle);
-        void onDeleteClick(PlanCycle planCycle);
+        void onEditClick(FitnessProgram fitnessProgram);
+        void onDeleteClick(FitnessProgram fitnessProgram);
     }
 
-    private final List<PlanCycle> planCycles;
+    private final List<FitnessProgram> fitnessPrograms;
     private final OnPlanCycleClickListener listener;
 
     // Конструктор
-    public PlanAdapter(List<PlanCycle> planCycles, OnPlanCycleClickListener listener) {
-        this.planCycles = planCycles;
+    public FitnessProgramAdapter(List<FitnessProgram> fitnessPrograms, OnPlanCycleClickListener listener) {
+        this.fitnessPrograms = fitnessPrograms;
         this.listener = listener;
     }
 
@@ -41,21 +41,21 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanCycleViewH
 
     @Override
     public void onBindViewHolder(@NonNull PlanCycleViewHolder holder, int position) {
-        PlanCycle planCycle = planCycles.get(position);
+        FitnessProgram fitnessProgram = fitnessPrograms.get(position);
         Context context = holder.itemView.getContext();
 
         // Заповнення даних
-        holder.textViewDayName.setText(planCycle.getName());
-        holder.textViewDayDescription.setText(planCycle.getDescription());
+        holder.textViewDayName.setText(fitnessProgram.getName());
+        holder.textViewDayDescription.setText(fitnessProgram.getDescription());
 
         // Обробка натискань на кнопки
-        holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(planCycle));
-        holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(planCycle));
+        holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(fitnessProgram));
+        holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(fitnessProgram));
     }
 
     @Override
     public int getItemCount() {
-        return planCycles.size();
+        return fitnessPrograms.size();
     }
 
     // ViewHolder

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.ui.exercise2.adapters.RecyclerViewAdapter;
+import com.example.gymlog.ui.exercise2.adapters.AttributeAdapter;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public abstract class BaseListFragment<T> extends Fragment {
     //рециклер що буде у фрагменті
     private RecyclerView recyclerView;
     //адаптер для рециклера
-    private RecyclerViewAdapter adapter;
+    private AttributeAdapter adapter;
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public abstract class BaseListFragment<T> extends Fragment {
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerViewAdapter(getItems(), this::onItemSelected);
+        adapter = new AttributeAdapter(getItems(), this::onItemSelected);
         recyclerView.setAdapter(adapter);
     }
 

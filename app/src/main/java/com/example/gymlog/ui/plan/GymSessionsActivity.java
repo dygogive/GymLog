@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.plan.GymDay;
+import com.example.gymlog.data.plan.GymSession;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // Активність для редагування тренувальних днів плану
-public class PlanEditActivity extends AppCompatActivity {
+public class GymSessionsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewDays;
-    private GymDayAdapter gymDayAdapter;
-    private List<GymDay> gymDays;
+    private GymSessionAdapter gymSessionAdapter;
+    private List<GymSession> gymSessions;
     private PlanManagerDAO planManagerDAO;
     private long planId;
 
@@ -37,28 +37,28 @@ public class PlanEditActivity extends AppCompatActivity {
         FloatingActionButton buttonAddDay = findViewById(R.id.buttonAddDay);
 
         recyclerViewDays.setLayoutManager(new LinearLayoutManager(this));
-        gymDays = new ArrayList<>();
-        gymDayAdapter = new GymDayAdapter(gymDays, new GymDayAdapter.OnGymDayClickListener() {
+        gymSessions = new ArrayList<>();
+        gymSessionAdapter = new GymSessionAdapter(gymSessions, new GymSessionAdapter.OnGymDayClickListener() {
             @Override
-            public void onDayClick(GymDay gymDay) {
-                Intent intent = new Intent(PlanEditActivity.this, TrainingBlockEditActivity.class);
-                intent.putExtra("gym_day_id", Long.valueOf(gymDay.getId()));
+            public void onDayClick(GymSession gymSession) {
+                Intent intent = new Intent(GymSessionsActivity.this, TrainingBlocksActivity.class);
+                intent.putExtra("gym_day_id", Long.valueOf(gymSession.getId()));
                 startActivity(intent);
             }
 
             @Override
-            public void onDeleteDayClick(GymDay gymDay) {
-                gymDays.remove(gymDay);
-                gymDayAdapter.notifyDataSetChanged();
-                Toast.makeText(PlanEditActivity.this, "День видалено", Toast.LENGTH_SHORT).show();
+            public void onDeleteDayClick(GymSession gymSession) {
+                gymSessions.remove(gymSession);
+                gymSessionAdapter.notifyDataSetChanged();
+                Toast.makeText(GymSessionsActivity.this, "День видалено", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onAddTrainingBlockClick(GymDay gymDay) {
-                Toast.makeText(PlanEditActivity.this, "Кнопка +", Toast.LENGTH_SHORT).show();
+            public void onAddTrainingBlockClick(GymSession gymSession) {
+                Toast.makeText(GymSessionsActivity.this, "Кнопка +", Toast.LENGTH_SHORT).show();
             }
         });
-        recyclerViewDays.setAdapter(gymDayAdapter);
+        recyclerViewDays.setAdapter(gymSessionAdapter);
 
         buttonAddDay.setOnClickListener(v -> openDayCreationDialog());
 
@@ -69,14 +69,14 @@ public class PlanEditActivity extends AppCompatActivity {
 
     // Завантаження даних плану для редагування
     private void loadPlanData() {
-        gymDays.clear();
-        gymDays.addAll(planManagerDAO.getGymDaysByPlanId(planId));
-        gymDayAdapter.notifyDataSetChanged();
+        gymSessions.clear();
+        gymSessions.addAll(planManagerDAO.getGymDaysByPlanId(planId));
+        gymSessionAdapter.notifyDataSetChanged();
     }
 
     // Відкриваємо діалог для додавання тренувального дня
     private void openDayCreationDialog() {
-        GymDayDialog dialog = new GymDayDialog(this, planId, () -> {
+        GymSessionDialog dialog = new GymSessionDialog(this, planId, () -> {
             loadPlanData(); // оновлюємо список після додавання
         });
         dialog.show();

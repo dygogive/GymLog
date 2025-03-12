@@ -12,13 +12,12 @@ import androidx.fragment.app.Fragment;
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.AttributeType;
 import com.example.gymlog.data.exercise.Motion;
-import com.example.gymlog.data.exercise.MuscleGroup;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MotionFragment extends BaseListFragment<String> {
+public class MotionsFragment extends BaseListFragment<String> {
 
 
     @Override

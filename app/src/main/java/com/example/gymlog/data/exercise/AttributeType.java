@@ -19,11 +19,6 @@ public enum AttributeType {
         this.descriptionResId = descriptionResId;
     }
 
-    //видати ідентифікатор опису м'язевої групи
-    public int getDescriptionResId() {
-        return descriptionResId;
-    }
-
     //видати текст опису м'язевої групи
     public String getDescription(Context context) {
         return context.getString(descriptionResId);

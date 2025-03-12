@@ -1,14 +1,12 @@
 package com.example.gymlog.ui.exercise2.activities;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.db.DBHelper;
 import com.example.gymlog.data.db.ExerciseDAO;
-import com.example.gymlog.ui.exercise2.factories.ExerciseFactory;
+import com.example.gymlog.ui.exercise2.factories.DefaultExercisesFactory;
 import com.example.gymlog.ui.exercise2.fragments.AttributeListFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,7 +22,7 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         ExerciseDAO exerciseDAO = new ExerciseDAO(this);
 
         // Ініціалізація базових вправ
-        ExerciseFactory.initializeDefaultExercises(exerciseDAO);
+        DefaultExercisesFactory.initializeDefaultExercises(exerciseDAO);
 
         // Відображення фрагмента
         if (savedInstanceState == null) {

@@ -25,7 +25,7 @@ import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
-import com.example.gymlog.ui.exercise2.factories.ExerciseFactory;
+import com.example.gymlog.ui.exercise2.factories.DefaultExercisesFactory;
 
 import java.util.List;
 
@@ -143,7 +143,7 @@ public class ExercisesFragment extends Fragment {
         ExerciseDAO exerciseDAO = new ExerciseDAO(getContext());
 
         // Виклик методу для отримання вправ
-        List<Exercise> exercises = ExerciseFactory.getExercisesForAttribute(
+        List<Exercise> exercises = DefaultExercisesFactory.getExercisesForAttribute(
                 exerciseDAO,
                 attributeType, // Тип атрибуту
                 attribute // Значення атрибуту

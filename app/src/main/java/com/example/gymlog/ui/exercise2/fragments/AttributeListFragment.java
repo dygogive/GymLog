@@ -60,13 +60,13 @@ public class AttributeListFragment extends BaseListFragment<String> {
 
         switch (enumAttributeType){
             case MUSCLE_GROUP:
-                fragment = new MuscleFragment();
+                fragment = new MusclesFragment();
                 break;
             case EQUIPMENT:
                 fragment = new EquipmentFragment();
                 break;
             case MOTION:
-                fragment = new MotionFragment();
+                fragment = new MotionsFragment();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + attributeType);

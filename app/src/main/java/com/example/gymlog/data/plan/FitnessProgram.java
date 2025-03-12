@@ -2,19 +2,17 @@ package com.example.gymlog.data.plan;
 
 import java.util.List;
 
-public class PlanCycle {
+public class FitnessProgram {
     private long id; // Унікальний ідентифікатор програми
     private String name; // Назва програми
     private String description; //опис
-    private List<GymDay> gymDays; // Список тренувальних днів
+    private List<GymSession> gymSessions; // Список тренувальних днів
 
     // Конструктори
-    public PlanCycle() {}
-
-    public PlanCycle(long id, String name, String description, List<GymDay> gymDays) {
+    public FitnessProgram(long id, String name, String description, List<GymSession> gymSessions) {
         this.id = id;
         this.name = name;
-        this.gymDays = gymDays;
+        this.gymSessions = gymSessions;
         this.description = description;
     }
 
@@ -30,7 +28,4 @@ public class PlanCycle {
         return id;
     }
 
-    public List<GymDay> getGymDays() {
-        return gymDays;
-    }
 }

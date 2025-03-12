@@ -2,27 +2,20 @@ package com.example.gymlog.data.plan;
 
 import java.util.List;
 
-public class GymDay {
+public class GymSession {
     private int id;
     private int planId;
 
     private String name = " ";
 
-    private List<TrainingBlock> trainingBlocks;
-
     private String description;
 
 
-    public GymDay(int id, int planId, List<TrainingBlock> trainingBlocks) {
+    public GymSession(int id, int fitProgramId, List<TrainingBlock> trainingBlocks) {
         this.id = id;
-        this.planId = planId;
-        this.trainingBlocks = trainingBlocks;
+        this.planId = fitProgramId;
     }
 
-
-    public List<TrainingBlock> getExercisesGroups() {
-        return trainingBlocks;
-    }
 
     public String getId() {
         return String.valueOf(id);
