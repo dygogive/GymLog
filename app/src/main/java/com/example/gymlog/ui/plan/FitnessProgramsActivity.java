@@ -24,7 +24,7 @@ public class FitnessProgramsActivity extends AppCompatActivity {
     private PlanManagerDAO planManagerDAO;
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
-    private FitnessProgramAdapter fitnessProgramAdapter;
+    private BasePlanAdapter<FitnessProgram> fitnessProgramAdapter;
     private List<FitnessProgram> fitnessPrograms;
 
     @Override
@@ -51,9 +51,9 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
     // Метод для налаштування RecyclerView (списку планів)
     private void setupRecyclerView() {
-        fitnessProgramAdapter = new FitnessProgramAdapter(
+        fitnessProgramAdapter = new BasePlanAdapter<>(
                 fitnessPrograms,
-                new FitnessProgramAdapter.OnPlanCycleClickListener() {
+                new BasePlanAdapter.OnPlanItemClickListener<>() {
                     @Override
                     public void onEditClick(FitnessProgram fitnessProgram) {
                         DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(

@@ -164,13 +164,13 @@
     <string name="day_groups_count" translatable="false">Groups: %1$d</string>
     <string name="no_exercise_groups" translatable="false">No groups added</string>
     <string name="edit_day" translatable="false">Edit day</string>
-    <string name="delete_day" translatable="false">Delete day</string>
+    <string name="delete_day" translatable="false">Delete Gym Session</string>
     <string name="description" translatable="false">Description</string>
     <string name="plan_management_title">Fitness Programs</string>
     <string name="add_new_plan">Add New</string>
     <string name="edit_plan">Edit Program Name</string>
     <string name="enter_plan_name">Enter plan name</string>
-    <string name="add_new_day">Add new day</string>
+    <string name="add_new_day">Add New Gym Session</string>
     <string name="new_program">New Program</string>
     <string name="create_gym_session">Create Gym Session</string>
     <string name="_save_block">Save exercises block</string>
@@ -187,6 +187,8 @@
     <string name="do_you_really_want_to_delete">Do you really want to delete? \"</string>
     <string name="confirm_deletion">Confirm deletion</string>
     <string name="edit">Edit</string>
+    <string name="deleted_day">Deleted Gym Session</string>
+    <string name="gym_sessions">Gym Sessions</string>
 
 
 </resources>

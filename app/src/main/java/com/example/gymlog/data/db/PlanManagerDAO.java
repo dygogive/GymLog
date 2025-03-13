@@ -138,6 +138,26 @@ public class PlanManagerDAO {
     }
 
 
+    // Оновлюємо день(сесію) тренування у базі даних
+    public void updateGymSession(GymSession gymSession) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("day_name", gymSession.getName());
+        values.put("description", gymSession.getDescription());
+
+        db.update("GymDays", values, "id = ?", new String[]{String.valueOf(gymSession.getId())});
+        db.close();
+    }
+
+    // Видаляємо Сесію жиму
+    public void deleteGymSession(long gymSessionId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("GymDays", "id = ?", new String[]{String.valueOf(gymSessionId)});
+        db.close();
+    }
+
+
+
     // Оновлюємо план у базі даних
     public void updatePlan(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();

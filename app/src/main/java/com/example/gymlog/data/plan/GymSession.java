@@ -2,8 +2,8 @@ package com.example.gymlog.data.plan;
 
 import java.util.List;
 
-public class GymSession {
-    private int id;
+public class GymSession implements BasePlanItem {
+    private long id;
     private int planId;
 
     private String name = " ";
@@ -17,8 +17,8 @@ public class GymSession {
     }
 
 
-    public String getId() {
-        return String.valueOf(id);
+    public long getId() {
+        return id;
     }
 
     public void setDescription(String description) {

@@ -2,7 +2,7 @@ package com.example.gymlog.data.plan;
 
 import java.util.List;
 
-public class FitnessProgram {
+public class FitnessProgram implements BasePlanItem {
     private long id; // Унікальний ідентифікатор програми
     private String name; // Назва програми
     private String description; //опис
