@@ -98,6 +98,8 @@
     <string name="expand_details">Показати деталі</string>
     <string name="exe_editor">Менеджер вправ</string>
     <string name="plan_management_title">Програми тренувань</string>
+    <string name="new_program">Нова програма</string>
+    <string name="edit_plan">Редагувати назву програми</string>
 
 
 </resources>

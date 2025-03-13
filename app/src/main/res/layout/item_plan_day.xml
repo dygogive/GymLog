@@ -14,10 +14,10 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <!-- Назва дня -->
             <TextView
@@ -25,17 +25,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/day_name"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <!-- Короткий опис -->
             <TextView
                 android:id="@+id/textViewDayDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="@string/description"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Кнопка редагування -->
@@ -43,18 +43,21 @@
             android:id="@+id/buttonEditDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="@string/edit_day"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackground"
-            android:layout_marginEnd="8dp" />
+            android:contentDescription="@string/edit_day"
+            android:src="@drawable/baseline_brush_24" />
 
         <!-- Кнопка видалення -->
         <ImageButton
             android:id="@+id/buttonDeleteDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/delete_day"
-            android:background="?attr/selectableItemBackground" />
+            android:src="@drawable/ic_delete" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

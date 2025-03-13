@@ -60,7 +60,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/gym_ico" />
+                        app:srcCompat="@drawable/ic_exercise" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -86,7 +86,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/history_ico" />
+                        app:srcCompat="@drawable/ic_exercise" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -118,7 +118,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/exer_list_ico" />
+                        app:srcCompat="@drawable/ic_exercise" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -144,7 +144,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:srcCompat="@drawable/exe_editor_ico" />
+                        app:srcCompat="@drawable/ic_exercise" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -176,7 +176,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="116dp"
-                        app:srcCompat="@drawable/plandays_ico" />
+                        app:srcCompat="@drawable/ic_exercise" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

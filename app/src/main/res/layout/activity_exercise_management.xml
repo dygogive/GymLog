@@ -14,5 +14,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primary_variant"
+        app:tint="@color/secondary"
         android:contentDescription="@string/add_exercise" />
 </FrameLayout>

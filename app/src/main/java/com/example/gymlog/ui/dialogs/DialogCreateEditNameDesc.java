@@ -6,16 +6,20 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import com.example.gymlog.R;
 
-public class EditNameDescDialog extends Dialog {
+public class DialogCreateEditNameDesc extends Dialog {
 
     private final String currentName;
     private final String currentDescription;
+    private String titleDialog = "Edit template";
     private final OnEditConfirmedListener listener;
 
     private EditText editTextName, editTextDescription;
+    private TextView idtextViewDialogTitle;
     private Button buttonCancel, buttonSave;
 
     // Інтерфейс для передачі оновлених значень
@@ -23,11 +27,19 @@ public class EditNameDescDialog extends Dialog {
         void onEditConfirmed(String newName, String newDescription);
     }
 
-    public EditNameDescDialog(@NonNull Context context, String currentName, String currentDescription, OnEditConfirmedListener listener) {
+    public DialogCreateEditNameDesc(@NonNull Context context, String currentName, String currentDescription, OnEditConfirmedListener listener) {
         super(context);
         this.currentName = currentName;
         this.currentDescription = currentDescription;
         this.listener = listener;
+        this.titleDialog = context.getString(R.string.edit_plan);
+    }
+    public DialogCreateEditNameDesc(@NonNull Context context, String title, String currentName, String currentDescription, OnEditConfirmedListener listener) {
+        super(context);
+        this.currentName = currentName;
+        this.currentDescription = currentDescription;
+        this.listener = listener;
+        this.titleDialog = title;
     }
 
     @Override
@@ -41,10 +53,14 @@ public class EditNameDescDialog extends Dialog {
             getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
+        idtextViewDialogTitle = (TextView) findViewById(R.id.textViewDialogTitle);
         editTextName = findViewById(R.id.editTextName);
         editTextDescription = findViewById(R.id.editTextDescription);
         buttonCancel = findViewById(R.id.buttonCancel);
         buttonSave = findViewById(R.id.buttonSave);
+
+        //встановити заголовок
+        idtextViewDialogTitle.setText(titleDialog);
 
         // Встановлюємо поточний текст, а не hint
         editTextName.setText(currentName);

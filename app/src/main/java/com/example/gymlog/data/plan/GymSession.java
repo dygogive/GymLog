@@ -32,6 +32,10 @@ public class GymSession {
     public void setName(String dayName) {
         name = dayName;
     }
+
+    public String getName() {
+        return name;
+    }
 }
 
 

@@ -2,6 +2,7 @@ package com.example.gymlog.ui.plan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
+import com.example.gymlog.data.plan.FitnessProgram;
 import com.example.gymlog.data.plan.GymSession;
+import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -60,25 +63,38 @@ public class GymSessionsActivity extends AppCompatActivity {
         });
         recyclerViewDays.setAdapter(gymSessionAdapter);
 
-        buttonAddDay.setOnClickListener(v -> openDayCreationDialog());
+        buttonAddDay.setOnClickListener(v -> createGymSession());
 
         if (planId != -1) {
-            loadPlanData();
+            updateGymSessionsInRecycler();
         }
     }
 
     // Завантаження даних плану для редагування
-    private void loadPlanData() {
+    private void updateGymSessionsInRecycler() {
         gymSessions.clear();
         gymSessions.addAll(planManagerDAO.getGymDaysByPlanId(planId));
         gymSessionAdapter.notifyDataSetChanged();
     }
 
     // Відкриваємо діалог для додавання тренувального дня
-    private void openDayCreationDialog() {
-        GymSessionDialog dialog = new GymSessionDialog(this, planId, () -> {
-            loadPlanData(); // оновлюємо список після додавання
-        });
+    private void createGymSession() {
+        DialogCreateEditNameDesc dialog = new DialogCreateEditNameDesc(
+                    GymSessionsActivity.this,
+                    GymSessionsActivity.this.getString(R.string.create_gym_session),
+                    "",
+                    "",
+                    (dayName, description) -> {
+                        long gymDayId = planManagerDAO.addGymDay(planId, dayName, description);
+
+                        if (gymDayId != -1) {
+                            Toast.makeText(GymSessionsActivity.this, "Новий день тренувань додано", Toast.LENGTH_SHORT).show();
+
+                        }
+                        GymSessionsActivity.this.updateGymSessionsInRecycler();
+                    }
+                );
         dialog.show();
+
     }
 }

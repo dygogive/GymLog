@@ -43,8 +43,8 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_add"
         android:contentDescription="@string/add_new_plan"
-        app:backgroundTint="@color/primary"
-        app:tint="@android:color/white"
+        app:backgroundTint="@color/primary_variant"
+        app:tint="@color/secondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"/>

@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.plan;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,11 @@ public class GymSessionAdapter extends RecyclerView.Adapter<GymSessionAdapter.Gy
         return new GymDayViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull GymDayViewHolder holder, int position) {
         GymSession gymSession = gymSessions.get(position);
-        holder.dayName.setText("День тренування №" + gymSession.getId());
+        holder.dayName.setText(gymSession.getName() + "\\n" + gymSession.getDescription());
 
         // Натискання на елемент для редагування дня
         holder.itemView.setOnClickListener(v -> listener.onDayClick(gymSession));

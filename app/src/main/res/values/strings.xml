@@ -168,12 +168,11 @@
     <string name="description" translatable="false">Description</string>
     <string name="plan_management_title">Fitness Programs</string>
     <string name="add_new_plan">Add New</string>
-    <string name="edit_plan">Edit Plan</string>
+    <string name="edit_plan">Edit Program Name</string>
     <string name="enter_plan_name">Enter plan name</string>
-    <string name="enter_plan_description">Enter plan description</string>
     <string name="add_new_day">Add new day</string>
-    <string name="new_plan">New Plan</string>
-    <string name="new_program">A new plan training</string>
+    <string name="new_program">New Program</string>
+    <string name="create_gym_session">Create Gym Session</string>
     <string name="_save_block">Save exercises block</string>
     <string name="descr_block">Training block description</string>
     <string name="training_block_name">Name of training block</string>
@@ -185,6 +184,9 @@
     <string name="add_a_training_day">Add a training day</string>
     <string name="save_the_plan">Save the plan</string>
     <string name="edit_name_description">Edit name and description</string>
+    <string name="do_you_really_want_to_delete">Do you really want to delete? \"</string>
+    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="edit">Edit</string>
 
 
 </resources>

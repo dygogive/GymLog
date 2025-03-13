@@ -29,7 +29,7 @@ public class PlanManagerDAO {
     }
 
     // Додаємо новий план у базу
-    public long addPlan(FitnessProgram fitnessProgram) {
+    public long addFitProgram(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", fitnessProgram.getName());

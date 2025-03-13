@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.plan;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -13,7 +14,7 @@ import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.FitnessProgram;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
-import com.example.gymlog.ui.dialogs.EditNameDescDialog;
+import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 new FitnessProgramAdapter.OnPlanCycleClickListener() {
                     @Override
                     public void onEditClick(FitnessProgram fitnessProgram) {
-                        EditNameDescDialog editDialog = new EditNameDescDialog(
+                        DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
                                 FitnessProgramsActivity.this,
                                 fitnessProgram.getName(),
                                 fitnessProgram.getDescription(),
@@ -100,17 +101,34 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
     // Метод для додавання нового плану
     private void addNewPlan() {
-        FitnessProgram newPlan = new FitnessProgram(0, getString(R.string.new_plan), getString(R.string.new_program), new ArrayList<>());
-        long newPlanId = planManagerDAO.addPlan(newPlan);
+        FitnessProgram newFitnessProgram = new FitnessProgram(0, "", "", new ArrayList<>());
+        FitnessProgram finalNewFitnessProgram = newFitnessProgram;
 
-        if (newPlanId != -1) {
-            newPlan = new FitnessProgram(newPlanId, newPlan.getName(), newPlan.getDescription(), new ArrayList<>());
-            fitnessPrograms.add(newPlan);
-            fitnessProgramAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "План додано!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Помилка при додаванні плану", Toast.LENGTH_SHORT).show();
-        }
+        @SuppressLint("NotifyDataSetChanged")
+        DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
+                FitnessProgramsActivity.this, FitnessProgramsActivity.this.getString(R.string.new_program),
+                newFitnessProgram.getName(),
+                newFitnessProgram.getDescription(),
+                (newName, newDescription) -> {
+                    // Оновлення даних після редагування
+                    finalNewFitnessProgram.setName(newName);
+                    finalNewFitnessProgram.setDescription(newDescription);
+                    long newPlanId = planManagerDAO.addFitProgram(finalNewFitnessProgram);
+
+                    if (newPlanId != -1) {
+                        FitnessProgram newFitnessProgram1 = new FitnessProgram(newPlanId, finalNewFitnessProgram.getName(), finalNewFitnessProgram.getDescription(), new ArrayList<>());
+                        fitnessPrograms.add(newFitnessProgram1);
+                        fitnessProgramAdapter.notifyDataSetChanged();
+                        Toast.makeText(this, "План додано!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Помилка при додаванні плану", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+        editDialog.show();
+
+
+
     }
 
     // Метод для відкриття екрану редагування плану
