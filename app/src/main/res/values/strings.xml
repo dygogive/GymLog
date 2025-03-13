@@ -184,6 +184,7 @@
     <string name="description_of_the_plan">Description of the plan</string>
     <string name="add_a_training_day">Add a training day</string>
     <string name="save_the_plan">Save the plan</string>
+    <string name="edit_name_description">Edit name and description</string>
 
 
 </resources>

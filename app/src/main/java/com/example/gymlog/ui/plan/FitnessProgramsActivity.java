@@ -2,14 +2,10 @@ package com.example.gymlog.ui.plan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +13,7 @@ import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.FitnessProgram;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
+import com.example.gymlog.ui.dialogs.EditNameDescDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -58,7 +55,19 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 new FitnessProgramAdapter.OnPlanCycleClickListener() {
                     @Override
                     public void onEditClick(FitnessProgram fitnessProgram) {
-                        // діалог для редагування програми тренувань
+                        EditNameDescDialog editDialog = new EditNameDescDialog(
+                                FitnessProgramsActivity.this,
+                                fitnessProgram.getName(),
+                                fitnessProgram.getDescription(),
+                                (newName, newDescription) -> {
+                                    // Оновлення даних після редагування
+                                    fitnessProgram.setName(newName);
+                                    fitnessProgram.setDescription(newDescription);
+                                    planManagerDAO.updatePlan(fitnessProgram);
+                                    fitnessProgramAdapter.notifyDataSetChanged();
+                                }
+                        );
+                        editDialog.show();
                     }
 
                     @Override
