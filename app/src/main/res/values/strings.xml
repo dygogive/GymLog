@@ -189,6 +189,7 @@
     <string name="edit">Edit</string>
     <string name="deleted_day">Deleted Gym Session</string>
     <string name="gym_sessions">Gym Sessions</string>
+    <string name="add_training_block">Add training block</string>
 
 
 </resources>

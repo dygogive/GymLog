@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GymLog"
+        android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
         <activity
             android:name=".ui.plan.TrainingBlocksActivity"
@@ -22,7 +22,7 @@
         <activity
             android:name=".ui.plan.FitnessProgramsActivity"
             android:exported="false"
-            android:theme="@style/Theme.GymLog" />
+            android:theme="@style/Theme.MyApp" />
         <activity
             android:name=".ui.exercise2.activities.ExerciseManagementActivity"
             android:exported="false" />

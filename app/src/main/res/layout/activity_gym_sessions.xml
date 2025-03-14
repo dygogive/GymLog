@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@color/background"
     android:padding="16dp"
     tools:context=".ui.plan.GymSessionsActivity">
 
@@ -15,11 +15,13 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"
+        android:paddingBottom="16dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:layout_constraintTop_toBottomOf="@+id/tvGymSessionsTitle" />
 
     <!-- Floating Action Button для додавання дня -->
@@ -27,12 +29,15 @@
         android:id="@+id/buttonAddDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="@string/add_training_block"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/primary_variant"
+        app:backgroundTint="@color/fab_background_tint"
+        app:tint="@color/fab_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/secondary" />
+        />
 
 
     <!-- Заголовок -->
@@ -40,12 +45,13 @@
         android:id="@+id/tvGymSessionsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/gym_sessions"
-        android:textColor="@color/text_secondary"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/exercises"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

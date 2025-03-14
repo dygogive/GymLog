@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.GymLog" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Theme.MyApp" parent="Theme.AppCompat.DayNight.NoActionBar">
+
     </style>
 
-    <style name="Theme.GymLog" parent="Base.Theme.GymLog" />
 </resources>
