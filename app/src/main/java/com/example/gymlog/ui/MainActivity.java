@@ -10,6 +10,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.ui.exercise2.activities.ExerciseManagementActivity;
 import com.example.gymlog.R;
 import com.example.gymlog.ui.exercise1.MuscleGroupActivity;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, FitnessProgramsActivity.class));
         });
 
+
+        ExerciseDAO exerciseDAO = new ExerciseDAO(this);
+        exerciseDAO.logAllExercises();
 
 
     }

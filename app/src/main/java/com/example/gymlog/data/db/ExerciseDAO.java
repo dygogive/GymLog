@@ -122,7 +122,9 @@ public class ExerciseDAO {
             Log.d("ExerciseLog", "Name: " + exercise.getName() + "---" +
                     "Motion: " + exercise.getMotion() + "---" +
                     "Equipment: " + exercise.getEquipment() + "---" +
-                    "Muscle Groups: " + exercise.getMuscleGroupList());
+                    "Muscle Groups: " + exercise.getMuscleGroupList()  + "---" +
+                    "is custom: " + exercise.getIsCustom()
+                    );
         }
     }
 

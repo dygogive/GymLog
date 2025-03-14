@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -104,7 +103,7 @@ public class TrainingBlockDialog extends Dialog {
         // Обробники натискання на кнопки вибору фільтрів
         buttonSelectMotion.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть рухи",
-                Motion.getMotionDescriptions(getContext()),
+                Motion.getAllDescriptions(getContext()),
                 selectedMotions,
                 chosenMotions,
                 checkBoxFilterMotion,
@@ -113,7 +112,7 @@ public class TrainingBlockDialog extends Dialog {
 
         buttonSelectMuscle.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть м’язи",
-                MuscleGroup.getMuscleGroupDescriptions(getContext()),
+                MuscleGroup.getAllDescriptions(getContext()),
                 selectedMuscles,
                 chosenMuscles,
                 checkBoxFilterMuscle,
@@ -288,7 +287,7 @@ public class TrainingBlockDialog extends Dialog {
     private void saveFilters(long blockId) {
         // Зберігаємо Motion
         for (String motionText : chosenMotions) {
-            Motion motion = Motion.getMotionByDescription(getContext(), motionText);
+            Motion motion = Motion.getObjectByDescription(getContext(), motionText);
             if (motion != null) {
                 Log.d("DB_DEBUG_SAVE", "Saving Motion: " + motion.name() + " for Block ID: " + blockId);
                 planManagerDAO.addTrainingBlockFilter(blockId, "motionType", motion.name());
@@ -297,7 +296,7 @@ public class TrainingBlockDialog extends Dialog {
 
         // Зберігаємо MuscleGroup
         for (String muscleText : chosenMuscles) {
-            MuscleGroup muscleGroup = MuscleGroup.getMuscleGroupByDescription(getContext(), muscleText);
+            MuscleGroup muscleGroup = MuscleGroup.getObjectByDescription(getContext(), muscleText);
             if (muscleGroup != null) {
                 Log.d("DB_DEBUG_SAVE", "Saving MuscleGroup: " + muscleGroup.name() + " for Block ID: " + blockId);
                 planManagerDAO.addTrainingBlockFilter(blockId, "muscleGroup", muscleGroup.name());

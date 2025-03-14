@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     android:padding="16dp"
-    tools:context=".ui.plan.GymSessionsActivity"
-    android:background="@color/background_color">
+    tools:context=".ui.plan.GymSessionsActivity">
 
     <!-- Список тренувальних днів -->
     <androidx.recyclerview.widget.RecyclerView

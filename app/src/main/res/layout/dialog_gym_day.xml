@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="@color/dialog_background">
+    android:background="@drawable/dialog_background"
+    android:padding="16dp">
 
     <!-- Заголовок діалогу -->
     <TextView
@@ -12,69 +12,69 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Додати тренувальний день"
+        android:textColor="@color/primary"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/primary"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Поле для введення назви тренувального дня -->
     <EditText
         android:id="@+id/editTextDayName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/primary_variant"
         android:hint="Назва дня"
         android:textSize="16sp"
-        android:backgroundTint="@color/primary_variant"
-        app:layout_constraintTop_toBottomOf="@id/textViewDialogTitle"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDialogTitle" />
 
     <!-- Поле для введення опису тренувального дня -->
     <EditText
         android:id="@+id/editTextDayDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/primary_variant"
         android:hint="Опис дня"
         android:textSize="16sp"
-        android:backgroundTint="@color/primary_variant"
-        app:layout_constraintTop_toBottomOf="@id/editTextDayName"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDayName" />
 
     <!-- Кнопки "Скасувати" і "Зберегти" -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/editTextDayDescription"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDayDescription">
 
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Скасувати"
-            android:textSize="16sp"
             android:backgroundTint="@color/secondary"
-            android:textColor="@android:color/white" />
+            android:text="Скасувати"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Зберегти"
-            android:textSize="16sp"
             android:backgroundTint="@color/primary"
+            android:text="Зберегти"
             android:textColor="@android:color/white"
-            android:layout_marginStart="8dp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

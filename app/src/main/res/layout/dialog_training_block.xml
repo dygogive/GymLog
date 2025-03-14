@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/primary"
     android:padding="16dp">
 
     <!-- Назва блоку -->
@@ -50,10 +50,10 @@
         android:id="@+id/buttonSelectMotion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оберіть рухи"
-        android:backgroundTint="@color/primary_variant"
-        android:textColor="@android:color/white"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@color/primary_variant"
+        android:text="Оберіть рухи"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterMotion" />
@@ -72,10 +72,10 @@
         android:id="@+id/buttonSelectMuscle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оберіть м’язи"
-        android:backgroundTint="@color/primary_variant"
-        android:textColor="@android:color/white"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@color/primary_variant"
+        android:text="Оберіть м’язи"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterMuscle" />
@@ -94,10 +94,10 @@
         android:id="@+id/buttonSelectEquipment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оберіть обладнання"
-        android:backgroundTint="@color/primary_variant"
-        android:textColor="@android:color/white"
         android:layout_marginTop="8dp"
+        android:backgroundTint="@color/primary_variant"
+        android:text="Оберіть обладнання"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterEquipment" />

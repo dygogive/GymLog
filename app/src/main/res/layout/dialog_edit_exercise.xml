@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     android:padding="16dp">
 
     <LinearLayout
@@ -21,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/motion" />
+
         <Spinner
             android:id="@+id/spinnerMotion"
             android:layout_width="match_parent"
@@ -31,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/muscle_groups" />
+
         <ListView
             android:id="@+id/listViewMuscleGroups"
             android:layout_width="match_parent"
@@ -42,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/equipment" />
+
         <Spinner
             android:id="@+id/spinnerEquipment"
             android:layout_width="match_parent"

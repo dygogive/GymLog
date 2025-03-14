@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:background="@color/primary"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="16dp">
 
         <!-- Назва тренувального блоку -->
@@ -18,12 +19,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Назва блоку"
+            android:textColor="@color/primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/primary"
+            app:layout_constraintEnd_toStartOf="@id/buttonExpand"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonExpand" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Опис блоку -->
         <TextView
@@ -31,11 +32,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Опис блоку"
-            android:textSize="14sp"
             android:textColor="@color/secondary"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/buttonExpand"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewBlockName"
-            app:layout_constraintEnd_toStartOf="@id/buttonExpand" />
+            app:layout_constraintTop_toBottomOf="@id/textViewBlockName" />
 
         <!-- Кнопка редагування блоку -->
         <ImageButton
@@ -45,22 +46,22 @@
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_edit"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonExpand"
             app:layout_constraintEnd_toStartOf="@id/buttonDeleteBlock"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/secondary" />
+            app:tint="@color/primary" />
 
         <!-- Кнопка видалення блоку -->
         <ImageButton
             android:id="@+id/buttonDeleteBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete"
             android:background="@android:color/transparent"
-            app:tint="@color/secondary"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonEditBlock"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:tint="@color/primary" />
 
         <!-- Кнопка розгортання списку вправ -->
         <ImageButton
@@ -70,7 +71,7 @@
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_expand"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBlockDescription"
             app:layout_constraintEnd_toStartOf="@id/buttonEditBlock"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/primary" />
@@ -81,13 +82,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewBlockDescription"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewBlockDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

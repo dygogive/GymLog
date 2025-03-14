@@ -2,7 +2,6 @@ package ui.exercise2.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -55,7 +54,7 @@ public class ExerciseDialog {
         ListView listViewMuscleGroups = dialogView.findViewById(R.id.listViewMuscleGroups); // Список для вибору м'язевих груп
 
         // Отримання описів для Motion та Equipment (перекладені строки)
-        String[] motionDescriptions = Motion.getMotionDescriptions(context);
+        String[] motionDescriptions = Motion.getAllDescriptions(context);
         String[] equipmentDescriptions = Equipment.getEquipmentDescriptions(context);
 
         // Налаштування адаптерів для спінерів
@@ -63,7 +62,7 @@ public class ExerciseDialog {
         spinnerEquipment.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, equipmentDescriptions));
 
         // Адаптер для списку м'язевих груп
-        listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.getMuscleGroupDescriptions(context)));
+        listViewMuscleGroups.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_multiple_choice, MuscleGroup.getAllDescriptions(context)));
 
         // Якщо передано об'єкт Exercise (режим редагування)
         if (exercise != null) {
@@ -73,7 +72,7 @@ public class ExerciseDialog {
             // Встановлення обраного значення для Motion
             Motion motion = exercise.getMotion();
             if (motion != null) {
-                int motionPosition = Motion.getMotionByDescription(context, motion.getDescription(context)).ordinal();
+                int motionPosition = Motion.getObjectByDescription(context, motion.getDescription(context)).ordinal();
                 spinnerMotion.setSelection(motionPosition);
             }
 
@@ -102,14 +101,14 @@ public class ExerciseDialog {
                     String motionDescription = (String) spinnerMotion.getSelectedItem();
                     String equipmentDescription = (String) spinnerEquipment.getSelectedItem();
 
-                    Motion selectedMotion = Motion.getMotionByDescription(context, motionDescription);
+                    Motion selectedMotion = Motion.getObjectByDescription(context, motionDescription);
                     Equipment selectedEquipment = Equipment.getEquipmentByDescription(context, equipmentDescription);
 
                     List<MuscleGroup> selectedMuscleGroups = new ArrayList<>();
                     for (int i = 0; i < listViewMuscleGroups.getCount(); i++) {
                         if (listViewMuscleGroups.isItemChecked(i)) {
                             String muscleGroupDescription = (String) listViewMuscleGroups.getItemAtPosition(i);
-                            MuscleGroup selectedMuscleGroup = MuscleGroup.getMuscleGroupByDescription(context, muscleGroupDescription);
+                            MuscleGroup selectedMuscleGroup = MuscleGroup.getObjectByDescription(context, muscleGroupDescription);
                             selectedMuscleGroups.add(selectedMuscleGroup);
                         }
                     }
@@ -133,13 +132,18 @@ public class ExerciseDialog {
                 deleteExerciseWithConfirmation(exercise); // Виклик підтвердження видалення
             });
         }
+        AlertDialog dialog = builder.create();
+        // Встановлюємо колір фону
+        dialog.setOnShowListener(d -> {
+            dialog.getWindow().setBackgroundDrawableResource(R.color.primary); // Вкажи свій колір в res/values/colors.xml
+        });
 
-        builder.show(); // Відображення діалогу
+        dialog.show();
     }
 
     // Метод для видалення вправи з підтвердженням
     private void deleteExerciseWithConfirmation(Exercise exercise) {
-        AlertDialog.Builder confirmationDialog = new AlertDialog.Builder(context)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(R.string.confirm_delete_title)
                 .setMessage(R.string.confirm_delete_message)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
@@ -152,7 +156,13 @@ public class ExerciseDialog {
                 })
                 .setNegativeButton(R.string.no, null); // Нічого не робимо, якщо "Ні"
 
-        confirmationDialog.show();
+        AlertDialog dialog = builder.create();
+        // Встановлюємо колір фону
+        dialog.setOnShowListener(d -> {
+            dialog.getWindow().setBackgroundDrawableResource(R.color.primary); // Вкажи свій колір в res/values/colors.xml
+        });
+
+        dialog.show();
     }
 
     // Метод для додавання нової вправи
