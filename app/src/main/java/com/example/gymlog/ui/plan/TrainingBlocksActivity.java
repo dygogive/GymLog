@@ -7,10 +7,15 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.TrainingBlock;
+import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
+import com.example.gymlog.ui.plan.adapter.TrainingBlockAdapter;
+import com.example.gymlog.ui.plan.dialogs.TrainingBlockDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +24,13 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrainingBlocks;
     private FloatingActionButton buttonAddTrainingBlock;
-    private TrainingBlockAdapter trainingBlockAdapter;
+    public TrainingBlockAdapter trainingBlockAdapter;
     private List<TrainingBlock> trainingBlocks;
     private PlanManagerDAO planManagerDAO;
     private long gymDayId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_training_block_edit);
@@ -57,21 +62,10 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                 TrainingBlocksActivity.this,
                 trainingBlocks,
                 planManagerDAO,
-                new TrainingBlockAdapter.OnTrainingBlockClickListener() {
-            @Override
-            public void onBlockClick(TrainingBlock block) {
-                // Логіка відкриття блоку для редагування
-                openBlockEditDialog(block);
-            }
+                new TrainingBlockListener()
+                );
 
-            @Override
-            public void onDeleteBlockClick(TrainingBlock block) {
-                planManagerDAO.deleteTrainingBlock(block.getId());
-                trainingBlocks.remove(block);
-                trainingBlockAdapter.notifyDataSetChanged();
-                Toast.makeText(TrainingBlocksActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
-            }
-        });
+
         recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
 
         //Завантажити блоки з бази
@@ -82,23 +76,53 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     }
 
     // Метод для відкриття діалогу створення блоку
-    private void openBlockCreationDialog() {
+    public void openBlockCreationDialog() {
         TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, this::loadTrainingBlocks);
         dialog.show();
     }
 
 
     // Метод для відкриття діалогу редагування блоку
-    private void openBlockEditDialog(TrainingBlock block) {
+    public void openBlockEditDialog(TrainingBlock block) {
         TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, block, this::loadTrainingBlocks);
         dialog.show();
     }
 
 
     // Метод для завантаження списку тренувальних блоків
-    private void loadTrainingBlocks() {
+    public void loadTrainingBlocks() {
         trainingBlocks.clear();
         trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
         trainingBlockAdapter.notifyDataSetChanged();
+    }
+
+
+
+
+    //Слухач натискань на елементі списка
+    private class TrainingBlockListener implements TrainingBlockAdapter.OnTrainingBlockClickListener{
+
+        @Override
+        public void onEditClick(TrainingBlock block) {
+
+            openBlockEditDialog(block);
+        }
+
+        @Override
+        public void onDeleteClick(TrainingBlock block) {
+            ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
+                planManagerDAO.deleteTrainingBlock(block.getId());
+                trainingBlocks.remove(block);
+                trainingBlockAdapter.notifyDataSetChanged();
+                Toast.makeText(TrainingBlocksActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
+            };
+
+            ConfirmDeleteDialog.show(
+                    TrainingBlocksActivity.this,
+                    block.getName(),
+                    onDeleteConfirmedListener
+            );
+
+        }
     }
 }

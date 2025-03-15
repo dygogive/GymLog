@@ -16,7 +16,7 @@ public class ConfirmDeleteDialog {
 
 
     public static void show(Context context, String itemName, final OnDeleteConfirmedListener listener) {
-        AlertDialog dialog1 = new AlertDialog.Builder(context, R.style.RoundedDialogTheme)// ваш кастомний layout
+        AlertDialog dialog1 = new AlertDialog.Builder(context)// ваш кастомний layout
                 .setTitle(R.string.confirm_deletion)
                 .setMessage(context.getString(R.string.do_you_really_want_to_delete) + itemName + "\"?")
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
@@ -33,10 +33,10 @@ public class ConfirmDeleteDialog {
         Button negativeButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
 
         if (positiveButton != null) {
-            positiveButton.setTextColor(ContextCompat.getColor(context, R.color.primary)); // Червоний
+            positiveButton.setTextColor(ContextCompat.getColor(context, R.color.my_primary)); // Червоний
         }
         if (negativeButton != null) {
-            negativeButton.setTextColor(ContextCompat.getColor(context, R.color.primary)); // Сірий
+            negativeButton.setTextColor(ContextCompat.getColor(context, R.color.my_on_primary)); // Сірий
         }
     }
 

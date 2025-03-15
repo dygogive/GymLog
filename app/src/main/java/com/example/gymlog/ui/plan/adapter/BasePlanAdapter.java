@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan;
+package com.example.gymlog.ui.plan.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -25,7 +25,7 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
     }
 
     private final List<T> items;
-    private final OnPlanItemClickListener<T> listener;
+    public final OnPlanItemClickListener<T> listener;
 
     // Конструктор
     public BasePlanAdapter(List<T> items, OnPlanItemClickListener<T> listener) {
@@ -60,7 +60,7 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
     }
 
     // ViewHolder
-    static class BasePlanViewHolder extends RecyclerView.ViewHolder {
+    public static class BasePlanViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName, textViewDescription;
         ImageButton buttonEdit, buttonDelete;
 

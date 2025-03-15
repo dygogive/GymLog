@@ -1,34 +1,34 @@
-package com.example.gymlog.ui.plan;
+package com.example.gymlog.ui.plan.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.Exercise;
-import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
 
 import java.util.List;
 
-public class AdapterExercisesTrainingBlock extends  RecyclerView.Adapter<AdapterExercisesTrainingBlock.ViewHolder> {
+public class AdapterExercisesInTrainingBlock extends  RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
 
     List<Exercise> exercises;
-
+    Context context;
     ExerciseListener listener;
 
-    interface ExerciseListener {
-        void onClickListener();
+    public interface ExerciseListener {
+        void onClickListener(Exercise exercise);
     }
 
-    public AdapterExercisesTrainingBlock(List<Exercise> exercises, ExerciseListener listener) {
+    public AdapterExercisesInTrainingBlock(Context context, List<Exercise> exercises, ExerciseListener listener) {
         this.exercises = exercises;
         this.listener = listener;
+        this.context = context;
     }
 
     @NonNull
@@ -44,12 +44,12 @@ public class AdapterExercisesTrainingBlock extends  RecyclerView.Adapter<Adapter
         //взяти вправу для заповнення інформації в картці списку RecyclerView
         Exercise exercise = exercises.get(position);
         //задати назву вправі
-        holder.nameExercise.setText(exercise.getName());
+        holder.nameExercise.setText(exercise.getNameOnly(context));
         //слухач для кнопки
         holder.buttonInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onClickListener();
+                listener.onClickListener(exercise);
             }
         });
 
@@ -64,7 +64,7 @@ public class AdapterExercisesTrainingBlock extends  RecyclerView.Adapter<Adapter
 
 
     // ViewHolder клас для адаптера
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameExercise;
         ImageButton buttonInfo;
 

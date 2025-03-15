@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan;
+package com.example.gymlog.ui.plan.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -41,7 +41,7 @@ public class TrainingBlockDialog extends Dialog {
     private PlanManagerDAO planManagerDAO;
     private ExerciseDAO exercisesDAO;
     private TrainingBlock blockToEdit;
-    private final OnTrainingBlockCreatedListener listener;
+    public final OnTrainingBlockCreatedListener listener;
     private final long gymDayId;
 
     // Інтерфейс для передачі нового блоку у активність

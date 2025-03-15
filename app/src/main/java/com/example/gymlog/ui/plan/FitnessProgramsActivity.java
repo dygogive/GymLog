@@ -15,6 +15,7 @@ import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.plan.FitnessProgram;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
+import com.example.gymlog.ui.plan.adapter.BasePlanAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

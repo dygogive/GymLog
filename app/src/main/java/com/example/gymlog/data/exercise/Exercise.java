@@ -1,9 +1,12 @@
 package com.example.gymlog.data.exercise;
 
 
-import android.database.Cursor;
+import android.content.Context;
+import android.util.Log;
 
-import java.util.ArrayList;
+import com.example.gymlog.R;
+
+import java.lang.reflect.Field;
 import java.util.List;
 
 //test comit user1
@@ -78,5 +81,21 @@ public class Exercise {
 
     public void setEquipment(Equipment newEquipment) {
         equipment = newEquipment;
+    }
+
+    public String getNameOnly(Context context) {
+        int resId = -1;
+        String value = "";
+        if(!isCustom){
+            try {
+                Field field = R.string.class.getDeclaredField(name);
+                resId = field.getInt(null);
+                value = context.getString(resId);
+            } catch (Exception e) {
+                Log.e("ResourceError", "Ресурс не знайдено для " + name);
+                resId = 0;
+            }
+            return value;
+        } else return name;
     }
 }

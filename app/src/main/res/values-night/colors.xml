@@ -16,10 +16,10 @@
     <color name="my_primary_container">#F9A825</color>
     <color name="my_on_primary_container">#000000</color>
 
-    <color name="my_secondary">#C7BDBA</color>
+    <color name="my_secondary">#8E8683</color>
     <color name="my_on_secondary">#000000</color>
     <color name="my_secondary_container">#121212</color>
-    <color name="my_on_secondary_container">#909090</color>
+    <color name="my_on_secondary_container">#595757</color>
 
     <color name="my_surface">#FFFFFF</color>
     <color name="my_on_surface">#000000</color>
