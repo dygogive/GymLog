@@ -64,12 +64,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
         AdapterExercisesTrainingBlock exerciseAdapter = new AdapterExercisesTrainingBlock(
                 exercises,
-                new AdapterExercisesTrainingBlock.ExerciseListener() {
-                    @Override
-                    public void onClickListener() {
-                        Toast.makeText(context,"Exercise Info",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                () -> Toast.makeText(context,"Exercise Info",Toast.LENGTH_SHORT).show());
 
         holder.recyclerViewExercises.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.recyclerViewExercises.setAdapter(exerciseAdapter);
