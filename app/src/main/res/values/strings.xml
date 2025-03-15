@@ -190,6 +190,17 @@
     <string name="deleted_day">Deleted Gym Session</string>
     <string name="gym_sessions">Gym Sessions</string>
     <string name="add_training_block">Add training block</string>
+    <string name="app_settings">Settings</string>
+    <string name="programs">Programs</string>
+    <string name="exercises_edit">Edit Exercises</string>
+    <string name="exe_list">List of Exercises</string>
+    <string name="training_blocks">Training Blocks</string>
+    <string name="save">Save</string>
+    <string name="moove_type">Mooving</string>
+    <string name="muscles">Muscles</string>
+    <string name="select">Select</string>
+    <string name="title">Title</string>
+    <string name="exercise">Exercise</string>
 
 
 </resources>

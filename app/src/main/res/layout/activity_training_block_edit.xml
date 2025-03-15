@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
-    android:padding="16dp"
+    android:background="@color/background"
+    android:padding="8dp"
     tools:context=".ui.plan.TrainingBlocksActivity">
 
     <!-- Заголовок екрана -->
@@ -13,21 +13,21 @@
         android:id="@+id/textViewBlockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/editing_training_blocks"
-        android:textColor="@color/primary"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/training_blocks"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Список тренувальних блоків -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTrainingBlocks"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,11 +40,13 @@
         android:id="@+id/buttonAddTrainingBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="@string/add_training_block"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/primary"
+        app:backgroundTint="@color/fab_background_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />
+        app:tint="@color/fab_tint" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="16dp"
+    android:padding="8dp"
     tools:context=".ui.plan.FitnessProgramsActivity">
 
     <!-- Заголовок -->
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="@string/exercises"
+        android:text="@string/plan_management_title"
         android:textColor="@color/text_color"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -46,10 +46,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="@string/add_new_plan"
-        app:backgroundTint="@color/primary_variant"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/fab_background_tint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@color/secondary" />
+        app:tint="@color/fab_tint" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

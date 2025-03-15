@@ -135,7 +135,7 @@ public class ExerciseDialog {
         AlertDialog dialog = builder.create();
         // Встановлюємо колір фону
         dialog.setOnShowListener(d -> {
-            dialog.getWindow().setBackgroundDrawableResource(R.color.primary); // Вкажи свій колір в res/values/colors.xml
+            dialog.getWindow().setBackgroundDrawableResource(R.color.background); // Вкажи свій колір в res/values/colors.xml
         });
 
         dialog.show();

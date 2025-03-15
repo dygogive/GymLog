@@ -1,6 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="Theme.MyApp" parent="Theme.Material3.Light.NoActionBar">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MyApp" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Кольори \"Primary\" -->
         <item name="colorPrimary">@color/my_primary</item>
         <item name="colorOnPrimary">@color/my_on_primary</item>
@@ -27,5 +27,4 @@
         <item name="android:navigationBarColor">?attr/android:colorBackground</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
-
 </resources>

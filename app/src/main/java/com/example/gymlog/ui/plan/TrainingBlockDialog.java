@@ -75,7 +75,7 @@ public class TrainingBlockDialog extends Dialog {
         // Розширюємо діалог на всю ширину екрану
         if (getWindow() != null) {
             getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            getWindow().setBackgroundDrawableResource(R.color.dialog_background);
+            getWindow().setBackgroundDrawableResource(R.color.background);
         }
 
         // Ініціалізація UI елементів

@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@color/primary"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:background="@color/my_on_secondary_container">
 
         <!-- Назва тренувального блоку -->
         <TextView
             android:id="@+id/textViewBlockName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:text="Назва блоку"
-            android:textColor="@color/primary"
-            android:textSize="18sp"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/buttonExpand"
+            app:layout_constraintEnd_toStartOf="@+id/buttonDeleteBlock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,63 +34,68 @@
             android:id="@+id/textViewBlockDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="Опис блоку"
-            android:textColor="@color/secondary"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/buttonExpand"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonExpand"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBlockName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewBlockName" />
 
         <!-- Кнопка редагування блоку -->
+
+        <!-- Кнопка видалення блоку -->
+
+        <!-- Кнопка розгортання списку вправ -->
         <ImageButton
             android:id="@+id/buttonEditBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_edit"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonExpand"
-            app:layout_constraintEnd_toStartOf="@id/buttonDeleteBlock"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonDeleteBlock"
             app:tint="@color/primary" />
 
-        <!-- Кнопка видалення блоку -->
         <ImageButton
             android:id="@+id/buttonDeleteBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_delete"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonEditBlock"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/primary" />
 
-        <!-- Кнопка розгортання списку вправ -->
         <ImageButton
             android:id="@+id/buttonExpand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_expand"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewBlockDescription"
-            app:layout_constraintEnd_toStartOf="@id/buttonEditBlock"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEditBlock"
             app:tint="@color/primary" />
 
         <!-- Список вправ -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewExercises"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBlockDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonExpand" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

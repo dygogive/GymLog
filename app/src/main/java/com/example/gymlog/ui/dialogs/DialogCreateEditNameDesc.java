@@ -28,14 +28,14 @@ public class DialogCreateEditNameDesc extends Dialog {
     }
 
     public DialogCreateEditNameDesc(@NonNull Context context, String currentName, String currentDescription, OnEditConfirmedListener listener) {
-        super(context);
+        super(context, R.style.RoundedDialogTheme);
         this.currentName = currentName;
         this.currentDescription = currentDescription;
         this.listener = listener;
         this.titleDialog = context.getString(R.string.edit_plan);
     }
     public DialogCreateEditNameDesc(@NonNull Context context, String title, String currentName, String currentDescription, OnEditConfirmedListener listener) {
-        super(context);
+        super(context, R.style.RoundedDialogTheme);
         this.currentName = currentName;
         this.currentDescription = currentDescription;
         this.listener = listener;

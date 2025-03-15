@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background"
-    android:padding="16dp">
+    android:background="@color/background"
+    android:padding="16dp"
+    >
 
     <!-- Заголовок діалогу -->
     <TextView
@@ -12,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit"
-        android:textColor="@color/primary"
-        android:textSize="20sp"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +28,8 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/background"
         android:hint="Назва"
-        android:textColor="@color/primary"
-        android:textColorHint="@color/primary"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/fab_background_tint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,8 +42,8 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/background"
         android:hint="Опис"
-        android:textColor="@color/primary"
-        android:textColorHint="@color/primary"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/fab_background_tint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,9 +64,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/card_background"
-            android:text="Скасувати"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/fab_tint"
+            android:text="@string/cancel"
+            android:textColor="@color/text_color"
             android:textSize="16sp" />
 
         <Button
@@ -74,9 +75,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/card_background"
-            android:text="Зберегти"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/fab_tint"
+            android:text="@string/save"
+            android:textColor="@color/text_color"
             android:textSize="16sp" />
     </LinearLayout>
 

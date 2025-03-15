@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Стиль для діалогу з заокругленим фоном -->
+    <style name="RoundedDialogTheme" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <!-- Вимикаємо заголовок, якщо треба -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- Застосовуємо наш фон із заокругленням -->
+        <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+        <!-- Дозволяємо прозорість, якщо потрібно -->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+</resources>

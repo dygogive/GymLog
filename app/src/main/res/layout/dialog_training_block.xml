@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@color/background"
     android:padding="16dp">
 
     <!-- Назва блоку -->
@@ -12,11 +13,11 @@
         android:id="@+id/editTextBlockName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/primary_variant"
+        android:backgroundTint="@color/fab_tint"
         android:hint="Назва блоку"
-        android:textColor="@color/primary"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,10 +28,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/primary_variant"
+        android:backgroundTint="@color/fab_tint"
         android:hint="Опис блоку"
-        android:textColor="@color/primary"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextBlockName" />
@@ -41,8 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Фільтр за типом руху"
-        android:textColor="@color/primary"
+        android:text="@string/moove_type"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextBlockDescription" />
 
@@ -51,9 +54,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/primary_variant"
-        android:text="Оберіть рухи"
-        android:textColor="@android:color/white"
+        android:backgroundTint="@color/fab_tint"
+        android:text="@string/select"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterMotion" />
@@ -63,8 +67,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Фільтр за групою м'язів"
-        android:textColor="@color/primary"
+        android:text="@string/muscles"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonSelectMotion" />
 
@@ -73,9 +78,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/primary_variant"
-        android:text="Оберіть м’язи"
-        android:textColor="@android:color/white"
+        android:backgroundTint="@color/fab_tint"
+        android:text="@string/select"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterMuscle" />
@@ -85,33 +91,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Фільтр за спорядженням"
-        android:textColor="@color/primary"
+        android:text="@string/equipment"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonSelectMuscle" />
+
+    <!-- Кнопки "Скасувати" та "Зберегти" -->
 
     <Button
         android:id="@+id/buttonSelectEquipment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/primary_variant"
-        android:text="Оберіть обладнання"
-        android:textColor="@android:color/white"
+        android:backgroundTint="@color/fab_tint"
+        android:text="@string/select"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/checkBoxFilterEquipment" />
-
-    <!-- Кнопки "Скасувати" та "Зберегти" -->
 
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/primary_variant"
-        android:text="Скасувати"
-        android:textColor="@android:color/white"
+        android:backgroundTint="@color/fab_tint"
+        android:text="@string/cancel"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttonSelectEquipment" />
 
@@ -120,9 +130,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/primary"
-        android:text="Зберегти"
-        android:textColor="@android:color/white"
+        android:backgroundTint="@color/fab_tint"
+        android:text="@string/save"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSelectEquipment" />
 

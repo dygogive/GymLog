@@ -16,7 +16,7 @@ public class ConfirmDeleteDialog {
 
 
     public static void show(Context context, String itemName, final OnDeleteConfirmedListener listener) {
-        AlertDialog dialog1 = new AlertDialog.Builder(context)
+        AlertDialog dialog1 = new AlertDialog.Builder(context, R.style.RoundedDialogTheme)// ваш кастомний layout
                 .setTitle(R.string.confirm_deletion)
                 .setMessage(context.getString(R.string.do_you_really_want_to_delete) + itemName + "\"?")
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
