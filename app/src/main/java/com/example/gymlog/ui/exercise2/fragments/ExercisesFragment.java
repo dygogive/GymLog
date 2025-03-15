@@ -25,6 +25,7 @@ import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.ui.exercise2.adapters.ExerciseAdapter;
+import com.example.gymlog.ui.exercise2.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.exercise2.factories.DefaultExercisesFactory;
 
 import java.util.List;
@@ -159,7 +160,7 @@ public class ExercisesFragment extends Fragment {
 
 
     private void openExerciseDialog(@Nullable Exercise exercise) {
-        ui.exercise2.dialogs.ExerciseDialog dialog = new ui.exercise2.dialogs.ExerciseDialog(getContext(), () -> {
+        DialogForExerciseEdit dialog = new DialogForExerciseEdit(getContext(), () -> {
             refreshExerciseList(); // Оновлення списку після збереження
         });
 

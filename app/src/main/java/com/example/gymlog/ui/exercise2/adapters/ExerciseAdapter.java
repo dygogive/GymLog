@@ -100,9 +100,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            exerciseName = itemView.findViewById(R.id.textViewExerciseName);
+            exerciseName = itemView.findViewById(R.id.nameExercise);
             exerciseDetails = itemView.findViewById(R.id.textViewExerciseDetails);
-            editButton = itemView.findViewById(R.id.buttonEditExercise);
+            editButton = itemView.findViewById(R.id.buttonInfo);
             expandButton = itemView.findViewById(R.id.buttonExpandDetails); // Кнопка розширення
         }
 

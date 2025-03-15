@@ -53,7 +53,11 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         // Налаштування RecyclerView
         recyclerViewTrainingBlocks.setLayoutManager(new LinearLayoutManager(this));
         trainingBlocks = new ArrayList<>();
-        trainingBlockAdapter = new TrainingBlockAdapter(trainingBlocks, planManagerDAO, new TrainingBlockAdapter.OnTrainingBlockClickListener() {
+        trainingBlockAdapter = new TrainingBlockAdapter(
+                TrainingBlocksActivity.this,
+                trainingBlocks,
+                planManagerDAO,
+                new TrainingBlockAdapter.OnTrainingBlockClickListener() {
             @Override
             public void onBlockClick(TrainingBlock block) {
                 // Логіка відкриття блоку для редагування

@@ -1,4 +1,4 @@
-package ui.exercise2.dialogs;
+package com.example.gymlog.ui.exercise2.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,7 +22,7 @@ import com.example.gymlog.data.db.ExerciseDAO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExerciseDialog {
+public class DialogForExerciseEdit {
 
     // Інтерфейс для зворотного виклику після збереження вправи
     public interface ExerciseDialogListener {
@@ -35,7 +35,7 @@ public class ExerciseDialog {
     private final ExerciseDialogListener listener; // Слухач для подій діалогу
 
     // Конструктор, ініціалізує необхідні залежності
-    public ExerciseDialog(Context context, ExerciseDialogListener listener) {
+    public DialogForExerciseEdit(Context context, ExerciseDialogListener listener) {
         this.context = context;
         this.exerciseDAO = new ExerciseDAO(context);
         this.listener = listener;
@@ -97,11 +97,11 @@ public class ExerciseDialog {
                 .setView(dialogView) // Встановлення кастомного вигляду
                 .setPositiveButton(R.string.ok, (dialog, which) -> {
                     // Отримання введених користувачем даних
-                    String name = editTextName.getText().toString().trim();
-                    String motionDescription = (String) spinnerMotion.getSelectedItem();
+                    String name                 = editTextName.getText().toString().trim();
+                    String motionDescription    = (String) spinnerMotion.getSelectedItem();
                     String equipmentDescription = (String) spinnerEquipment.getSelectedItem();
 
-                    Motion selectedMotion = Motion.getObjectByDescription(context, motionDescription);
+                    Motion selectedMotion       = Motion.getObjectByDescription(context, motionDescription);
                     Equipment selectedEquipment = Equipment.getEquipmentByDescription(context, equipmentDescription);
 
                     List<MuscleGroup> selectedMuscleGroups = new ArrayList<>();
