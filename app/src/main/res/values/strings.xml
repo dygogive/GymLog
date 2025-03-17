@@ -205,6 +205,7 @@
     <string name="chosed">Chosed</string>
     <string name="set_name">Set name</string>
     <string name="no_description">No description!</string>
+    <string name="program_title">Program Title</string>
 
 
 </resources>

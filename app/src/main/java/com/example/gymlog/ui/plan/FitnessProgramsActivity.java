@@ -135,7 +135,10 @@ public class FitnessProgramsActivity extends AppCompatActivity {
     // Метод для відкриття екрану редагування плану
     private void openEditPlanActivity(FitnessProgram fitnessProgram) {
         Intent intent = new Intent(this, GymSessionsActivity.class);
+        //Передаємо інформацію на наступне актівіті
         intent.putExtra("plan_id", fitnessProgram.getId());
+        intent.putExtra("program_name", fitnessProgram.getName());
+        intent.putExtra("program_description", fitnessProgram.getDescription());
         startActivity(intent);
     }
 

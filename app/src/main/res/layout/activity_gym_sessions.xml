@@ -8,6 +8,44 @@
     android:padding="8dp"
     tools:context=".ui.plan.GymSessionsActivity">
 
+
+
+
+
+
+
+    <!-- Заголовок назва програми -->
+    <TextView
+        android:id="@+id/tvProgramTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/program_title"
+        android:textColor="@color/text_color"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Опис програми -->
+    <TextView
+        android:id="@+id/tvProgramDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvProgramTitle" />
+
     <!-- Список тренувальних днів -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDays"
@@ -17,12 +55,11 @@
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tvProgramDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvGymSessionsTitle"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <!-- Floating Action Button для додавання дня -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,20 +74,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/fab_tint" />
-
-
-    <!-- Заголовок -->
-    <TextView
-        android:id="@+id/tvGymSessionsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/gym_sessions"
-        android:textColor="@color/text_color"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

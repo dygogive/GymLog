@@ -44,10 +44,12 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(@NonNull BasePlanViewHolder holder, int position) {
         T item = items.get(position);
-        Context context = holder.itemView.getContext();
+
+        String description = item.getDescription();
 
         holder.textViewName.setText(item.getName());
-        holder.textViewDescription.setText(item.getDescription());
+
+        holder.textViewDescription.setText(description);
 
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
         holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(item));
