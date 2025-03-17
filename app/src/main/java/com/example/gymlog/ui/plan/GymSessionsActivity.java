@@ -22,17 +22,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-// Активність для редагування тренувальних днів плану
+/**
+ * Активність для відображення та редагування списку тренувальних днів (GymSession)
+ * у рамках обраної програми (plan).
+ */
 public class GymSessionsActivity extends AppCompatActivity {
 
+    // UI компоненти
     private RecyclerView recyclerViewDays;
+    private TextView tvProgramTitle, tvProgramDescription;
+    private FloatingActionButton buttonAddDay;
+
+    // DAO і список GymSession
+    private PlanManagerDAO planManagerDAO;
     private BasePlanAdapter<GymSession> gymSessionAdapter;
     private List<GymSession> gymSessions;
-    private PlanManagerDAO planManagerDAO;
+
+    // Ідентифікатор плану + назва/опис програми
     private long planId;
     private String programName, programDescription;
-
-    private TextView tvProgramTitle, tvProgramDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,121 +48,133 @@ public class GymSessionsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_gym_sessions);
 
+        // Ініціалізація DAO
         planManagerDAO = new PlanManagerDAO(this);
 
-        // Отримуємо передані дані
-        Intent intent = getIntent();
-        planId = intent.getLongExtra("plan_id", -1);
-        programName = intent.getStringExtra("program_name");
-        programDescription = intent.getStringExtra("program_description");
+        // Отримуємо дані з Intent (plan_id, programName, programDescription)
+        initIntentData();
 
-        // Перевірка чи отримані дані не null
-        if (planId == -1 || programName == null || programDescription == null) {
-            Toast.makeText(this, "Помилка завантаження програми", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        // Ініціалізація UI компонентів
+        initUI();
 
-        tvProgramTitle = findViewById(R.id.tvProgramTitle);
-        tvProgramDescription = findViewById(R.id.tvProgramDescription);
+        // Налаштовуємо список днів
+        setupRecyclerView();
 
-
-        // Встановлюємо заголовок
-        tvProgramTitle.setText(programName != null ? programName : "");
-
-// Встановлюємо опис
-        if (programDescription != null && programDescription.length() > 50) {
-            tvProgramDescription.setText(programDescription.substring(0, 50) + "...");
-        } else {
-            tvProgramDescription.setText(programDescription != null ? programDescription : "");
-        }
-
-        //Слухач натискання на опис програми
-        tvProgramDescription.setOnClickListener( v -> {
-                    new AlertDialog.Builder(
-                    GymSessionsActivity.this, R.style.RoundedDialogTheme)
-                    .setTitle(programName)
-                    .setMessage(programDescription)
-                    .setPositiveButton("OK", null)
-                    .show();
-                }
-        );
-
-
-
-
-
-
-
-        recyclerViewDays = findViewById(R.id.recyclerViewDays);
-        FloatingActionButton buttonAddDay = findViewById(R.id.buttonAddDay);
-
-        recyclerViewDays.setLayoutManager(new LinearLayoutManager(this));
-        gymSessions = new ArrayList<>();
-        gymSessionAdapter = new BasePlanAdapter<>(gymSessions, new PlanItemClickListener());
-        recyclerViewDays.setAdapter(gymSessionAdapter);
-
-        buttonAddDay.setOnClickListener(v -> createGymSession());
-
+        // Якщо planId валідний, завантажимо дні
         if (planId != -1) {
             loadGymSessions();
         } else {
             Toast.makeText(this, "Помилка завантаження програми", Toast.LENGTH_SHORT).show();
             finish();
-            return;
         }
-
-
     }
 
+    /**
+     * Зчитуємо з Intent ідентифікатор плану і назву/опис програми.
+     * Якщо їх немає, завершуємо активність.
+     */
+    private void initIntentData() {
+        Intent intent = getIntent();
+        planId = intent.getLongExtra("plan_id", -1);
+        programName = intent.getStringExtra("program_name");
+        programDescription = intent.getStringExtra("program_description");
 
+        // Якщо дані не передані або некоректні
+        if (planId == -1 || programName == null || programDescription == null) {
+            Toast.makeText(this, "Помилка завантаження програми", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 
+    /**
+     * Ініціалізуємо візуальні елементи і виводимо назву/опис програми
+     */
+    private void initUI() {
+        // TextView для назви/опису програми
+        tvProgramTitle = findViewById(R.id.tvProgramTitle);
+        tvProgramDescription = findViewById(R.id.tvProgramDescription);
 
-    // Завантаження даних плану для редагування
+        // Встановлюємо назву програми
+        tvProgramTitle.setText(programName);
+
+        // Обрізаємо довгий опис і додаємо три крапки (…)
+        if (programDescription.length() > 50) {
+            tvProgramDescription.setText(programDescription.substring(0, 50) + "...");
+        } else {
+            tvProgramDescription.setText(programDescription);
+        }
+
+        // При натисканні на обрізаний опис показуємо AlertDialog з повним текстом
+        tvProgramDescription.setOnClickListener(v -> {
+            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                    .setTitle(programName)
+                    .setMessage(programDescription)
+                    .setPositiveButton("OK", null)
+                    .show();
+        });
+
+        // Кнопка додавання нового дня
+        buttonAddDay = findViewById(R.id.buttonAddDay);
+        buttonAddDay.setOnClickListener(v -> createGymSession());
+    }
+
+    /**
+     * Налаштовуємо RecyclerView для списку GymSession
+     */
+    private void setupRecyclerView() {
+        recyclerViewDays = findViewById(R.id.recyclerViewDays);
+        recyclerViewDays.setLayoutManager(new LinearLayoutManager(this));
+
+        gymSessions = new ArrayList<>();
+        gymSessionAdapter = new BasePlanAdapter<>(gymSessions, new PlanItemClickListener());
+        recyclerViewDays.setAdapter(gymSessionAdapter);
+    }
+
+    /**
+     * Завантажуємо список GymSession з бази даних і оновлюємо адаптер
+     */
     private void loadGymSessions() {
         gymSessions.clear();
         gymSessions.addAll(planManagerDAO.getGymDaysByPlanId(planId));
         gymSessionAdapter.notifyDataSetChanged();
     }
 
-    // Відкриваємо діалог для додавання тренувального дня
+    /**
+     * Відкриваємо діалог для створення нового тренувального дня (GymSession)
+     */
     private void createGymSession() {
         DialogCreateEditNameDesc dialog = new DialogCreateEditNameDesc(
-                    GymSessionsActivity.this,
-                    GymSessionsActivity.this.getString(R.string.create_gym_session),
-                    "",
-                    "",
-                    (dayName, description) -> {
-                        long gymDayId = planManagerDAO.addGymDay(planId, dayName, description);
-
-                        if (gymDayId != -1) {
-                            Toast.makeText(GymSessionsActivity.this, "Новий день тренувань додано", Toast.LENGTH_SHORT).show();
-
-                        }
-                        GymSessionsActivity.this.loadGymSessions();
+                this,
+                getString(R.string.create_gym_session),
+                "",
+                "",
+                (dayName, description) -> {
+                    long gymDayId = planManagerDAO.addGymDay(planId, dayName, description);
+                    if (gymDayId != -1) {
+                        Toast.makeText(this, "Новий день тренувань додано", Toast.LENGTH_SHORT).show();
                     }
-                );
+                    loadGymSessions();
+                }
+        );
         dialog.show();
-
     }
 
-
-    //Слухач натискань на елемент списку
-    private class PlanItemClickListener implements BasePlanAdapter.OnPlanItemClickListener {
-
-        private PlanItemClickListener() {
-        }
+    /**
+     * Внутрішній клас-слухач подій на кожному GymSession:
+     *  - редагувати
+     *  - видалити
+     *  - натиснути (перехід до TrainingBlocks)
+     */
+    private class PlanItemClickListener implements BasePlanAdapter.OnPlanItemClickListener<GymSession> {
 
         @Override
-        public void onEditClick(Object item) {
-
-            GymSession gymSession = (GymSession) item;
+        public void onEditClick(GymSession gymSession) {
+            // Діалог редагування назви та опису
             DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
                     GymSessionsActivity.this,
                     gymSession.getName(),
                     gymSession.getDescription(),
                     (newName, newDescription) -> {
-                        // Оновлення даних після редагування
                         gymSession.setName(newName);
                         gymSession.setDescription(newDescription);
                         planManagerDAO.updateGymSession(gymSession);
@@ -165,15 +185,15 @@ public class GymSessionsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onDeleteClick(Object item) {
-            GymSession gymSession = (GymSession) item;
-
+        public void onDeleteClick(GymSession gymSession) {
+            // Підтвердження перед видаленням
             ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
                 planManagerDAO.deleteGymSession(gymSession.getId());
                 loadGymSessions();
-                Toast.makeText(GymSessionsActivity.this, GymSessionsActivity.this.getString(R.string.deleted_day), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GymSessionsActivity.this,
+                        getString(R.string.deleted_day),
+                        Toast.LENGTH_SHORT).show();
             };
-
 
             ConfirmDeleteDialog.show(
                     GymSessionsActivity.this,
@@ -183,10 +203,10 @@ public class GymSessionsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onItemClick(Object item) {
-            GymSession gymSession = (GymSession) item;
+        public void onItemClick(GymSession gymSession) {
+            // Переходимо до списку блоків (TrainingBlocksActivity)
             Intent intent = new Intent(GymSessionsActivity.this, TrainingBlocksActivity.class);
-            intent.putExtra("gym_day_id", Long.valueOf(gymSession.getId()));
+            intent.putExtra("gym_day_id", gymSession.getId());
             startActivity(intent);
         }
     }

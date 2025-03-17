@@ -8,7 +8,6 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -27,38 +26,79 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// Діалог для створення/редагування тренувального блоку
+/**
+ * Діалог для створення/редагування тренувального блоку (TrainingBlock).
+ * Містить логіку вибору фільтрів (рухи, м'язеві групи, обладнання).
+ */
 public class TrainingBlockDialog extends Dialog {
-    Context context;
 
+    // Контекст
+    private final Context context;
+
+    // Поля вводу для назви і опису
     private EditText editTextBlockName, editTextBlockDescription;
-    private TextView textViewFilterMotion, textViewFilterMuscle, textViewFilterEquipment;
-    private Button buttonSelectMotion, buttonSelectMuscle, buttonSelectEquipment, buttonCancel, buttonSaveBlock;
 
+    // Три TextView для відображення підписів фільтрів (Motion, Muscle, Equipment)
+    private TextView textViewFilterMotion, textViewFilterMuscle, textViewFilterEquipment;
+
+    // Кнопки вибору фільтрів і керування діалогом
+    private Button buttonSelectMotion, buttonSelectMuscle, buttonSelectEquipment;
+    private Button buttonCancel, buttonSaveBlock;
+
+    // Логіка вибраних елементів у фільтрах
     private boolean[] booleansMotions, booleansMuscles, booleansEquipment;
     private final List<String> chosenTxtMotions = new ArrayList<>();
     private final List<String> chosenTxtMuscles = new ArrayList<>();
     private final List<String> chosenTxtEquipment = new ArrayList<>();
 
+    // DAO для роботи з базою
     private PlanManagerDAO planManagerDAO;
     private ExerciseDAO exercisesDAO;
+
+    // Поточний блок (якщо редагуємо)
     private TrainingBlock trainingBlock;
-    public final OnTrainingBlockCreatedListener listener;
+
+    // Колбек для оновлення списку після збереження
+    private final OnTrainingBlockCreatedListener listener;
+
+    // id дня тренування (gymDayId), до якого належить цей блок
     private final long gymDayId;
 
-    // Інтерфейс для передачі нового блоку у активність
+    /**
+     * Інтерфейс для повідомлення про створення/оновлення нового блоку.
+     */
     public interface OnTrainingBlockCreatedListener {
         void onBlockAdded();
     }
 
-    public TrainingBlockDialog(@NonNull Context context, long gymDayId, OnTrainingBlockCreatedListener listener) {
+    /**
+     * Конструктор для створення нового блоку.
+     *
+     * @param context   поточний контекст
+     * @param gymDayId  id дня тренування
+     * @param listener  колбек, що буде викликаний після збереження
+     */
+    public TrainingBlockDialog(@NonNull Context context,
+                               long gymDayId,
+                               OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;
         this.listener = listener;
     }
 
-    public TrainingBlockDialog(@NonNull Context context, long gymDayId, TrainingBlock block, OnTrainingBlockCreatedListener listener) {
+    /**
+     * Конструктор для редагування існуючого блоку.
+     *
+     * @param context   поточний контекст
+     * @param gymDayId  id дня тренування
+     * @param block     існуючий TrainingBlock
+     * @param listener  колбек, що викликається після збереження
+     */
+    public TrainingBlockDialog(@NonNull Context context,
+                               long gymDayId,
+                               TrainingBlock block,
+                               OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;
@@ -71,44 +111,58 @@ public class TrainingBlockDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_training_block);
 
+        // Ініціалізація DAO
         planManagerDAO = new PlanManagerDAO(getContext());
         exercisesDAO = new ExerciseDAO(getContext());
 
-        // Розширюємо діалог на всю ширину екрану
+        // Розтягнути діалог по ширині (WRAP_CONTENT x WRAP_CONTENT)
         if (getWindow() != null) {
-            getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
             getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         }
 
+        // Налаштування UI
+        initUI();
 
-        // Ініціалізація UI елементів
-        editTextBlockName = findViewById(R.id.editTextBlockName);
-        editTextBlockDescription = findViewById(R.id.editTextBlockDescription);
-        textViewFilterMotion = findViewById(R.id.textViewFilterMotion);
-        textViewFilterMuscle = findViewById(R.id.textViewFilterMuscle);
-        textViewFilterEquipment = findViewById(R.id.textViewFilterEquipment);
-        buttonSelectMotion = findViewById(R.id.buttonSelectMotion);
-        buttonSelectMuscle = findViewById(R.id.buttonSelectMuscle);
-        buttonSelectEquipment = findViewById(R.id.buttonSelectEquipment);
-        buttonCancel = findViewById(R.id.buttonCancel);
-        buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
+        // Ініціалізація масивів фільтрів (Motion, Muscle, Equipment)
+        initFilters();
 
-        //обмеження для EditText полів
-        editTextBlockName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
-        editTextBlockDescription.setFilters(new InputFilter[]{new InputFilter.LengthFilter(300)});
-
-
-        // Ініціалізація масивів доступних фільтрів
-        booleansMotions = new boolean[Motion.values().length];
-        booleansMuscles = new boolean[MuscleGroup.values().length];
-        booleansEquipment = new boolean[Equipment.values().length];
-
-        // Завантажуємо дані, якщо блок редагується
+        // Якщо редагуємо існуючий блок
         if (trainingBlock != null) {
             loadBlockData();
         }
+    }
 
-        // Обробники натискання на кнопки вибору фільтрів
+    /**
+     * Ініціалізація UI елементів.
+     * Налаштування кнопок: Обрати рухи / м'язи / обладнання,
+     * Кнопок "Скасувати" та "Зберегти".
+     */
+    private void initUI() {
+        // Поля вводу
+        editTextBlockName = findViewById(R.id.editTextBlockName);
+        editTextBlockDescription = findViewById(R.id.editTextBlockDescription);
+
+        // Обмеження довжини тексту (наприклад, назва до 30 символів, опис до 300)
+        editTextBlockName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
+        editTextBlockDescription.setFilters(new InputFilter[]{new InputFilter.LengthFilter(300)});
+
+        // TextView із підписами (зараз не мають великої функціональності, але залишаємо)
+        textViewFilterMotion = findViewById(R.id.textViewFilterMotion);
+        textViewFilterMuscle = findViewById(R.id.textViewFilterMuscle);
+        textViewFilterEquipment = findViewById(R.id.textViewFilterEquipment);
+
+        // Кнопки вибору фільтрів
+        buttonSelectMotion = findViewById(R.id.buttonSelectMotion);
+        buttonSelectMuscle = findViewById(R.id.buttonSelectMuscle);
+        buttonSelectEquipment = findViewById(R.id.buttonSelectEquipment);
+
+        // Кнопки керування діалогом
+        buttonCancel = findViewById(R.id.buttonCancel);
+        buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
+
+        // Вибір рухів
         buttonSelectMotion.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть рухи",
                 Motion.getAllDescriptions(getContext()),
@@ -117,6 +171,7 @@ public class TrainingBlockDialog extends Dialog {
                 buttonSelectMotion
         ));
 
+        // Вибір м'язів
         buttonSelectMuscle.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть м’язи",
                 MuscleGroup.getAllDescriptions(getContext()),
@@ -125,6 +180,7 @@ public class TrainingBlockDialog extends Dialog {
                 buttonSelectMuscle
         ));
 
+        // Вибір обладнання
         buttonSelectEquipment.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть обладнання",
                 Equipment.getEquipmentDescriptions(getContext()),
@@ -133,41 +189,49 @@ public class TrainingBlockDialog extends Dialog {
                 buttonSelectEquipment
         ));
 
-
-        // Обробник кнопки "Скасувати"
+        // Кнопка "Скасувати"
         buttonCancel.setOnClickListener(v -> dismiss());
 
-        // Обробник кнопки "Зберегти"
+        // Кнопка "Зберегти"
         buttonSaveBlock.setOnClickListener(v -> saveTrainingBlock());
-
-
-
     }
 
-    //Якщо блок редагується, то оновити діалог з бази даних
+    /**
+     * Ініціалізація масивів фільтрів (Motion / MuscleGroup / Equipment).
+     */
+    private void initFilters() {
+        booleansMotions = new boolean[Motion.values().length];
+        booleansMuscles = new boolean[MuscleGroup.values().length];
+        booleansEquipment = new boolean[Equipment.values().length];
+    }
+
+    /**
+     * Завантажуємо дані існуючого блоку і відзначаємо обрані фільтри.
+     */
     private void loadBlockData() {
+        // Назва і опис
         editTextBlockName.setText(trainingBlock.getName());
         editTextBlockDescription.setText(trainingBlock.getDescription());
 
-        // Отримуємо фільтри з бази
+        // Завантажуємо фільтри з БД
         List<String> savedMotionsInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "motionType");
         List<String> savedMusclesInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "muscleGroup");
         List<String> savedEquipmentInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "equipment");
 
-
-        // Відзначаємо вибрані елементи у списках
+        // Відзначаємо вибрані елементи
         updateSelections(savedMotionsInDB, chosenTxtMotions, booleansMotions, Motion.values(), getContext());
         updateSelections(savedMusclesInDB, chosenTxtMuscles, booleansMuscles, MuscleGroup.values(), getContext());
         updateSelections(savedEquipmentInDB, chosenTxtEquipment, booleansEquipment, Equipment.values(), getContext());
 
-        // Оновлюємо текст кнопок
+        // Оновлення кнопок (кількість обраних елементів)
         updateButtonText(buttonSelectMotion, chosenTxtMotions);
         updateButtonText(buttonSelectMuscle, chosenTxtMuscles);
         updateButtonText(buttonSelectEquipment, chosenTxtEquipment);
     }
 
-
-    // Відзначаємо вибрані елементи у списках
+    /**
+     * Оновлюємо виділення у масивах (booleans) і текстових списках (chosenTxtX)
+     */
     private <T extends Enum<T>> void updateSelections(
             List<String> savedEnumNamesInDB,
             List<String> chosenItems,
@@ -179,20 +243,25 @@ public class TrainingBlockDialog extends Dialog {
         Arrays.fill(selectedBooleans, false);
 
         for (int i = 0; i < enums.length; i++) {
+            // Якщо enum.name() є у збережених в БД
             if (savedEnumNamesInDB.contains(enums[i].name())) {
                 selectedBooleans[i] = true;
-                chosenItems.add(enums[i] instanceof Motion ?
-                        ((Motion) enums[i]).getDescription(context) :
-                        enums[i] instanceof MuscleGroup ?
-                                ((MuscleGroup) enums[i]).getDescription(context) :
-                                ((Equipment) enums[i]).getDescription(context));
+
+                // Додаємо локалізований опис (Motion/MuscleGroup/Equipment)
+                if (enums[i] instanceof Motion) {
+                    chosenItems.add(((Motion) enums[i]).getDescription(context));
+                } else if (enums[i] instanceof MuscleGroup) {
+                    chosenItems.add(((MuscleGroup) enums[i]).getDescription(context));
+                } else if (enums[i] instanceof Equipment) {
+                    chosenItems.add(((Equipment) enums[i]).getDescription(context));
+                }
             }
         }
     }
 
-
-
-    //оновити назву кнопки згідно з к-стю вибраних елементів у списку
+    /**
+     * Оновлює текст на кнопці (к-ть обраних елементів).
+     */
     private void updateButtonText(Button button, List<String> selectedItems) {
         if (selectedItems.isEmpty()) {
             button.setText(R.string.chose);
@@ -201,11 +270,19 @@ public class TrainingBlockDialog extends Dialog {
         }
     }
 
-
+    /**
+     * Збереження/оновлення тренувального блоку в базі.
+     * 1. Якщо нового блоку не було, створюємо
+     * 2. Якщо існує, оновлюємо
+     * 3. Очищаємо попередні фільтри та зберігаємо нові
+     * 4. Оновлюємо список вправ у блоці
+     */
     private void saveTrainingBlock() {
+        // Зчитуємо назву і опис
         String name = editTextBlockName.getText().toString().trim();
         String description = editTextBlockDescription.getText().toString().trim();
 
+        // Перевірка: назва не може бути порожньою
         if (name.isEmpty()) {
             editTextBlockName.setError(context.getString(R.string.set_name));
             return;
@@ -213,50 +290,49 @@ public class TrainingBlockDialog extends Dialog {
 
         long blockId;
 
+        // Якщо блок ще не існував (створення)
         if (trainingBlock == null) {
-            TrainingBlock block = new TrainingBlock(
-                    0,
-                    gymDayId,
-                    name,
-                    description,
-                    new ArrayList<>()
-            );
+            TrainingBlock block = new TrainingBlock(0, gymDayId, name, description, new ArrayList<>());
             blockId = planManagerDAO.addTrainingBlock(block);
-            trainingBlock = block; // Ініціалізуємо trainingBlock новим створеним блоком!
-            trainingBlock.setId(blockId); // важливо оновити id після додавання
+            // Присвоюємо trainingBlock, оновлюємо його id
+            trainingBlock = block;
+            trainingBlock.setId(blockId);
         } else {
+            // Якщо блок існує (редагування)
             trainingBlock.setName(name);
             trainingBlock.setDescription(description);
             planManagerDAO.updateTrainingBlock(trainingBlock);
             blockId = trainingBlock.getId();
         }
 
-        // Очистити старі фільтри та зберегти нові
+        // Очищаємо старі фільтри і зберігаємо нові
         planManagerDAO.clearTrainingBlockFilters(blockId);
         saveFilters(blockId);
 
-        // Оновити список вправ для блоку
+        // Оновлюємо список вправ для блоку
         List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(blockId);
-
         if (trainingBlock == null) {
+            // Підстраховка, але логічно сюди не дійде,
+            // оскільки trainingBlock вже ініціалізовано вище
             trainingBlock = new TrainingBlock(blockId, gymDayId, name, description, exercises);
         } else {
             trainingBlock.setExercises(exercises);
         }
 
-        // запускаємо оновлення у списку
+        // Викликаємо колбек (оновлення списку в основній активності)
         if (listener != null) {
             listener.onBlockAdded();
         }
 
+        // Закриваємо діалог
         dismiss();
     }
 
-
-
-
+    /**
+     * Зберігаємо (motion/muscle/equipment) фільтри в таблицях
+     */
     private void saveFilters(long blockId) {
-        // Зберігаємо Motion якщо чекбокс активний
+        // Motion
         for (String motionText : chosenTxtMotions) {
             Motion motion = Motion.getObjectByDescription(getContext(), motionText);
             if (motion != null) {
@@ -264,7 +340,7 @@ public class TrainingBlockDialog extends Dialog {
             }
         }
 
-        // Зберігаємо MuscleGroup
+        // MuscleGroup
         for (String muscleText : chosenTxtMuscles) {
             MuscleGroup muscleGroup = MuscleGroup.getObjectByDescription(getContext(), muscleText);
             if (muscleGroup != null) {
@@ -272,7 +348,7 @@ public class TrainingBlockDialog extends Dialog {
             }
         }
 
-        // Зберігаємо Equipment
+        // Equipment
         for (String equipmentText : chosenTxtEquipment) {
             Equipment equipment = Equipment.getEquipmentByDescription(getContext(), equipmentText);
             if (equipment != null) {
@@ -281,12 +357,10 @@ public class TrainingBlockDialog extends Dialog {
         }
     }
 
-
-
-
-
-
-    // Метод для показу діалогу вибору значень
+    /**
+     * Показує діалог із мультивибором (список елементів + checkbox).
+     * Обираємо потрібні речі: рухи, м'язи, обладнання.
+     */
     private void showMultiSelectDialog(
             String title,
             String[] AllItems,
@@ -295,11 +369,10 @@ public class TrainingBlockDialog extends Dialog {
             Button button
     ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
         builder.setTitle(title);
 
+        // Мультивибір
         builder.setMultiChoiceItems(AllItems, booleansOfItems, (dialog, which, isChecked) -> {
-            //оновити список значень щодо списку
             booleansOfItems[which] = isChecked;
             if (isChecked) {
                 selectedItems.add(AllItems[which]);
@@ -309,17 +382,11 @@ public class TrainingBlockDialog extends Dialog {
         });
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            // Оновлюємо текст кнопки
+            // Оновлюємо відображення кнопки
             updateButtonText(button, selectedItems);
         });
-
         builder.setNegativeButton("Скасувати", (dialog, which) -> dialog.dismiss());
 
         builder.show();
     }
-
-
-
-
-
 }

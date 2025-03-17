@@ -21,48 +21,76 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Активність для відображення і редагування (створення, редагування, видалення) списку
+ * програм тренувань (FitnessProgram).
+ */
 public class FitnessProgramsActivity extends AppCompatActivity {
+
+    // DAO для роботи з базою
     private PlanManagerDAO planManagerDAO;
+
+    // RecyclerView + адаптер
     private RecyclerView recyclerView;
-    private FloatingActionButton floatingActionButton;
     private BasePlanAdapter<FitnessProgram> fitnessProgramAdapter;
     private List<FitnessProgram> fitnessPrograms;
+
+    // FloatingActionButton для додавання нової програми
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Увімкнути розширене відображення (edge-to-edge)
         EdgeToEdge.enable(this);
+
+        // Встановити лейаут
         setContentView(R.layout.activity_fitness_programs);
 
+        // Ініціалізація UI
+        initializeUI();
 
+        // Ініціалізація DAO
+        planManagerDAO = new PlanManagerDAO(this);
 
-        initializeUI(); // Ініціалізація елементів інтерфейсу
-        planManagerDAO = new PlanManagerDAO(this); // Ініціалізація об'єкта для роботи з базою даних
-        fitnessPrograms = new ArrayList<>(); // Створення списку планів
-        setupRecyclerView(); // Налаштування списку планів
-        loadPlanCycles(); // Завантаження списку планів з бази даних
+        // Створюємо список програм і налаштовуємо адаптер
+        fitnessPrograms = new ArrayList<>();
+        setupRecyclerView();
+
+        // Завантажуємо програми з бази
+        loadPlanCycles();
     }
 
-    // Метод для ініціалізації UI елементів
+    /**
+     * Ініціалізація UI елементів (RecyclerView, FloatingActionButton) та обробників натискання
+     */
     private void initializeUI() {
         recyclerView = findViewById(R.id.recyclerViewPlans);
         floatingActionButton = findViewById(R.id.fabAddPlan);
+
+        // Клік на FAB для додавання нової програми
         floatingActionButton.setOnClickListener(v -> addNewPlan());
     }
 
-    // Метод для налаштування RecyclerView (списку планів)
+    /**
+     * Налаштовуємо RecyclerView:
+     * - створюємо адаптер BasePlanAdapter
+     * - передаємо слухач подій (редагувати, видалити, натиснути)
+     */
     private void setupRecyclerView() {
+        // Створюємо адаптер із анонімним слухачем
         fitnessProgramAdapter = new BasePlanAdapter<>(
                 fitnessPrograms,
                 new BasePlanAdapter.OnPlanItemClickListener<>() {
                     @Override
                     public void onEditClick(FitnessProgram fitnessProgram) {
+                        // Діалог редагування назви та опису
                         DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
                                 FitnessProgramsActivity.this,
                                 fitnessProgram.getName(),
                                 fitnessProgram.getDescription(),
                                 (newName, newDescription) -> {
-                                    // Оновлення даних після редагування
+                                    // Оновлюємо план і зберігаємо в базу
                                     fitnessProgram.setName(newName);
                                     fitnessProgram.setDescription(newDescription);
                                     planManagerDAO.updatePlan(fitnessProgram);
@@ -74,51 +102,63 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
                     @Override
                     public void onDeleteClick(FitnessProgram fitnessProgram) {
-                        ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
-                    deletePlan(fitnessProgram); // Видалення плану
-                };
+                        // Діалог підтвердження перед видаленням
+                        ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () ->
+                                deletePlan(fitnessProgram);
+
                         ConfirmDeleteDialog.show(
-                        FitnessProgramsActivity.this,
-                        fitnessProgram.getName(),
-                        onDeleteConfirmedListener
+                                FitnessProgramsActivity.this,
+                                fitnessProgram.getName(),
+                                onDeleteConfirmedListener
                         );
                     }
 
                     @Override
                     public void onItemClick(FitnessProgram fitnessProgram) {
-                        openEditPlanActivity(fitnessProgram); // Відкриття екрану редагування
+                        // Відкриваємо екран із списком днів тренувань
+                        openEditPlanActivity(fitnessProgram);
                     }
                 });
+
+        // Прив'язуємо адаптер до RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(fitnessProgramAdapter);
     }
 
-    // Метод для завантаження планів з бази даних
+    /**
+     * Завантажуємо всі програми (FitnessProgram) із бази даних
+     */
     private void loadPlanCycles() {
-        fitnessPrograms.clear(); // Очистимо список перед оновленням
-        fitnessPrograms.addAll(planManagerDAO.getAllPlans()); // Додаємо плани з бази даних
-        fitnessProgramAdapter.notifyDataSetChanged(); // Оновлюємо відображення
+        fitnessPrograms.clear();
+        fitnessPrograms.addAll(planManagerDAO.getAllPlans());
+        fitnessProgramAdapter.notifyDataSetChanged();
     }
 
-    // Метод для додавання нового плану
+    /**
+     * Створення нової програми тренувань через діалог
+     */
+    @SuppressLint("NotifyDataSetChanged")
     private void addNewPlan() {
+        // Створюємо тимчасовий об'єкт (поки без назви/опису)
         FitnessProgram newFitnessProgram = new FitnessProgram(0, "", "", new ArrayList<>());
-        FitnessProgram finalNewFitnessProgram = newFitnessProgram;
 
-        @SuppressLint("NotifyDataSetChanged")
         DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
-                FitnessProgramsActivity.this, FitnessProgramsActivity.this.getString(R.string.new_program),
+                this,
+                getString(R.string.new_program),
                 newFitnessProgram.getName(),
                 newFitnessProgram.getDescription(),
                 (newName, newDescription) -> {
-                    // Оновлення даних після редагування
-                    finalNewFitnessProgram.setName(newName);
-                    finalNewFitnessProgram.setDescription(newDescription);
-                    long newPlanId = planManagerDAO.addFitProgram(finalNewFitnessProgram);
+                    // Оновлюємо тимчасовий об'єкт і записуємо в базу
+                    newFitnessProgram.setName(newName);
+                    newFitnessProgram.setDescription(newDescription);
 
+                    long newPlanId = planManagerDAO.addFitProgram(newFitnessProgram);
                     if (newPlanId != -1) {
-                        FitnessProgram newFitnessProgram1 = new FitnessProgram(newPlanId, finalNewFitnessProgram.getName(), finalNewFitnessProgram.getDescription(), new ArrayList<>());
-                        fitnessPrograms.add(newFitnessProgram1);
+                        // Якщо успішно додано, створюємо об'єкт із реальним id
+                        FitnessProgram newlyAddedProgram = new FitnessProgram(
+                                newPlanId, newName, newDescription, new ArrayList<>()
+                        );
+                        fitnessPrograms.add(newlyAddedProgram);
                         fitnessProgramAdapter.notifyDataSetChanged();
                         Toast.makeText(this, "План додано!", Toast.LENGTH_SHORT).show();
                     } else {
@@ -127,26 +167,30 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 }
         );
         editDialog.show();
-
-
-
     }
 
-    // Метод для відкриття екрану редагування плану
+    /**
+     * Перехід до екрану GymSessionsActivity,
+     * де відображаються дні тренувань обраної програми
+     */
     private void openEditPlanActivity(FitnessProgram fitnessProgram) {
         Intent intent = new Intent(this, GymSessionsActivity.class);
-        //Передаємо інформацію на наступне актівіті
+        // Передаємо id та назву/опис програми на GymSessionsActivity
         intent.putExtra("plan_id", fitnessProgram.getId());
         intent.putExtra("program_name", fitnessProgram.getName());
         intent.putExtra("program_description", fitnessProgram.getDescription());
         startActivity(intent);
     }
 
-    // Метод для видалення плану
+    /**
+     * Видаляємо план із бази, видаляємо з локального списку і оновлюємо UI
+     */
     private void deletePlan(FitnessProgram fitnessProgram) {
-        planManagerDAO.deletePlan(fitnessProgram.getId()); // Видаляємо план з бази даних
-        fitnessPrograms.remove(fitnessProgram); // Видаляємо з локального списку
-        fitnessProgramAdapter.notifyDataSetChanged(); // Оновлюємо UI
-        Toast.makeText(this, "План видалено: " + fitnessProgram.getName(), Toast.LENGTH_SHORT).show();
+        planManagerDAO.deletePlan(fitnessProgram.getId());
+        fitnessPrograms.remove(fitnessProgram);
+        fitnessProgramAdapter.notifyDataSetChanged();
+        Toast.makeText(this,
+                "План видалено: " + fitnessProgram.getName(),
+                Toast.LENGTH_SHORT).show();
     }
 }
