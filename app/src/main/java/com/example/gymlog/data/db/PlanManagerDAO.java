@@ -237,35 +237,58 @@ public class PlanManagerDAO {
     // Додаємо тренувальний блок
     public long addTrainingBlock(TrainingBlock block) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Отримуємо наступну позицію
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM TrainingBlock WHERE gym_day_id = ?",
+                new String[]{String.valueOf(block.getGymDayId())});
+
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
+        // Встановлюємо позицію блоку
+        block.setPosition(newPosition);
+
         ContentValues values = new ContentValues();
         values.put("gym_day_id", block.getGymDayId());
         values.put("name", block.getName());
         values.put("description", block.getDescription());
+        values.put("position", block.getPosition());
 
         long id = db.insert("TrainingBlock", null, values);
         db.close();
         return id;
     }
 
+
     // Отримуємо всі тренувальні блоки для дня
     public List<TrainingBlock> getTrainingBlocksByDayId(long gymDayId) {
         List<TrainingBlock> blocks = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?",
-                new String[]{String.valueOf(gymDayId)});
+        Cursor cursor = db.rawQuery(
+                "SELECT id, name, description, position FROM TrainingBlock WHERE gym_day_id = ? ORDER BY position ASC",
+                new String[]{String.valueOf(gymDayId)}
+        );
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 String description = cursor.getString(2);
-                blocks.add(new TrainingBlock(id, gymDayId, name, description, new ArrayList<>()));
+                int position = cursor.getInt(3); //додано position
+                TrainingBlock block = new TrainingBlock(id, gymDayId, name, description);
+                block.setPosition(position); // встановлюємо позицію
+                blocks.add(block);
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return blocks;
     }
+
 
     // Додаємо фільтр до тренувального блоку (motion, muscle, equipment)
     public void addTrainingBlockFilter(long trainingBlockId, String filterType, String value) {
@@ -307,6 +330,23 @@ public class PlanManagerDAO {
     }
 
 
+    // оновлюємо порядок у базі
+    public void updateTrainingBlockPositions(List<TrainingBlock> blocks) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < blocks.size(); i++) {
+                ContentValues values = new ContentValues();
+                values.put("position", i);
+                db.update("TrainingBlock", values, "id = ?", new String[]{String.valueOf(blocks.get(i).getId())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
 
 
 
@@ -318,7 +358,7 @@ public class PlanManagerDAO {
     public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
+        Log.d("Where_error_1", "msg 1 ");
         // Для зручності додаємо логування запиту
         String query = "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                 "FROM Exercise e " +
@@ -333,13 +373,13 @@ public class PlanManagerDAO {
 
         Log.d("DB_DEBUG_SQL", "Executing SQL for Block ID: " + trainingBlockId);
         Log.d("DB_DEBUG_SQL", "SQL Query: " + query);
-
+        Log.d("Where_error_1", "msg 2 ");
         Cursor cursor = db.rawQuery(query, new String[]{
                 String.valueOf(trainingBlockId),
                 String.valueOf(trainingBlockId),
                 String.valueOf(trainingBlockId)
         });
-
+        Log.d("Where_error_1", "msg 3 ");
         if (cursor.moveToFirst()) {
             do {
                 // Зчитуємо основні поля
@@ -400,8 +440,10 @@ public class PlanManagerDAO {
             Log.d("DB_DEBUG_EXERCISES", "No exercises found for Block ID: " + trainingBlockId);
         }
 
+        Log.d("Where_error_1", "msg 4");
         cursor.close();
         db.close();
+        Log.d("Where_error_1", "msg 5 ");
         return exercises;
     }
 

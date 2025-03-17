@@ -201,6 +201,10 @@
     <string name="select">Select</string>
     <string name="title">Title</string>
     <string name="exercise">Exercise</string>
+    <string name="chose">Chose</string>
+    <string name="chosed">Chosed</string>
+    <string name="set_name">Set name</string>
+    <string name="no_description">No description!</string>
 
 
 </resources>

@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,11 +70,50 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
 
+
+        // Створюємо колбек (callback), який керує drag & drop
+        ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,  // drag flags (вгору/вниз)
+                0                                           // swipe flags (0 – без свайпів)
+        ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+
+                int fromPosition = viewHolder.getBindingAdapterPosition();
+                int toPosition = target.getBindingAdapterPosition();
+
+                // Викликаємо метод, що міняє місцями елементи в адаптері
+                trainingBlockAdapter.moveItem(fromPosition, toPosition);
+
+                // За бажанням можна зберегти оновлений порядок у базі
+                updateTrainingBlockPositionsInDB();
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Тут нічого не робимо, бо swipeFlags = 0
+            }
+        };
+
+
+        // Під'єднуємо цей колбек до RecyclerView
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewTrainingBlocks);
+
+
         //Завантажити блоки з бази
         loadTrainingBlocks();
 
         // Обробник натискання кнопки "Додати тренувальний блок"
         buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialog());
+    }
+
+    private void updateTrainingBlockPositionsInDB() {
+        planManagerDAO.updateTrainingBlockPositions(trainingBlocks);
     }
 
     // Метод для відкриття діалогу створення блоку
@@ -95,8 +136,6 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
         trainingBlockAdapter.notifyDataSetChanged();
     }
-
-
 
 
     //Слухач натискань на елементі списка

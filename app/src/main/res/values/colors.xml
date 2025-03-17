@@ -18,14 +18,14 @@
     <color name="my_primary_container">#D4DBFF</color>
     <color name="my_on_primary_container">#000000</color>
 
-    <color name="my_secondary">#A8A39E</color>
+    <color name="my_secondary">#6D6C6A</color>
     <color name="my_on_secondary">#000000</color>
     <color name="my_secondary_container">#121212</color>
     <color name="my_on_secondary_container">#DCDCDC</color>
 
     <color name="my_surface">#EBD4CF</color>
     <color name="my_on_surface">#000000</color>
-    <color name="my_surface_variant">#F5F5F5</color>
+    <color name="my_surface_variant">#898484</color>
 
     <color name="my_background">#BDB8B7</color>
     <color name="my_on_background">#AFA9A7</color>

@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.plan.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.plan.TrainingBlock;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdapter.TrainingBlockViewHolder> {
@@ -57,6 +59,16 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
         holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(block));
         holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(block));
+        holder.textViewBlockDescription.setOnClickListener( v -> {
+            String desc = block.getDescription();
+            if(desc.length() > 45) {
+                new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
+                        .setTitle(block.getName())
+                        .setMessage(desc)
+                        .setPositiveButton("OK",null)
+                        .show();
+            }
+        });
 
         // Завантажуємо вправи для блоку
         List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
@@ -77,6 +89,22 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
     @Override
     public int getItemCount() {
         return trainingBlocks.size();
+    }
+
+
+    // Метод для перестановки елементів
+    public void moveItem(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(trainingBlocks, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(trainingBlocks, i, i - 1);
+            }
+
+        }
+        notifyItemMoved(fromPosition, toPosition);
     }
 
 

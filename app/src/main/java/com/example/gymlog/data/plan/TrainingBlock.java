@@ -2,6 +2,7 @@ package com.example.gymlog.data.plan;
 
 import com.example.gymlog.data.exercise.Exercise;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrainingBlock {
@@ -10,10 +11,17 @@ public class TrainingBlock {
     private String name; // Назва групи
     private String description; // Опис або мета групи
     private List<Exercise> exercises; // Список вправ
+    private int position = 0; // За замовчуванням
 
 
     // Конструктори
-    public TrainingBlock() {}
+    public TrainingBlock(long id, long gymDayId, String name, String description) {
+        this.id = id;
+        this.gymDayId = gymDayId;
+        this.name = name;
+        this.description = description;
+        this.exercises = new ArrayList<Exercise>();
+    }
 
     public TrainingBlock(long id, long gymDayId, String name, String description, List<Exercise> exercises) {
         this.id = id;
@@ -40,6 +48,10 @@ public class TrainingBlock {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -57,4 +69,13 @@ public class TrainingBlock {
         return exercises;
     }
 
+
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 }
