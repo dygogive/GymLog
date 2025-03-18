@@ -758,4 +758,96 @@ public class PlanManagerDAO {
         db.close();
         return exercises;
     }
+
+
+
+    /**
+     * Логує всю структуру:
+     *   1) Усі плани (PlanCycles)
+     *   2) Кожен день (GymDay) в плані
+     *   3) Кожен блок (TrainingBlock) у дні
+     *   4) Список фільтрів для блока (motion, muscleGroup, equipment)
+     */
+    public void logAllData() {
+        Log.d("PlanManagerDAO", "========== START: logAllData() ==========");
+
+        // 1) Отримуємо усі плани
+        List<FitnessProgram> allPrograms = getAllPlans();
+        if (allPrograms.isEmpty()) {
+            Log.d("PlanManagerDAO", "Немає жодної програми (PlanCycles)");
+            Log.d("PlanManagerDAO", "========== END: logAllData() ==========");
+            return;
+        }
+
+        for (FitnessProgram program : allPrograms) {
+            long   planId   = program.getId();
+            String planName = program.getName();
+            String planDesc = program.getDescription();
+            // За потреби ти можеш логувати position, is_active тощо — головне, щоб
+            // ти діставав їх у getAllPlans()
+            Log.d("PlanManagerDAO", "PlanCycle [id=" + planId
+                    + ", name=\"" + planName + "\", desc=\"" + planDesc + "\"]");
+
+            // 2) Отримуємо всі дні для плану
+            List<GymSession> sessions = getGymDaysByPlanId(program.getId()); // або getGymDaysByPlanId(planId)
+            if (sessions.isEmpty()) {
+                Log.d("PlanManagerDAO", "  (No GymDays in this plan)");
+            } else {
+                for (GymSession session : sessions) {
+                    long   dayId   = session.getId();
+                    String dayName = session.getName();
+                    String dayDesc = session.getDescription();
+
+                    Log.d("PlanManagerDAO", "   GymDay [id=" + dayId
+                            + ", name=\"" + dayName
+                            + "\", desc=\"" + dayDesc + "\"]");
+
+                    // 3) Для кожного дня дістаємо блоки
+                    List<TrainingBlock> blocks = getTrainingBlocksByDayId(session.getId());
+                    if (blocks.isEmpty()) {
+                        Log.d("PlanManagerDAO", "     (No TrainingBlocks in this day)");
+                    } else {
+                        for (TrainingBlock block : blocks) {
+                            long   blockId   = block.getId();
+                            String blockName = block.getName();
+                            String blockDesc = block.getDescription();
+                            Log.d("PlanManagerDAO", "     TrainingBlock [id=" + blockId
+                                    + ", name=\"" + blockName
+                                    + "\", desc=\"" + blockDesc + "\"]");
+
+                            // 4) Логуємо фільтри (motion, muscleGroup, equipment)
+                            List<String> motions = getTrainingBlockFilters(blockId, "motionType");
+                            List<String> muscles = getTrainingBlockFilters(blockId, "muscleGroup");
+                            List<String> equips  = getTrainingBlockFilters(blockId, "equipment");
+
+                            if (!motions.isEmpty()) {
+                                Log.d("PlanManagerDAO", "       * motions=" + motions);
+                            }
+                            if (!muscles.isEmpty()) {
+                                Log.d("PlanManagerDAO", "       * muscles=" + muscles);
+                            }
+                            if (!equips.isEmpty()) {
+                                Log.d("PlanManagerDAO", "       * equipment=" + equips);
+                            }
+
+                            // Можна ще для відладки дістати всі вправи цього блоку:
+                            List<Exercise> blockExercises = getExercisesForTrainingBlock(blockId);
+                            if (!blockExercises.isEmpty()) {
+                                Log.d("PlanManagerDAO", "       * exercises in block => ");
+                                for (Exercise ex : blockExercises) {
+                                    Log.d("PlanManagerDAO",
+                                            "         - exId=" + ex.getId()
+                                                    + ", name=\"" + ex.getName() + "\"");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Log.d("PlanManagerDAO", "-----------------------------------------");
+        }
+
+        Log.d("PlanManagerDAO", "========== END: logAllData() ==========");
+    }
+
 }

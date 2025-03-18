@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
     public interface OnTrainingBlockClickListener {
         void onEditClick(TrainingBlock block);
         void onDeleteClick(TrainingBlock block);
+        void onAddExercise(TrainingBlock block);
+        void onEditExercises(TrainingBlock block);
     }
 
     // Контекст, список блоків, DAO, слухач
@@ -81,9 +84,33 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         holder.textViewBlockName.setText(block.getName());
         holder.textViewBlockDescription.setText(block.getDescription());
 
-        // Кнопки: "Редагувати" і "Видалити"
-        holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(block));
-        holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(block));
+        //Контекстне меню через 3 крапки
+        holder.buttonMenu.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(context,holder.buttonMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.training_block_menu,popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.menu_edit_block) {
+                    listener.onEditClick(block);
+                    return true;
+                } else if (item.getItemId() == R.id.menu_delete_block) {
+                    listener.onDeleteClick(block);
+                    return true;
+                } else if (item.getItemId() == R.id.menu_add_exercise) {
+                    listener.onAddExercise(block);
+                    return true;
+                } else if (item.getItemId() == R.id.menu_edit_exercises) {
+                    listener.onEditExercises(block);
+                    return true;
+                }
+                return false;
+            });
+
+            popupMenu.show();
+        });
+
+
+
 
         // Якщо опис довгий, при натисканні відкриваємо AlertDialog з повним описом
         holder.textViewBlockDescription.setOnClickListener(v -> {
@@ -151,16 +178,15 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
      */
     public static class TrainingBlockViewHolder extends RecyclerView.ViewHolder {
         TextView textViewBlockName, textViewBlockDescription;
-        ImageButton buttonEdit, buttonDelete;
+        ImageButton buttonMenu;
         RecyclerView recyclerViewExercises;
 
         public TrainingBlockViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewBlockName        = itemView.findViewById(R.id.textViewBlockName);
             textViewBlockDescription = itemView.findViewById(R.id.textViewBlockDescription);
-            buttonEdit               = itemView.findViewById(R.id.buttonEditBlock);
-            buttonDelete             = itemView.findViewById(R.id.buttonDeleteBlock);
             recyclerViewExercises    = itemView.findViewById(R.id.recyclerViewExercises);
+            buttonMenu               = itemView.findViewById(R.id.buttonMenu); // Контекстне меню
         }
     }
 }

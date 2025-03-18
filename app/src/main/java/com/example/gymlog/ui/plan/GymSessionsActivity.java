@@ -6,8 +6,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +61,9 @@ public class GymSessionsActivity extends AppCompatActivity {
 
         // Налаштовуємо список днів
         setupRecyclerView();
+
+        // Створюємо ItemTouchHelper для drag & drop
+        setupDragAndDrop();
 
         // Якщо planId валідний, завантажимо дні
         if (planId != -1) {
@@ -128,6 +133,47 @@ public class GymSessionsActivity extends AppCompatActivity {
         gymSessions = new ArrayList<>();
         gymSessionAdapter = new BasePlanAdapter<>(gymSessions, new PlanItemClickListener());
         recyclerViewDays.setAdapter(gymSessionAdapter);
+    }
+
+    /**
+     * Створюємо SimpleCallback для drag & drop і прикріплюємо його до RecyclerView
+     */
+    private void setupDragAndDrop() {
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,  // Дозволяємо перетягування вгору/вниз
+                0  // Вимкнено swipe
+        ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+
+                // Отримуємо позиції
+                int fromPosition = viewHolder.getBindingAdapterPosition();
+                int toPosition = target.getBindingAdapterPosition();
+
+                // Міняємо місцями елементи в адаптері
+                gymSessionAdapter.moveItem(fromPosition, toPosition);
+
+                // За бажанням зберігаємо новий порядок у базі
+                updateGymSessionPositionsInDB();
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Swipe ігнорується, бо напрямок = 0
+            }
+        };
+        new ItemTouchHelper(callback).attachToRecyclerView(recyclerViewDays);
+    }
+
+    /**
+     * Метод викликається для збереження оновлених позицій у базі
+     */
+    private void updateGymSessionPositionsInDB() {
+        planManagerDAO.updateGymDaysPositions(gymSessionAdapter.getItems());
     }
 
     /**

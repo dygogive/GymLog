@@ -75,7 +75,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
 
         // Додаємо клік для створення нового тренувального блоку
-        buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialog());
+        buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialogByFAB());
     }
 
     /**
@@ -135,7 +135,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     /**
      * Метод для відкриття діалогу створення нового тренувального блоку
      */
-    private void openBlockCreationDialog() {
+    private void openBlockCreationDialogByFAB() {
         TrainingBlockDialog dialog =
                 new TrainingBlockDialog(this, gymDayId, this::loadTrainingBlocks);
         dialog.show();
@@ -184,6 +184,16 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                     block.getName(),
                     onDeleteConfirmedListener
             );
+        }
+
+        @Override
+        public void onAddExercise(TrainingBlock block) {
+            Toast.makeText(TrainingBlocksActivity.this, "Add Exercise New! ",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEditExercises(TrainingBlock block) {
+            Toast.makeText(TrainingBlocksActivity.this, "Chose Exercises! ",Toast.LENGTH_SHORT).show();
         }
     }
 }

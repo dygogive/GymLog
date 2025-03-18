@@ -206,6 +206,7 @@
     <string name="set_name">Set name</string>
     <string name="no_description">No description!</string>
     <string name="program_title">Program Title</string>
+    <string name="delete_training_block">Delete this training block</string>
 
 
 </resources>

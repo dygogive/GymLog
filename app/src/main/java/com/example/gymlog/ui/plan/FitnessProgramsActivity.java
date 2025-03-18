@@ -64,6 +64,8 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
         // Завантажуємо програми з бази
         loadPlanCycles();
+
+        planManagerDAO.logAllData();
     }
 
     /**
@@ -74,7 +76,7 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.fabAddPlan);
 
         // Клік на FAB для додавання нової програми
-        floatingActionButton.setOnClickListener(v -> addNewPlan());
+        floatingActionButton.setOnClickListener(v -> addNewPlanByFAB());
     }
 
     /**
@@ -144,7 +146,7 @@ public class FitnessProgramsActivity extends AppCompatActivity {
      * Створення нової програми тренувань через діалог
      */
     @SuppressLint("NotifyDataSetChanged")
-    private void addNewPlan() {
+    private void addNewPlanByFAB() {
         // Створюємо тимчасовий об'єкт (поки без назви/опису)
         FitnessProgram newFitnessProgram = new FitnessProgram(0, "", "", new ArrayList<>());
 
@@ -155,6 +157,8 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 newFitnessProgram.getDescription(),
                 (newName, newDescription) -> {
                     // Оновлюємо тимчасовий об'єкт і записуємо в базу
+
+
                     newFitnessProgram.setName(newName);
                     newFitnessProgram.setDescription(newDescription);
 

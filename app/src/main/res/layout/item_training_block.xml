@@ -27,7 +27,7 @@
             android:textColor="@color/text_color"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/buttonEditBlock"
+            app:layout_constraintEnd_toStartOf="@+id/buttonMenu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,35 +47,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewBlockName" />
 
-        <!-- Кнопка редагування блоку -->
+        <!-- Кнопка контекстного меню -->
+        <ImageButton
+            android:id="@+id/buttonMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_brush_24"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewBlockDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewBlockName"
+            app:tint="@color/primary" />
 
         <!-- Кнопка видалення блоку -->
 
         <!-- Кнопка розгортання списку вправ -->
-
-        <ImageButton
-            android:id="@+id/buttonEditBlock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/baseline_brush_24"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonDeleteBlock"
-            app:layout_constraintEnd_toStartOf="@+id/buttonDeleteBlock"
-            app:layout_constraintTop_toTopOf="@+id/buttonDeleteBlock"
-            app:tint="@color/primary" />
-
-        <ImageButton
-            android:id="@+id/buttonDeleteBlock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary" />
 
         <!-- Список вправ -->
         <androidx.recyclerview.widget.RecyclerView

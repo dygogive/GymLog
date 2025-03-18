@@ -72,6 +72,13 @@ public class DialogCreateEditNameDesc extends Dialog {
         // Кнопка "Зберегти"
         buttonSave.setOnClickListener(v -> {
             String newName = editTextName.getText().toString().trim();
+
+            // Перевірка: назва не може бути порожньою
+            if (newName.isEmpty()) {
+                editTextName.setError(getContext().getString(R.string.set_name));
+                return;
+            }
+
             String newDescription = editTextDescription.getText().toString().trim();
 
             // Якщо користувач залишив поле порожнім, залишаємо старе значення
