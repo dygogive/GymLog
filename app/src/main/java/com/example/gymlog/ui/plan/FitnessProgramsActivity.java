@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,6 +59,9 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         fitnessPrograms = new ArrayList<>();
         setupRecyclerView();
 
+        // Створюємо ItemTouchHelper для drag & drop
+        setupDragAndDrop();
+
         // Завантажуємо програми з бази
         loadPlanCycles();
     }
@@ -79,50 +84,51 @@ public class FitnessProgramsActivity extends AppCompatActivity {
      */
     private void setupRecyclerView() {
         // Створюємо адаптер із анонімним слухачем
-        fitnessProgramAdapter = new BasePlanAdapter<>(
-                fitnessPrograms,
-                new BasePlanAdapter.OnPlanItemClickListener<>() {
-                    @Override
-                    public void onEditClick(FitnessProgram fitnessProgram) {
-                        // Діалог редагування назви та опису
-                        DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
-                                FitnessProgramsActivity.this,
-                                fitnessProgram.getName(),
-                                fitnessProgram.getDescription(),
-                                (newName, newDescription) -> {
-                                    // Оновлюємо план і зберігаємо в базу
-                                    fitnessProgram.setName(newName);
-                                    fitnessProgram.setDescription(newDescription);
-                                    planManagerDAO.updatePlan(fitnessProgram);
-                                    fitnessProgramAdapter.notifyDataSetChanged();
-                                }
-                        );
-                        editDialog.show();
-                    }
-
-                    @Override
-                    public void onDeleteClick(FitnessProgram fitnessProgram) {
-                        // Діалог підтвердження перед видаленням
-                        ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () ->
-                                deletePlan(fitnessProgram);
-
-                        ConfirmDeleteDialog.show(
-                                FitnessProgramsActivity.this,
-                                fitnessProgram.getName(),
-                                onDeleteConfirmedListener
-                        );
-                    }
-
-                    @Override
-                    public void onItemClick(FitnessProgram fitnessProgram) {
-                        // Відкриваємо екран із списком днів тренувань
-                        openEditPlanActivity(fitnessProgram);
-                    }
-                });
-
+        fitnessProgramAdapter = new BasePlanAdapter<>(fitnessPrograms,new OnItemsRecyclerListener());
         // Прив'язуємо адаптер до RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(fitnessProgramAdapter);
+    }
+
+    /**
+     * Створюємо SimpleCallback для drag & drop і прикріплюємо його до RecyclerView
+     */
+    private void setupDragAndDrop() {
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,  // Дозволяємо перетягування вгору/вниз
+                0  // Вимкнено swipe
+        ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+
+                // Отримуємо позиції
+                int fromPosition = viewHolder.getBindingAdapterPosition();
+                int toPosition = target.getBindingAdapterPosition();
+
+                // Міняємо місцями елементи в адаптері
+                fitnessProgramAdapter.moveItem(fromPosition, toPosition);
+
+                // За бажанням зберігаємо новий порядок у базі
+                updateTrainingBlockPositionsInDB();
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Swipe ігнорується, бо напрямок = 0
+            }
+        };
+        new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * Метод викликається для збереження оновлених позицій у базі
+     */
+    private void updateTrainingBlockPositionsInDB() {
+        planManagerDAO.updatePlansPositions(fitnessProgramAdapter.getItems());
     }
 
     /**
@@ -193,4 +199,49 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 "План видалено: " + fitnessProgram.getName(),
                 Toast.LENGTH_SHORT).show();
     }
+
+
+    /**
+     * Слухач натискань на елементи RecyclerView
+     */
+    private class OnItemsRecyclerListener implements BasePlanAdapter.OnPlanItemClickListener<FitnessProgram> {
+        @Override
+        public void onEditClick(FitnessProgram fitnessProgram) {
+            // Діалог редагування назви та опису
+            DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
+                    FitnessProgramsActivity.this,
+                    fitnessProgram.getName(),
+                    fitnessProgram.getDescription(),
+                    (newName, newDescription) -> {
+                        // Оновлюємо план і зберігаємо в базу
+                        fitnessProgram.setName(newName);
+                        fitnessProgram.setDescription(newDescription);
+                        planManagerDAO.updatePlan(fitnessProgram);
+                        fitnessProgramAdapter.notifyDataSetChanged();
+                    }
+            );
+            editDialog.show();
+        }
+
+        @Override
+        public void onDeleteClick(FitnessProgram fitnessProgram) {
+            // Діалог підтвердження перед видаленням
+            ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () ->
+                    deletePlan(fitnessProgram);
+
+            ConfirmDeleteDialog.show(
+                    FitnessProgramsActivity.this,
+                    fitnessProgram.getName(),
+                    onDeleteConfirmedListener
+            );
+        }
+
+        @Override
+        public void onItemClick(FitnessProgram fitnessProgram) {
+            // Відкриваємо екран із списком днів тренувань
+            openEditPlanActivity(fitnessProgram);
+        }
+    }
+
+
 }

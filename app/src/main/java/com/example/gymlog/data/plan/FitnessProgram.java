@@ -8,6 +8,9 @@ public class FitnessProgram implements BasePlanItem {
     private String description; //опис
     private List<GymSession> gymSessions; // Список тренувальних днів
 
+    private int position = 0;
+
+
     // Конструктори
     public FitnessProgram(long id, String name, String description, List<GymSession> gymSessions) {
         this.id = id;
@@ -35,5 +38,13 @@ public class FitnessProgram implements BasePlanItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setPosition(int newPosition) {
+        this.position = newPosition;
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

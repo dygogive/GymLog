@@ -20,39 +20,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO-клас для управління планами тренувань (FitnessProgram), днями (GymSession),
- * та блоками (TrainingBlock). Здійснює:
- * - створення/оновлення/видалення планів, днів і блоків
- * - отримання списків із бази
- * - роботу з фільтрами для блоку
+ * DAO-клас для управління планами (FitnessProgram), днями (GymSession) і блоками (TrainingBlock).
+ * Охоплює:
+ *  - створення / оновлення / видалення планів і їхніх дочірніх сутностей
+ *  - отримання списків
+ *  - роботу з позиціями (position) та фільтрами (TrainingBlockMotion, ...).
  */
 public class PlanManagerDAO {
 
     private final DBHelper dbHelper;
     private final Context context;
 
-    /**
-     * Конструктор DAO
-     */
     public PlanManagerDAO(Context context) {
         this.dbHelper = new DBHelper(context);
-        this.context = context;
+        this.context  = context;
     }
 
-    /** ------------------------------------------------------ *
-    *              РОБОТА З ТАБЛИЦЕЮ PlanCycles               *
-    * ------------------------------------------------------ */
+    /* ------------------------------------------------------ */
+    /*              РОБОТА З ТАБЛИЦЕЮ PlanCycles              */
+    /* ------------------------------------------------------ */
 
     /**
-     * Додає нову програму тренувань (FitnessProgram) у таблицю "PlanCycles".
+     * Додає нову програму (FitnessProgram) у таблицю "PlanCycles",
+     * визначаючи position як (MAX(position) + 1).
      */
     public long addFitProgram(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Знаходимо наступну position
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM PlanCycles",
+                null
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
+        fitnessProgram.setPosition(newPosition);
+
         ContentValues values = new ContentValues();
-        values.put("name", fitnessProgram.getName());
-        values.put("description", fitnessProgram.getDescription());
-        values.put("creation_date", System.currentTimeMillis());
-        values.put("is_active", 0);
+        values.put("name",           fitnessProgram.getName());
+        values.put("description",    fitnessProgram.getDescription());
+        values.put("creation_date",  System.currentTimeMillis());
+        values.put("position",       fitnessProgram.getPosition());
+        values.put("is_active",      0);
 
         long id = db.insert("PlanCycles", null, values);
         db.close();
@@ -60,21 +73,32 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Отримує список усіх планів (FitnessProgram) із таблиці "PlanCycles".
+     * Повертає всі програми, відсортовані за position (зчитує також name, description).
+     * GymDays підтягується окремим викликом getGymDaysByPlanId(...).
      */
     public List<FitnessProgram> getAllPlans() {
         List<FitnessProgram> plans = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT id, name, description FROM PlanCycles", null);
 
+        Cursor cursor = db.rawQuery(
+                "SELECT id, name, description, position " +
+                        "FROM PlanCycles " +
+                        "ORDER BY position ASC",
+                null
+        );
         if (cursor.moveToFirst()) {
             do {
-                long id          = cursor.getLong(0);
-                String name      = cursor.getString(1);
-                String desc      = cursor.getString(2);
-                List<GymSession> gymSessions = getGymDaysByPlanId(id);
+                long   id   = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String desc = cursor.getString(2);
+                // int position = cursor.getInt(3); // Якщо треба присвоїти
 
-                plans.add(new FitnessProgram(id, name, desc, gymSessions));
+                // Підтягуємо GymSession
+                List<GymSession> sessions = getGymDaysByPlanId(id);
+
+                FitnessProgram fp = new FitnessProgram(id, name, desc, sessions);
+                // fp.setPosition(position); // Якщо зберігаєш position у FitnessProgram
+                plans.add(fp);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -83,22 +107,29 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Отримує одну програму (FitnessProgram) за її ID.
+     * Отримує одну програму за ID. Якщо треба — зчитуємо position.
      */
     public FitnessProgram getPlanById(long planId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         FitnessProgram fitnessProgram = null;
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, name, description FROM PlanCycles WHERE id = ?",
+                "SELECT id, name, description, position " +
+                        "FROM PlanCycles " +
+                        "WHERE id = ?",
                 new String[]{String.valueOf(planId)}
         );
         if (cursor.moveToFirst()) {
-            String name        = cursor.getString(1);
-            String description = cursor.getString(2);
-            List<GymSession> gymSessions = getGymDaysByPlanId(planId);
+            long   id   = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String desc = cursor.getString(2);
+            // int position = cursor.getInt(3);
 
-            fitnessProgram = new FitnessProgram(planId, name, description, gymSessions);
+            // Підтягуємо GymSessions
+            List<GymSession> gymSessions = getGymDaysByPlanId(id);
+
+            fitnessProgram = new FitnessProgram(id, name, desc, gymSessions);
+            // fitnessProgram.setPosition(position);
         }
         cursor.close();
         db.close();
@@ -106,40 +137,104 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Оновлює назву та опис існуючої програми тренувань.
+     * Оновлює назву, опис і position (перераховуючи MAX(...) + 1).
+     * За бажанням можна не змінювати position при update.
      */
     public void updatePlan(FitnessProgram fitnessProgram) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Якщо справді треба перевизначати position:
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM PlanCycles",
+                null
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+        fitnessProgram.setPosition(newPosition);
+
         ContentValues values = new ContentValues();
-        values.put("name", fitnessProgram.getName());
+        values.put("name",        fitnessProgram.getName());
         values.put("description", fitnessProgram.getDescription());
+        values.put("position",    fitnessProgram.getPosition());
 
         db.update("PlanCycles", values, "id = ?", new String[]{String.valueOf(fitnessProgram.getId())});
         db.close();
     }
 
     /**
-     * Видаляє програму тренувань за ID.
+     * Видаляє програму за ID.
+     * Спочатку видаляємо дні (і блоки), потім саму програму —
+     * або навпаки, якщо немає зовнішніх ключів.
      */
     public void deletePlan(long planId) {
+        // Спочатку видаляємо дні (залежні)
+        deleteGymDaysByPlanId(planId);
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete("PlanCycles", "id = ?", new String[]{String.valueOf(planId)});
         db.close();
     }
 
-    /** ------------------------------------------------------ *
-    *          РОБОТА З ТАБЛИЦЕЮ GymDays (GymSession)        *
-    * ------------------------------------------------------ */
+    /**
+     * Оновлює positions у таблиці "PlanCycles" відповідно до порядку списку.
+     */
+    public void updatePlansPositions(List<FitnessProgram> programs) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < programs.size(); i++) {
+                FitnessProgram program = programs.get(i);
+
+                ContentValues values = new ContentValues();
+                values.put("position", i);
+
+                db.update("PlanCycles",
+                        values,
+                        "id = ?",
+                        new String[]{String.valueOf(program.getId())}
+                );
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    /* ------------------------------------------------------ */
+    /*            РОБОТА З ТАБЛИЦЕЮ GymDays (GymSession)      */
+    /* ------------------------------------------------------ */
 
     /**
-     * Додає новий тренувальний день (GymSession) до певного плану.
+     * Додає новий тренувальний день (GymSession),
+     * визначаючи position як MAX(...) + 1 серед усіх GymDays.
+     *
+     * За логікою можна робити "WHERE plan_id = ?" замість "SELECT ... FROM GymDays".
      */
     public long addGymDay(long planId, String dayName, String description) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Знаходимо наступну position (серед усього GymDays або конкретно plan_id)
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos " +
+                        "FROM GymDays " +
+                        "WHERE plan_id = ?",
+                new String[]{String.valueOf(planId)}
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
         ContentValues values = new ContentValues();
-        values.put("plan_id", planId);
-        values.put("day_name", dayName);
+        values.put("plan_id",     planId);
+        values.put("day_name",    dayName);
         values.put("description", description);
+        values.put("position",    newPosition);
 
         long gymDayId = db.insert("GymDays", null, values);
         db.close();
@@ -147,38 +242,69 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Оновлює тренувальний день (GymSession) у таблиці "GymDays".
+     * Оновлює GymSession. Якщо бажано — перераховуємо position (max + 1).
      */
     public void updateGymSession(GymSession gymSession) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Якщо треба підраховувати position для цього plan_id:
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos " +
+                        "FROM GymDays " +
+                        "WHERE plan_id = ?",
+                new String[]{String.valueOf(gymSession.getPlanId())}
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
+        gymSession.setPosition(newPosition);
+
         ContentValues values = new ContentValues();
-        values.put("day_name", gymSession.getName());
+        values.put("day_name",    gymSession.getName());
         values.put("description", gymSession.getDescription());
+        values.put("position",    gymSession.getPosition());
 
         db.update("GymDays", values, "id = ?", new String[]{String.valueOf(gymSession.getId())});
         db.close();
     }
 
     /**
-     * Видаляє тренувальний день із таблиці "GymDays".
+     * Видаляє день за його ID. Спочатку видаляємо блоки, потім сам день (GymDays).
      */
     public void deleteGymSession(long gymSessionId) {
+        // Спочатку видаляємо TrainingBlock, які належать цьому дню
+        deleteTrainingBlocksByDayId(gymSessionId);
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete("GymDays", "id = ?", new String[]{String.valueOf(gymSessionId)});
         db.close();
     }
 
     /**
-     * Видаляє всі дні плану (для повного оновлення списку днів).
+     * Видаляє всі дні плану, а також блоки, що їм належать
+     * (через підзапит).
      */
     public void deleteGymDaysByPlanId(long planId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("GymDays", "plan_id = ?", new String[]{String.valueOf(planId)});
-        db.close();
+        try {
+            // Спочатку видаляємо блоки, які належать дням цього planId
+            db.execSQL(
+                    "DELETE FROM TrainingBlock " +
+                            "WHERE gym_day_id IN (SELECT id FROM GymDays WHERE plan_id=?)",
+                    new Object[]{planId}
+            );
+            // Потім видаляємо дні
+            db.delete("GymDays", "plan_id = ?", new String[]{String.valueOf(planId)});
+        } finally {
+            db.close();
+        }
     }
 
     /**
-     * Додає список днів (GymSession) у план (planId).
+     * Додає список днів до плану, вираховуючи position.
      */
     public void addGymDays(long planId, List<GymSession> gymSessions) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -186,46 +312,67 @@ public class PlanManagerDAO {
         for (int i = 0; i < gymSessions.size(); i++) {
             GymSession day = gymSessions.get(i);
 
+            // Знаходимо нову позицію:
+            Cursor cursor = db.rawQuery(
+                    "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos " +
+                            "FROM GymDays " +
+                            "WHERE plan_id = ?",
+                    new String[]{String.valueOf(planId)}
+            );
+            int newPosition = 0;
+            if (cursor.moveToFirst()) {
+                newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+            }
+            cursor.close();
+
+            day.setPosition(newPosition);
+
             ContentValues values = new ContentValues();
-            values.put("plan_id", planId);
-            // day_name можна призначити, наприклад, i+1, або бравши з day.getName()
-            values.put("day_name", i + 1);
+            values.put("plan_id",     planId);
+            values.put("day_name",    day.getName().isEmpty() ? ("Day "+ (i+1)) : day.getName());
             values.put("description", day.getDescription());
+            values.put("position",    day.getPosition());
 
-            // Вставляємо в БД
             db.insert("GymDays", null, values);
-            // Можна тут додавати TrainingBlocks, якщо потрібно
+            // За потреби додай і блоки
         }
-
         db.close();
     }
 
     /**
-     * Отримує всі дні (GymSession) конкретного плану за ID плану.
+     * Отримує список GymSession певного плану, відсортований за position.
      */
     public List<GymSession> getGymDaysByPlanId(long planId) {
         List<GymSession> gymSessions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, day_name, description FROM GymDays WHERE plan_id = ?",
+                "SELECT id, day_name, description, position " +
+                        "FROM GymDays " +
+                        "WHERE plan_id = ? " +
+                        "ORDER BY position ASC",
                 new String[]{String.valueOf(planId)}
         );
         if (cursor.moveToFirst()) {
             do {
-                @SuppressLint("Range") int id         = cursor.getInt(cursor.getColumnIndex("id"));
-                @SuppressLint("Range") String dayName = cursor.getString(cursor.getColumnIndex("day_name"));
-                @SuppressLint("Range") String desc    = cursor.getString(cursor.getColumnIndex("description"));
+                @SuppressLint("Range")
+                int    id        = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range")
+                String dayName   = cursor.getString(cursor.getColumnIndex("day_name"));
+                @SuppressLint("Range")
+                String desc      = cursor.getString(cursor.getColumnIndex("description"));
+                @SuppressLint("Range")
+                int    position  = cursor.getInt(cursor.getColumnIndex("position"));
 
-                // Для кожного дня отримуємо TrainingBlocks
-                List<TrainingBlock> trainingBlocks = getTrainingBlocksByDayId(id);
+                // Підтягуємо TrainingBlocks для цього дня
+                List<TrainingBlock> blocks = getTrainingBlocksByDayId(id);
 
-                // Формуємо об’єкт GymSession
-                GymSession gymSession = new GymSession(id, (int) planId, trainingBlocks);
-                gymSession.setName(dayName);
-                gymSession.setDescription(desc);
+                GymSession session = new GymSession(id, (int) planId, blocks);
+                session.setName(dayName);
+                session.setDescription(desc);
+                session.setPosition(position);
 
-                gymSessions.add(gymSession);
+                gymSessions.add(session);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -233,18 +380,42 @@ public class PlanManagerDAO {
         return gymSessions;
     }
 
-    /** ------------------------------------------------------ *
-    *        РОБОТА З ТАБЛИЦЕЮ TrainingBlock (блоки)         *
-    * ------------------------------------------------------ */
+    /**
+     * Оновлює позиції днів (GymSession) у таблиці "GymDays"
+     * за списком, що відсортований після drag&drop.
+     */
+    public void updateGymDaysPositions(List<GymSession> gymSessions) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < gymSessions.size(); i++) {
+                GymSession session = gymSessions.get(i);
+
+                ContentValues values = new ContentValues();
+                values.put("position", i);
+
+                db.update("GymDays",
+                        values,
+                        "id = ?",
+                        new String[]{String.valueOf(session.getId())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    /* ------------------------------------------------------ */
+    /*           РОБОТА З ТАБЛИЦЕЮ TrainingBlock (блоки)      */
+    /* ------------------------------------------------------ */
 
     /**
-     * Додає новий тренувальний блок (TrainingBlock) у таблицю "TrainingBlock".
-     * Визначає позицію (максимальне position + 1).
+     * Додає блок (TrainingBlock), визначаючи position як max(...) + 1.
      */
     public long addTrainingBlock(TrainingBlock block) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Знаходимо наступну position
         Cursor cursor = db.rawQuery(
                 "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos " +
                         "FROM TrainingBlock " +
@@ -257,15 +428,13 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
-        // Присвоюємо блокові цю позицію
         block.setPosition(newPosition);
 
-        // Записуємо в БД
         ContentValues values = new ContentValues();
-        values.put("gym_day_id", block.getGymDayId());
-        values.put("name", block.getName());
+        values.put("gym_day_id",  block.getGymDayId());
+        values.put("name",        block.getName());
         values.put("description", block.getDescription());
-        values.put("position", block.getPosition());
+        values.put("position",    block.getPosition());
 
         long id = db.insert("TrainingBlock", null, values);
         db.close();
@@ -273,34 +442,54 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Оновлює тренувальний блок (name, description) у таблиці "TrainingBlock".
+     * Оновлює блок (name, description) і (опційно) position у TrainingBlock.
      */
     public void updateTrainingBlock(TrainingBlock block) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", block.getName());
-        values.put("description", block.getDescription());
 
-        db.update("TrainingBlock", values, "id = ?", new String[]{String.valueOf(block.getId())});
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos " +
+                        "FROM TrainingBlock " +
+                        "WHERE gym_day_id = ?",
+                new String[]{String.valueOf(block.getGymDayId())}
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
+        block.setPosition(newPosition);
+
+        ContentValues values = new ContentValues();
+        values.put("name",        block.getName());
+        values.put("description", block.getDescription());
+        values.put("position",    block.getPosition());
+
+        db.update("TrainingBlock",
+                values,
+                "id = ?",
+                new String[]{String.valueOf(block.getId())}
+        );
         db.close();
     }
 
     /**
-     * Видаляє тренувальний блок (TrainingBlock), а також пов'язані фільтри
-     * з таблиць TrainingBlockMotion, TrainingBlockMuscleGroup, TrainingBlockEquipment.
+     * Видаляє блок за ID. Перед цим знищуємо фільтри, пов'язані з блоком.
      */
     public void deleteTrainingBlock(long blockId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("TrainingBlockMotion", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+        // Спочатку видаляємо фільтри
+        db.delete("TrainingBlockMotion",      "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
         db.delete("TrainingBlockMuscleGroup", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
-        db.delete("TrainingBlockEquipment", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
-        db.delete("TrainingBlock", "id = ?", new String[]{String.valueOf(blockId)});
+        db.delete("TrainingBlockEquipment",   "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+        // Потім сам блок
+        db.delete("TrainingBlock",            "id = ?", new String[]{String.valueOf(blockId)});
         db.close();
     }
 
     /**
-     * Повертає список блоків (TrainingBlock) для певного дня (gymDayId),
-     * відсортованих за полем "position".
+     * Отримує список блоків дня, відсортованих за position.
      */
     public List<TrainingBlock> getTrainingBlocksByDayId(long gymDayId) {
         List<TrainingBlock> blocks = new ArrayList<>();
@@ -315,14 +504,14 @@ public class PlanManagerDAO {
         );
         if (cursor.moveToFirst()) {
             do {
-                long id          = cursor.getLong(0);
-                String name      = cursor.getString(1);
-                String desc      = cursor.getString(2);
-                int position     = cursor.getInt(3);
+                long   id   = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String desc = cursor.getString(2);
+                int    pos  = cursor.getInt(3);
 
-                // Створюємо block, ставимо позицію
                 TrainingBlock block = new TrainingBlock(id, gymDayId, name, desc);
-                block.setPosition(position);
+                block.setPosition(pos);
+
                 blocks.add(block);
             } while (cursor.moveToNext());
         }
@@ -332,8 +521,7 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Оновлює позиції блоків (TrainingBlock) у таблиці "TrainingBlock"
-     * на основі поточного порядку в списку (наприклад, після drag&drop).
+     * Оновлює позиції блоків у TrainingBlock (drag&drop).
      */
     public void updateTrainingBlockPositions(List<TrainingBlock> blocks) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -348,8 +536,7 @@ public class PlanManagerDAO {
                 db.update("TrainingBlock",
                         values,
                         "id = ?",
-                        new String[]{String.valueOf(block.getId())}
-                );
+                        new String[]{String.valueOf(block.getId())});
             }
             db.setTransactionSuccessful();
         } finally {
@@ -358,13 +545,39 @@ public class PlanManagerDAO {
         }
     }
 
-    /** ------------------------------------------------------ *
-    *      ФІЛЬТРИ ДЛЯ БЛОКІВ (motion, muscle, equipment)    *
-    * ------------------------------------------------------ */
+    /**
+     * Видаляє блоки за ID дня (gym_day_id).
+     * Викликається під час видалення дня.
+     */
+    private void deleteTrainingBlocksByDayId(long dayId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        // Так само з фільтрами, якщо треба:
+        db.execSQL(
+                "DELETE FROM TrainingBlockMotion " +
+                        "WHERE trainingBlockId IN (SELECT id FROM TrainingBlock WHERE gym_day_id=?)",
+                new Object[]{dayId}
+        );
+        db.execSQL(
+                "DELETE FROM TrainingBlockMuscleGroup " +
+                        "WHERE trainingBlockId IN (SELECT id FROM TrainingBlock WHERE gym_day_id=?)",
+                new Object[]{dayId}
+        );
+        db.execSQL(
+                "DELETE FROM TrainingBlockEquipment " +
+                        "WHERE trainingBlockId IN (SELECT id FROM TrainingBlock WHERE gym_day_id=?)",
+                new Object[]{dayId}
+        );
+
+        db.delete("TrainingBlock", "gym_day_id = ?", new String[]{String.valueOf(dayId)});
+        db.close();
+    }
+
+    /* ------------------------------------------------------ */
+    /*          ФІЛЬТРИ ДЛЯ БЛОКІВ (motion, muscle, etc.)     */
+    /* ------------------------------------------------------ */
 
     /**
-     * Додає фільтр до блоку (motionType / muscleGroup / equipment),
-     * записуючи в відповідну таблицю (TrainingBlockMotion / TrainingBlockMuscleGroup / TrainingBlockEquipment).
+     * Додає фільтр (motionType / muscleGroup / equipment) у відповідну таблицю.
      */
     public void addTrainingBlockFilter(long trainingBlockId, String filterType, String value) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -372,51 +585,62 @@ public class PlanManagerDAO {
         values.put("trainingBlockId", trainingBlockId);
         values.put(filterType, value);
 
-        String tableName = "";
-        if (filterType.equals("motionType")) {
-            tableName = "TrainingBlockMotion";
-        } else if (filterType.equals("muscleGroup")) {
-            tableName = "TrainingBlockMuscleGroup";
-        } else if (filterType.equals("equipment")) {
-            tableName = "TrainingBlockEquipment";
+        String tableName;
+        switch (filterType) {
+            case "motionType":
+                tableName = "TrainingBlockMotion";
+                break;
+            case "muscleGroup":
+                tableName = "TrainingBlockMuscleGroup";
+                break;
+            case "equipment":
+                tableName = "TrainingBlockEquipment";
+                break;
+            default:
+                tableName = "";
         }
-
         db.insert(tableName, null, values);
         db.close();
     }
 
     /**
-     * Видаляє усі фільтри для блоку, щоб потім можна було зберегти нові (clear + add).
+     * Очищає фільтри (motion/muscle/equipment) перед збереженням нових.
      */
     public void clearTrainingBlockFilters(long trainingBlockId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete("TrainingBlockMotion", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
+        db.delete("TrainingBlockMotion",      "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
         db.delete("TrainingBlockMuscleGroup", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
-        db.delete("TrainingBlockEquipment", "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
+        db.delete("TrainingBlockEquipment",   "trainingBlockId = ?", new String[]{String.valueOf(trainingBlockId)});
         db.close();
     }
 
     /**
-     * Отримуємо список фільтрів за певним типом (motionType, muscleGroup, equipment)
-     * з таблиць TrainingBlockMotion / TrainingBlockMuscleGroup / TrainingBlockEquipment.
+     * Повертає список значень фільтра (motionType, muscleGroup, equipment)
+     * із відповідної таблиці.
      */
     public List<String> getTrainingBlockFilters(long trainingBlockId, String filterType) {
         List<String> filters = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String tableName = "";
-        if (filterType.equals("motionType")) {
-            tableName = "TrainingBlockMotion";
-        } else if (filterType.equals("muscleGroup")) {
-            tableName = "TrainingBlockMuscleGroup";
-        } else if (filterType.equals("equipment")) {
-            tableName = "TrainingBlockEquipment";
+        String tableName;
+        switch (filterType) {
+            case "motionType":
+                tableName = "TrainingBlockMotion";
+                break;
+            case "muscleGroup":
+                tableName = "TrainingBlockMuscleGroup";
+                break;
+            case "equipment":
+                tableName = "TrainingBlockEquipment";
+                break;
+            default:
+                tableName = "";
         }
 
         Cursor cursor = db.rawQuery(
-                "SELECT " + filterType +
-                        " FROM " + tableName +
-                        " WHERE trainingBlockId = ?",
+                "SELECT " + filterType + " " +
+                        "FROM " + tableName + " " +
+                        "WHERE trainingBlockId = ?",
                 new String[]{String.valueOf(trainingBlockId)}
         );
         if (cursor.moveToFirst()) {
@@ -428,29 +652,33 @@ public class PlanManagerDAO {
         }
         cursor.close();
         db.close();
-
         return filters;
     }
 
-    /** ------------------------------------------------------ *
-    *           МЕТОД ДЛЯ ОТРИМАННЯ ВПРАВ БЛОКУ (ФІЛЬТР)      *
-    * ------------------------------------------------------ */
+    /* ------------------------------------------------------ */
+    /*  ВПРАВИ ДЛЯ БЛОКУ (ФІЛЬТРИ) : getExercisesForTrainingBlock */
+    /* ------------------------------------------------------ */
 
     /**
-     * Повертає список вправ (Exercise), що підпадають під фільтри блоку (motion, muscle, equipment).
+     * Повертає список вправ (Exercise), що підпадають під фільтри даного блоку
+     * (motion, muscleGroup, equipment).
      */
     public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // Запит з LEFT JOIN-ами для зв’язування Exercise з TrainingBlock* таблицями
         String query =
                 "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                         "FROM Exercise e " +
-                        "LEFT JOIN TrainingBlockMotion tm ON e.motion = tm.motionType " +
-                        "LEFT JOIN TrainingBlockMuscleGroup tmg ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
-                        "LEFT JOIN TrainingBlockEquipment te ON e.equipment = te.equipment " +
-                        "WHERE tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?";
+                        "LEFT JOIN TrainingBlockMotion tm " +
+                        "    ON e.motion = tm.motionType " +
+                        "LEFT JOIN TrainingBlockMuscleGroup tmg " +
+                        "    ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
+                        "LEFT JOIN TrainingBlockEquipment te " +
+                        "    ON e.equipment = te.equipment " +
+                        "WHERE tm.trainingBlockId = ? " +
+                        "   OR tmg.trainingBlockId = ? " +
+                        "   OR te.trainingBlockId = ?";
 
         Log.d("DB_DEBUG_SQL", "Executing SQL for Block ID: " + trainingBlockId);
         Log.d("DB_DEBUG_SQL", "SQL Query: " + query);
@@ -466,7 +694,6 @@ public class PlanManagerDAO {
 
         if (cursor.moveToFirst()) {
             do {
-                // Зчитуємо поля
                 @SuppressLint("Range")
                 long id = cursor.getLong(cursor.getColumnIndex("id"));
                 @SuppressLint("Range")
@@ -490,10 +717,7 @@ public class PlanManagerDAO {
                     try {
                         motion = Motion.valueOf(motionStr);
                     } catch (IllegalArgumentException e) {
-                        Log.e("DB_DEBUG_CURSOR",
-                                "Unknown Motion enum name: " + motionStr,
-                                e
-                        );
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Motion: " + motionStr, e);
                     }
                 }
 
@@ -503,10 +727,7 @@ public class PlanManagerDAO {
                     try {
                         equipment = Equipment.valueOf(equipmentStr);
                     } catch (IllegalArgumentException e) {
-                        Log.e("DB_DEBUG_CURSOR",
-                                "Unknown Equipment enum name: " + equipmentStr,
-                                e
-                        );
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Equipment: " + equipmentStr, e);
                     }
                 }
 
@@ -519,14 +740,12 @@ public class PlanManagerDAO {
                         try {
                             muscleGroups.add(MuscleGroup.valueOf(mg));
                         } catch (IllegalArgumentException e) {
-                            Log.e("DB_DEBUG_CURSOR",
-                                    "Unknown MuscleGroup enum name: " + mg,
-                                    e
-                            );
+                            Log.e("DB_DEBUG_CURSOR", "Unknown MuscleGroup: " + mg, e);
                         }
                     }
                 }
 
+                // Створюємо Exercise
                 Exercise exercise = new Exercise(id, exerciseName, motion, muscleGroups, equipment);
                 exercises.add(exercise);
 

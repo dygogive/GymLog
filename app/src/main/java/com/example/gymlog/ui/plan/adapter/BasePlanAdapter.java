@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
 import com.example.gymlog.data.plan.BasePlanItem;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,6 +23,10 @@ import java.util.List;
  *  - Метод "onItemClick" для переходу чи детального перегляду
  */
 public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapter<BasePlanAdapter.BasePlanViewHolder> {
+
+    public List<T> getItems() {
+        return items;
+    }
 
     /**
      * Інтерфейс для обробки кліків:
@@ -81,6 +86,32 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
     public int getItemCount() {
         return items.size();
     }
+
+    /**
+     * Метод для переміщення елементів (Drag & Drop).
+     * Викликається з ItemTouchHelper.
+     *
+     * @param fromPosition Поточна позиція
+     * @param toPosition   Цільова позиція
+     */
+    public void moveItem(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            // зсув вниз
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(items, i, i + 1);
+            }
+        } else {
+            // зсув вгору
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(items, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+
+
+    }
+
+
 
     /**
      * ViewHolder містить посилання на назву, опис і кнопки (редагувати, видалити).

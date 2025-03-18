@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    private static final int version = 9;
+    private static final int version = 12;
     private final Context context;
 
     // Конструктор
@@ -52,8 +52,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         db.execSQL("CREATE TABLE Exercise (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, motion TEXT, muscleGroups TEXT, equipment TEXT, isCustom INTEGER DEFAULT 0)");
 
         // Створення таблиць для планів
-        db.execSQL("CREATE TABLE PlanCycles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, creation_date TEXT NOT NULL, is_active INTEGER DEFAULT 0)");
-        db.execSQL("CREATE TABLE GymDays (id INTEGER PRIMARY KEY AUTOINCREMENT, plan_id INTEGER NOT NULL, day_name TEXT NOT NULL, description TEXT, FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE)");
+        db.execSQL("CREATE TABLE PlanCycles (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, creation_date TEXT NOT NULL, position INTEGER, is_active INTEGER DEFAULT 0)");
+        db.execSQL("CREATE TABLE GymDays (id INTEGER PRIMARY KEY AUTOINCREMENT, plan_id INTEGER NOT NULL, day_name TEXT NOT NULL, description TEXT, position INTEGER, FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE)");
 
         // Нова таблиця TrainingBlock замість ExercisesGroups
         db.execSQL("CREATE TABLE TrainingBlock (id INTEGER PRIMARY KEY AUTOINCREMENT, gym_day_id INTEGER NOT NULL, name TEXT NOT NULL, description TEXT, position INTEGER, FOREIGN KEY (gym_day_id) REFERENCES GymDays(id) ON DELETE CASCADE)");
