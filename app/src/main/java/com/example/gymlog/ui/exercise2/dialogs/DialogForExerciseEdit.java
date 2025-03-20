@@ -18,11 +18,17 @@ import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.db.ExerciseDAO;
+import com.example.gymlog.ui.plan.dialogs.TrainingBlockDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DialogForExerciseEdit {
+
+    private Motion preselectedMotion = null;
+    private List<MuscleGroup> preselectedMuscleGroups = new ArrayList<>();
+    private Equipment preselectedEquipment = null;
+
 
     // Інтерфейс для зворотного виклику після збереження вправи
     public interface ExerciseDialogListener {
@@ -34,6 +40,17 @@ public class DialogForExerciseEdit {
     private final ExerciseDAO exerciseDAO; // DAO для взаємодії з базою даних
     private final ExerciseDialogListener listener; // Слухач для подій діалогу
 
+
+
+
+    private TrainingBlockDialog.OnExerciseCreatedListener createdListener;
+
+    public void setOnExerciseCreatedListener(TrainingBlockDialog.OnExerciseCreatedListener listener) {
+        this.createdListener = listener;
+    }
+
+
+
     // Конструктор, ініціалізує необхідні залежності
     public DialogForExerciseEdit(Context context, ExerciseDialogListener listener) {
         this.context = context;
@@ -43,6 +60,7 @@ public class DialogForExerciseEdit {
 
     // Метод для відображення діалогу (додає або редагує вправу залежно від переданого об'єкта Exercise)
     public void show(@Nullable Exercise exercise) {
+
         // Інфлейтинг макета діалогу
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_edit_exercise, null);
@@ -84,8 +102,32 @@ public class DialogForExerciseEdit {
             }
 
             // Встановлення виділення для м'язевих груп
+            if (preselectedMuscleGroups != null) {
+                for (int i = 0; i < MuscleGroup.values().length; i++) {
+                    if (preselectedMuscleGroups.contains(MuscleGroup.values()[i]))
+                        listViewMuscleGroups.setItemChecked(i, true);
+                }
+            }
+
+        } else {
+
+            // Встановлення обраного значення для Motion
+            Motion motion = preselectedMotion;
+            if (motion != null) {
+                int motionPosition = Motion.getObjectByDescription(context, motion.getDescription(context)).ordinal();
+                spinnerMotion.setSelection(motionPosition);
+            }
+
+            // Встановлення обраного значення для Equipment
+            Equipment equipment = preselectedEquipment;
+            if (equipment != null) {
+                int equipmentPosition = Equipment.getEquipmentByDescription(context, equipment.getDescription(context)).ordinal();
+                spinnerEquipment.setSelection(equipmentPosition);
+            }
+
+            // Встановлення виділення для м'язевих груп
             for (int i = 0; i < MuscleGroup.values().length; i++) {
-                if (exercise.getMuscleGroupList().contains(MuscleGroup.values()[i])) {
+                if (preselectedMuscleGroups.contains(MuscleGroup.values()[i])) {
                     listViewMuscleGroups.setItemChecked(i, true);
                 }
             }
@@ -141,6 +183,14 @@ public class DialogForExerciseEdit {
         dialog.show();
     }
 
+    public void showWithPreselectedFilters(@Nullable Exercise exercise, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
+        this.preselectedMotion = motion;
+        this.preselectedMuscleGroups = muscleGroupList;
+        this.preselectedEquipment = equipment;
+        show(exercise);
+    }
+
+
     // Метод для видалення вправи з підтвердженням
     private void deleteExerciseWithConfirmation(Exercise exercise) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
@@ -167,15 +217,24 @@ public class DialogForExerciseEdit {
 
     // Метод для додавання нової вправи
     private void addNewExercise(String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
-        Exercise newExercise = new Exercise((long) -1, name, motion, muscleGroups, equipment);
+        Exercise newExercise = new Exercise((long)-1, name, motion, muscleGroups, equipment);
         long result = exerciseDAO.addExercise(newExercise);
+
         if (result != -1) {
+            // ⚡️ Встановлюємо реальний ID вправи після додавання у БД
+            newExercise.setId(result);
+
             Toast.makeText(context, R.string.exercise_added, Toast.LENGTH_SHORT).show();
             listener.onExerciseSaved(); // Оновлення списку
+
+            if (createdListener != null) {
+                createdListener.onExerciseCreated(newExercise);
+            }
         } else {
             Toast.makeText(context, R.string.add_failed, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     // Метод для оновлення існуючої вправи
     private void updateExercise(Exercise exercise, String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {

@@ -47,6 +47,10 @@ public class ExerciseManagementActivity extends AppCompatActivity {
             // Оновлення UI після збереження вправи
             refreshFragment();
         });
+        // Додаємо пустий слухач, щоб уникнути помилки
+        dialog.setOnExerciseCreatedListener(newExercise -> {
+            // Цей блок залишається порожнім, бо в цьому актівіті немає додаткових дій
+        });
         dialog.show(null); // Передаємо null, щоб створити нову вправу
     }
 

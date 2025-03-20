@@ -1,25 +1,32 @@
 package com.example.gymlog.ui.plan;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.db.PlanManagerDAO;
+import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.plan.TrainingBlock;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
+import com.example.gymlog.ui.exercise2.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.plan.adapter.TrainingBlockAdapter;
 import com.example.gymlog.ui.plan.dialogs.TrainingBlockDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Активність для редагування (створення, видалення, переміщення) тренувальних блоків у списку.
@@ -188,12 +195,98 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         @Override
         public void onAddExercise(TrainingBlock block) {
-            Toast.makeText(TrainingBlocksActivity.this, "Add Exercise New! ",Toast.LENGTH_SHORT).show();
+            DialogForExerciseEdit dialog = new DialogForExerciseEdit(
+                    TrainingBlocksActivity.this,
+                    () -> {
+                        loadTrainingBlocks();
+                    }
+                    );
+
+            dialog.setOnExerciseCreatedListener(newExercise -> {
+                // Після створення вправи додаємо її до блоку
+                planManagerDAO.addExerciseToBlock(block.getId(), newExercise.getId());
+
+                // Перезавантажуємо блоки для оновлення списку
+                loadTrainingBlocks();
+
+                Toast.makeText(
+                        TrainingBlocksActivity.this,
+                        "Вправу додано в блок: " + newExercise.getName(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            });
+
+            dialog.showWithPreselectedFilters(
+                    null,
+                    block.getMotion(),
+                    block.getMuscleGroupList(),
+                    block.getEquipment()
+            );
+
+            //тут добавити створену вправу у список вправ Тренувального блоку.
         }
 
         @Override
         public void onEditExercises(TrainingBlock block) {
-            Toast.makeText(TrainingBlocksActivity.this, "Chose Exercises! ",Toast.LENGTH_SHORT).show();
+            showExerciseSelectionDialog(block);
         }
     }
+
+    private void showExerciseSelectionDialog(TrainingBlock block) {
+        List<Exercise> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
+        List<Exercise> selectedExercises = planManagerDAO.getBlockExercises(block.getId());
+
+        // Створюємо множину ID обраних вправ для швидкого порівняння
+        Set<Long> selectedExerciseIds = new HashSet<>();
+        for (Exercise ex : selectedExercises) {
+            selectedExerciseIds.add(ex.getId());
+        }
+
+        // Масив для діалогу: всі рекомендовані вправи, але з перевіркою, які вже були вибрані
+        String[] exerciseNames = new String[recommendedExercises.size()];
+        boolean[] checkedItems = new boolean[recommendedExercises.size()];
+
+        for (int i = 0; i < recommendedExercises.size(); i++) {
+            Exercise exercise = recommendedExercises.get(i);
+            exerciseNames[i] = exercise.getName();
+            checkedItems[i] = selectedExerciseIds.contains(exercise.getId()); // Чи вже вибрали раніше?
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(TrainingBlocksActivity.this);
+        builder.setTitle("Редагувати вправи блоку: " + block.getName());
+
+        builder.setMultiChoiceItems(exerciseNames, checkedItems, (dialog, which, isChecked) -> {
+            checkedItems[which] = isChecked;
+            Log.d("howExerciseSelectionDialog", "Вправа '" + exerciseNames[which] + "' " + (isChecked ? "додана" : "видалена"));
+        });
+
+        builder.setPositiveButton("Зберегти", (dialog, which) -> {
+            List<Exercise> updatedExerciseList = new ArrayList<>();
+
+            for (int i = 0; i < recommendedExercises.size(); i++) {
+                if (checkedItems[i]) {
+                    updatedExerciseList.add(recommendedExercises.get(i));
+                }
+            }
+
+            // Логуємо обрані вправи
+            Log.d("howExerciseSelectionDialog", "Оновлений список вправ для блоку ID: " + block.getId());
+            for (Exercise ex : updatedExerciseList) {
+                Log.d("howExerciseSelectionDialog", "✓ Вправа ID: " + ex.getId() + " | Назва: " + ex.getName());
+            }
+
+            // Оновлюємо список вправ у базі
+            planManagerDAO.updateTrainingBlockExercises(block.getId(), updatedExerciseList);
+
+            // Оновлюємо UI
+            loadTrainingBlocks();
+        });
+
+        builder.setNegativeButton("Скасувати", null);
+        builder.show();
+    }
+
+
+
+
 }

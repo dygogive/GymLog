@@ -19,8 +19,11 @@ import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.plan.TrainingBlock;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Адаптер для відображення списку тренувальних блоків (TrainingBlock).
@@ -77,70 +80,44 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
     @Override
     public void onBindViewHolder(@NonNull TrainingBlockViewHolder holder, int position) {
-        // Отримуємо поточний блок
         TrainingBlock block = trainingBlocks.get(position);
 
-        // Назва та опис блоку
         holder.textViewBlockName.setText(block.getName());
         holder.textViewBlockDescription.setText(block.getDescription());
 
-        //Контекстне меню через 3 крапки
         holder.buttonMenu.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(context,holder.buttonMenu);
-            popupMenu.getMenuInflater().inflate(R.menu.training_block_menu,popupMenu.getMenu());
+            PopupMenu popupMenu = new PopupMenu(context, holder.buttonMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.training_block_menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.menu_edit_block) {
                     listener.onEditClick(block);
-                    return true;
                 } else if (item.getItemId() == R.id.menu_delete_block) {
                     listener.onDeleteClick(block);
-                    return true;
                 } else if (item.getItemId() == R.id.menu_add_exercise) {
                     listener.onAddExercise(block);
-                    return true;
                 } else if (item.getItemId() == R.id.menu_edit_exercises) {
                     listener.onEditExercises(block);
-                    return true;
                 }
-                return false;
+                return true;
             });
 
             popupMenu.show();
         });
 
+        // Тепер все просто і швидко:
+        List<Exercise> exercises = planManagerDAO.getBlockExercises(block.getId());
 
-
-
-        // Якщо опис довгий, при натисканні відкриваємо AlertDialog з повним описом
-        holder.textViewBlockDescription.setOnClickListener(v -> {
-            String desc = block.getDescription();
-            if (desc.length() > 45) {
-                new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
-                        .setTitle(block.getName())
-                        .setMessage(desc)
-                        .setPositiveButton("OK", null)
-                        .show();
-            }
-        });
-
-        // Завантажуємо вправи, які відфільтровані для цього блоку
-        List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
         AdapterExercisesInTrainingBlock exerciseAdapter = new AdapterExercisesInTrainingBlock(
                 context,
                 exercises,
-                exe -> Toast.makeText(context,
-                        "Exercise Info: " + exe.getNameOnly(context),
-                        Toast.LENGTH_SHORT).show()
+                exe -> Toast.makeText(context, exe.getNameOnly(context), Toast.LENGTH_SHORT).show()
         );
 
-        // Налаштовуємо внутрішній RecyclerView для списку вправ
-        holder.recyclerViewExercises.setLayoutManager(
-                new LinearLayoutManager(holder.itemView.getContext())
-        );
+        holder.recyclerViewExercises.setLayoutManager(new LinearLayoutManager(context));
         holder.recyclerViewExercises.setAdapter(exerciseAdapter);
-        holder.recyclerViewExercises.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public int getItemCount() {

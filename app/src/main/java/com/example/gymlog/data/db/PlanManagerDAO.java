@@ -17,7 +17,9 @@ import com.example.gymlog.data.plan.GymSession;
 import com.example.gymlog.data.plan.TrainingBlock;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * DAO-клас для управління планами (FitnessProgram), днями (GymSession) і блоками (TrainingBlock).
@@ -36,8 +38,8 @@ public class PlanManagerDAO {
         this.context  = context;
     }
 
-    /* ------------------------------------------------------ */
-    /*              РОБОТА З ТАБЛИЦЕЮ PlanCycles              */
+    /** ------------------------------------------------------ /
+    /*              РОБОТА З ТАБЛИЦЕЮ PlanCycles              /
     /* ------------------------------------------------------ */
 
     /**
@@ -204,8 +206,8 @@ public class PlanManagerDAO {
         }
     }
 
-    /* ------------------------------------------------------ */
-    /*            РОБОТА З ТАБЛИЦЕЮ GymDays (GymSession)      */
+    /** ------------------------------------------------------ /
+    /*            РОБОТА З ТАБЛИЦЕЮ GymDays (GymSession)      /
     /* ------------------------------------------------------ */
 
     /**
@@ -406,9 +408,9 @@ public class PlanManagerDAO {
         }
     }
 
-    /* ------------------------------------------------------ */
-    /*           РОБОТА З ТАБЛИЦЕЮ TrainingBlock (блоки)      */
-    /* ------------------------------------------------------ */
+    /** ------------------------------------------------------ /
+    /*           РОБОТА З ТАБЛИЦЕЮ TrainingBlock (блоки)      /
+    /* ------------------------------------------------------ /
 
     /**
      * Додає блок (TrainingBlock), визначаючи position як max(...) + 1.
@@ -495,6 +497,7 @@ public class PlanManagerDAO {
         List<TrainingBlock> blocks = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        // Спочатку вибираємо з TrainingBlock (id, name, desc, position)
         Cursor cursor = db.rawQuery(
                 "SELECT id, name, description, position " +
                         "FROM TrainingBlock " +
@@ -502,6 +505,7 @@ public class PlanManagerDAO {
                         "ORDER BY position ASC",
                 new String[]{String.valueOf(gymDayId)}
         );
+
         if (cursor.moveToFirst()) {
             do {
                 long   id   = cursor.getLong(0);
@@ -509,16 +513,33 @@ public class PlanManagerDAO {
                 String desc = cursor.getString(2);
                 int    pos  = cursor.getInt(3);
 
-                TrainingBlock block = new TrainingBlock(id, gymDayId, name, desc);
-                block.setPosition(pos);
+                // Створюємо проміжний об'єкт (motion, muscleGroups, equipment — поки що null / порожнє)
+                // Припустимо, що маємо «повний» конструктор (long id, long gymDayId, String name, ...)
+                //  ДЕ motion, muscleGroups, equipment передаємо поки null / empty, exercises = new ArrayList<>()
+                TrainingBlock block = new TrainingBlock(
+                        id,
+                        gymDayId,
+                        name,
+                        desc,
+                        null,                     // motion
+                        new ArrayList<>(),       // muscleGroupList
+                        null,                     // equipment
+                        pos,
+                        new ArrayList<>()        // exercises
+                );
+
+                // Тепер треба зчитати додаткові фільтри blockId=id
+                loadBlockFilters(db, block);
 
                 blocks.add(block);
+
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return blocks;
     }
+
 
     /**
      * Оновлює позиції блоків у TrainingBlock (drag&drop).
@@ -572,9 +593,9 @@ public class PlanManagerDAO {
         db.close();
     }
 
-    /* ------------------------------------------------------ */
-    /*          ФІЛЬТРИ ДЛЯ БЛОКІВ (motion, muscle, etc.)     */
-    /* ------------------------------------------------------ */
+    /** ------------------------------------------------------ /
+    /          ФІЛЬТРИ ДЛЯ БЛОКІВ (motion, muscle, etc.)     /
+    / ------------------------------------------------------ */
 
     /**
      * Додає фільтр (motionType / muscleGroup / equipment) у відповідну таблицю.
@@ -655,9 +676,70 @@ public class PlanManagerDAO {
         return filters;
     }
 
-    /* ------------------------------------------------------ */
-    /*  ВПРАВИ ДЛЯ БЛОКУ (ФІЛЬТРИ) : getExercisesForTrainingBlock */
-    /* ------------------------------------------------------ */
+    private void loadBlockFilters(SQLiteDatabase db, TrainingBlock block) {
+        long blockId = block.getId();
+
+        // 1) Зчитуємо motions із таблиці TrainingBlockMotion
+        //    Якщо припускаємо, що motion завжди один, беремо перший запис.
+        //    Якщо може бути кілька — зберігаємо список або якось обробляємо.
+        Cursor cMotion = db.rawQuery(
+                "SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId=?",
+                new String[]{ String.valueOf(blockId) }
+        );
+        if (cMotion.moveToFirst()) {
+            // Припустимо, що беремо лише перший
+            String motionStr = cMotion.getString(0);
+            try {
+                block.setMotion(Motion.valueOf(motionStr));
+            } catch (Exception e) {
+                // Якщо motionStr не підходить до enum
+                Log.e("DB_DEBUG", "Unknown motion: " + motionStr, e);
+            }
+        }
+        cMotion.close();
+
+        // 2) Зчитуємо muscleGroup із TrainingBlockMuscleGroup
+        //    Тут може бути кілька рядків, тож наповнюємо block.getMuscleGroupList()
+        Cursor cMuscle = db.rawQuery(
+                        "SELECT muscleGroup FROM TrainingBlockMuscleGroup " +
+                        "WHERE trainingBlockId=?",
+                        new String[]{ String.valueOf(blockId) }
+                    );
+        List<MuscleGroup> mgList = new ArrayList<>();
+        if (cMuscle.moveToFirst()) {
+            do {
+                String mgStr = cMuscle.getString(0);
+                try {
+                    mgList.add(MuscleGroup.valueOf(mgStr));
+                } catch (Exception e) {
+                    Log.e("DB_DEBUG", "Unknown muscleGroup: " + mgStr, e);
+                }
+            } while (cMuscle.moveToNext());
+        }
+        cMuscle.close();
+        block.setMuscleGroupList(mgList);
+
+        // 3) Зчитуємо equipment з TrainingBlockEquipment
+        //    Якщо equipment лише один, беремо перший.
+        Cursor cEquip = db.rawQuery("SELECT equipment " +
+                        "FROM TrainingBlockEquipment WHERE trainingBlockId=?",
+                        new String[]{ String.valueOf(blockId) }
+                    );
+        if (cEquip.moveToFirst()) {
+            String eqStr = cEquip.getString(0);
+            try {
+                block.setEquipment(Equipment.valueOf(eqStr));
+            } catch (Exception e) {
+                Log.e("DB_DEBUG", "Unknown equipment: " + eqStr, e);
+            }
+        }
+        cEquip.close();
+    }
+
+
+    /** --------------------------------------------------------- /
+    /  ВПРАВИ ДЛЯ БЛОКУ (ФІЛЬТРИ) : getExercisesForTrainingBlock /
+    / --------------------------------------------------------- */
 
     /**
      * Повертає список вправ (Exercise), що підпадають під фільтри даного блоку
@@ -759,6 +841,133 @@ public class PlanManagerDAO {
         return exercises;
     }
 
+    public void updateTrainingBlockExercises(long blockId, List<Exercise> exercises) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            db.beginTransaction();
+
+            // Видаляємо всі вправи для блоку перед оновленням
+            db.delete("TrainingBlockExercises", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
+
+            ContentValues values = new ContentValues();
+            for (Exercise exercise : exercises) {
+                values.clear();
+                values.put("trainingBlockId", blockId);
+                values.put("exerciseId", exercise.getId());
+                db.insert("TrainingBlockExercises", null, values);
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e("DB_CRASH", "Помилка при оновленні вправ у блоці", e);
+        } finally {
+            db.endTransaction(); // Закінчуємо транзакцію
+        }
+
+        db.close();
+    }
+
+
+
+
+
+    /**
+     * Повертає список обраних вправ для конкретного блоку (білий список).
+     */
+    public List<Exercise> getBlockExercises(long trainingBlockId) {
+        List<Exercise> exercises = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String sql = "SELECT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
+                "FROM TrainingBlockExercises tbe " +
+                "JOIN Exercise e ON e.id = tbe.exerciseId " +
+                "WHERE tbe.trainingBlockId = ?";
+
+        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(trainingBlockId)});
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String motionStr = cursor.getString(2);
+            String muscleGroupsStr = cursor.getString(3);
+            String equipmentStr = cursor.getString(4);
+            boolean isCustom = cursor.getInt(5) == 1;
+
+            // Парсимо ENUM-и
+            Motion motion = parseMotion(motionStr);
+            Equipment equipment = parseEquipment(equipmentStr);
+            List<MuscleGroup> muscleGroups = parseMuscleGroups(muscleGroupsStr);
+
+            Exercise exercise = new Exercise(id, name, motion, muscleGroups, equipment);
+            exercise.setCustom(isCustom);
+
+            exercises.add(exercise);
+        }
+        cursor.close();
+        db.close();
+
+        return exercises;
+    }
+
+    // Допоміжні методи для парсингу ENUM (для чистоти коду)
+    private Motion parseMotion(String motionStr) {
+        if (motionStr != null && !motionStr.isEmpty()) {
+            try { return Motion.valueOf(motionStr); } catch (Exception ignored) { }
+        }
+        return null;
+    }
+
+    private Equipment parseEquipment(String equipmentStr) {
+        if (equipmentStr != null && !equipmentStr.isEmpty()) {
+            try { return Equipment.valueOf(equipmentStr); } catch (Exception ignored) { }
+        }
+        return null;
+    }
+
+    private List<MuscleGroup> parseMuscleGroups(String muscleGroupsStr) {
+        List<MuscleGroup> groups = new ArrayList<>();
+        if (muscleGroupsStr != null && !muscleGroupsStr.isEmpty()) {
+            for (String mg : muscleGroupsStr.split(",")) {
+                try { groups.add(MuscleGroup.valueOf(mg.trim())); } catch (Exception ignored) { }
+            }
+        }
+        return groups;
+    }
+
+
+
+    /**
+     * Додає вправу до тренувального блоку.
+     */
+    public void addExerciseToBlock(long blockId, long exerciseId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put("trainingBlockId", blockId);
+        cv.put("exerciseId", exerciseId);
+
+        // Щоб уникнути дублікатів
+        db.insertWithOnConflict("TrainingBlockExercises", null, cv, SQLiteDatabase.CONFLICT_IGNORE);
+        db.close();
+    }
+
+
+
+    /**
+     * Видаляє вправу з тренувального блоку.
+     */
+    public void removeExerciseFromBlock(long blockId, long exerciseId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.delete("TrainingBlockExercises",
+                "trainingBlockId=? AND exerciseId=?",
+                new String[]{String.valueOf(blockId), String.valueOf(exerciseId)});
+
+        db.close();
+    }
+
+
+
+
 
 
     /**
@@ -769,85 +978,55 @@ public class PlanManagerDAO {
      *   4) Список фільтрів для блока (motion, muscleGroup, equipment)
      */
     public void logAllData() {
-        Log.d("PlanManagerDAO", "========== START: logAllData() ==========");
+        Log.d("logAllData", "========== START: logAllData() ==========");
 
-        // 1) Отримуємо усі плани
-        List<FitnessProgram> allPrograms = getAllPlans();
-        if (allPrograms.isEmpty()) {
-            Log.d("PlanManagerDAO", "Немає жодної програми (PlanCycles)");
-            Log.d("PlanManagerDAO", "========== END: logAllData() ==========");
-            return;
-        }
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        for (FitnessProgram program : allPrograms) {
-            long   planId   = program.getId();
-            String planName = program.getName();
-            String planDesc = program.getDescription();
-            // За потреби ти можеш логувати position, is_active тощо — головне, щоб
-            // ти діставав їх у getAllPlans()
-            Log.d("PlanManagerDAO", "PlanCycle [id=" + planId
-                    + ", name=\"" + planName + "\", desc=\"" + planDesc + "\"]");
+        // 1️⃣ Логуємо всі плани
+        Cursor cursorPlans = db.rawQuery("SELECT id, name, description FROM PlanCycles", null);
+        while (cursorPlans.moveToNext()) {
+            long planId = cursorPlans.getLong(0);
+            String planName = cursorPlans.getString(1);
+            String planDesc = cursorPlans.getString(2);
+            Log.d("logAllData", "PlanCycle [id=" + planId + ", name=" + planName + ", desc=" + planDesc + "]");
 
-            // 2) Отримуємо всі дні для плану
-            List<GymSession> sessions = getGymDaysByPlanId(program.getId()); // або getGymDaysByPlanId(planId)
-            if (sessions.isEmpty()) {
-                Log.d("PlanManagerDAO", "  (No GymDays in this plan)");
-            } else {
-                for (GymSession session : sessions) {
-                    long   dayId   = session.getId();
-                    String dayName = session.getName();
-                    String dayDesc = session.getDescription();
+            // 2️⃣ Логуємо всі дні для кожного плану
+            Cursor cursorDays = db.rawQuery("SELECT id, day_name, description FROM GymDays WHERE plan_id = ?", new String[]{String.valueOf(planId)});
+            while (cursorDays.moveToNext()) {
+                long dayId = cursorDays.getLong(0);
+                String dayName = cursorDays.getString(1);
+                String dayDesc = cursorDays.getString(2);
+                Log.d("logAllData", "  GymDay [id=" + dayId + ", name=" + dayName + ", desc=" + dayDesc + "]");
 
-                    Log.d("PlanManagerDAO", "   GymDay [id=" + dayId
-                            + ", name=\"" + dayName
-                            + "\", desc=\"" + dayDesc + "\"]");
+                // 3️⃣ Логуємо всі блоки для кожного дня
+                Cursor cursorBlocks = db.rawQuery("SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?", new String[]{String.valueOf(dayId)});
+                while (cursorBlocks.moveToNext()) {
+                    long blockId = cursorBlocks.getLong(0);
+                    String blockName = cursorBlocks.getString(1);
+                    String blockDesc = cursorBlocks.getString(2);
+                    Log.d("logAllData", "    TrainingBlock [id=" + blockId + ", name=" + blockName + ", desc=" + blockDesc + "]");
 
-                    // 3) Для кожного дня дістаємо блоки
-                    List<TrainingBlock> blocks = getTrainingBlocksByDayId(session.getId());
-                    if (blocks.isEmpty()) {
-                        Log.d("PlanManagerDAO", "     (No TrainingBlocks in this day)");
-                    } else {
-                        for (TrainingBlock block : blocks) {
-                            long   blockId   = block.getId();
-                            String blockName = block.getName();
-                            String blockDesc = block.getDescription();
-                            Log.d("PlanManagerDAO", "     TrainingBlock [id=" + blockId
-                                    + ", name=\"" + blockName
-                                    + "\", desc=\"" + blockDesc + "\"]");
-
-                            // 4) Логуємо фільтри (motion, muscleGroup, equipment)
-                            List<String> motions = getTrainingBlockFilters(blockId, "motionType");
-                            List<String> muscles = getTrainingBlockFilters(blockId, "muscleGroup");
-                            List<String> equips  = getTrainingBlockFilters(blockId, "equipment");
-
-                            if (!motions.isEmpty()) {
-                                Log.d("PlanManagerDAO", "       * motions=" + motions);
-                            }
-                            if (!muscles.isEmpty()) {
-                                Log.d("PlanManagerDAO", "       * muscles=" + muscles);
-                            }
-                            if (!equips.isEmpty()) {
-                                Log.d("PlanManagerDAO", "       * equipment=" + equips);
-                            }
-
-                            // Можна ще для відладки дістати всі вправи цього блоку:
-                            List<Exercise> blockExercises = getExercisesForTrainingBlock(blockId);
-                            if (!blockExercises.isEmpty()) {
-                                Log.d("PlanManagerDAO", "       * exercises in block => ");
-                                for (Exercise ex : blockExercises) {
-                                    Log.d("PlanManagerDAO",
-                                            "         - exId=" + ex.getId()
-                                                    + ", name=\"" + ex.getName() + "\"");
-                                }
-                            }
-                        }
+                    // 4️⃣ Логуємо всі вправи у кожному блоці
+                    Cursor cursorExercises = db.rawQuery(
+                            "SELECT e.id, e.name FROM TrainingBlockExercises tbe JOIN Exercise e ON e.id = tbe.exerciseId WHERE tbe.trainingBlockId = ?",
+                            new String[]{String.valueOf(blockId)}
+                    );
+                    while (cursorExercises.moveToNext()) {
+                        long exId = cursorExercises.getLong(0);
+                        String exName = cursorExercises.getString(1);
+                        Log.d("logAllData", "      Exercise [id=" + exId + ", name=" + exName + "]");
                     }
+                    cursorExercises.close();
                 }
+                cursorBlocks.close();
             }
-            Log.d("PlanManagerDAO", "-----------------------------------------");
+            cursorDays.close();
         }
+        cursorPlans.close();
+        db.close();
 
-        Log.d("PlanManagerDAO", "========== END: logAllData() ==========");
+        Log.d("logAllData", "========== END: logAllData() ==========");
     }
+
 
 }

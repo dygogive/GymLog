@@ -24,7 +24,9 @@ import com.example.gymlog.data.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Діалог для створення/редагування тренувального блоку (TrainingBlock).
@@ -58,6 +60,15 @@ public class TrainingBlockDialog extends Dialog {
     // Поточний блок (якщо редагуємо)
     private TrainingBlock trainingBlock;
 
+    /**
+     * Збереження/оновлення тренувального блоку в базі.
+     * 1. Якщо нового блоку не було, створюємо
+     * 2. Якщо існує, оновлюємо
+     * 3. Очищаємо попередні фільтри та зберігаємо нові
+     * 4. Оновлюємо список вправ у блоці
+     */
+    private Set<Long> exerciseBlacklist = new HashSet<>();
+
     // Колбек для оновлення списку після збереження
     private final OnTrainingBlockCreatedListener listener;
 
@@ -70,6 +81,14 @@ public class TrainingBlockDialog extends Dialog {
     public interface OnTrainingBlockCreatedListener {
         void onBlockAdded();
     }
+
+
+    public interface OnExerciseCreatedListener {
+        void onExerciseCreated(Exercise exercise);
+    }
+
+
+
 
     /**
      * Конструктор для створення нового блоку.
@@ -270,19 +289,12 @@ public class TrainingBlockDialog extends Dialog {
         }
     }
 
-    /**
-     * Збереження/оновлення тренувального блоку в базі.
-     * 1. Якщо нового блоку не було, створюємо
-     * 2. Якщо існує, оновлюємо
-     * 3. Очищаємо попередні фільтри та зберігаємо нові
-     * 4. Оновлюємо список вправ у блоці
-     */
+
+
     private void saveTrainingBlock() {
-        // Зчитуємо назву і опис
         String name = editTextBlockName.getText().toString().trim();
         String description = editTextBlockDescription.getText().toString().trim();
 
-        // Перевірка: назва не може бути порожньою
         if (name.isEmpty()) {
             editTextBlockName.setError(context.getString(R.string.set_name));
             return;
@@ -290,43 +302,63 @@ public class TrainingBlockDialog extends Dialog {
 
         long blockId;
 
-        // Якщо блок ще не існував (створення)
         if (trainingBlock == null) {
+            // Створення нового блоку
             TrainingBlock block = new TrainingBlock(0, gymDayId, name, description, new ArrayList<>());
             blockId = planManagerDAO.addTrainingBlock(block);
-            // Присвоюємо trainingBlock, оновлюємо його id
             trainingBlock = block;
             trainingBlock.setId(blockId);
         } else {
-            // Якщо блок існує (редагування)
+            // Оновлення існуючого
             trainingBlock.setName(name);
             trainingBlock.setDescription(description);
             planManagerDAO.updateTrainingBlock(trainingBlock);
             blockId = trainingBlock.getId();
+
+            // формуємо чорний список (які раніше виключені користувачем)
+            List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+            List<Exercise> oldSelected = planManagerDAO.getBlockExercises(blockId);
+
+            exerciseBlacklist.clear();
+            Set<Long> oldSelectedIds = new HashSet<>();
+            for (Exercise ex : oldSelected) {
+                oldSelectedIds.add(ex.getId());
+            }
+
+            for (Exercise ex : oldRecommended) {
+                if (!oldSelectedIds.contains(ex.getId())) {  // Перевіряємо по ID
+                    exerciseBlacklist.add(ex.getId());
+                }
+            }
         }
 
-        // Очищаємо старі фільтри і зберігаємо нові
+        // Очищаємо старі фільтри
         planManagerDAO.clearTrainingBlockFilters(blockId);
         saveFilters(blockId);
 
-        // Оновлюємо список вправ для блоку
-        List<Exercise> exercises = planManagerDAO.getExercisesForTrainingBlock(blockId);
-        if (trainingBlock == null) {
-            // Підстраховка, але логічно сюди не дійде,
-            // оскільки trainingBlock вже ініціалізовано вище
-            trainingBlock = new TrainingBlock(blockId, gymDayId, name, description, exercises);
-        } else {
-            trainingBlock.setExercises(exercises);
+        // Оновлюємо список вправ (з урахуванням чорного списку)
+        List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+
+        List<Exercise> updatedExercises = new ArrayList<>();
+        for (Exercise newEx : newRecommended) {
+            if (!exerciseBlacklist.contains(newEx.getId())) {
+                updatedExercises.add(newEx);
+            }
         }
 
-        // Викликаємо колбек (оновлення списку в основній активності)
-        if (listener != null) {
-            listener.onBlockAdded();
+        // Оновлюємо БД
+        try {
+            planManagerDAO.updateTrainingBlockExercises(blockId, updatedExercises);
+            if (listener != null) {
+                listener.onBlockAdded();
+            }
+            dismiss();
+        } catch (Exception e) {
+            Log.e("DB_CRASH", "Помилка при оновленні вправ у блоці", e);
         }
-
-        // Закриваємо діалог
-        dismiss();
     }
+
+
 
     /**
      * Зберігаємо (motion/muscle/equipment) фільтри в таблицях
