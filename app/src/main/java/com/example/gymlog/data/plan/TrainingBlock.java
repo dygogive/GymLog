@@ -137,4 +137,5 @@ public class TrainingBlock {
     public void setEquipment(Equipment equipment) {
         this.equipment = equipment;
     }
+
 }

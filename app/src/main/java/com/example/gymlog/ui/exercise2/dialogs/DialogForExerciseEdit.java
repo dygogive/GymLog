@@ -30,17 +30,16 @@ public class DialogForExerciseEdit {
     private Equipment preselectedEquipment = null;
 
 
-    // Інтерфейс для зворотного виклику після збереження вправи
-    public interface ExerciseDialogListener {
-        void onExerciseSaved(); // Викликається при успішному збереженні або видаленні вправи
-    }
+
 
     // Поля класу
     private final Context context; // Контекст для доступу до ресурсів та відображення UI
     private final ExerciseDAO exerciseDAO; // DAO для взаємодії з базою даних
     private final ExerciseDialogListener listener; // Слухач для подій діалогу
-
-
+    // Інтерфейс для зворотного виклику після збереження вправи
+    public interface ExerciseDialogListener {
+        void onExerciseSaved(); // Викликається при успішному збереженні або видаленні вправи
+    }
 
 
     private TrainingBlockDialog.OnExerciseCreatedListener createdListener;
@@ -216,24 +215,26 @@ public class DialogForExerciseEdit {
     }
 
     // Метод для додавання нової вправи
+    // Метод для додавання нової вправи
     private void addNewExercise(String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
         Exercise newExercise = new Exercise((long)-1, name, motion, muscleGroups, equipment);
-        long result = exerciseDAO.addExercise(newExercise);
+        long newExerciseId = exerciseDAO.addExercise(newExercise);
 
-        if (result != -1) {
-            // ⚡️ Встановлюємо реальний ID вправи після додавання у БД
-            newExercise.setId(result);
+        if (newExerciseId != -1) {
+            //Встановлюємо реальний ID вправи після додавання у БД
+            newExercise.setId(newExerciseId);
 
             Toast.makeText(context, R.string.exercise_added, Toast.LENGTH_SHORT).show();
             listener.onExerciseSaved(); // Оновлення списку
 
             if (createdListener != null) {
-                createdListener.onExerciseCreated(newExercise);
+                createdListener.onExerciseCreated(newExercise); //Викликаємо діалог вибору блоків ТІЛЬКИ після того, як отримали ID!
             }
         } else {
             Toast.makeText(context, R.string.add_failed, Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     // Метод для оновлення існуючої вправи

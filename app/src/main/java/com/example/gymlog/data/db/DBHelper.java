@@ -118,10 +118,9 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    trainingBlockId INTEGER NOT NULL,\n" +
                 "    exerciseId INTEGER NOT NULL,\n" +
+                "    position INTEGER,\n" +
                 "    FOREIGN KEY(trainingBlockId) REFERENCES TrainingBlock(id) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY(exerciseId) REFERENCES Exercise(id) ON DELETE CASCADE)");
-
-
 
     }
 

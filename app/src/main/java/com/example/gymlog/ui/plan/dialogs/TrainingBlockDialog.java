@@ -18,6 +18,7 @@ import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.ExerciseInBlock;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 import com.example.gymlog.data.plan.TrainingBlock;
@@ -317,11 +318,11 @@ public class TrainingBlockDialog extends Dialog {
 
             // формуємо чорний список (які раніше виключені користувачем)
             List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
-            List<Exercise> oldSelected = planManagerDAO.getBlockExercises(blockId);
+            List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(blockId);
 
             exerciseBlacklist.clear();
             Set<Long> oldSelectedIds = new HashSet<>();
-            for (Exercise ex : oldSelected) {
+            for (ExerciseInBlock ex : oldSelected) {
                 oldSelectedIds.add(ex.getId());
             }
 
@@ -339,10 +340,19 @@ public class TrainingBlockDialog extends Dialog {
         // Оновлюємо список вправ (з урахуванням чорного списку)
         List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
 
-        List<Exercise> updatedExercises = new ArrayList<>();
+        List<ExerciseInBlock> updatedExercises = new ArrayList<>();
+        int position = 0; // Починаємо з 0 і проставляємо позиції
+
         for (Exercise newEx : newRecommended) {
             if (!exerciseBlacklist.contains(newEx.getId())) {
-                updatedExercises.add(newEx);
+                updatedExercises.add(new ExerciseInBlock(
+                        newEx.getId(),
+                        newEx.getName(),
+                        newEx.getMotion(),
+                        newEx.getMuscleGroupList(),
+                        newEx.getEquipment(),
+                        position++  // Проставляємо позицію
+                ));
             }
         }
 

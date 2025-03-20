@@ -207,6 +207,12 @@
     <string name="no_description">No description!</string>
     <string name="program_title">Program Title</string>
     <string name="delete_training_block">Delete this training block</string>
+    <string name="no_training_blocks_available">No training blocks available</string>
+    <string name="add_exercise_to_blocks">Add exercise to blocks</string>
+    <string name="add">Add</string>
+    <string name="exercise_added_to_selected_blocks">Exercise added to selected blocks!</string>
+    <string name="no_block_selected">No block selected</string>
+    <string name="do_not_add">Do not add</string>
 
 
 </resources>

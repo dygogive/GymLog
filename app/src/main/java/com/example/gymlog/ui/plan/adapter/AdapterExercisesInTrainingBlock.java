@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.ExerciseInBlock;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class AdapterExercisesInTrainingBlock
         extends RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
 
     // Список вправ, поточний context, і слухач (на клік інформації)
-    private final List<Exercise> exercises;
+    private final List<ExerciseInBlock> exercises;
     private final Context context;
     private final ExerciseListener listener;
 
@@ -42,13 +43,14 @@ public class AdapterExercisesInTrainingBlock
      */
     public AdapterExercisesInTrainingBlock(
             Context context,
-            List<Exercise> exercises,
+            List<ExerciseInBlock> exercises,
             ExerciseListener listener
     ) {
         this.exercises = exercises;
         this.listener = listener;
         this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -65,7 +67,7 @@ public class AdapterExercisesInTrainingBlock
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Отримуємо вправу
-        Exercise exercise = exercises.get(position);
+        ExerciseInBlock exercise = exercises.get(position);
 
         // Встановлюємо назву (локалізовану чи кастомну)
         holder.nameExercise.setText(exercise.getNameOnly(context));

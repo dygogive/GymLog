@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.ExerciseDAO;
 import com.example.gymlog.ui.exercise2.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.ui.exercise2.dialogs.DialogSelectTrainingBlocks;
 import com.example.gymlog.ui.exercise2.factories.DefaultExercisesFactory;
 import com.example.gymlog.ui.exercise2.fragments.AttributeListFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,15 +44,14 @@ public class ExerciseManagementActivity extends AppCompatActivity {
     }
 
     private void openAddExerciseDialog() {
-        DialogForExerciseEdit dialog = new DialogForExerciseEdit(this, () -> {
-            // Оновлення UI після збереження вправи
-            refreshFragment();
-        });
-        // Додаємо пустий слухач, щоб уникнути помилки
+        DialogForExerciseEdit dialog = new DialogForExerciseEdit(this, this::refreshFragment);
+
         dialog.setOnExerciseCreatedListener(newExercise -> {
-            // Цей блок залишається порожнім, бо в цьому актівіті немає додаткових дій
+            // Відкриваємо діалог ДОДАВАННЯ ДО БЛОКІВ після збереження вправи в БД
+            DialogSelectTrainingBlocks.addExerciseToBlocks(this, newExercise, this::refreshFragment);
         });
-        dialog.show(null); // Передаємо null, щоб створити нову вправу
+
+        dialog.show(null); // Викликаємо діалог для створення нової вправи
     }
 
     private void refreshFragment() {

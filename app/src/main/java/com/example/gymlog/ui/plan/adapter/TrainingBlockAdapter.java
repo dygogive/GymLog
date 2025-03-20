@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
 import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.ExerciseInBlock;
 import com.example.gymlog.data.plan.TrainingBlock;
 
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         });
 
         // Тепер все просто і швидко:
-        List<Exercise> exercises = planManagerDAO.getBlockExercises(block.getId());
+        List<ExerciseInBlock> exercises = planManagerDAO.getBlockExercises(block.getId());
 
         AdapterExercisesInTrainingBlock exerciseAdapter = new AdapterExercisesInTrainingBlock(
                 context,
