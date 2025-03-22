@@ -85,7 +85,7 @@ public class Exercise {
 
     public String getNameOnly(Context context) {
         int resId = -1;
-        String value = "";
+        String value = getName();
         if(!isCustom){
             try {
                 Field field = R.string.class.getDeclaredField(name);

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.gymlog"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.gymlog"
@@ -27,14 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_12
+        targetCompatibility = JavaVersion.VERSION_12
     }
 
-    buildToolsVersion = "35.0.0"
-    buildFeatures {
-        viewBinding = true
-    }
+    buildToolsVersion = "36.0.0"
     kotlinOptions {
         jvmTarget = "11"
     }

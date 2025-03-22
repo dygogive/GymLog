@@ -11,89 +11,98 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.data.db.PlanManagerDAO;
 import com.example.gymlog.data.exercise.Exercise;
 import com.example.gymlog.data.exercise.ExerciseInBlock;
 
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Адаптер для відображення списку вправ (Exercise) всередині одного TrainingBlock.
- * Використовується в TrainingBlockAdapter (у внутрішньому RecyclerView).
- */
-public class AdapterExercisesInTrainingBlock
-        extends RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
+public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
 
-    // Список вправ, поточний context, і слухач (на клік інформації)
-    private final List<ExerciseInBlock> exercises;
+
+
+
+
+
+
+
     private final Context context;
-    private final ExerciseListener listener;
+    private final List<ExerciseInBlock> exercises;
+    public List<ExerciseInBlock> getItems() {
+        return exercises;
+    }
 
-    /**
-     * Інтерфейс, що обробляє клік на конкретну вправу
-     */
+
     public interface ExerciseListener {
         void onClickListener(Exercise exercise);
     }
+    private final ExerciseListener exerciseListener;
 
-    /**
-     * Конструктор, де передаємо:
-     * @param context   – поточний Context
-     * @param exercises – список вправ
-     * @param listener  – слухач натискання на кнопку інформації
-     */
+
     public AdapterExercisesInTrainingBlock(
             Context context,
             List<ExerciseInBlock> exercises,
-            ExerciseListener listener
+            ExerciseListener exerciseListener
     ) {
         this.exercises = exercises;
-        this.listener = listener;
+        this.exerciseListener = exerciseListener;
         this.context = context;
     }
-
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Інфлюємо item_exercise_for_training_block.xml
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_exercise_for_training_block, parent, false);
         return new ViewHolder(view);
     }
 
-    /**
-     * Зв’язуємо поля ViewHolder із даними конкретної вправи.
-     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Отримуємо вправу
         ExerciseInBlock exercise = exercises.get(position);
-
-        // Встановлюємо назву (локалізовану чи кастомну)
         holder.nameExercise.setText(exercise.getNameOnly(context));
 
-        // На кнопку info вішаємо виклик listener.onClickListener(...)
-        holder.buttonInfo.setOnClickListener(v -> listener.onClickListener(exercise));
+        holder.buttonInfo.setOnClickListener(v -> {
+            exerciseListener.onClickListener(exercise);
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return (exercises != null) ? exercises.size() : 0;
+        return exercises != null ? exercises.size() : 0;
     }
 
-    /**
-     * ViewHolder для одного елемента списку вправ:
-     *  - nameExercise: TextView з назвою вправи
-     *  - buttonInfo: ImageButton для показу додаткової інформації.
-     */
+    public void moveItem(int fromPosition, int toPosition, PlanManagerDAO dao, long blockID) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(exercises, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(exercises, i, i - 1);
+            }
+        }
+        for (int i = 0; i < exercises.size(); i++) {
+            exercises.get(i).setPosition(i);
+        }
+        dao.updateTrainingBlockExercises(blockID, exercises);
+
+        notifyItemMoved(fromPosition, toPosition);
+
+        dao.logAllData();
+    }
+
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameExercise;
         ImageButton buttonInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            buttonInfo   = itemView.findViewById(R.id.buttonInfo);   // кнопка info
-            nameExercise = itemView.findViewById(R.id.nameExercise); // назва вправи
+            nameExercise = itemView.findViewById(R.id.nameExercise);
+            buttonInfo = itemView.findViewById(R.id.buttonInfo);
         }
     }
 }

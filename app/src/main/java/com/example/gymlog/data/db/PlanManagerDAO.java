@@ -981,10 +981,11 @@ public class PlanManagerDAO {
                 values.put("position", exercise.getPosition());
                 db.insert("TrainingBlockExercises", null, values);
             }
+            Log.e("DB_CRASH updateTrainingBlockExercises", "Оновлено вправи");
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("DB_CRASH", "Помилка при оновленні вправ у блоці", e);
+            Log.e("DB_CRASH updateTrainingBlockExercises", "Помилка при оновленні вправ у блоці", e);
         } finally {
             db.endTransaction();
             db.close();
@@ -1006,7 +1007,8 @@ public class PlanManagerDAO {
 
         String sql = "SELECT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
                 "FROM TrainingBlockExercises tbe " +
-                "JOIN Exercise e ON e.id = tbe.exerciseId " +
+                "JOIN Exercise e " +
+                "ON e.id = tbe.exerciseId " +
                 "WHERE tbe.trainingBlockId = ? " +
                 "ORDER BY tbe.position ASC";
 
@@ -1032,6 +1034,8 @@ public class PlanManagerDAO {
         }
         cursor.close();
         db.close();
+
+        Log.d("getBlockExercises", "Завантаження списку вправ до адаптера вправ блокуpublic TrainingBlockViewHolder onCreateViewHolder");
 
         return exercises;
     }
@@ -1084,12 +1088,12 @@ public class PlanManagerDAO {
     /**
      * Видаляє вправу з тренувального блоку.
      */
-    public void removeExerciseFromBlock(long blockId, long exerciseId) {
+    public void removeExerciseFromBlock(long blockId, long exerciseId, int position) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.delete("TrainingBlockExercises",
-                "trainingBlockId=? AND exerciseId=?",
-                new String[]{String.valueOf(blockId), String.valueOf(exerciseId)});
+                "trainingBlockId=? AND exerciseId=? AND position=?",
+                new String[]{String.valueOf(blockId), String.valueOf(exerciseId), String.valueOf(position)});
 
         db.close();
     }
@@ -1137,13 +1141,18 @@ public class PlanManagerDAO {
 
                     // 4️⃣ Логуємо всі вправи у кожному блоці
                     Cursor cursorExercises = db.rawQuery(
-                            "SELECT e.id, e.name FROM TrainingBlockExercises tbe JOIN Exercise e ON e.id = tbe.exerciseId WHERE tbe.trainingBlockId = ?",
+                            "SELECT tbe.exerciseId, e.name, tbe.position " +
+                                    "FROM TrainingBlockExercises tbe " +
+                                    "JOIN Exercise e " +
+                                    "ON e.id = tbe.exerciseId " +
+                                    "WHERE tbe.trainingBlockId = ?",
                             new String[]{String.valueOf(blockId)}
                     );
                     while (cursorExercises.moveToNext()) {
                         long exId = cursorExercises.getLong(0);
                         String exName = cursorExercises.getString(1);
-                        Log.d("logAllData", "      Exercise [id=" + exId + ", name=" + exName + "]");
+                        int position = cursorExercises.getInt(2);
+                        Log.d("logAllData", "      Exercise [id=" + exId + ", name=" + exName + ", position=" + position + "]");
                     }
                     cursorExercises.close();
                 }

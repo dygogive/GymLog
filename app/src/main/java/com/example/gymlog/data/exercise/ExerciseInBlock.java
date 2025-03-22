@@ -6,8 +6,8 @@ import java.util.List;
 public class ExerciseInBlock extends Exercise {
     private int position;
 
-    public ExerciseInBlock(long id, String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment, int position) {
-        super(id, name, motion, muscleGroups, equipment);
+    public ExerciseInBlock(long exerciseId, String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment, int position) {
+        super(exerciseId, name, motion, muscleGroups, equipment);
         this.position = position;
     }
 

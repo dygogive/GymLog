@@ -31,7 +31,7 @@
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/edit_exercise"
         android:padding="8dp"
-        android:src="@drawable/get_info"
+        android:src="@drawable/baseline_view_week_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/primary" />
