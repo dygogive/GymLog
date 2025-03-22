@@ -100,18 +100,19 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                 // Клік на вправу (короткий тап)
                 exercise -> Toast.makeText(context, exercise.getNameOnly(context), Toast.LENGTH_SHORT).show()
         );
+
         holder.recyclerViewExercises.setAdapter(exerciseAdapter);
 
-        // Якщо раніше до цього ViewHolder уже було прикріплено ItemTouchHelper –
-        // відчепимо його, щоб не було накладань:
+        // Якщо раніше до цього ViewHolder уже було прикріплено ItemTouchHelper – відчепимо його
         if (holder.itemTouchHelper != null) {
             holder.itemTouchHelper.attachToRecyclerView(null);
         }
 
-        // Створюємо новий callback, щоб передати конкретний blockId
+        // Створюємо новий callback, щоб передати blockId і забезпечити
+        // Drag (UP | DOWN) + Swipe (LEFT).
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN,  // drag вгору/вниз
-                0  // swipe відключений
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT // <-- Додано swipe вліво
         ) {
             @Override
             public boolean onMove(@NonNull RecyclerView rv,
@@ -126,7 +127,33 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Не використовується
+                // Ловимо свайп вліво, щоб видалити вправу
+                if (direction == ItemTouchHelper.LEFT) {
+                    int pos = viewHolder.getBindingAdapterPosition();
+                    // Перевіримо, що позиція валідна
+                    if (pos != RecyclerView.NO_POSITION) {
+                        ExerciseInBlock removedExercise = exerciseAdapter.getItems().get(pos);
+
+                        // 1) Видаляємо з БД
+                        //    Можна напряму використати removeExerciseFromBlock(), якщо хочеш зберегти
+                        //    унікальний position. Але, щоб було простіше, показую варіант "повного" оновлення:
+                        planManagerDAO.removeExerciseFromBlock(
+                                block.getId(),
+                                removedExercise.getId(),
+                                removedExercise.getPosition()
+                        );
+
+                        // 2) Видаляємо з локального списку
+                        exerciseAdapter.getItems().remove(pos);
+                        exerciseAdapter.notifyItemRemoved(pos);
+
+                        // 3) Перепризначаємо позиції решті елементів (і оновлюємо в БД)
+                        for (int i = pos; i < exerciseAdapter.getItems().size(); i++) {
+                            exerciseAdapter.getItems().get(i).setPosition(i);
+                        }
+                        planManagerDAO.updateTrainingBlockExercises(block.getId(), exerciseAdapter.getItems());
+                    }
+                }
             }
         };
 
@@ -154,7 +181,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
      * Викликається з ItemTouchHelper, який налаштований в іншому місці (для блоків).
      */
     public void moveItem(int fromPosition, int toPosition) {
-        // Спрощене переміщення елемента: “вирізати” і “вставити”
+        // “Вирізати” і “вставити” (замість Collections.swap)
         TrainingBlock removed = trainingBlocks.remove(fromPosition);
         trainingBlocks.add(toPosition, removed);
         notifyItemMoved(fromPosition, toPosition);
