@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background"
+    android:background="@color/my_on_primary_container"
     android:padding="16dp">
 
     <!-- Заголовок діалогу -->
@@ -26,8 +26,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/fab_background_tint"
         android:hint="Назва дня"
+        android:textColor="@color/fab_tint"
+        android:textColorHint="@color/fab_tint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +42,8 @@
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/fab_tint"
         android:hint="Опис дня"
+        android:textColor="@color/fab_tint"
+        android:textColorHint="@color/fab_tint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +64,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/fab_tint"
+            android:backgroundTint="@color/my_on_background"
             android:text="Скасувати"
             android:textColor="@color/text_color"
             android:textSize="16sp" />
@@ -72,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/fab_tint"
+            android:backgroundTint="@color/my_on_background"
             android:text="Зберегти"
             android:textColor="@color/text_color"
             android:textSize="16sp" />

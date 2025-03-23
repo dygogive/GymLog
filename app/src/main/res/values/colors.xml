@@ -1,11 +1,11 @@
 <resources>
-    <color name="background">#C3C3C3</color>
+    <color name="background">#E7E7E7</color>
     <color name="text_color">#3C3C3C</color>
-    <color name="fab_tint">#BDBDBD</color>
-    <color name="fab_background_tint">#696969</color>
+    <color name="fab_tint">#5D5D5D</color>
+    <color name="fab_background_tint">#B6B6B6</color>
 
-    <color name="primary">#2F2F2F</color>          <!-- Приклад фіолетового, можеш замінити на свій -->
-    <color name="primary_variant">#4E4E4E</color> <!-- Темніший відтінок -->
+    <color name="primary">#615F5F</color>          <!-- Приклад фіолетового, можеш замінити на свій -->
+    <color name="primary_variant">#818080</color> <!-- Темніший відтінок -->
 
     <!-- Якщо є посилання на інші кольори: secondary, accent, і т.д.
     <color name="secondary">#03DAC5</color>
@@ -14,20 +14,20 @@
 
     <!-- Приклад \"my\" кольорів -->
     <color name="my_primary">#B1ADAD</color>
-    <color name="my_on_primary">#BAB2B2</color>
-    <color name="my_primary_container">#D4DBFF</color>
-    <color name="my_on_primary_container">#000000</color>
+    <color name="my_on_primary">#8C8C8C</color>
+    <color name="my_primary_container">#D7D6D6</color>
+    <color name="my_on_primary_container">#CAC7C7</color>
 
     <color name="my_secondary">#6D6C6A</color>
-    <color name="my_on_secondary">#000000</color>
-    <color name="my_secondary_container">#121212</color>
-    <color name="my_on_secondary_container">#DCDCDC</color>
+    <color name="my_on_secondary">#EBEBEB</color>
+    <color name="my_secondary_container">#DBD8D8</color>
+    <color name="my_on_secondary_container">#D3D3D3</color>
 
-    <color name="my_surface">#EBD4CF</color>
-    <color name="my_on_surface">#000000</color>
-    <color name="my_surface_variant">#898484</color>
+    <color name="my_surface">#BDBDBD</color>
+    <color name="my_on_surface">#403E3E</color>
+    <color name="my_surface_variant">#E4E3E3</color>
 
-    <color name="my_background">#BDB8B7</color>
-    <color name="my_on_background">#AFA9A7</color>
+    <color name="my_background">#E4E2E2</color>
+    <color name="my_on_background">#CAC9C8</color>
 
 </resources>

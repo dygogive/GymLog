@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/my_on_secondary_container">
+    android:background="@color/my_secondary_container">
 
 
     <!-- Кнопка для редагування -->
@@ -15,25 +15,31 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/exercise"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonInfo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/buttonInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/edit_exercise"
         android:padding="8dp"
-        android:src="@drawable/baseline_view_week_24"
+        android:src="@drawable/get_info"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/primary" />
+        app:tint="@color/my_on_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

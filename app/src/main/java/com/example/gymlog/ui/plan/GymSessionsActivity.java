@@ -231,6 +231,11 @@ public class GymSessionsActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onCloneClick(GymSession item) {
+
+        }
+
+        @Override
         public void onDeleteClick(GymSession gymSession) {
             // Підтвердження перед видаленням
             ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {

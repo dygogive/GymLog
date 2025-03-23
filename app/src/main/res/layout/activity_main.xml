@@ -43,7 +43,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -82,7 +82,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -122,7 +122,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -160,7 +160,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -199,7 +199,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -237,7 +237,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fab_tint"
+            android:background="@color/my_primary_container"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">

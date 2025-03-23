@@ -213,6 +213,9 @@
     <string name="exercise_added_to_selected_blocks">Exercise added to selected blocks!</string>
     <string name="no_block_selected">No block selected</string>
     <string name="do_not_add">Do not add</string>
+    <string name="context_menu">Context menu</string>
+    <string name="clone_exercise">Clone</string>
+    <string name="clone">Clone</string>
 
 
 </resources>

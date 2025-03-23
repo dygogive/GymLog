@@ -228,6 +228,11 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onCloneClick(FitnessProgram item) {
+
+        }
+
+        @Override
         public void onDeleteClick(FitnessProgram fitnessProgram) {
             // Діалог підтвердження перед видаленням
             ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () ->

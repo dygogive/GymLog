@@ -1,9 +1,11 @@
 package com.example.gymlog.ui.plan.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,9 @@ import java.util.List;
  */
 public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapter<BasePlanAdapter.BasePlanViewHolder> {
 
+
+
+
     public List<T> getItems() {
         return items;
     }
@@ -35,9 +40,10 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
      * - onItemClick()   => простий клік на весь елемент
      */
     public interface OnPlanItemClickListener<T> {
-        void onEditClick(T item);
-        void onDeleteClick(T item);
         void onItemClick(T item);
+        void onEditClick(T item);
+        void onCloneClick(T item);
+        void onDeleteClick(T item);
     }
 
     // Список елементів та слухач кліків
@@ -64,6 +70,7 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
         return new BasePlanViewHolder(view);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onBindViewHolder(@NonNull BasePlanViewHolder holder, int position) {
         // Поточний об'єкт (наприклад, FitnessProgram чи GymSession)
@@ -76,10 +83,32 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
         // Обробники натискань
         // 1) натискання на весь item
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
-        // 2) редагувати
-        holder.buttonEdit.setOnClickListener(v -> listener.onEditClick(item));
-        // 3) видалити
-        holder.buttonDelete.setOnClickListener(v -> listener.onDeleteClick(item));
+        // 2) контекстне меню і відразу ж назначаємо слухач на пункти меню
+        holder.buttonMenu.setOnClickListener(v -> {
+            // Створюємо PopupMenu
+            PopupMenu popupMenu = new PopupMenu(v.getContext(),v);
+            popupMenu.getMenuInflater().inflate(R.menu.program_context_menu,popupMenu.getMenu());
+
+            // Обробник вибору пунктів меню
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.menu_edit) {
+                    listener.onEditClick(item); // Редагувати
+                    return true;
+                } else if (itemId == R.id.menu_clone) {
+                    listener.onCloneClick(item); // Клонувати
+                    return true;
+                } else if (itemId == R.id.menu_delete) {
+                    listener.onDeleteClick(item); // Видалити
+                    return true;
+                }
+                return false;
+            });
+
+            // Показати меню
+            popupMenu.show();
+        });
+
     }
 
     @Override
@@ -118,14 +147,13 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
      */
     public static class BasePlanViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName, textViewDescription;
-        ImageButton buttonEdit, buttonDelete;
+        ImageButton buttonMenu;
 
         public BasePlanViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName        = itemView.findViewById(R.id.textViewDayName);
             textViewDescription = itemView.findViewById(R.id.tvDayDescription);
-            buttonEdit          = itemView.findViewById(R.id.buttonEditDay);
-            buttonDelete        = itemView.findViewById(R.id.buttonDeleteDay);
+            buttonMenu          = itemView.findViewById(R.id.buttonMenu);
         }
     }
 }
