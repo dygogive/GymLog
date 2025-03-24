@@ -10,13 +10,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.gymlog.data.db.ExerciseDAO;
-import com.example.gymlog.ui.exercise2.activities.ExerciseManagementActivity;
+import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.ui.exercise.activities.ExerciseManagementActivity;
 import com.example.gymlog.R;
-import com.example.gymlog.ui.exercise1.MuscleGroupActivity;
-import com.example.gymlog.ui.history.HistoryActivity;
+
 import com.example.gymlog.ui.plan.FitnessProgramsActivity;
-import com.example.gymlog.ui.workout.WorkoutActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,21 +30,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Плитки
-        findViewById(R.id.cardStartGym).setOnClickListener(v -> {
-            Log.d("LogTag", "Start Gym clicked");
-            startActivity(new Intent(MainActivity.this, WorkoutActivity.class));
-        });
 
-        findViewById(R.id.cardHistory).setOnClickListener(v -> {
-            Log.d("LogTag", "History clicked");
-            startActivity(new Intent(MainActivity.this, HistoryActivity.class));
-        });
-
-        findViewById(R.id.cardExercises).setOnClickListener(v -> {
-            Log.d("LogTag", "Exercises clicked");
-            startActivity(new Intent(MainActivity.this, MuscleGroupActivity.class));
-        });
 
         findViewById(R.id.cardNewExercises).setOnClickListener(v -> {
             Log.d("LogTag", "New Exercises clicked");

@@ -9,152 +9,35 @@
     tools:context=".ui.MainActivity">
 
     <!-- Заголовок -->
+
+    <!-- CardView 1 -->
+
     <TextView
         android:id="@+id/textViewLOGO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/app_name"
+        android:text="@string/my_gym_log"
         android:textColor="@color/text_color"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- CardView 1 -->
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardStartGym"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="116dp"
-        android:layout_marginBottom="153dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardExercises"
-        app:layout_constraintEnd_toStartOf="@+id/cardHistory"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLOGO">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_exercise" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/start_gym"
-                android:textColor="@color/text_color"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardHistory"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="66dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardStartGym"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardStartGym"
-        app:layout_constraintTop_toTopOf="@+id/cardStartGym"
-        app:layout_constraintWidth_percent="0.45">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_exercise" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/workout_history"
-                android:textColor="@color/text_color"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardExercises"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="116dp"
-        android:layout_marginBottom="230dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardPrograms"
-        app:layout_constraintEnd_toStartOf="@+id/cardNewExercises"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardStartGym"
-        app:layout_constraintWidth_percent="0.45">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_exercise" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/exe_list"
-                android:textColor="@color/text_color"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16000003" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardNewExercises"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
         android:layout_margin="16dp"
-        android:layout_marginStart="66dp"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardExercises"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardExercises"
-        app:layout_constraintTop_toTopOf="@+id/cardExercises"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cardPrograms"
+        app:layout_constraintStart_toStartOf="@+id/cardPrograms"
+        app:layout_constraintTop_toBottomOf="@+id/cardPrograms"
+        app:layout_constraintVertical_bias="0.17000002"
         app:layout_constraintWidth_percent="0.45">
 
         <LinearLayout
@@ -172,8 +55,8 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/exercises_edit"
+                android:layout_height="match_parent"
+                android:text="@string/exe_editor"
                 android:textColor="@color/text_color"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -183,55 +66,16 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPrograms"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
         android:layout_margin="16dp"
-        android:layout_marginEnd="116dp"
-        android:layout_marginBottom="443dp"
         app:cardCornerRadius="100dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cardSettings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardExercises"
-        app:layout_constraintWidth_percent="0.45">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_exercise" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/programs"
-                android:textColor="@color/text_color"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardSettings"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"
-        android:layout_marginStart="66dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardPrograms"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardPrograms"
-        app:layout_constraintTop_toTopOf="@+id/cardPrograms"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLOGO"
+        app:layout_constraintVertical_bias="0.18"
         app:layout_constraintWidth_percent="0.45">
 
         <LinearLayout
@@ -249,8 +93,8 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/app_settings"
+                android:layout_height="match_parent"
+                android:text="@string/edit_programs"
                 android:textColor="@color/text_color"
                 android:textSize="24sp"
                 android:textStyle="bold" />

@@ -115,7 +115,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="expand_details">Show details</string>
-    <string name="exe_editor">Exercises manager</string>
+    <string name="exe_editor">Exercises Editor</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -216,6 +216,8 @@
     <string name="context_menu">Context menu</string>
     <string name="clone_exercise">Clone</string>
     <string name="clone">Clone</string>
+    <string name="edit_programs">Programs Editor</string>
+    <string name="my_gym_log">My Gym`s Logs</string>
 
 
 </resources>

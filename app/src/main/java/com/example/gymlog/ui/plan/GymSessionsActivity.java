@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.plan.GymSession;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.model.plan.GymSession;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
 import com.example.gymlog.ui.plan.adapter.BasePlanAdapter;

@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
-import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.exercise.ExerciseInBlock;
-import com.example.gymlog.data.plan.TrainingBlock;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.model.exercise.ExerciseInBlock;
+import com.example.gymlog.model.plan.TrainingBlock;
 import java.util.ArrayList;
 import java.util.List;
 

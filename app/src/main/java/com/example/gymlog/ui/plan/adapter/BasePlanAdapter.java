@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.plan.BasePlanItem;
+import com.example.gymlog.model.plan.BasePlanItem;
 
 import java.util.Collections;
 import java.util.List;

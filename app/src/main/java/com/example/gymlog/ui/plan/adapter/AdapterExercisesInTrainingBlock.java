@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
-import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.exercise.ExerciseInBlock;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.model.exercise.ExerciseInBlock;
 import java.util.Collections;
 import java.util.List;
 

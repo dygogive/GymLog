@@ -24,7 +24,7 @@
             android:exported="false"
             android:theme="@style/Theme.MyApp" />
         <activity
-            android:name=".ui.exercise2.activities.ExerciseManagementActivity"
+            android:name=".ui.exercise.activities.ExerciseManagementActivity"
             android:exported="false" />
         <activity
             android:name=".ui.exercise1.MuscleGroupActivity"

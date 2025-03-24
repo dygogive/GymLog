@@ -14,14 +14,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
-import com.example.gymlog.data.db.ExerciseDAO;
-import com.example.gymlog.data.db.PlanManagerDAO;
-import com.example.gymlog.data.exercise.Equipment;
-import com.example.gymlog.data.exercise.Exercise;
-import com.example.gymlog.data.exercise.ExerciseInBlock;
-import com.example.gymlog.data.exercise.Motion;
-import com.example.gymlog.data.exercise.MuscleGroup;
-import com.example.gymlog.data.plan.TrainingBlock;
+import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.model.exercise.Equipment;
+import com.example.gymlog.model.exercise.Exercise;
+import com.example.gymlog.model.exercise.ExerciseInBlock;
+import com.example.gymlog.model.exercise.Motion;
+import com.example.gymlog.model.exercise.MuscleGroup;
+import com.example.gymlog.model.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
