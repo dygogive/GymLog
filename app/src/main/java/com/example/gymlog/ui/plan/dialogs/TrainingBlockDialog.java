@@ -317,7 +317,7 @@ public class TrainingBlockDialog extends Dialog {
             blockId = trainingBlock.getId();
 
             // формуємо чорний список (які раніше виключені користувачем)
-            List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+            List<ExerciseInBlock> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
             List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(blockId);
 
             exerciseBlacklist.clear();
@@ -338,7 +338,7 @@ public class TrainingBlockDialog extends Dialog {
         saveFilters(blockId);
 
         // Оновлюємо список вправ (з урахуванням чорного списку)
-        List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+        List<ExerciseInBlock> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
 
         List<ExerciseInBlock> updatedExercises = new ArrayList<>();
         int position = 0; // Починаємо з 0 і проставляємо позиції

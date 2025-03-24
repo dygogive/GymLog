@@ -151,7 +151,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     // Діалог вибору вправ для блоку
     private void showExerciseSelectionDialog(TrainingBlock block) {
-        List<Exercise> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
+        List<ExerciseInBlock> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
         List<ExerciseInBlock> selectedExercises = planManagerDAO.getBlockExercises(block.getId());
 
         Set<Long> oldSelectedIds = new HashSet<>();

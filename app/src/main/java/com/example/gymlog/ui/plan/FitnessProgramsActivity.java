@@ -228,8 +228,22 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onCloneClick(FitnessProgram item) {
+        public void onCloneClick(FitnessProgram fitnessProgram) {
+            // Клонування елемента
+            FitnessProgram copiedProgram = new FitnessProgram(
+                    fitnessProgram.getId(), // ID буде згенеровано базою даних
+                    fitnessProgram.getName() + " (Копія)",
+                    fitnessProgram.getDescription(),
+                    new ArrayList<>(fitnessProgram.getGymSessions())
+            );
 
+            // Додаємо клонований елемент до бази даних
+            FitnessProgram clonedProgram = planManagerDAO.cloneFitProgram(copiedProgram);
+            if (clonedProgram != null) {
+                fitnessPrograms.add(clonedProgram);
+                fitnessProgramAdapter.notifyDataSetChanged();
+                Toast.makeText(FitnessProgramsActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(FitnessProgramsActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
         }
 
         @Override

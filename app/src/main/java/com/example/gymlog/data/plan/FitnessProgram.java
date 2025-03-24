@@ -31,6 +31,9 @@ public class FitnessProgram implements BasePlanItem {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -46,5 +49,13 @@ public class FitnessProgram implements BasePlanItem {
 
     public int getPosition() {
         return position;
+    }
+
+    public List<GymSession> getGymSessions() {
+        return gymSessions;
+    }
+
+    public void setGymSessions(List<GymSession> gymSessions) {
+        this.gymSessions = gymSessions;
     }
 }

@@ -28,6 +28,8 @@ public class GymSession implements BasePlanItem {
         return position;
     }
 
+    private List<TrainingBlock> trainingBlocks;
+
     private String name = " ";
 
     private String description;
@@ -36,6 +38,7 @@ public class GymSession implements BasePlanItem {
     public GymSession(int id, int fitProgramId, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = fitProgramId;
+        this.trainingBlocks = trainingBlocks;
     }
 
 
@@ -57,6 +60,14 @@ public class GymSession implements BasePlanItem {
 
     public String getName() {
         return name;
+    }
+
+    public List<TrainingBlock> getTrainingBlocks() {
+        return trainingBlocks;
+    }
+
+    public void setTrainingBlocks(List<TrainingBlock> trainingBlocks) {
+        this.trainingBlocks = trainingBlocks;
     }
 }
 

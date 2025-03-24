@@ -2,6 +2,7 @@ package com.example.gymlog.data.plan;
 
 import com.example.gymlog.data.exercise.Equipment;
 import com.example.gymlog.data.exercise.Exercise;
+import com.example.gymlog.data.exercise.ExerciseInBlock;
 import com.example.gymlog.data.exercise.Motion;
 import com.example.gymlog.data.exercise.MuscleGroup;
 
@@ -13,7 +14,7 @@ public class TrainingBlock {
     private long gymDayId; // Ідентифікатор дня тренування
     private String name; // Назва групи
     private String description; // Опис або мета групи
-    private List<Exercise> exercises; // Список вправ
+    private List<ExerciseInBlock> exerciseInBlocks; // Список вправ
 
     private Motion motion; //фільтр вправ
     private List<MuscleGroup> muscleGroupList; //фільтр вправ
@@ -28,18 +29,18 @@ public class TrainingBlock {
         this.gymDayId = gymDayId;
         this.name = name;
         this.description = description;
-        this.exercises = new ArrayList<Exercise>();
+        this.exerciseInBlocks = new ArrayList<ExerciseInBlock>();
     }
 
-    public TrainingBlock(long id, long gymDayId, String name, String description, List<Exercise> exercises) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, List<ExerciseInBlock> exerciseInBlocks) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
         this.description = description;
-        this.exercises = exercises;
+        this.exerciseInBlocks = exerciseInBlocks;
     }
 
-    public TrainingBlock(long id, long gymDayId, String name, String description, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment, int position, List<Exercise> exercises) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment, int position, List<ExerciseInBlock> exerciseInBlocks) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -48,18 +49,9 @@ public class TrainingBlock {
         this.muscleGroupList = muscleGroupList;
         this.equipment = equipment;
         this.position = position;
-        this.exercises = exercises;
+        this.exerciseInBlocks = exerciseInBlocks;
     }
-    public TrainingBlock(long id, long gymDayId, String name, String description, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment, int position) {
-        this.id = id;
-        this.gymDayId = gymDayId;
-        this.name = name;
-        this.description = description;
-        this.motion = motion;
-        this.muscleGroupList = muscleGroupList;
-        this.equipment = equipment;
-        this.position = position;
-    }
+
 
 
 
@@ -91,13 +83,13 @@ public class TrainingBlock {
         this.description = description;
     }
 
-    public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
+    public void setExercises(List<ExerciseInBlock> exerciseInBlocks) {
+        this.exerciseInBlocks = exerciseInBlocks;
     }
 
 
-    public List<Exercise> getExercises() {
-        return exercises;
+    public List<ExerciseInBlock> getExercises() {
+        return exerciseInBlocks;
     }
 
 
