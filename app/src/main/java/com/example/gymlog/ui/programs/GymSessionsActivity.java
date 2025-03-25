@@ -232,6 +232,9 @@ public class GymSessionsActivity extends AppCompatActivity {
 
         @Override
         public void onCloneClick(GymSession item) {
+
+            loadGymSessions();
+
             // Клонування елемента
             GymSession copiedItem = new GymSession(
                     (int) item.getId(), // ID буде згенеровано базою даних
@@ -277,4 +280,13 @@ public class GymSessionsActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadGymSessions(); // метод, який заново бере дні з бази
+    }
+
 }

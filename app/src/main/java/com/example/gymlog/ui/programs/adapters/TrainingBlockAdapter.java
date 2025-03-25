@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.programs.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -11,15 +12,17 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.model.plan.TrainingBlock;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,28 +35,19 @@ import java.util.List;
  */
 public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdapter.TrainingBlockViewHolder> {
 
-    // Інтерфейс для обробки подій на тренувальних блоках
     public interface OnTrainingBlockClickListener {
-        void onEditClick(TrainingBlock block); // Редагувати блок
-        void onDeleteClick(TrainingBlock block); // Видалити блок
-        void onAddExercise(TrainingBlock block); // Додати вправу
-        void onEditExercises(TrainingBlock block); // Редагувати вправи
-        void onCloneTrainingBlock(TrainingBlock block); // Редагувати вправи
+        void onEditClick(TrainingBlock block);       // Редагувати блок
+        void onDeleteClick(TrainingBlock block);     // Видалити блок
+        void onAddExercise(TrainingBlock block);     // Додати вправу
+        void onEditExercises(TrainingBlock block);   // Редагувати вправи
+        void onCloneTrainingBlock(TrainingBlock block);
     }
 
-    private final Context context; // Контекст для доступу до ресурсів
-    private final List<TrainingBlock> trainingBlocks; // Список тренувальних блоків
-    private final PlanManagerDAO planManagerDAO; // DAO для роботи з базою даних
-    private final OnTrainingBlockClickListener listener; // Обробник подій
+    private final Context context;
+    private final List<TrainingBlock> trainingBlocks;
+    private final PlanManagerDAO planManagerDAO;
+    private final OnTrainingBlockClickListener listener;
 
-    /**
-     * Конструктор адаптера.
-     *
-     * @param context          Контекст.
-     * @param trainingBlocks   Список тренувальних блоків.
-     * @param planManagerDAO   DAO для роботи з базою даних.
-     * @param listener         Обробник подій для блоків.
-     */
     public TrainingBlockAdapter(
             Context context,
             List<TrainingBlock> trainingBlocks,
@@ -61,135 +55,81 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
             OnTrainingBlockClickListener listener
     ) {
         this.context = context;
-        this.trainingBlocks = trainingBlocks != null ? trainingBlocks : new ArrayList<>();
+        // Якщо trainingBlocks == null, створюємо пустий список (захист від NPE)
+        this.trainingBlocks = (trainingBlocks != null) ? trainingBlocks : new ArrayList<>();
         this.planManagerDAO = planManagerDAO;
         this.listener = listener;
-        setHasStableIds(true); // Увімкнення стабільних ідентифікаторів для уникнення "блимання"
+
+        setHasStableIds(true);
     }
 
-    /**
-     * Створює новий ViewHolder для елемента списку.
-     */
     @NonNull
     @Override
     public TrainingBlockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_training_block, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_training_block, parent, false);
         return new TrainingBlockViewHolder(view);
     }
 
-    /**
-     * Прив'язує дані до ViewHolder на певній позиції.
-     */
     @Override
     public void onBindViewHolder(@NonNull TrainingBlockViewHolder holder, int position) {
         TrainingBlock block = trainingBlocks.get(position);
-
-        // Встановлюємо назву та опис блоку
         holder.textViewBlockName.setText(block.getName());
         holder.textViewBlockDescription.setText(block.getDescription());
 
-        // Налаштування контекстного меню для блоку
+        // Налаштовуємо контекстне меню (три крапки)
         setupBlockMenu(holder, block);
 
-        // Завантаження та відображення списку вправ у блоці
+        // Налаштовуємо внутрішній список вправ
         setupExercisesRecyclerView(holder, block);
     }
 
     /**
-     * Налаштовує контекстне меню для блоку.
+     * Відображає список вправ, прив'язаних до конкретного TrainingBlock.
      */
-    private void setupBlockMenu(TrainingBlockViewHolder holder, TrainingBlock block) {
-        holder.buttonMenu.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(context, holder.buttonMenu);
-            popup.getMenuInflater().inflate(R.menu.training_block_menu, popup.getMenu());
-
-            // Показати іконки
-            try {
-                Field[] fields = popup.getClass().getDeclaredFields();
-                for (Field field : fields) {
-                    if ("mPopup".equals(field.getName())) {
-                        field.setAccessible(true);
-                        Object menuPopupHelper = field.get(popup);
-                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                        setForceIcons.invoke(menuPopupHelper, true);
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.menu_edit_block) {
-                    listener.onEditClick(block); // Редагувати блок
-                } else if (item.getItemId() == R.id.menu_delete_block) {
-                    listener.onDeleteClick(block); // Видалити блок
-                } else if (item.getItemId() == R.id.menu_add_exercise) {
-                    listener.onAddExercise(block); // Додати вправу
-                } else if (item.getItemId() == R.id.menu_edit_exercises) {
-                    listener.onEditExercises(block); // Редагувати вправи
-                } else if (item.getItemId() == R.id.menu_clone_block) {
-                    listener.onCloneTrainingBlock(block); // Редагувати вправи
-                }
-                return true;
-            });
-
-
-            // Програмно встановити колір іконок
-            Menu menu = popup.getMenu();
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem item = menu.getItem(i);
-                Drawable icon = item.getIcon();
-                if (icon != null) {
-                    icon.mutate(); // щоб не змінювати глобальний ресурс
-                    icon.setTint(ContextCompat.getColor(context, R.color.text_color)); // або Color.RED
-                    item.setIcon(icon);
-                }
-            }
-
-
-            popup.show();
-        });
-    }
-
-    /**
-     * Налаштовує RecyclerView для відображення вправ у блоці.
-     */
-    private void setupExercisesRecyclerView(TrainingBlockViewHolder holder, TrainingBlock block) {
+    private void setupExercisesRecyclerView(@NonNull TrainingBlockViewHolder holder, @NonNull TrainingBlock block) {
+        // Завантажуємо вправи з бази
         List<ExerciseInBlock> exercises = planManagerDAO.getBlockExercises(block.getId());
 
-        // Створення адаптера для вправ
+        // Створюємо адаптер (AdapterExercisesInTrainingBlock)
         AdapterExercisesInTrainingBlock exerciseAdapter = new AdapterExercisesInTrainingBlock(
                 context,
                 exercises,
-                exercise -> Toast.makeText(context, exercise.getNameOnly(context), Toast.LENGTH_SHORT).show()
+                exercise -> {
+                    // Просто покажемо Toast із назвою вправи
+                    Toast.makeText(context, exercise.getNameOnly(context), Toast.LENGTH_SHORT).show();
+                }
         );
 
         holder.recyclerViewExercises.setAdapter(exerciseAdapter);
 
-        // Налаштування drag & drop для вправ
+        // Налаштовуємо drag&drop і swipe для вправ
         setupItemTouchHelper(holder, block, exerciseAdapter);
     }
 
     /**
-     * Налаштовує ItemTouchHelper для переміщення та видалення вправ.
+     * Налаштовує ItemTouchHelper для drag & drop (зміна позицій) і swipe (видалення).
      */
-    private void setupItemTouchHelper(TrainingBlockViewHolder holder, TrainingBlock block, AdapterExercisesInTrainingBlock exerciseAdapter) {
+    private void setupItemTouchHelper(@NonNull TrainingBlockViewHolder holder,
+                                      @NonNull TrainingBlock block,
+                                      @NonNull AdapterExercisesInTrainingBlock exerciseAdapter) {
         if (holder.itemTouchHelper != null) {
-            holder.itemTouchHelper.attachToRecyclerView(null); // Від'єднати попередній ItemTouchHelper
+            // Від'єднуємо, щоб не було дублювання
+            holder.itemTouchHelper.attachToRecyclerView(null);
         }
 
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN, // Дозволяємо переміщення вгору/вниз
-                ItemTouchHelper.LEFT // Дозволяємо свайп вліво для видалення
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT
         ) {
             @Override
-            public boolean onMove(@NonNull RecyclerView rv, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getBindingAdapterPosition();
-                int toPosition = target.getBindingAdapterPosition();
-                exerciseAdapter.moveItem(fromPosition, toPosition, planManagerDAO, block.getId()); // Оновити позиції
+            public boolean onMove(@NonNull RecyclerView rv,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                int fromPos = viewHolder.getBindingAdapterPosition();
+                int toPos   = target.getBindingAdapterPosition();
+
+                // Змінюємо позиції в локальному списку
+                exerciseAdapter.moveItem(fromPos, toPos, planManagerDAO, block.getId());
                 return true;
             }
 
@@ -198,16 +138,15 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                 if (direction == ItemTouchHelper.LEFT) {
                     int pos = viewHolder.getBindingAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        ExerciseInBlock removedExercise = exerciseAdapter.getItems().get(pos);
+                        // Видаляємо вправу з бази і локального списку
+                        ExerciseInBlock removedEx = exerciseAdapter.getItems().get(pos);
+                        planManagerDAO.removeExerciseFromBlock(block.getId(), removedEx.getId(), removedEx.getPosition());
 
-                        // Видалити вправу з бази даних
-                        planManagerDAO.removeExerciseFromBlock(block.getId(), removedExercise.getId(), removedExercise.getPosition());
-
-                        // Видалити вправу з локального списку
+                        // Видаляємо з адаптера
                         exerciseAdapter.getItems().remove(pos);
                         exerciseAdapter.notifyItemRemoved(pos);
 
-                        // Оновити позиції решти вправ
+                        // Перепризначимо позиції решті вправ
                         for (int i = pos; i < exerciseAdapter.getItems().size(); i++) {
                             exerciseAdapter.getItems().get(i).setPosition(i);
                         }
@@ -222,23 +161,95 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
     }
 
     /**
-     * Повертає унікальний ідентифікатор для елемента на позиції.
+     * Налаштовує контекстне меню (три крапки) із опціями блоку: редагувати, видалити, додати вправу, клонувати тощо.
      */
-    @Override
-    public long getItemId(int position) {
-        return trainingBlocks.get(position).getId();
+
+    private void setupBlockMenu(@NonNull TrainingBlockViewHolder holder, @NonNull TrainingBlock block) {
+        holder.buttonMenu.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(context, holder.buttonMenu);
+            popup.getMenuInflater().inflate(R.menu.training_block_menu, popup.getMenu());
+
+            // Якщо ти хочеш, щоб іконки показувалися завжди (у т.ч. на старих пристроях) — Reflection hack
+            forceShowIcons(popup);
+
+            popup.setOnMenuItemClickListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu_edit_block) {
+                    listener.onEditClick(block);
+                    return true;
+                } else if (itemId == R.id.menu_delete_block) {
+                    listener.onDeleteClick(block);
+                    return true;
+                } else if (itemId == R.id.menu_add_exercise) {
+                    listener.onAddExercise(block);
+                    return true;
+                } else if (itemId == R.id.menu_edit_exercises) {
+                    listener.onEditExercises(block);
+                    return true;
+                } else if (itemId == R.id.menu_clone_block) {
+                    listener.onCloneTrainingBlock(block);
+                    return true;
+                }
+                return false;
+            });
+
+            // Програмно встановимо колір іконок (не завжди потрібно)
+            tintMenuIcons(popup);
+
+            popup.show();
+        });
     }
 
     /**
-     * Повертає кількість елементів у списку.
+     * Метод-допоміжник: “хак” через Reflection, аби іконки відображалися у PopupMenu навіть на старих Android.
      */
+    private void forceShowIcons(PopupMenu popup) {
+        try {
+            Field[] fields = popup.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popup);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Змінює колір іконок у меню, якщо іконки взагалі є.
+     */
+    private void tintMenuIcons(@NonNull PopupMenu popup) {
+        Menu menu = popup.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            Drawable icon = item.getIcon();
+            if (icon != null) {
+                icon.mutate();
+                icon.setTint(ContextCompat.getColor(context, R.color.text_color));
+                item.setIcon(icon);
+            }
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // Повертаємо унікальний ID для стабільних ідентифікаторів
+        return trainingBlocks.get(position).getId();
+    }
+
     @Override
     public int getItemCount() {
         return trainingBlocks.size();
     }
 
     /**
-     * Переміщує елемент у списку (для drag & drop між блоками).
+     * Зміна позиції блоку у списку (для drag&drop між блоками).
      */
     public void moveItem(int fromPosition, int toPosition) {
         TrainingBlock removed = trainingBlocks.remove(fromPosition);
@@ -246,72 +257,21 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         notifyItemMoved(fromPosition, toPosition);
     }
 
-    /**
-     * ViewHolder для одного тренувального блоку.
-     */
     public static class TrainingBlockViewHolder extends RecyclerView.ViewHolder {
-        final TextView textViewBlockName; // Назва блоку
-        final TextView textViewBlockDescription; // Опис блоку
-        final ImageButton buttonMenu; // Кнопка меню
-        final RecyclerView recyclerViewExercises; // Список вправ
-        ItemTouchHelper itemTouchHelper; // Для drag & drop вправ
+        final TextView textViewBlockName;
+        final TextView textViewBlockDescription;
+        final ImageButton buttonMenu;
+        final RecyclerView recyclerViewExercises;
+        ItemTouchHelper itemTouchHelper;
 
         public TrainingBlockViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewBlockName = itemView.findViewById(R.id.textViewBlockName);
             textViewBlockDescription = itemView.findViewById(R.id.textViewBlockDescription);
             buttonMenu = itemView.findViewById(R.id.buttonMenu);
+
             recyclerViewExercises = itemView.findViewById(R.id.recyclerViewExercises);
             recyclerViewExercises.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         }
     }
 }
-
-/**
- * Конструктор (TrainingBlockAdapter):
-     *
-     * Приймає контекст, список тренувальних блоків, DAO для роботи з базою даних та обробник подій.
-     *
-     * Ініціалізує поля класу та увімкнення стабільних ідентифікаторів.
-     *
- * Метод onCreateViewHolder:
-     *
-     * Створює новий ViewHolder для елемента списку, використовуючи XML-розмітку (item_training_block).
-     *
- * Метод onBindViewHolder:
-     *
-     * Прив'язує дані до елемента списку на певній позиції.
-     *
-     * Встановлює назву та опис блоку, налаштовує контекстне меню та список вправ.
-     *
- * Метод setupBlockMenu:
-     *
-     * Налаштовує контекстне меню для блоку з опціями редагування, видалення, додавання вправ тощо.
-     *
- * Метод setupExercisesRecyclerView:
-     *
-     * Завантажує список вправ для блоку та налаштовує адаптер для їх відображення.
-     *
- * Метод setupItemTouchHelper:
-     *
-     * Налаштовує можливість переміщення та видалення вправ за допомогою drag & drop.
-     *
- * Метод moveItem:
-     *
-     * Переміщує блок у списку (використовується для drag & drop між блоками).
-     *
- * Клас TrainingBlockViewHolder:
-     *
-     * Зберігає посилання на елементи UI (назва блоку, опис, кнопка меню, список вправ).
-     *
-     * Використовується для оптимізації роботи з RecyclerView.
-     *
- * Для новачків:
-         * RecyclerView.Adapter: Відповідає за створення та оновлення елементів списку.
-         *
-         * ViewHolder: Зберігає посилання на елементи UI для швидкого доступу.
-         *
-         * onBindViewHolder: Викликається для прив'язки даних до елемента списку.
-         *
-         * ItemTouchHelper: Дозволяє реалізувати drag & drop та свайп для елементів списку.
- */

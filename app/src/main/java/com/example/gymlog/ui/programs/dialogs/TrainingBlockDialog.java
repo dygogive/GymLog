@@ -68,7 +68,7 @@ public class TrainingBlockDialog extends Dialog {
      * 3. Очищаємо попередні фільтри та зберігаємо нові
      * 4. Оновлюємо список вправ у блоці
      */
-    private Set<Long> exerciseBlacklist = new HashSet<>();
+    private Set<Long> idExercisesBlacklist = new HashSet<>();
 
     // Колбек для оновлення списку після збереження
     private final OnTrainingBlockCreatedListener listener;
@@ -293,22 +293,26 @@ public class TrainingBlockDialog extends Dialog {
 
 
     private void saveTrainingBlock() {
-        String name = editTextBlockName.getText().toString().trim();
-        String description = editTextBlockDescription.getText().toString().trim();
+        Log.d("findErrorDialog", "1");
+
+        String name         = editTextBlockName       .getText().toString().trim();
+        String description  = editTextBlockDescription.getText().toString().trim();
 
         if (name.isEmpty()) {
             editTextBlockName.setError(context.getString(R.string.set_name));
             return;
         }
-
+        Log.d("findErrorDialog", "2");
         long blockId;
 
         if (trainingBlock == null) {
             // Створення нового блоку
             TrainingBlock block = new TrainingBlock(0, gymDayId, name, description, new ArrayList<>());
-            blockId = planManagerDAO.addTrainingBlock(block);
-            trainingBlock = block;
-            trainingBlock.setId(blockId);
+            Log.d("findErrorDialog", "3");
+            blockId             = planManagerDAO.addTrainingBlock(block);
+            Log.d("findErrorDialog", "4");
+            trainingBlock       = block;
+            trainingBlock       .setId(blockId);
         } else {
             // Оновлення існуючого
             trainingBlock.setName(name);
@@ -320,7 +324,7 @@ public class TrainingBlockDialog extends Dialog {
             List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
             List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(blockId);
 
-            exerciseBlacklist.clear();
+            idExercisesBlacklist.clear();
             Set<Long> oldSelectedIds = new HashSet<>();
             for (ExerciseInBlock ex : oldSelected) {
                 oldSelectedIds.add(ex.getId());
@@ -328,7 +332,7 @@ public class TrainingBlockDialog extends Dialog {
 
             for (Exercise ex : oldRecommended) {
                 if (!oldSelectedIds.contains(ex.getId())) {  // Перевіряємо по ID
-                    exerciseBlacklist.add(ex.getId());
+                    idExercisesBlacklist.add(ex.getId());
                 }
             }
         }
@@ -336,15 +340,18 @@ public class TrainingBlockDialog extends Dialog {
         // Очищаємо старі фільтри
         planManagerDAO.clearTrainingBlockFilters(blockId);
         saveFilters(blockId);
+        Log.d("findErrorDialog", "5");
 
         // Оновлюємо список вправ (з урахуванням чорного списку)
         List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+        Log.d("findErrorDialog", "6");
 
         List<ExerciseInBlock> updatedExercises = new ArrayList<>();
         int position = 0; // Починаємо з 0 і проставляємо позиції
+        Log.d("findErrorDialog", "7");
 
         for (Exercise newEx : newRecommended) {
-            if (!exerciseBlacklist.contains(newEx.getId())) {
+            if (!idExercisesBlacklist.contains(newEx.getId())) {
                 updatedExercises.add(new ExerciseInBlock(
                         newEx.getId(),
                         newEx.getName(),
@@ -355,16 +362,19 @@ public class TrainingBlockDialog extends Dialog {
                 ));
             }
         }
-
+        Log.d("findErrorDialog", "8");
         // Оновлюємо БД
         try {
             planManagerDAO.updateTrainingBlockExercises(blockId, updatedExercises);
+            Log.d("findErrorDialog", "9");
             if (listener != null) {
                 listener.onBlockAdded();
             }
+            Log.d("findErrorDialog", "10");
             dismiss();
         } catch (Exception e) {
             Log.e("DB_CRASH", "Помилка при оновленні вправ у блоці", e);
+            Log.d("findErrorDialog", "11");
         }
     }
 

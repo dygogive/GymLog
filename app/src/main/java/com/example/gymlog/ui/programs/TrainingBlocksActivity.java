@@ -1,6 +1,7 @@
 package com.example.gymlog.ui.programs;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -150,68 +151,103 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         @Override
         public void onCloneTrainingBlock(TrainingBlock block) {
-
+            loadTrainingBlocks();
+            Log.d("trainingBlocksError", "1");
             // Додаємо клонований елемент до бази даних
             TrainingBlock clonedBlock = planManagerDAO.onStartCloneTrainingBlock(block);
-            planManagerDAO.getAllPlans();
+            Log.d("trainingBlocksError", "2");
             if (clonedBlock != null) {
                 trainingBlocks.add(clonedBlock);
+                Log.d("trainingBlocksError", "3");
                 loadTrainingBlocks();
+                Log.d("trainingBlocksError", "4");
                 Toast.makeText(TrainingBlocksActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
-            } else Toast.makeText(TrainingBlocksActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(TrainingBlocksActivity.this, "Помилка при клонуванні", Toast.LENGTH_SHORT).show();
         }
     }
 
     // Діалог вибору вправ для блоку
     private void showExerciseSelectionDialog(TrainingBlock block) {
+        // 1) Отримуємо потенційно рекомендовані вправи
         List<Exercise> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
-        List<ExerciseInBlock> selectedExercises = planManagerDAO.getBlockExercises(block.getId());
+        // 2) Отримуємо вже вибрані вправи
+        List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(block.getId());
 
+        // Зберігаємо їх ID у set, щоб швидко перевіряти
         Set<Long> oldSelectedIds = new HashSet<>();
-        for (ExerciseInBlock oldEx : selectedExercises) {
-            oldSelectedIds.add(oldEx.getId());
+        for (ExerciseInBlock ex : oldSelected) {
+            oldSelectedIds.add(ex.getId());
         }
 
-        String[] exerciseNames = new String[recommendedExercises.size()];
-        boolean[] checkedItems = new boolean[recommendedExercises.size()];
+        // Формуємо масив назв і масив checked
+        final String[] exerciseNames = new String[recommendedExercises.size()];
+        final boolean[] checkedItems = new boolean[recommendedExercises.size()];
+
         for (int i = 0; i < recommendedExercises.size(); i++) {
             Exercise e = recommendedExercises.get(i);
-            exerciseNames[i] = e.getNameOnly(TrainingBlocksActivity.this);
+            exerciseNames[i] = e.getNameOnly(this);
+
+            // Позначимо галочкою, якщо ця вправа була у блоці (ID у oldSelectedIds)
             checkedItems[i] = oldSelectedIds.contains(e.getId());
         }
 
         new AlertDialog.Builder(this)
                 .setTitle("Редагувати вправи блоку: " + block.getName())
-                .setMultiChoiceItems(exerciseNames, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked)
+                .setMultiChoiceItems(exerciseNames, checkedItems, (dialog, which, isChecked) -> {
+                    checkedItems[which] = isChecked;
+                })
                 .setPositiveButton("Зберегти", (dialog, whichBtn) -> {
-                    selectedExercises.sort((a, b) -> Integer.compare(a.getPosition(), b.getPosition()));
-                    List<ExerciseInBlock> updatedExerciseList = new ArrayList<>();
-
-                    for (ExerciseInBlock oldEx : selectedExercises) {
-                        long oldId = oldEx.getId();
-                        for (int i = 0; i < recommendedExercises.size(); i++) {
-                            if (recommendedExercises.get(i).getId() == oldId && checkedItems[i]) {
-                                updatedExerciseList.add(oldEx);
-                                break;
-                            }
-                        }
-                    }
-
+                    // 1) Збираємо ID всіх вправ, що стали позначені
+                    Set<Long> newIds = new HashSet<>();
                     for (int i = 0; i < recommendedExercises.size(); i++) {
-                        if (checkedItems[i] && !oldSelectedIds.contains(recommendedExercises.get(i).getId())) {
-                            Exercise e = recommendedExercises.get(i);
-                            updatedExerciseList.add(new ExerciseInBlock(e.getId(), e.getName(), e.getMotion(), e.getMuscleGroupList(), e.getEquipment(), 0));
+                        if (checkedItems[i]) {
+                            newIds.add(recommendedExercises.get(i).getId());
                         }
                     }
 
-                    for (int i = 0; i < updatedExerciseList.size(); i++) {
-                        updatedExerciseList.get(i).setPosition(i);
+                    // 2) Формуємо підсумковий список ExerciseInBlock (зберігаючи порядки старих)
+                    List<ExerciseInBlock> updatedList = new ArrayList<>();
+
+                    // (а) Додаємо старі вправи, якщо вони досі в newIds
+                    //     і зберігаємо стару position
+                    for (ExerciseInBlock oldEx : oldSelected) {
+                        if (newIds.contains(oldEx.getId())) {
+                            updatedList.add(oldEx);
+                            // при цьому oldEx уже має свою стару position
+                            // при бажанні можна заново призначати position
+                            newIds.remove(oldEx.getId());
+                        }
                     }
 
-                    planManagerDAO.updateTrainingBlockExercises(block.getId(), updatedExerciseList);
+                    // (б) Додаємо нові вправи (яких раніше не було)
+                    for (Exercise recEx : recommendedExercises) {
+                        if (newIds.contains(recEx.getId())) {
+                            // Створюємо ExerciseInBlock зі позицією = 0 або будь-якою
+                            ExerciseInBlock newEIB = new ExerciseInBlock(
+                                    recEx.getId(),
+                                    recEx.getName(),
+                                    recEx.getMotion(),
+                                    recEx.getMuscleGroupList(),
+                                    recEx.getEquipment(),
+                                    0
+                            );
+                            updatedList.add(newEIB);
+                        }
+                    }
+
+                    // 3) Перепризначимо position, щоб вони йшли 0..N
+                    for (int i = 0; i < updatedList.size(); i++) {
+                        updatedList.get(i).setPosition(i);
+                    }
+
+                    // 4) Оновлюємо базу
+                    planManagerDAO.updateTrainingBlockExercises(block.getId(), updatedList);
+
+                    // 5) Перевантажуємо блоки з бази (щоб отримати актуальний стан)
                     loadTrainingBlocks();
                 })
                 .setNegativeButton("Скасувати", null)
                 .show();
     }
+
 }

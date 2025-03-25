@@ -260,4 +260,10 @@ public class FitnessProgramsActivity extends AppCompatActivity {
     }
 
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPlanCycles(); // метод, який заново бере дні з бази
+    }
 }
