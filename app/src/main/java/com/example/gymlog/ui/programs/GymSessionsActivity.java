@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.plan.FitnessProgram;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.plan.GymSession;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
@@ -243,7 +242,7 @@ public class GymSessionsActivity extends AppCompatActivity {
             );
 
             // Додаємо клонований елемент до бази даних
-            GymSession clonedItem = planManagerDAO.cloneGymSession(copiedItem);
+            GymSession clonedItem = planManagerDAO.onStartCloneGymSession(copiedItem);
             planManagerDAO.getAllPlans();
             if (clonedItem != null) {
                 gymSessions.add(clonedItem);

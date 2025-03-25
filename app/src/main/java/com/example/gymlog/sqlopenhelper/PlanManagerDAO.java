@@ -1097,19 +1097,12 @@ public class PlanManagerDAO {
      * - Фільтри (motion, muscleGroup, equipment)
      * - Вправи (ExerciseInBlock)
      */
-    public FitnessProgram cloneFitProgram(FitnessProgram programToClone) {
+    public FitnessProgram onStartCloneFitProgram(FitnessProgram programToClone) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
+            //клонування безпосередньо
             FitnessProgram clonedProgram = cloneProgram(programToClone, db);
-
-            List<GymSession> clonedSessions = new ArrayList<>();
-            for (GymSession session : programToClone.getGymSessions()) {
-                GymSession clonedSession = cloneGymSession(session, clonedProgram.getId(), db);
-                clonedSessions.add(clonedSession);
-            }
-
-            clonedProgram.setGymSessions(clonedSessions);
 
             db.setTransactionSuccessful();
             return clonedProgram;
@@ -1126,32 +1119,40 @@ public class PlanManagerDAO {
 
     /**
      * Клонує програму (FitnessProgram) без вкладених даних.
+     * //перевірено!!!25,03,2025
      */
     private FitnessProgram cloneProgram(FitnessProgram program, SQLiteDatabase db) {
+        //робимо нову позицію для клонування
+        int newPosition = 0;
         Cursor cursor = db.rawQuery(
-                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM PlanCycles",
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM " + "PlanCycles",
                 null
         );
-        int newPosition = 0;
+
         if (cursor.moveToFirst()) {
             newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        } else {
+            cursor.close();
+            throw new SQLException("Не вдалося отримати наступну позицію з таблиці: " + "PlanCycles");
         }
         cursor.close();
+
+
 
         FitnessProgram clonedProgram = new FitnessProgram(
                 0,
                 program.getName() + "(c)",
                 program.getDescription(),
-                new ArrayList<>() // ✅ Створюємо пустий новий список!
+                new ArrayList<>() //Створюємо пустий новий список!
         );
-        clonedProgram.setPosition(newPosition);
 
         ContentValues values = new ContentValues();
         values.put("name", clonedProgram.getName());
         values.put("description", clonedProgram.getDescription());
         values.put("creation_date", System.currentTimeMillis());
-        values.put("position", clonedProgram.getPosition());
+        values.put("position", newPosition);
         values.put("is_active", 0);
+
 
         long newProgramId = db.insert("PlanCycles", null, values);
         if (newProgramId == -1) {
@@ -1159,8 +1160,23 @@ public class PlanManagerDAO {
         }
         clonedProgram.setId(newProgramId);
 
+
+        //клонуємо список тренувальних днів у програмі
+        List<GymSession> clonedSessions = new ArrayList<>();
+        for (GymSession session : program.getGymSessions()) {
+            GymSession clonedSession = cloneGymSession(session, clonedProgram.getId(), db);
+            clonedSessions.add(clonedSession);
+        }
+        //додати список до плану
+        clonedProgram.setGymSessions(clonedSessions);
+
+
+
         return clonedProgram;
     }
+
+
+
 
 
     /**
@@ -1177,6 +1193,9 @@ public class PlanManagerDAO {
         int newPosition = 0;
         if (cursor.moveToFirst()) {
             newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        } else {
+            cursor.close();
+            throw new SQLException("Не вдалося отримати наступну позицію з таблиці: " + "GymDays");
         }
         cursor.close();
 
@@ -1186,16 +1205,17 @@ public class PlanManagerDAO {
         GymSession clonedSession = new GymSession(
                 0, // ID буде згенеровано базою даних
                 (int) newProgramId,
+                session.getName(),
+                session.getDescription(),
+                newPosition,
                 new ArrayList<>() // Блоки будуть додані пізніше
         );
-        clonedSession.setName(session.getName());
-        clonedSession.setDescription(session.getDescription());
-        clonedSession.setPosition(newPosition);
+
 
         // Додаємо день до бази даних
         ContentValues values = new ContentValues();
         values.put("plan_id", clonedSession.getPlanId());
-        values.put("day_name", clonedSession.getName());
+        values.put("day_name", clonedSession.getName()+"(C)");
         values.put("description", clonedSession.getDescription());
         values.put("position", clonedSession.getPosition());
 
@@ -1207,8 +1227,8 @@ public class PlanManagerDAO {
 
         // Клонуємо блоки для цього дня
         List<TrainingBlock> clonedBlocks = new ArrayList<>();
-        for (TrainingBlock block : session.getTrainingBlocks()) {
-            TrainingBlock clonedBlock = cloneTrainingBlock(block, clonedSession.getId(),db);
+        for (TrainingBlock originalblock : session.getTrainingBlocks()) {
+            TrainingBlock clonedBlock = cloneTrainingBlock(originalblock, clonedSession.getId(),db);
             clonedBlocks.add(clonedBlock);
         }
         clonedSession.setTrainingBlocks(clonedBlocks);
@@ -1217,11 +1237,11 @@ public class PlanManagerDAO {
         return clonedSession;
     }
 
-    public GymSession cloneGymSession(GymSession copiedItem) {
+    public GymSession onStartCloneGymSession(GymSession gymSession) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            GymSession cloned = cloneGymSession(copiedItem,copiedItem.getPlanId(),db);
+            GymSession cloned = cloneGymSession(gymSession,gymSession.getPlanId(),db);
             db.setTransactionSuccessful();
             return cloned;
         } catch (Exception e) {
@@ -1233,6 +1253,8 @@ public class PlanManagerDAO {
         }
 
     }
+
+
 
     /**
      * Клонує блок (TrainingBlock) разом із фільтрами та вправами.
@@ -1247,10 +1269,14 @@ public class PlanManagerDAO {
         int newPosition = 0;
         if (cursor.moveToFirst()) {
             newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        } else {
+            cursor.close();
+            throw new SQLException("Не вдалося отримати наступну позицію з таблиці: " + "TrainingBlock");
         }
         cursor.close();
 
-        // Створюємо новий блок з такими ж даними, але новим ID
+
+        // Створюємо клон з такими ж даними, але новим ID
         TrainingBlock clonedBlock = new TrainingBlock(
                 0, // ID буде згенеровано базою даних
                 newSessionId,
@@ -1263,10 +1289,10 @@ public class PlanManagerDAO {
                 new ArrayList<>() // Вправи будуть додані пізніше
         );
 
-        // Додаємо блок до бази даних
+        // Додаємо блок до бази даних а фільтри до інших - пов'язаних таблиць
         ContentValues values = new ContentValues();
         values.put("gym_day_id", clonedBlock.getGymDayId());
-        values.put("name", clonedBlock.getName());
+        values.put("name", clonedBlock.getName()+"(C)");
         values.put("description", clonedBlock.getDescription());
         values.put("position", clonedBlock.getPosition());
 
@@ -1274,6 +1300,7 @@ public class PlanManagerDAO {
         if (newBlockId == -1) {
             throw new SQLException("Помилка вставки нового TrainingBlock");
         }
+        //задаємо згенерований ІД іт тепер TrainingBlock таблиця готова, а о'бєкт ще фільтрами і вправами треба заповнити
         clonedBlock.setId(newBlockId);
 
         // Клонуємо фільтри блоку
@@ -1281,8 +1308,8 @@ public class PlanManagerDAO {
 
         // Клонуємо вправи блоку
         List<ExerciseInBlock> clonedExercises = new ArrayList<>();
-        for (ExerciseInBlock exercise : block.getExercises()) {
-            ExerciseInBlock clonedExercise = cloneExerciseInBlock(exercise, clonedBlock.getId(),db);
+        for (ExerciseInBlock exerciseOriginal : block.getExercises()) {
+            ExerciseInBlock clonedExercise = cloneExerciseInBlock(exerciseOriginal, clonedBlock.getId(),db);
             clonedExercises.add(clonedExercise);
         }
         clonedBlock.setExercises(clonedExercises);
@@ -1291,16 +1318,15 @@ public class PlanManagerDAO {
         return clonedBlock;
     }
 
-    public TrainingBlock cloneTrainingBlock(TrainingBlock block) {
+    public TrainingBlock onStartCloneTrainingBlock(TrainingBlock block) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
             TrainingBlock cloned = cloneTrainingBlock(block,block.getGymDayId(),db);
-            cloned.setName(block.getName() + "(копія)"); // ✅ Унікальна назва
             db.setTransactionSuccessful();
             return cloned;
         } catch (Exception e) {
-            Log.e("DB_ERROR", "Помилка при клонуванні програми", e);
+            Log.e("DB_ERROR", "Помилка при клонуванні TrainingBlock", e);
             return null;
         } finally {
             db.endTransaction();
@@ -1358,31 +1384,49 @@ public class PlanManagerDAO {
 
     }
 
+
+
     /**
      * Клонує вправу в блоці (ExerciseInBlock).
      */
     private ExerciseInBlock cloneExerciseInBlock(ExerciseInBlock exercise, long newBlockId, SQLiteDatabase db) {
 
+        // Знаходимо наступну позицію для нового блоку
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM TrainingBlockExercises WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(newBlockId)}
+        );
+        int newPosition = 0;
+        if (cursor.moveToFirst()) {
+            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        } else {
+            cursor.close();
+            throw new SQLException("Не вдалося отримати наступну позицію з таблиці: " + "TrainingBlockExercises");
+        }
+        cursor.close();
+
+        ExerciseInBlock cloned = new ExerciseInBlock(
+                exercise.getId(),
+                exercise.getName(),
+                exercise.getMotion(),
+                exercise.getMuscleGroupList(),
+                exercise.getEquipment(),
+                newPosition
+        );
+
 
         // Додаємо вправу до блоку
         ContentValues values = new ContentValues();
         values.put("trainingBlockId", newBlockId);
-        values.put("exerciseId", exercise.getId());
-        values.put("position", exercise.getPosition());
+        values.put("exerciseId", cloned.getId());
+        values.put("position", cloned.getPosition());
 
         long newExerciseId = db.insert("TrainingBlockExercises", null, values);
         if (newExerciseId == -1) {
             throw new SQLException("Помилка cloneExerciseInBlock(ExerciseInBlock exercise, long newBlockId, SQLiteDatabase db)");
         }
 
-        return new ExerciseInBlock(
-                exercise.getId(),
-                exercise.getName(),
-                exercise.getMotion(),
-                exercise.getMuscleGroupList(),
-                exercise.getEquipment(),
-                exercise.getPosition()
-        );
+        return cloned;
     }
 
 

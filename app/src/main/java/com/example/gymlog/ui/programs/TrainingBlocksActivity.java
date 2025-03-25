@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
-import com.example.gymlog.model.plan.GymSession;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
@@ -153,7 +152,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         public void onCloneTrainingBlock(TrainingBlock block) {
 
             // Додаємо клонований елемент до бази даних
-            TrainingBlock clonedBlock = planManagerDAO.cloneTrainingBlock(block);
+            TrainingBlock clonedBlock = planManagerDAO.onStartCloneTrainingBlock(block);
             planManagerDAO.getAllPlans();
             if (clonedBlock != null) {
                 trainingBlocks.add(clonedBlock);

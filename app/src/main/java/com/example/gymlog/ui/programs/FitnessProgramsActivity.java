@@ -229,16 +229,9 @@ public class FitnessProgramsActivity extends AppCompatActivity {
 
         @Override
         public void onCloneClick(FitnessProgram fitnessProgram) {
-            // Клонування елемента
-            FitnessProgram copiedProgram = new FitnessProgram(
-                    0, // ID буде згенеровано базою даних
-                    fitnessProgram.getName() + " (Копія)",
-                    fitnessProgram.getDescription(),
-                    new ArrayList<>(fitnessProgram.getGymSessions())
-            );
 
             // Додаємо клонований елемент до бази даних
-            FitnessProgram clonedProgram = planManagerDAO.cloneFitProgram(copiedProgram);
+            FitnessProgram clonedProgram = planManagerDAO.onStartCloneFitProgram(fitnessProgram);
             if (clonedProgram != null) {
                 fitnessPrograms.add(clonedProgram);
                 fitnessProgramAdapter.notifyDataSetChanged();
