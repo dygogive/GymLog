@@ -60,7 +60,7 @@
             android:layout_marginEnd="16dp"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/context_menu"
-            android:src="@drawable/baseline_view_week_24"
+            android:src="@drawable/context_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

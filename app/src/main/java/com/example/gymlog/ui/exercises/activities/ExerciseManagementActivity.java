@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise.activities;
+package com.example.gymlog.ui.exercises.activities;
 
 import android.os.Bundle;
 
@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gymlog.R;
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
-import com.example.gymlog.ui.exercise.dialogs.DialogForExerciseEdit;
-import com.example.gymlog.ui.exercise.dialogs.DialogSelectTrainingBlocks;
-import com.example.gymlog.ui.exercise.factories.DefaultExercisesFactory;
-import com.example.gymlog.ui.exercise.fragments.AttributeListFragment;
+import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.ui.exercises.dialogs.DialogSelectTrainingBlocks;
+import com.example.gymlog.ui.exercises.factories.DefaultExercisesFactory;
+import com.example.gymlog.ui.exercises.fragments.AttributeListFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ExerciseManagementActivity extends AppCompatActivity {
@@ -40,7 +40,8 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         FloatingActionButton fabAddExercise = findViewById(R.id.fab_add_exercise);
         fabAddExercise.setOnClickListener(view -> openAddExerciseDialog());
 
-        //exerciseDAO.logAllExercises();
+        exerciseDAO.logAllExercises();
+        exerciseDAO.voidGetAllDatabaseInLog();
     }
 
     private void openAddExerciseDialog() {

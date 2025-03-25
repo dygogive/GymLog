@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise.dialogs;
+package com.example.gymlog.ui.exercises.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,7 +18,7 @@ import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.MuscleGroup;
 import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
-import com.example.gymlog.ui.plan.dialogs.TrainingBlockDialog;
+import com.example.gymlog.ui.programs.dialogs.TrainingBlockDialog;
 
 import java.util.ArrayList;
 import java.util.List;

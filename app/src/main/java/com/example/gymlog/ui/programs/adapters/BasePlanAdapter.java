@@ -1,7 +1,10 @@
-package com.example.gymlog.ui.plan.adapter;
+package com.example.gymlog.ui.programs.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -9,11 +12,14 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.model.plan.BasePlanItem;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,11 +92,28 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
         // 2) контекстне меню і відразу ж назначаємо слухач на пункти меню
         holder.buttonMenu.setOnClickListener(v -> {
             // Створюємо PopupMenu
-            PopupMenu popupMenu = new PopupMenu(v.getContext(),v);
-            popupMenu.getMenuInflater().inflate(R.menu.program_context_menu,popupMenu.getMenu());
+            PopupMenu popup = new PopupMenu(v.getContext(),v);
+            popup.getMenuInflater().inflate(R.menu.program_context_menu,popup.getMenu());
+
+            // Показати іконки
+            try {
+                Field[] fields = popup.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    if ("mPopup".equals(field.getName())) {
+                        field.setAccessible(true);
+                        Object menuPopupHelper = field.get(popup);
+                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                        setForceIcons.invoke(menuPopupHelper, true);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // Обробник вибору пунктів меню
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
+            popup.setOnMenuItemClickListener(menuItem -> {
                 int itemId = menuItem.getItemId();
                 if (itemId == R.id.menu_edit) {
                     listener.onEditClick(item); // Редагувати
@@ -105,8 +128,20 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
                 return false;
             });
 
+            // Програмно встановити колір іконок
+            Menu menu = popup.getMenu();
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item1 = menu.getItem(i);
+                Drawable icon = item1.getIcon();
+                if (icon != null) {
+                    icon.mutate(); // щоб не змінювати глобальний ресурс
+                    icon.setTint(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_color)); // або Color.RED
+                    item1.setIcon(icon);
+                }
+            }
+
             // Показати меню
-            popupMenu.show();
+            popup.show();
         });
 
     }

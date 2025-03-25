@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    private static final int version = 13;
+    private static final int version = 14;
     private final Context context;
 
     // Конструктор
@@ -45,18 +45,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
 → ON DELETE CASCADE означає, що якщо запис у PlanCycles буде видалений, то всі GymDays, пов’язані з ним, теж видаляються автоматично.*/
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Workout (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "name TEXT, " +
-                "date TEXT)");
 
-        db.execSQL("CREATE TABLE WorkoutSet (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "workoutId INTEGER, " +
-                "exercise TEXT, " +
-                "reptype TEXT, " +
-                "weight REAL, " +
-                "reps INTEGER)");
+
 
         // Вправи
         db.execSQL("CREATE TABLE Exercise (" +

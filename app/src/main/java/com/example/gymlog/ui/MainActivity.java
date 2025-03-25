@@ -11,10 +11,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
-import com.example.gymlog.ui.exercise.activities.ExerciseManagementActivity;
+import com.example.gymlog.ui.exercises.activities.ExerciseManagementActivity;
 import com.example.gymlog.R;
 
-import com.example.gymlog.ui.plan.FitnessProgramsActivity;
+import com.example.gymlog.ui.programs.FitnessProgramsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

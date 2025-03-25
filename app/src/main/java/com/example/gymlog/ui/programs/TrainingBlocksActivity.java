@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan;
+package com.example.gymlog.ui.programs;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
+import com.example.gymlog.model.plan.GymSession;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.model.plan.TrainingBlock;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
-import com.example.gymlog.ui.exercise.dialogs.DialogForExerciseEdit;
-import com.example.gymlog.ui.plan.adapter.TrainingBlockAdapter;
-import com.example.gymlog.ui.plan.dialogs.TrainingBlockDialog;
+import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.ui.programs.adapters.TrainingBlockAdapter;
+import com.example.gymlog.ui.programs.dialogs.TrainingBlockDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -147,11 +148,24 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         public void onEditExercises(TrainingBlock block) {
             showExerciseSelectionDialog(block);
         }
+
+        @Override
+        public void onCloneTrainingBlock(TrainingBlock block) {
+
+            // Додаємо клонований елемент до бази даних
+            TrainingBlock clonedBlock = planManagerDAO.cloneTrainingBlock(block);
+            planManagerDAO.getAllPlans();
+            if (clonedBlock != null) {
+                trainingBlocks.add(clonedBlock);
+                loadTrainingBlocks();
+                Toast.makeText(TrainingBlocksActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(TrainingBlocksActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Діалог вибору вправ для блоку
     private void showExerciseSelectionDialog(TrainingBlock block) {
-        List<ExerciseInBlock> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
+        List<Exercise> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
         List<ExerciseInBlock> selectedExercises = planManagerDAO.getBlockExercises(block.getId());
 
         Set<Long> oldSelectedIds = new HashSet<>();

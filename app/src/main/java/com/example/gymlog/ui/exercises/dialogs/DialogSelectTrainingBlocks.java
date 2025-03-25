@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise.dialogs;
+package com.example.gymlog.ui.exercises.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;

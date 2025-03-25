@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise.fragments;
+package com.example.gymlog.ui.exercises.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -24,9 +24,9 @@ import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.MuscleGroup;
-import com.example.gymlog.ui.exercise.adapters.ExerciseAdapter;
-import com.example.gymlog.ui.exercise.dialogs.DialogForExerciseEdit;
-import com.example.gymlog.ui.exercise.factories.DefaultExercisesFactory;
+import com.example.gymlog.ui.exercises.adapters.ExerciseAdapter;
+import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.ui.exercises.factories.DefaultExercisesFactory;
 
 import java.util.List;
 

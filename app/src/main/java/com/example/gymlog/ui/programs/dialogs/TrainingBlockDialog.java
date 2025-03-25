@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan.dialogs;
+package com.example.gymlog.ui.programs.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -317,7 +317,7 @@ public class TrainingBlockDialog extends Dialog {
             blockId = trainingBlock.getId();
 
             // формуємо чорний список (які раніше виключені користувачем)
-            List<ExerciseInBlock> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+            List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
             List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(blockId);
 
             exerciseBlacklist.clear();
@@ -338,7 +338,7 @@ public class TrainingBlockDialog extends Dialog {
         saveFilters(blockId);
 
         // Оновлюємо список вправ (з урахуванням чорного списку)
-        List<ExerciseInBlock> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
+        List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
 
         List<ExerciseInBlock> updatedExercises = new ArrayList<>();
         int position = 0; // Починаємо з 0 і проставляємо позиції

@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan;
+package com.example.gymlog.ui.programs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,11 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.model.plan.FitnessProgram;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.plan.GymSession;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
-import com.example.gymlog.ui.plan.adapter.BasePlanAdapter;
+import com.example.gymlog.ui.programs.adapters.BasePlanAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -232,7 +233,23 @@ public class GymSessionsActivity extends AppCompatActivity {
 
         @Override
         public void onCloneClick(GymSession item) {
+            // Клонування елемента
+            GymSession copiedItem = new GymSession(
+                    (int) item.getId(), // ID буде згенеровано базою даних
+                    item.getPlanId(),
+                    item.getName() + " (Копія)",
+                    item.getDescription(),
+                    new ArrayList<>(item.getTrainingBlocks())
+            );
 
+            // Додаємо клонований елемент до бази даних
+            GymSession clonedItem = planManagerDAO.cloneGymSession(copiedItem);
+            planManagerDAO.getAllPlans();
+            if (clonedItem != null) {
+                gymSessions.add(clonedItem);
+                loadGymSessions();
+                Toast.makeText(GymSessionsActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(GymSessionsActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
         }
 
         @Override

@@ -5,18 +5,21 @@
         android:id="@+id/menu_edit"
         android:title="@string/edit"
         android:icon="@drawable/ic_edit"
+        app:iconTint="@color/text_color"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_clone"
         android:title="@string/clone"
-        android:icon="@drawable/clone_ico"
+        android:icon="@drawable/baseline_copy_all_24"
+        app:iconTint="@color/text_color"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_delete"
         android:title="@string/delete"
         android:icon="@drawable/ic_delete"
+        app:iconTint="@color/text_color"
         app:showAsAction="never" />
 
 

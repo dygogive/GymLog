@@ -1,7 +1,10 @@
-package com.example.gymlog.ui.plan.adapter;
+package com.example.gymlog.ui.programs.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -9,6 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +20,9 @@ import com.example.gymlog.R;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.model.plan.TrainingBlock;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +38,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         void onDeleteClick(TrainingBlock block); // Видалити блок
         void onAddExercise(TrainingBlock block); // Додати вправу
         void onEditExercises(TrainingBlock block); // Редагувати вправи
+        void onCloneTrainingBlock(TrainingBlock block); // Редагувати вправи
     }
 
     private final Context context; // Контекст для доступу до ресурсів
@@ -93,10 +101,27 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
      */
     private void setupBlockMenu(TrainingBlockViewHolder holder, TrainingBlock block) {
         holder.buttonMenu.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(context, holder.buttonMenu);
-            popupMenu.getMenuInflater().inflate(R.menu.training_block_menu, popupMenu.getMenu());
+            PopupMenu popup = new PopupMenu(context, holder.buttonMenu);
+            popup.getMenuInflater().inflate(R.menu.training_block_menu, popup.getMenu());
 
-            popupMenu.setOnMenuItemClickListener(item -> {
+            // Показати іконки
+            try {
+                Field[] fields = popup.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    if ("mPopup".equals(field.getName())) {
+                        field.setAccessible(true);
+                        Object menuPopupHelper = field.get(popup);
+                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                        setForceIcons.invoke(menuPopupHelper, true);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            popup.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.menu_edit_block) {
                     listener.onEditClick(block); // Редагувати блок
                 } else if (item.getItemId() == R.id.menu_delete_block) {
@@ -105,11 +130,27 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                     listener.onAddExercise(block); // Додати вправу
                 } else if (item.getItemId() == R.id.menu_edit_exercises) {
                     listener.onEditExercises(block); // Редагувати вправи
+                } else if (item.getItemId() == R.id.menu_clone_block) {
+                    listener.onCloneTrainingBlock(block); // Редагувати вправи
                 }
                 return true;
             });
 
-            popupMenu.show();
+
+            // Програмно встановити колір іконок
+            Menu menu = popup.getMenu();
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+                Drawable icon = item.getIcon();
+                if (icon != null) {
+                    icon.mutate(); // щоб не змінювати глобальний ресурс
+                    icon.setTint(ContextCompat.getColor(context, R.color.text_color)); // або Color.RED
+                    item.setIcon(icon);
+                }
+            }
+
+
+            popup.show();
         });
     }
 

@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.plan.adapter;
+package com.example.gymlog.ui.programs.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

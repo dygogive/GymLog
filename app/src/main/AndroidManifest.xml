@@ -13,25 +13,20 @@
         android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.plan.TrainingBlocksActivity"
+            android:name=".ui.programs.TrainingBlocksActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.plan.GymSessionsActivity"
+            android:name=".ui.programs.GymSessionsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.plan.FitnessProgramsActivity"
+            android:name=".ui.programs.FitnessProgramsActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApp" />
         <activity
-            android:name=".ui.exercise.activities.ExerciseManagementActivity"
+            android:name=".ui.exercises.activities.ExerciseManagementActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.exercise1.MuscleGroupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.exercise1.ExerciseListActivity"
-            android:exported="false" />
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
@@ -41,8 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.workout.WorkoutActivity" />
-        <activity android:name=".ui.history.HistoryActivity" />
+
     </application>
 
 </manifest>

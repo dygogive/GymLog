@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.exercise.fragments;
+package com.example.gymlog.ui.exercises.fragments;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -1,5 +1,7 @@
-package com.example.gymlog.ui.exercise.factories;
+package com.example.gymlog.ui.exercises.factories;
 
+
+import android.util.Log;
 
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
 import com.example.gymlog.model.exercise.AttributeType;
@@ -84,6 +86,8 @@ public class DefaultExercisesFactory {
                     false
             );
 
+
+            Log.d("initializeDefaultExercises", "initializeDefaultExercises");
             exerciseDAO.addExercise(
                     "exercise_deadlift", //мертва тяга
                     Motion.PULL_BY_LEGS,

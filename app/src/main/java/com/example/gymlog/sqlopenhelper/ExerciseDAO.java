@@ -252,4 +252,67 @@ public class ExerciseDAO {
         cursor.close();
         return exerciseList;
     }
+
+
+    /**
+     * Logs all exercises from the database to Logcat
+     */
+    public void voidGetAllDatabaseInLog() {
+        Cursor cursor = null;
+        try {
+            // Query all exercises from the database
+            cursor = database.query(
+                    "Exercise",
+                    null, // all columns
+                    null, // no selection
+                    null, // no selection args
+                    null, // no group by
+                    null, // no having
+                    null  // no order by
+            );
+
+            // Check if there are any exercises
+            if (cursor != null && cursor.getCount() > 0) {
+                Log.d("ExerciseDAO", "===== START OF EXERCISE DATABASE DUMP =====");
+
+                // Get column indices
+                int idIndex = cursor.getColumnIndex("id");
+                int nameIndex = cursor.getColumnIndex("name");
+                int motionIndex = cursor.getColumnIndex("motion");
+                int muscleGroupsIndex = cursor.getColumnIndex("muscleGroups");
+                int equipmentIndex = cursor.getColumnIndex("equipment");
+                int isCustomIndex = cursor.getColumnIndex("isCustom");
+
+                // Iterate through all rows
+                while (cursor.moveToNext()) {
+                    // Get values from each column
+                    int id = cursor.getInt(idIndex);
+                    String name = cursor.getString(nameIndex);
+                    String motion = cursor.getString(motionIndex);
+                    String muscleGroups = cursor.getString(muscleGroupsIndex);
+                    String equipment = cursor.getString(equipmentIndex);
+                    int isCustom = cursor.getInt(isCustomIndex);
+
+                    // Format the log message
+                    String logMessage = String.format(
+                            "ID: %d | Name: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
+                            id, name, motion, muscleGroups, equipment, isCustom
+                    );
+
+                    // Log the exercise
+                    Log.d("ExerciseDAO", logMessage);
+                }
+                Log.d("ExerciseDAO", "===== END OF EXERCISE DATABASE DUMP =====");
+            } else {
+                Log.d("ExerciseDAO", "Database is empty - no exercises found");
+            }
+        } catch (Exception e) {
+            Log.e("ExerciseDAO", "Error while dumping database to log", e);
+        } finally {
+            // Always close the cursor
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+    }
 }

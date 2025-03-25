@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import android.util.Log;
@@ -80,6 +81,10 @@ public class PlanManagerDAO {
         values.put("is_active",      0);
 
         long id = db.insert("PlanCycles", null, values);
+        if (id == -1) {
+            throw new SQLException("Помилка addFitProgram(FitnessProgram fitnessProgram)");
+        }
+
         db.close();
         return id;
     }
@@ -258,6 +263,9 @@ public class PlanManagerDAO {
         values.put("position",    newPosition);
 
         long gymDayId = db.insert("GymDays", null, values);
+        if (gymDayId == -1) {
+            throw new SQLException("Помилка addGymDay(long planId, String dayName, String description)");
+        }
         db.close();
         return gymDayId;
     }
@@ -371,6 +379,7 @@ public class PlanManagerDAO {
             values.put("position",    day.getPosition());
 
             db.insert("GymDays", null, values);
+
             // За потреби додай і блоки
         }
         db.close();
@@ -474,6 +483,9 @@ public class PlanManagerDAO {
         values.put("position",    block.getPosition());
 
         long id = db.insert("TrainingBlock", null, values);
+        if (id == -1) {
+            throw new SQLException("Помилка addTrainingBlock(TrainingBlock block) ");
+        }
         db.close();
         return id;
     }
@@ -566,8 +578,9 @@ public class PlanManagerDAO {
                 // Тепер треба зчитати додаткові фільтри blockId=id
                 loadBlockFilters(db, block);
                 //зчитую вправи
+
                 block.setExercises(
-                        getExercisesForTrainingBlock(block.getId())
+                        getBlockExercises(block.getId())
                 );
 
                 blocks.add(block);
@@ -867,73 +880,74 @@ public class PlanManagerDAO {
      * Повертає список вправ (ExerciseInBlock), що підпадають під фільтри даного блоку
      * (motion, muscleGroup, equipment).
      */
-    public List<ExerciseInBlock> getExercisesForTrainingBlock(long trainingBlockId) {
-        List<ExerciseInBlock> exercises = new ArrayList<>();
+    /**
+     * Повертає список вправ (Exercise), що підпадають під фільтри даного блоку
+     * (motion, muscleGroup, equipment).
+     */
+    public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
+        List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =
-                "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
+                "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                         "FROM Exercise e " +
-                        "JOIN TrainingBlockExercises tbe ON e.id = tbe.exerciseId " +
                         "LEFT JOIN TrainingBlockMotion tm ON e.motion = tm.motionType " +
                         "LEFT JOIN TrainingBlockMuscleGroup tmg ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
                         "LEFT JOIN TrainingBlockEquipment te ON e.equipment = te.equipment " +
-                        "WHERE tbe.trainingBlockId = ? " +
-                        "AND (tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?)";
+                        "WHERE tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?";
 
         Log.d("DB_DEBUG_SQL", "Executing SQL for Block ID: " + trainingBlockId);
-        Log.d("DB_DEBUG_SQL", "SQL Query: " + query);
-
-        Cursor cursor = db.rawQuery(
-                query,
-                new String[]{
-                        String.valueOf(trainingBlockId),
-                        String.valueOf(trainingBlockId),
-                        String.valueOf(trainingBlockId),
-                        String.valueOf(trainingBlockId)
-                }
-        );
+        Cursor cursor = db.rawQuery(query, new String[]{
+                String.valueOf(trainingBlockId),
+                String.valueOf(trainingBlockId),
+                String.valueOf(trainingBlockId)
+        });
 
         if (cursor.moveToFirst()) {
             do {
-                @SuppressLint("Range")
-                long id = cursor.getLong(cursor.getColumnIndex("id"));
-                @SuppressLint("Range")
-                String exerciseName = cursor.getString(cursor.getColumnIndex("name"));
-                @SuppressLint("Range")
-                String motionStr = cursor.getString(cursor.getColumnIndex("motion"));
-                @SuppressLint("Range")
-                String muscleGroupsStr = cursor.getString(cursor.getColumnIndex("muscleGroups"));
-                @SuppressLint("Range")
-                String equipmentStr = cursor.getString(cursor.getColumnIndex("equipment"));
-                @SuppressLint("Range")
-                int position = cursor.getInt(cursor.getColumnIndex("position"));
+                @SuppressLint("Range") long id = cursor.getLong(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                @SuppressLint("Range") String motionStr = cursor.getString(cursor.getColumnIndex("motion"));
+                @SuppressLint("Range") String muscleGroupsStr = cursor.getString(cursor.getColumnIndex("muscleGroups"));
+                @SuppressLint("Range") String equipmentStr = cursor.getString(cursor.getColumnIndex("equipment"));
 
-                Log.d("DB_DEBUG_CURSOR",
-                        "Exercise: " + exerciseName +
-                                " | motion=" + motionStr +
-                                " | muscleGroups=" + muscleGroupsStr +
-                                " | equipment=" + equipmentStr +
-                                " | position=" + position);
+                Motion motion = null;
+                if (motionStr != null && !motionStr.isEmpty()) {
+                    try {
+                        motion = Motion.valueOf(motionStr);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Motion: " + motionStr, e);
+                    }
+                }
 
-                // Парсинг motion
-                Motion motion = parseMotion(motionStr);
+                Equipment equipment = null;
+                if (equipmentStr != null && !equipmentStr.isEmpty()) {
+                    try {
+                        equipment = Equipment.valueOf(equipmentStr);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("DB_DEBUG_CURSOR", "Unknown Equipment: " + equipmentStr, e);
+                    }
+                }
 
-                // Парсинг equipment
-                Equipment equipment = parseEquipment(equipmentStr);
+                List<MuscleGroup> muscleGroups = new ArrayList<>();
+                if (muscleGroupsStr != null && !muscleGroupsStr.isEmpty()) {
+                    String[] mgArray = muscleGroupsStr.split(",");
+                    for (String mg : mgArray) {
+                        mg = mg.trim();
+                        try {
+                            muscleGroups.add(MuscleGroup.valueOf(mg));
+                        } catch (IllegalArgumentException e) {
+                            Log.e("DB_DEBUG_CURSOR", "Unknown MuscleGroup: " + mg, e);
+                        }
+                    }
+                }
 
-                // Парсинг muscleGroups
-                List<MuscleGroup> muscleGroups = parseMuscleGroups(muscleGroupsStr);
-
-                // Створення ExerciseInBlock
-                ExerciseInBlock exercise = new ExerciseInBlock(id, exerciseName, motion, muscleGroups, equipment, position);
+                Exercise exercise = new Exercise(id, name, motion, muscleGroups, equipment);
                 exercises.add(exercise);
-
             } while (cursor.moveToNext());
         } else {
             Log.d("DB_DEBUG_EXERCISES", "No exercises found for Block ID: " + trainingBlockId);
         }
-
         cursor.close();
         db.close();
         return exercises;
@@ -1128,7 +1142,7 @@ public class PlanManagerDAO {
                 0,
                 program.getName() + "(c)",
                 program.getDescription(),
-                program.getGymSessions()
+                new ArrayList<>() // ✅ Створюємо пустий новий список!
         );
         clonedProgram.setPosition(newPosition);
 
@@ -1140,6 +1154,9 @@ public class PlanManagerDAO {
         values.put("is_active", 0);
 
         long newProgramId = db.insert("PlanCycles", null, values);
+        if (newProgramId == -1) {
+            throw new SQLException("Помилка cloneProgram(FitnessProgram program, SQLiteDatabase db)");
+        }
         clonedProgram.setId(newProgramId);
 
         return clonedProgram;
@@ -1149,7 +1166,7 @@ public class PlanManagerDAO {
     /**
      * Клонує день тренувань (GymSession) разом із блоками.
      */
-    private GymSession cloneGymSession(GymSession session, long newProgramId, SQLiteDatabase db) {
+    private GymSession cloneGymSession(GymSession session, long newProgramId, SQLiteDatabase db)                                                                {
 
 
         // Знаходимо наступну позицію для нового дня
@@ -1183,6 +1200,9 @@ public class PlanManagerDAO {
         values.put("position", clonedSession.getPosition());
 
         long newSessionId = db.insert("GymDays", null, values);
+        if (newSessionId == -1) {
+            throw new SQLException("Помилка cloneGymSession(GymSession session, long newProgramId, SQLiteDatabase db)");
+        }
         clonedSession.setId(newSessionId);
 
         // Клонуємо блоки для цього дня
@@ -1197,11 +1217,27 @@ public class PlanManagerDAO {
         return clonedSession;
     }
 
+    public GymSession cloneGymSession(GymSession copiedItem) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            GymSession cloned = cloneGymSession(copiedItem,copiedItem.getPlanId(),db);
+            db.setTransactionSuccessful();
+            return cloned;
+        } catch (Exception e) {
+            Log.e("DB_ERROR", "Помилка при клонуванні програми", e);
+            return null;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+    }
+
     /**
      * Клонує блок (TrainingBlock) разом із фільтрами та вправами.
      */
     private TrainingBlock cloneTrainingBlock(TrainingBlock block, long newSessionId, SQLiteDatabase db) {
-
 
         // Знаходимо наступну позицію для нового блоку
         Cursor cursor = db.rawQuery(
@@ -1235,6 +1271,9 @@ public class PlanManagerDAO {
         values.put("position", clonedBlock.getPosition());
 
         long newBlockId = db.insert("TrainingBlock", null, values);
+        if (newBlockId == -1) {
+            throw new SQLException("Помилка вставки нового TrainingBlock");
+        }
         clonedBlock.setId(newBlockId);
 
         // Клонуємо фільтри блоку
@@ -1250,6 +1289,23 @@ public class PlanManagerDAO {
 
 
         return clonedBlock;
+    }
+
+    public TrainingBlock cloneTrainingBlock(TrainingBlock block) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            TrainingBlock cloned = cloneTrainingBlock(block,block.getGymDayId(),db);
+            cloned.setName(block.getName() + "(копія)"); // ✅ Унікальна назва
+            db.setTransactionSuccessful();
+            return cloned;
+        } catch (Exception e) {
+            Log.e("DB_ERROR", "Помилка при клонуванні програми", e);
+            return null;
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
     }
 
     /**
@@ -1315,7 +1371,9 @@ public class PlanManagerDAO {
         values.put("position", exercise.getPosition());
 
         long newExerciseId = db.insert("TrainingBlockExercises", null, values);
-
+        if (newExerciseId == -1) {
+            throw new SQLException("Помилка cloneExerciseInBlock(ExerciseInBlock exercise, long newBlockId, SQLiteDatabase db)");
+        }
 
         return new ExerciseInBlock(
                 exercise.getId(),
@@ -1409,6 +1467,7 @@ public class PlanManagerDAO {
 
         Log.d("logAllData", "========== END: logAllData() ==========");
     }
+
 
 
 }
