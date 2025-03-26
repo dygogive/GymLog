@@ -42,9 +42,13 @@ public class DialogForExerciseEdit {
     }
 
 
-    private TrainingBlockDialog.OnExerciseCreatedListener createdListener;
+    private OnExerciseCreatedListener createdListener;
+    public interface OnExerciseCreatedListener {
+        void onExerciseCreated(Exercise exercise);
+    }
 
-    public void setOnExerciseCreatedListener(TrainingBlockDialog.OnExerciseCreatedListener listener) {
+
+    public void setOnExerciseCreatedListener(OnExerciseCreatedListener listener) {
         this.createdListener = listener;
     }
 
