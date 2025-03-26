@@ -241,7 +241,7 @@ public class DialogForExerciseEdit {
 
 
 
-    // Метод для оновлення існуючої вправи
+    // Метод для оновлення існуючої вправи**
     private void updateExercise(Exercise exercise, String name, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment) {
         exercise.setName(name);
         exercise.setMotion(motion);
