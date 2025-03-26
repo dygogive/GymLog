@@ -14,7 +14,6 @@ public class ExerciseInBlock extends Exercise {
     }
 
     public long getLinkId() { return linkId; }
-    public void setLinkId(long linkId) { this.linkId = linkId; }
 
     public int getPosition() { return position; }
     public void setPosition(int position) { this.position = position; }

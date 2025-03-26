@@ -19,8 +19,6 @@ public class DialogCreateEditNameDesc extends Dialog {
     private final OnEditConfirmedListener listener;
 
     private EditText editTextName, editTextDescription;
-    private TextView idtextViewDialogTitle;
-    private Button buttonCancel, buttonSave;
 
     // Інтерфейс для передачі оновлених значень
     public interface OnEditConfirmedListener {
@@ -47,18 +45,18 @@ public class DialogCreateEditNameDesc extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_edit_name_description);
 
-        
+
         if (getWindow() != null) {
             getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         }
 
-        idtextViewDialogTitle = (TextView) findViewById(R.id.textViewDialogTitle);
+        TextView idtextViewDialogTitle = findViewById(R.id.textViewDialogTitle);
         editTextName = findViewById(R.id.editTextName);
         editTextDescription = findViewById(R.id.editTextDescription);
-        buttonCancel = findViewById(R.id.buttonCancel);
-        buttonSave = findViewById(R.id.buttonSave);
+        Button buttonCancel = findViewById(R.id.buttonCancel);
+        Button buttonSave = findViewById(R.id.buttonSave);
 
         //встановити заголовок
         idtextViewDialogTitle.setText(titleDialog);
@@ -83,7 +81,6 @@ public class DialogCreateEditNameDesc extends Dialog {
             String newDescription = editTextDescription.getText().toString().trim();
 
             // Якщо користувач залишив поле порожнім, залишаємо старе значення
-            if (newName.isEmpty()) newName = currentName;
             if (newDescription.isEmpty()) newDescription = currentDescription;
 
             listener.onEditConfirmed(newName, newDescription);

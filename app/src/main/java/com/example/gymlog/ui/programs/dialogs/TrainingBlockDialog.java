@@ -39,16 +39,14 @@ public class TrainingBlockDialog extends Dialog {
 
     private final Context context;
     private EditText editTextBlockName, editTextBlockDescription;
-    private TextView textViewFilterMotion, textViewFilterMuscle, textViewFilterEquipment;
     private Button buttonSelectMotion, buttonSelectMuscle, buttonSelectEquipment;
-    private Button buttonCancel, buttonSaveBlock;
+    private Button buttonSaveBlock;
     private boolean[] booleansMotions, booleansMuscles, booleansEquipment;
     private final List<String> chosenTxtMotions = new ArrayList<>();
     private final List<String> chosenTxtMuscles = new ArrayList<>();
     private final List<String> chosenTxtEquipment = new ArrayList<>();
 
     private PlanManagerDAO planManagerDAO;
-    private ExerciseDAO exercisesDAO;
     private TrainingBlock trainingBlock;
     private Set<Long> idExercisesBlacklist = new HashSet<>();
 
@@ -87,7 +85,6 @@ public class TrainingBlockDialog extends Dialog {
         setContentView(R.layout.dialog_training_block);
 
         planManagerDAO = new PlanManagerDAO(getContext());
-        exercisesDAO = new ExerciseDAO(getContext());
 
         if (getWindow() != null) {
             getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -112,14 +109,12 @@ public class TrainingBlockDialog extends Dialog {
         editTextBlockName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
         editTextBlockDescription.setFilters(new InputFilter[]{new InputFilter.LengthFilter(300)});
 
-        textViewFilterMotion = findViewById(R.id.textViewFilterMotion);
-        textViewFilterMuscle = findViewById(R.id.textViewFilterMuscle);
-        textViewFilterEquipment = findViewById(R.id.textViewFilterEquipment);
+
 
         buttonSelectMotion = findViewById(R.id.buttonSelectMotion);
         buttonSelectMuscle = findViewById(R.id.buttonSelectMuscle);
         buttonSelectEquipment = findViewById(R.id.buttonSelectEquipment);
-        buttonCancel = findViewById(R.id.buttonCancel);
+        Button buttonCancel = findViewById(R.id.buttonCancel);
         buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
 
         // Обробники кліків для кнопок вибору фільтрів

@@ -27,11 +27,9 @@ import java.util.List;
 public class PlanManagerDAO {
 
     private final DBHelper dbHelper;
-    private final Context context;
 
     public PlanManagerDAO(Context context) {
         this.dbHelper = new DBHelper(context);
-        this.context  = context;
     }
 
     /**
@@ -133,34 +131,6 @@ public class PlanManagerDAO {
         cursor.close();
         db.close();
         return plans;
-    }
-
-
-    /**
-     * Повертає одну програму по ID
-     */
-    public FitnessProgram getPlanById(long planId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        FitnessProgram program = null;
-
-        Cursor cursor = db.rawQuery(
-                "SELECT id, name, description, position FROM PlanCycles WHERE id = ?",
-                new String[]{String.valueOf(planId)}
-        );
-        if (cursor.moveToFirst()) {
-            long id         = cursor.getLong(0);
-            String name     = cursor.getString(1);
-            String desc     = cursor.getString(2);
-            int position    = cursor.getInt(3);
-
-            List<GymSession> sessions = getGymDaysByPlanId(id);
-            program = new FitnessProgram(id, name, desc, sessions);
-            program.setPosition(position);
-        }
-
-        cursor.close();
-        db.close();
-        return program;
     }
 
 
@@ -319,8 +289,7 @@ public class PlanManagerDAO {
      * Видаляє всі дні тренування, що належать плану, та їхні блоки.
      */
     public void deleteGymDaysByPlanId(long planId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        try {
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
             // Спочатку видаляємо блоки, пов’язані з днями
             db.execSQL(
                     "DELETE FROM TrainingBlock WHERE gym_day_id IN (SELECT id FROM GymDays WHERE plan_id=?)",
@@ -329,45 +298,9 @@ public class PlanManagerDAO {
 
             // Потім самі дні
             db.delete("GymDays", "plan_id = ?", new String[]{String.valueOf(planId)});
-        } finally {
-            db.close();
         }
     }
 
-    /**
-     * Масове додавання GymSession до плану з обрахунком позиції.
-     */
-    public void addGymDays(long planId, List<GymSession> gymSessions) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        for (int i = 0; i < gymSessions.size(); i++) {
-            GymSession day = gymSessions.get(i);
-
-            // Обрахунок позиції
-            int newPosition = 0;
-            Cursor cursor = db.rawQuery(
-                    "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM GymDays WHERE plan_id = ?",
-                    new String[]{String.valueOf(planId)}
-            );
-            if (cursor.moveToFirst()) {
-                newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
-            }
-            cursor.close();
-
-            day.setPosition(newPosition);
-
-            ContentValues values = new ContentValues();
-            values.put("plan_id",     planId);
-            values.put("day_name",    day.getName().isEmpty() ? "Day " + (i + 1) : day.getName());
-            values.put("description", day.getDescription());
-            values.put("position",    newPosition);
-
-            db.insert("GymDays", null, values);
-            // Якщо потрібно — додавати пов’язані блоки
-        }
-
-        db.close();
-    }
 
     /**
      * Повертає всі дні тренування певного плану (GymSession), включаючи блоки.
@@ -545,37 +478,6 @@ public class PlanManagerDAO {
         return blocks;
     }
 
-    /**
-     * Повертає всі TrainingBlock з бази.
-     */
-    public List<TrainingBlock> getAllTrainingBlocks() {
-        List<TrainingBlock> blocks = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(
-                    "SELECT id, gym_day_id, name, description FROM TrainingBlock", null
-            );
-            if (cursor.moveToFirst()) {
-                do {
-                    @SuppressLint("Range") long id         = cursor.getLong(cursor.getColumnIndex("id"));
-                    @SuppressLint("Range") long gymDayId   = cursor.getLong(cursor.getColumnIndex("gym_day_id"));
-                    @SuppressLint("Range") String name     = cursor.getString(cursor.getColumnIndex("name"));
-                    @SuppressLint("Range") String desc     = cursor.getString(cursor.getColumnIndex("description"));
-
-                    blocks.add(new TrainingBlock(id, gymDayId, name, desc));
-                } while (cursor.moveToNext());
-            }
-        } catch (Exception e) {
-            Log.e("DB_ERROR", "Помилка при отриманні всіх TrainingBlock", e);
-        } finally {
-            if (cursor != null) cursor.close();
-            db.close();
-        }
-
-        return blocks;
-    }
 
     /**
      * Повертає блоки, які потенційно підходять під задану вправу (фільтри).
@@ -651,23 +553,23 @@ public class PlanManagerDAO {
      * Видаляє всі блоки, що належать певному GymDay, разом з фільтрами.
      */
     private void deleteTrainingBlocksByDayId(long dayId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
 
-        db.execSQL(
-                "DELETE FROM TrainingBlockMotion WHERE trainingBlockId IN " +
-                        "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
-        );
-        db.execSQL(
-                "DELETE FROM TrainingBlockMuscleGroup WHERE trainingBlockId IN " +
-                        "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
-        );
-        db.execSQL(
-                "DELETE FROM TrainingBlockEquipment WHERE trainingBlockId IN " +
-                        "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
-        );
-        db.delete("TrainingBlock", "gym_day_id = ?", new String[]{String.valueOf(dayId)});
+            db.execSQL(
+                    "DELETE FROM TrainingBlockMotion WHERE trainingBlockId IN " +
+                            "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
+            );
+            db.execSQL(
+                    "DELETE FROM TrainingBlockMuscleGroup WHERE trainingBlockId IN " +
+                            "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
+            );
+            db.execSQL(
+                    "DELETE FROM TrainingBlockEquipment WHERE trainingBlockId IN " +
+                            "(SELECT id FROM TrainingBlock WHERE gym_day_id = ?)", new Object[]{dayId}
+            );
+            db.delete("TrainingBlock", "gym_day_id = ?", new String[]{String.valueOf(dayId)});
 
-        db.close();
+        }
     }
 
 // ------------------------------------------------------
@@ -1300,11 +1202,10 @@ public class PlanManagerDAO {
      */
     public void logAllData() {
         Log.d("logAllData", "========== START: logAllData() ==========");
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursorPlans = null;
-        try {
-            cursorPlans = db.rawQuery("SELECT id, name, description FROM PlanCycles", null);
+        try (SQLiteDatabase db = dbHelper.getReadableDatabase();
+             Cursor cursorPlans = db.rawQuery("SELECT id, name, description FROM PlanCycles", null)) {
+
             while (cursorPlans.moveToNext()) {
                 long planId = cursorPlans.getLong(0);
                 String planName = cursorPlans.getString(1);
@@ -1315,12 +1216,10 @@ public class PlanManagerDAO {
                 );
 
                 // ----- GymDays -----
-                Cursor cursorDays = null;
-                try {
-                    cursorDays = db.rawQuery(
-                            "SELECT id, day_name, description FROM GymDays WHERE plan_id = ?",
-                            new String[]{String.valueOf(planId)}
-                    );
+                try (Cursor cursorDays = db.rawQuery(
+                        "SELECT id, day_name, description FROM GymDays WHERE plan_id = ?",
+                        new String[]{String.valueOf(planId)}
+                )) {
                     while (cursorDays.moveToNext()) {
                         long dayId = cursorDays.getLong(0);
                         String dayName = cursorDays.getString(1);
@@ -1331,12 +1230,10 @@ public class PlanManagerDAO {
                         );
 
                         // ----- TrainingBlocks -----
-                        Cursor cursorBlocks = null;
-                        try {
-                            cursorBlocks = db.rawQuery(
-                                    "SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?",
-                                    new String[]{String.valueOf(dayId)}
-                            );
+                        try (Cursor cursorBlocks = db.rawQuery(
+                                "SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?",
+                                new String[]{String.valueOf(dayId)}
+                        )) {
                             while (cursorBlocks.moveToNext()) {
                                 long blockId = cursorBlocks.getLong(0);
                                 String blockName = cursorBlocks.getString(1);
@@ -1347,15 +1244,13 @@ public class PlanManagerDAO {
                                 );
 
                                 // ----- Exercises in block -----
-                                Cursor cursorExercises = null;
-                                try {
-                                    cursorExercises = db.rawQuery(
-                                            "SELECT tbe.exerciseId, e.name, tbe.position " +
-                                                    "FROM TrainingBlockExercises tbe " +
-                                                    "JOIN Exercise e ON e.id = tbe.exerciseId " +
-                                                    "WHERE tbe.trainingBlockId = ?",
-                                            new String[]{String.valueOf(blockId)}
-                                    );
+                                try (Cursor cursorExercises = db.rawQuery(
+                                        "SELECT tbe.exerciseId, e.name, tbe.position " +
+                                                "FROM TrainingBlockExercises tbe " +
+                                                "JOIN Exercise e ON e.id = tbe.exerciseId " +
+                                                "WHERE tbe.trainingBlockId = ?",
+                                        new String[]{String.valueOf(blockId)}
+                                )) {
                                     while (cursorExercises.moveToNext()) {
                                         long exId = cursorExercises.getLong(0);
                                         String exName = cursorExercises.getString(1);
@@ -1365,29 +1260,12 @@ public class PlanManagerDAO {
                                                 "      Exercise [id=" + exId + ", name=" + exName + ", position=" + position + "]"
                                         );
                                     }
-                                } finally {
-                                    if (cursorExercises != null) {
-                                        cursorExercises.close();
-                                    }
                                 }
-                            }
-                        } finally {
-                            if (cursorBlocks != null) {
-                                cursorBlocks.close();
                             }
                         }
                     }
-                } finally {
-                    if (cursorDays != null) {
-                        cursorDays.close();
-                    }
                 }
             }
-        } finally {
-            if (cursorPlans != null) {
-                cursorPlans.close();
-            }
-            db.close();
         }
 
         Log.d("logAllData", "========== END: logAllData() ==========");
