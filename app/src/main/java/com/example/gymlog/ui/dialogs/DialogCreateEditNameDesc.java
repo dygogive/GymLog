@@ -47,10 +47,11 @@ public class DialogCreateEditNameDesc extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_edit_name_description);
 
-        // Розширюємо діалог на всю ширину екрану
+        
         if (getWindow() != null) {
-            getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
         }
 
         idtextViewDialogTitle = (TextView) findViewById(R.id.textViewDialogTitle);

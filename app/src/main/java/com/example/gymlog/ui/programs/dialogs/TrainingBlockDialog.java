@@ -243,14 +243,14 @@ public class TrainingBlockDialog extends Dialog {
             blockId = trainingBlock.getId();
 
             // Формування чорного списку для вже виключених вправ
-            List<Exercise> oldRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
-            List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(blockId);
+            List<Exercise> recommendedExes = planManagerDAO.getExercisesForTrainingBlock(blockId);
+            List<ExerciseInBlock> blockExercises = planManagerDAO.getBlockExercises(blockId);
             idExercisesBlacklist.clear();
             Set<Long> oldSelectedIds = new HashSet<>();
-            for (ExerciseInBlock ex : oldSelected) {
+            for (ExerciseInBlock ex : blockExercises) {
                 oldSelectedIds.add(ex.getId());
             }
-            for (Exercise ex : oldRecommended) {
+            for (Exercise ex : recommendedExes) {
                 if (!oldSelectedIds.contains(ex.getId())) {
                     idExercisesBlacklist.add(ex.getId());
                 }
@@ -260,24 +260,25 @@ public class TrainingBlockDialog extends Dialog {
         planManagerDAO.clearTrainingBlockFilters(blockId);
         saveFilters(blockId);
 
-        // Оновлюємо список вправ з урахуванням чорного списку
-        List<Exercise> newRecommended = planManagerDAO.getExercisesForTrainingBlock(blockId);
-        List<ExerciseInBlock> updatedExercises = new ArrayList<>();
+        // Оновлюємо список вправ
+        List<Exercise> recommendedExes = planManagerDAO.getExercisesForTrainingBlock(blockId);
+        List<ExerciseInBlock> exerciseInBlockList = new ArrayList<>();
         int position = 0;
-        for (Exercise newEx : newRecommended) {
-            if (!idExercisesBlacklist.contains(newEx.getId())) {
-                updatedExercises.add(new ExerciseInBlock(
-                        newEx.getId(),
-                        newEx.getName(),
-                        newEx.getMotion(),
-                        newEx.getMuscleGroupList(),
-                        newEx.getEquipment(),
+        for (Exercise recommended : recommendedExes) {
+            if (!idExercisesBlacklist.contains(recommended.getId())) {
+                exerciseInBlockList.add(new ExerciseInBlock(
+                        -1,
+                        recommended.getId(),
+                        recommended.getName(),
+                        recommended.getMotion(),
+                        recommended.getMuscleGroupList(),
+                        recommended.getEquipment(),
                         position++
                 ));
             }
         }
         try {
-            planManagerDAO.updateTrainingBlockExercises(blockId, updatedExercises);
+            planManagerDAO.updateTrainingBlockExercises(blockId, exerciseInBlockList);
             if (listener != null) {
                 listener.onBlockAdded();
             }

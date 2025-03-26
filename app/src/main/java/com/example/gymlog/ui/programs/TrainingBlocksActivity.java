@@ -174,33 +174,33 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(block.getId());
 
         // Зберігаємо їх ID у set, щоб швидко перевіряти
-        Set<Long> oldSelectedIds = new HashSet<>();
+        Set<Long> idsExeInBlock = new HashSet<>();
         for (ExerciseInBlock ex : oldSelected) {
-            oldSelectedIds.add(ex.getId());
+            idsExeInBlock.add(ex.getId());
         }
 
         // Формуємо масив назв і масив checked
-        final String[] exerciseNames = new String[recommendedExercises.size()];
-        final boolean[] checkedItems = new boolean[recommendedExercises.size()];
+        final String[] recommendNames = new String[recommendedExercises.size()];
+        final boolean[] recommendChkBoxes = new boolean[recommendedExercises.size()];
 
         for (int i = 0; i < recommendedExercises.size(); i++) {
             Exercise e = recommendedExercises.get(i);
-            exerciseNames[i] = e.getNameOnly(this);
+            recommendNames[i] = e.getNameOnly(this);
 
-            // Позначимо галочкою, якщо ця вправа була у блоці (ID у oldSelectedIds)
-            checkedItems[i] = oldSelectedIds.contains(e.getId());
+            // Позначимо галочкою, якщо ця вправа була у блоці (ID у idsExeInBlock)
+            recommendChkBoxes[i] = idsExeInBlock.contains(e.getId());
         }
 
         new AlertDialog.Builder(this)
                 .setTitle("Редагувати вправи блоку: " + block.getName())
-                .setMultiChoiceItems(exerciseNames, checkedItems, (dialog, which, isChecked) -> {
-                    checkedItems[which] = isChecked;
+                .setMultiChoiceItems(recommendNames, recommendChkBoxes, (dialog, which, isChecked) -> {
+                    recommendChkBoxes[which] = isChecked;
                 })
                 .setPositiveButton("Зберегти", (dialog, whichBtn) -> {
                     // 1) Збираємо ID всіх вправ, що стали позначені
                     Set<Long> newIds = new HashSet<>();
                     for (int i = 0; i < recommendedExercises.size(); i++) {
-                        if (checkedItems[i]) {
+                        if (recommendChkBoxes[i]) {
                             newIds.add(recommendedExercises.get(i).getId());
                         }
                     }
@@ -224,12 +224,13 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                         if (newIds.contains(recEx.getId())) {
                             // Створюємо ExerciseInBlock зі позицією = 0 або будь-якою
                             ExerciseInBlock newEIB = new ExerciseInBlock(
+                                    -1, //буде в базі оновлено
                                     recEx.getId(),
                                     recEx.getName(),
                                     recEx.getMotion(),
                                     recEx.getMuscleGroupList(),
                                     recEx.getEquipment(),
-                                    0
+                                    -1 //буде далі оновлено
                             );
                             updatedList.add(newEIB);
                         }

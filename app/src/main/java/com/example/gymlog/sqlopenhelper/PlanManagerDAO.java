@@ -866,7 +866,8 @@ public class PlanManagerDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =
-                "SELECT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
+                "SELECT tbe.id AS linkId,e.id AS exerciseId," +
+                        " e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
                         "FROM TrainingBlockExercises tbe " +
                         "JOIN Exercise e ON e.id = tbe.exerciseId " +
                         "WHERE tbe.trainingBlockId = ? " +
@@ -875,15 +876,16 @@ public class PlanManagerDAO {
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(trainingBlockId)});
 
         while (cursor.moveToNext()) {
-            long id = cursor.getLong(0);
-            String name = cursor.getString(1);
-            Motion motion = parseMotion(cursor.getString(2));
-            List<MuscleGroup> muscleGroups = parseMuscleGroups(cursor.getString(3));
-            Equipment equipment = parseEquipment(cursor.getString(4));
-            boolean isCustom = cursor.getInt(5) == 1;
-            int position = cursor.getInt(6);
+            long linkId = cursor.getLong(0);
+            long exerciseId = cursor.getLong(1);
+            String name = cursor.getString(2);
+            Motion motion = parseMotion(cursor.getString(3));
+            List<MuscleGroup> muscleGroups = parseMuscleGroups(cursor.getString(4));
+            Equipment equipment = parseEquipment(cursor.getString(5));
+            boolean isCustom = cursor.getInt(6) == 1;
+            int position = cursor.getInt(7);
 
-            ExerciseInBlock exercise = new ExerciseInBlock(id, name, motion, muscleGroups, equipment, position);
+            ExerciseInBlock exercise = new ExerciseInBlock(linkId, exerciseId, name, motion, muscleGroups, equipment, position);
             exercise.setCustom(isCustom);
             exercises.add(exercise);
         }
@@ -896,14 +898,14 @@ public class PlanManagerDAO {
     /**
      * Оновлює список вправ у блоці (перезаписує повністю).
      */
-    public void updateTrainingBlockExercises(long blockId, List<ExerciseInBlock> exercises) {
+    public void updateTrainingBlockExercises(long blockId, List<ExerciseInBlock> exerciseInBlocks) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try {
             db.beginTransaction();
             db.delete("TrainingBlockExercises", "trainingBlockId = ?", new String[]{String.valueOf(blockId)});
 
             ContentValues values = new ContentValues();
-            for (ExerciseInBlock ex : exercises) {
+            for (ExerciseInBlock ex : exerciseInBlocks) {
                 values.clear();
                 values.put("trainingBlockId", blockId);
                 values.put("exerciseId", ex.getId());
@@ -926,12 +928,27 @@ public class PlanManagerDAO {
      */
     public void addExerciseToBlock(long blockId, long exerciseId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Знаходимо наступну позицію для вправи в цьому блоці
+        int nextPosition = 0;
+        Cursor cursor = db.rawQuery(
+                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM TrainingBlockExercises WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(blockId)}
+        );
+        if (cursor.moveToFirst()) {
+            nextPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+        }
+        cursor.close();
+
         ContentValues cv = new ContentValues();
         cv.put("trainingBlockId", blockId);
         cv.put("exerciseId", exerciseId);
+        cv.put("position", nextPosition);
+
         db.insertWithOnConflict("TrainingBlockExercises", null, cv, SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
     }
+
 
     /**
      * Видаляє вправу з блоку (за position).
@@ -1233,7 +1250,7 @@ public class PlanManagerDAO {
     /**
      * Клонує вправу в блоці (ExerciseInBlock) з тією ж логікою, але новою position.
      */
-    private ExerciseInBlock cloneExerciseInBlock(ExerciseInBlock exercise, long newBlockId, SQLiteDatabase db) {
+    private ExerciseInBlock cloneExerciseInBlock(ExerciseInBlock exerciseInBlock, long newBlockId, SQLiteDatabase db) {
         // 1) Визначити нову позицію
         int newPosition = 0;
         Cursor cursor = db.rawQuery(
@@ -1247,11 +1264,12 @@ public class PlanManagerDAO {
 
         // 2) Створити клон
         ExerciseInBlock clone = new ExerciseInBlock(
-                exercise.getId(),
-                exercise.getName(),
-                exercise.getMotion(),
-                exercise.getMuscleGroupList(),
-                exercise.getEquipment(),
+                exerciseInBlock.getLinkId(),
+                exerciseInBlock.getId(),
+                exerciseInBlock.getName(),
+                exerciseInBlock.getMotion(),
+                exerciseInBlock.getMuscleGroupList(),
+                exerciseInBlock.getEquipment(),
                 newPosition
         );
 
