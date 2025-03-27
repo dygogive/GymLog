@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.programs.dialogs;
+package com.example.gymlog.ui.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,12 +9,10 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.ExerciseDAO;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
@@ -35,7 +33,7 @@ import java.util.function.Function;
  * Діалог для створення/редагування тренувального блоку (TrainingBlock).
  * Містить логіку вибору фільтрів (рухи, м'язеві групи, обладнання).
  */
-public class TrainingBlockDialog extends Dialog {
+public class DialogExeBlocCreator extends Dialog {
 
     private final Context context;
     private EditText editTextBlockName, editTextBlockDescription;
@@ -58,9 +56,9 @@ public class TrainingBlockDialog extends Dialog {
     }
 
     // Конструктор для створення нового блоку
-    public TrainingBlockDialog(@NonNull Context context,
-                               long gymDayId,
-                               OnTrainingBlockCreatedListener listener) {
+    public DialogExeBlocCreator(@NonNull Context context,
+                                long gymDayId,
+                                OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;
@@ -68,10 +66,10 @@ public class TrainingBlockDialog extends Dialog {
     }
 
     // Конструктор для редагування існуючого блоку
-    public TrainingBlockDialog(@NonNull Context context,
-                               long gymDayId,
-                               TrainingBlock block,
-                               OnTrainingBlockCreatedListener listener) {
+    public DialogExeBlocCreator(@NonNull Context context,
+                                long gymDayId,
+                                TrainingBlock block,
+                                OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;

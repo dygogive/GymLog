@@ -18,7 +18,7 @@ import com.example.gymlog.model.plan.TrainingBlock;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.programs.adapters.TrainingBlockAdapter;
-import com.example.gymlog.ui.programs.dialogs.TrainingBlockDialog;
+import com.example.gymlog.ui.dialogs.DialogExeBlocCreator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -99,13 +99,13 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     // Відкриття діалогу створення нового блоку
     private void openBlockCreationDialogByFAB() {
-        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, this::loadTrainingBlocks);
+        DialogExeBlocCreator dialog = new DialogExeBlocCreator(this, gymDayId, this::loadTrainingBlocks);
         dialog.show();
     }
 
     // Відкриття діалогу редагування блоку
     public void openBlockEditDialog(TrainingBlock block) {
-        TrainingBlockDialog dialog = new TrainingBlockDialog(this, gymDayId, block, this::loadTrainingBlocks);
+        DialogExeBlocCreator dialog = new DialogExeBlocCreator(this, gymDayId, block, this::loadTrainingBlocks);
         dialog.show();
     }
 

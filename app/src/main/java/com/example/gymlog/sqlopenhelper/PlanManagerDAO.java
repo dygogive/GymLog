@@ -723,39 +723,83 @@ public class PlanManagerDAO {
     /**
      * Повертає список вправ, що відповідають фільтрам блоку.
      */
+
     public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String query =
+        // Отримуємо фільтри motion
+        List<String> motionFilters = new ArrayList<>();
+        Cursor cursor = db.rawQuery(
+                "SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(trainingBlockId)}
+        );
+        while (cursor.moveToNext()) {
+            motionFilters.add(cursor.getString(0));
+        }
+        cursor.close();
+
+        // Отримуємо фільтри equipment
+        List<String> equipmentFilters = new ArrayList<>();
+        cursor = db.rawQuery(
+                "SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(trainingBlockId)}
+        );
+        while (cursor.moveToNext()) {
+            equipmentFilters.add(cursor.getString(0));
+        }
+        cursor.close();
+
+        // Створюємо запит
+        StringBuilder queryBuilder = new StringBuilder();
+        List<String> args = new ArrayList<>();
+
+        queryBuilder.append(
                 "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                         "FROM Exercise e " +
-                        "LEFT JOIN TrainingBlockMotion tm ON e.motion = tm.motionType " +
-                        "LEFT JOIN TrainingBlockMuscleGroup tmg ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
-                        "LEFT JOIN TrainingBlockEquipment te ON e.equipment = te.equipment " +
-                        "WHERE tm.trainingBlockId = ? OR tmg.trainingBlockId = ? OR te.trainingBlockId = ?";
+                        "JOIN TrainingBlockMuscleGroup tmg " +
+                        "ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
+                        "WHERE tmg.trainingBlockId = ?"
+        );
+        args.add(String.valueOf(trainingBlockId));
 
-        Cursor cursor = db.rawQuery(query, new String[]{
-                String.valueOf(trainingBlockId),
-                String.valueOf(trainingBlockId),
-                String.valueOf(trainingBlockId)
-        });
-
-        if (cursor.moveToFirst()) {
-            do {
-                long id = cursor.getLong(0);
-                String name = cursor.getString(1);
-                Motion motion = parseMotion(cursor.getString(2));
-                List<MuscleGroup> muscleGroups = parseMuscleGroups(cursor.getString(3));
-                Equipment equipment = parseEquipment(cursor.getString(4));
-
-                exercises.add(new Exercise(id, name, motion, muscleGroups, equipment));
-            } while (cursor.moveToNext());
-        } else {
-            Log.d("DB_DEBUG_EXERCISES", "No exercises found for Block ID: " + trainingBlockId);
+        if (!motionFilters.isEmpty()) {
+            queryBuilder.append(" AND e.motion IN (");
+            for (int i = 0; i < motionFilters.size(); i++) {
+                queryBuilder.append("?");
+                if (i < motionFilters.size() - 1) queryBuilder.append(", ");
+                args.add(motionFilters.get(i));
+            }
+            queryBuilder.append(")");
         }
 
-        cursor.close();
+        if (!equipmentFilters.isEmpty()) {
+            queryBuilder.append(" AND e.equipment IN (");
+            for (int i = 0; i < equipmentFilters.size(); i++) {
+                queryBuilder.append("?");
+                if (i < equipmentFilters.size() - 1) queryBuilder.append(", ");
+                args.add(equipmentFilters.get(i));
+            }
+            queryBuilder.append(")");
+        }
+
+        String query = queryBuilder.toString();
+
+        Cursor result = db.rawQuery(query, args.toArray(new String[0]));
+
+        if (result.moveToFirst()) {
+            do {
+                long id = result.getLong(0);
+                String name = result.getString(1);
+                Motion motion = parseMotion(result.getString(2));
+                List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(3));
+                Equipment equipment = parseEquipment(result.getString(4));
+
+                exercises.add(new Exercise(id, name, motion, muscleGroups, equipment));
+            } while (result.moveToNext());
+        }
+
+        result.close();
         db.close();
         return exercises;
     }
