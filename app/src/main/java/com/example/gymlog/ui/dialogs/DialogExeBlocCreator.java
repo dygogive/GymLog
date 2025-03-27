@@ -38,7 +38,6 @@ public class DialogExeBlocCreator extends Dialog {
     private final Context context;
     private EditText editTextBlockName, editTextBlockDescription;
     private Button buttonSelectMotion, buttonSelectMuscle, buttonSelectEquipment;
-    private Button buttonSaveBlock;
     private boolean[] booleansMotions, booleansMuscles, booleansEquipment;
     private final List<String> chosenTxtMotions = new ArrayList<>();
     private final List<String> chosenTxtMuscles = new ArrayList<>();
@@ -46,7 +45,7 @@ public class DialogExeBlocCreator extends Dialog {
 
     private PlanManagerDAO planManagerDAO;
     private TrainingBlock trainingBlock;
-    private Set<Long> idExercisesBlacklist = new HashSet<>();
+    private final Set<Long> idExercisesBlacklist = new HashSet<>();
 
     private final OnTrainingBlockCreatedListener listener;
     private final long gymDayId;
@@ -113,7 +112,7 @@ public class DialogExeBlocCreator extends Dialog {
         buttonSelectMuscle = findViewById(R.id.buttonSelectMuscle);
         buttonSelectEquipment = findViewById(R.id.buttonSelectEquipment);
         Button buttonCancel = findViewById(R.id.buttonCancel);
-        buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
+        Button buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
 
         // Обробники кліків для кнопок вибору фільтрів
         buttonSelectMotion.setOnClickListener(v -> showMultiSelectDialog(
@@ -164,11 +163,11 @@ public class DialogExeBlocCreator extends Dialog {
 
         // Використовуємо спільний метод updateSelections з лямбдами для отримання опису
         updateSelections(savedMotionsInDB, chosenTxtMotions, booleansMotions,
-                Motion.values(), (motion, ctx) -> motion.getDescription(ctx));
+                Motion.values(), Motion::getDescription);
         updateSelections(savedMusclesInDB, chosenTxtMuscles, booleansMuscles,
-                MuscleGroup.values(), (muscle, ctx) -> muscle.getDescription(ctx));
+                MuscleGroup.values(), MuscleGroup::getDescription);
         updateSelections(savedEquipmentInDB, chosenTxtEquipment, booleansEquipment,
-                Equipment.values(), (equipment, ctx) -> equipment.getDescription(ctx));
+                Equipment.values(), Equipment::getDescription);
 
         updateButtonText(buttonSelectMotion, chosenTxtMotions);
         updateButtonText(buttonSelectMuscle, chosenTxtMuscles);
@@ -207,7 +206,9 @@ public class DialogExeBlocCreator extends Dialog {
         if (selectedItems.isEmpty()) {
             button.setText(context.getString(R.string.chose));
         } else {
-            button.setText(context.getString(R.string.chosed) + ": " + selectedItems.size());
+            String sb = context.getString(R.string.chosed) +
+                    ": " + selectedItems.size();
+            button.setText(sb);
         }
     }
 

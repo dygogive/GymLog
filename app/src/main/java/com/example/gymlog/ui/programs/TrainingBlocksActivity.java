@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.programs;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,7 +32,6 @@ import java.util.Set;
 public class TrainingBlocksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrainingBlocks;
-    private FloatingActionButton buttonAddTrainingBlock;
     private TrainingBlockAdapter trainingBlockAdapter;
     private final List<TrainingBlock> trainingBlocks = new ArrayList<>();
     private PlanManagerDAO planManagerDAO;
@@ -61,7 +61,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     // Ініціалізація UI
     private void initUI() {
         recyclerViewTrainingBlocks = findViewById(R.id.recyclerViewTrainingBlocks);
-        buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
+        FloatingActionButton buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
         buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialogByFAB());
     }
 
@@ -110,6 +110,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     }
 
     // Завантаження тренувальних блоків з бази даних
+    @SuppressLint("NotifyDataSetChanged")
     public void loadTrainingBlocks() {
         trainingBlocks.clear();
         trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
@@ -123,6 +124,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
             openBlockEditDialog(block);
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onDeleteClick(TrainingBlock block) {
             ConfirmDeleteDialog.show(TrainingBlocksActivity.this, block.getName(), () -> {
@@ -193,10 +195,10 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Редагувати вправи блоку: " + block.getName())
-                .setMultiChoiceItems(recommendNames, recommendChkBoxes, (dialog, which, isChecked) -> {
-                    recommendChkBoxes[which] = isChecked;
-                })
-                .setPositiveButton("Зберегти", (dialog, whichBtn) -> {
+                .setMultiChoiceItems(recommendNames, recommendChkBoxes,
+                        (dialog, which, isChecked) ->
+                        recommendChkBoxes[which] = isChecked
+                ).setPositiveButton("Зберегти", (dialog, whichBtn) -> {
                     // 1) Збираємо ID всіх вправ, що стали позначені
                     Set<Long> newIds = new HashSet<>();
                     for (int i = 0; i < recommendedExercises.size(); i++) {

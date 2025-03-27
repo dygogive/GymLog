@@ -21,6 +21,7 @@ import com.example.gymlog.sqlopenhelper.ExerciseDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DialogForExerciseEdit {
 
@@ -92,14 +93,14 @@ public class DialogForExerciseEdit {
             // Встановлення обраного значення для Motion
             Motion motion = exercise.getMotion();
             if (motion != null) {
-                int motionPosition = Motion.getObjectByDescription(context, motion.getDescription(context)).ordinal();
+                int motionPosition = Objects.requireNonNull(Motion.getObjectByDescription(context, motion.getDescription(context))).ordinal();
                 spinnerMotion.setSelection(motionPosition);
             }
 
             // Встановлення обраного значення для Equipment
             Equipment equipment = exercise.getEquipment();
             if (equipment != null) {
-                int equipmentPosition = Equipment.getEquipmentByDescription(context, equipment.getDescription(context)).ordinal();
+                int equipmentPosition = Objects.requireNonNull(Equipment.getEquipmentByDescription(context, equipment.getDescription(context))).ordinal();
                 spinnerEquipment.setSelection(equipmentPosition);
             }
 
@@ -116,14 +117,14 @@ public class DialogForExerciseEdit {
             // Встановлення обраного значення для Motion
             Motion motion = preselectedMotion;
             if (motion != null) {
-                int motionPosition = Motion.getObjectByDescription(context, motion.getDescription(context)).ordinal();
+                int motionPosition = Objects.requireNonNull(Motion.getObjectByDescription(context, motion.getDescription(context))).ordinal();
                 spinnerMotion.setSelection(motionPosition);
             }
 
             // Встановлення обраного значення для Equipment
             Equipment equipment = preselectedEquipment;
             if (equipment != null) {
-                int equipmentPosition = Equipment.getEquipmentByDescription(context, equipment.getDescription(context)).ordinal();
+                int equipmentPosition = Objects.requireNonNull(Equipment.getEquipmentByDescription(context, equipment.getDescription(context))).ordinal();
                 spinnerEquipment.setSelection(equipmentPosition);
             }
 
@@ -179,7 +180,7 @@ public class DialogForExerciseEdit {
         AlertDialog dialog = builder.create();
         // Встановлюємо колір фону
         dialog.setOnShowListener(d -> {
-            dialog.getWindow().setBackgroundDrawableResource(R.color.my_primary_container); // Вкажи свій колір в res/values/colors.xml
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.my_primary_container); // Вкажи свій колір в res/values/colors.xml
         });
 
         dialog.show();
@@ -211,7 +212,7 @@ public class DialogForExerciseEdit {
         AlertDialog dialog = builder.create();
         // Встановлюємо колір фону
         dialog.setOnShowListener(d -> {
-            dialog.getWindow().setBackgroundDrawableResource(R.color.primary); // Вкажи свій колір в res/values/colors.xml
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.primary); // Вкажи свій колір в res/values/colors.xml
         });
 
         dialog.show();
