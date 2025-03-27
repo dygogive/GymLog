@@ -47,6 +47,7 @@ public class DefaultExercisesFactory {
 
             exerciseDAO.addExercise(
                     "exercise_dip_weighted", // Жим на брусах
+                    "",
                     Motion.PRESS_DOWNWARDS,
                     Arrays.asList(MuscleGroup.CHEST_LOWER, MuscleGroup.TRICEPS, MuscleGroup.CHEST),
                     Equipment.KETTLEBELL,
@@ -56,6 +57,7 @@ public class DefaultExercisesFactory {
 
             exerciseDAO.addExercise(
                     "exercise_incline_db_press",  // жим гантелей на наклонній лаві
+                    "",
                     Motion.PRESS_UP_MIDDLE,
                     Arrays.asList(MuscleGroup.CHEST_UPPER, MuscleGroup.CHEST, MuscleGroup.TRICEPS),
                     Equipment.DUMBBELLS,
@@ -64,6 +66,7 @@ public class DefaultExercisesFactory {
 
             exerciseDAO.addExercise(
                     "exercise_pullup_weighted", //підтягування
+                    "",
                     Motion.PULL_UPWARDS,
                     Arrays.asList(MuscleGroup.LATS, MuscleGroup.BICEPS),
                     Equipment.KETTLEBELL,
@@ -72,6 +75,7 @@ public class DefaultExercisesFactory {
 
             exerciseDAO.addExercise(
                     "exercise_db_row", //тяга гантелей в наклоні
+                    "",
                     Motion.PULL_DOWN_MIDDLE,
                     Arrays.asList(MuscleGroup.TRAPS_MIDDLE, MuscleGroup.BICEPS),
                     Equipment.DUMBBELLS,
@@ -80,6 +84,7 @@ public class DefaultExercisesFactory {
 
             exerciseDAO.addExercise(
                     "exercise_squat_barbell", //присідання
+                    "",
                     Motion.PRESS_BY_LEGS,
                     Arrays.asList(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES, MuscleGroup.LONGISSIMUS),
                     Equipment.BARBELL,
@@ -90,13 +95,15 @@ public class DefaultExercisesFactory {
             Log.d("initializeDefaultExercises", "initializeDefaultExercises");
             exerciseDAO.addExercise(
                     "exercise_deadlift", //мертва тяга
+                    "",
                     Motion.PULL_BY_LEGS,
                     Arrays.asList(MuscleGroup.HAMSTRINGS, MuscleGroup.TRAPS_LOWER, MuscleGroup.LONGISSIMUS),
                     Equipment.BARBELL,
                     false
             );
         }
-        
+
     }
+
 
 }

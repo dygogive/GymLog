@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.gymlog.R;
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
 import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
-import com.example.gymlog.ui.exercises.dialogs.DialogSelectTrainingBlocks;
 import com.example.gymlog.ui.exercises.factories.DefaultExercisesFactory;
 import com.example.gymlog.ui.exercises.fragments.AttributeListFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,12 +45,6 @@ public class ExerciseManagementActivity extends AppCompatActivity {
 
     private void openAddExerciseDialog() {
         DialogForExerciseEdit dialog = new DialogForExerciseEdit(this, this::refreshFragment);
-
-        dialog.setOnExerciseCreatedListener(newExercise -> {
-            // Відкриваємо діалог ДОДАВАННЯ ДО БЛОКІВ після збереження вправи в БД
-            DialogSelectTrainingBlocks.addExerciseToBlocks(this, newExercise, this::refreshFragment);
-        });
-
         dialog.show(null); // Викликаємо діалог для створення нової вправи
     }
 

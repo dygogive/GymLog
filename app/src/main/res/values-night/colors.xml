@@ -15,10 +15,10 @@
     <color name="my_primary_container">#374B74</color> <!-- Світліший синій -->
     <color name="my_on_primary_container">#2C3D61</color>
 
-    <color name="my_secondary">#757575</color> <!-- Сірий для другорядних елементів -->
+    <color name="my_secondary">#7793B8</color> <!-- Сірий для другорядних елементів -->
     <color name="my_on_secondary">#FFFFFF</color>
 
-    <color name="my_secondary_container">#3B3B3B</color>
+    <color name="my_secondary_container">#393E56</color>
     <color name="my_on_secondary_container">#384C68</color>
 
 

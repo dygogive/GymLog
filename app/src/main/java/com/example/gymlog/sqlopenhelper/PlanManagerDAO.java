@@ -406,22 +406,11 @@ public class PlanManagerDAO {
     public void updateTrainingBlock(TrainingBlock block) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        int newPosition = 0;
-        Cursor cursor = db.rawQuery(
-                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM TrainingBlock WHERE gym_day_id = ?",
-                new String[]{String.valueOf(block.getGymDayId())}
-        );
-        if (cursor.moveToFirst()) {
-            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
-        }
-        cursor.close();
-
-        block.setPosition(newPosition);
 
         ContentValues values = new ContentValues();
         values.put("name",        block.getName());
         values.put("description", block.getDescription());
-        values.put("position",    newPosition);
+        values.put("position",    block.getPosition());
 
         db.update("TrainingBlock", values, "id = ?", new String[]{String.valueOf(block.getId())});
         db.close();
@@ -509,23 +498,27 @@ public class PlanManagerDAO {
 
             if (cursor.moveToFirst()) {
                 do {
-                    @SuppressLint("Range") long id        = cursor.getLong(cursor.getColumnIndex("id"));
-                    @SuppressLint("Range") long gymDayId  = cursor.getLong(cursor.getColumnIndex("gym_day_id"));
-                    @SuppressLint("Range") String name    = cursor.getString(cursor.getColumnIndex("name"));
-                    @SuppressLint("Range") String desc    = cursor.getString(cursor.getColumnIndex("description"));
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
+                    long gymDayId = cursor.getLong(cursor.getColumnIndexOrThrow("gym_day_id"));
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                    String desc = cursor.getString(cursor.getColumnIndexOrThrow("description"));
 
+                    // Створюємо об'єкт TrainingBlock із врахуванням опису
                     blocks.add(new TrainingBlock(id, gymDayId, name, desc));
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
             Log.e("DB_ERROR", "Помилка при пошуку блоків для вправи", e);
         } finally {
-            if (cursor != null) cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
             db.close();
         }
 
         return blocks;
     }
+
 
     /**
      * Оновлює позиції блоків у межах GymDay (drag & drop).
@@ -723,8 +716,7 @@ public class PlanManagerDAO {
     /**
      * Повертає список вправ, що відповідають фільтрам блоку.
      */
-
-    public List<Exercise> getExercisesForTrainingBlock(long trainingBlockId) {
+    public List<Exercise> recommendExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -755,7 +747,7 @@ public class PlanManagerDAO {
         List<String> args = new ArrayList<>();
 
         queryBuilder.append(
-                "SELECT DISTINCT e.id, e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
+                "SELECT DISTINCT e.id, e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
                         "FROM Exercise e " +
                         "JOIN TrainingBlockMuscleGroup tmg " +
                         "ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
@@ -791,11 +783,12 @@ public class PlanManagerDAO {
             do {
                 long id = result.getLong(0);
                 String name = result.getString(1);
-                Motion motion = parseMotion(result.getString(2));
-                List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(3));
-                Equipment equipment = parseEquipment(result.getString(4));
+                String description = result.getString(2);
+                Motion motion = parseMotion(result.getString(3));
+                List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(4));
+                Equipment equipment = parseEquipment(result.getString(5));
 
-                exercises.add(new Exercise(id, name, motion, muscleGroups, equipment));
+                exercises.add(new Exercise(id, name, description, motion, muscleGroups, equipment));
             } while (result.moveToNext());
         }
 
@@ -803,6 +796,7 @@ public class PlanManagerDAO {
         db.close();
         return exercises;
     }
+
 
     /**
      * Повертає список вправ, що додані до блоку (білий список).
@@ -812,8 +806,8 @@ public class PlanManagerDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String query =
-                "SELECT tbe.id AS linkId,e.id AS exerciseId," +
-                        " e.name, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
+                "SELECT tbe.id AS linkId, e.id AS exerciseId, " +
+                        "e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
                         "FROM TrainingBlockExercises tbe " +
                         "JOIN Exercise e ON e.id = tbe.exerciseId " +
                         "WHERE tbe.trainingBlockId = ? " +
@@ -825,13 +819,14 @@ public class PlanManagerDAO {
             long linkId = cursor.getLong(0);
             long exerciseId = cursor.getLong(1);
             String name = cursor.getString(2);
-            Motion motion = parseMotion(cursor.getString(3));
-            List<MuscleGroup> muscleGroups = parseMuscleGroups(cursor.getString(4));
-            Equipment equipment = parseEquipment(cursor.getString(5));
-            boolean isCustom = cursor.getInt(6) == 1;
-            int position = cursor.getInt(7);
+            String description = cursor.getString(3);
+            Motion motion = parseMotion(cursor.getString(4));
+            List<MuscleGroup> muscleGroups = parseMuscleGroups(cursor.getString(5));
+            Equipment equipment = parseEquipment(cursor.getString(6));
+            boolean isCustom = cursor.getInt(7) == 1;
+            int position = cursor.getInt(8);
 
-            ExerciseInBlock exercise = new ExerciseInBlock(linkId, exerciseId, name, motion, muscleGroups, equipment, position);
+            ExerciseInBlock exercise = new ExerciseInBlock(linkId, exerciseId, name, description, motion, muscleGroups, equipment, position);
             exercise.setCustom(isCustom);
             exercises.add(exercise);
         }
@@ -840,6 +835,7 @@ public class PlanManagerDAO {
         db.close();
         return exercises;
     }
+
 
     /**
      * Оновлює список вправ у блоці (перезаписує повністю).
@@ -1213,6 +1209,7 @@ public class PlanManagerDAO {
                 exerciseInBlock.getLinkId(),
                 exerciseInBlock.getId(),
                 exerciseInBlock.getName(),
+                exerciseInBlock.getDescription(), // <--- нове
                 exerciseInBlock.getMotion(),
                 exerciseInBlock.getMuscleGroupList(),
                 exerciseInBlock.getEquipment(),
@@ -1232,8 +1229,6 @@ public class PlanManagerDAO {
 
         return clone;
     }
-
-
 
 
 
@@ -1289,7 +1284,7 @@ public class PlanManagerDAO {
 
                                 // ----- Exercises in block -----
                                 try (Cursor cursorExercises = db.rawQuery(
-                                        "SELECT tbe.exerciseId, e.name, tbe.position " +
+                                        "SELECT tbe.exerciseId, e.name, e.description, tbe.position " +
                                                 "FROM TrainingBlockExercises tbe " +
                                                 "JOIN Exercise e ON e.id = tbe.exerciseId " +
                                                 "WHERE tbe.trainingBlockId = ?",
@@ -1298,10 +1293,11 @@ public class PlanManagerDAO {
                                     while (cursorExercises.moveToNext()) {
                                         long exId = cursorExercises.getLong(0);
                                         String exName = cursorExercises.getString(1);
-                                        int position = cursorExercises.getInt(2);
+                                        String exDesc = cursorExercises.getString(2);
+                                        int position = cursorExercises.getInt(3);
 
                                         Log.d("logAllData",
-                                                "      Exercise [id=" + exId + ", name=" + exName + ", position=" + position + "]"
+                                                "      Exercise [id=" + exId + ", name=" + exName + ", desc=" + exDesc + ", position=" + position + "]"
                                         );
                                     }
                                 }
@@ -1314,8 +1310,6 @@ public class PlanManagerDAO {
 
         Log.d("logAllData", "========== END: logAllData() ==========");
     }
-
-
 
 
 }

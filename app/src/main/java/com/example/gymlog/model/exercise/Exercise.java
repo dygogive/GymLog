@@ -14,15 +14,17 @@ public class Exercise {
 
     private long id = -1;
     private String name;
+    private String description;
+
     private Motion motion;
     private List<MuscleGroup> muscleGroupList;
     private Equipment equipment;
     private boolean isCustom = false;
 
-
-    public Exercise(Long id, String name, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
+    public Exercise(Long id, String name, String description, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.motion = motion;
         this.muscleGroupList = muscleGroupList;
         this.equipment = equipment;
@@ -97,5 +99,13 @@ public class Exercise {
             }
             return value;
         } else return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

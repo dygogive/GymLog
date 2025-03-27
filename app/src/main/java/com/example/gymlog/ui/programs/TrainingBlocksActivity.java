@@ -19,7 +19,6 @@ import com.example.gymlog.model.plan.TrainingBlock;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.programs.adapters.TrainingBlockAdapter;
-import com.example.gymlog.ui.dialogs.DialogExeBlocCreator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -99,13 +98,13 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     // Відкриття діалогу створення нового блоку
     private void openBlockCreationDialogByFAB() {
-        DialogExeBlocCreator dialog = new DialogExeBlocCreator(this, gymDayId, this::loadTrainingBlocks);
+        DialogBlocCreator dialog = new DialogBlocCreator(this, gymDayId, this::loadTrainingBlocks);
         dialog.show();
     }
 
     // Відкриття діалогу редагування блоку
     public void openBlockEditDialog(TrainingBlock block) {
-        DialogExeBlocCreator dialog = new DialogExeBlocCreator(this, gymDayId, block, this::loadTrainingBlocks);
+        DialogBlocCreator dialog = new DialogBlocCreator(this, gymDayId, block, this::loadTrainingBlocks);
         dialog.show();
     }
 
@@ -171,7 +170,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     // Діалог вибору вправ для блоку
     private void showExerciseSelectionDialog(TrainingBlock block) {
         // 1) Отримуємо потенційно рекомендовані вправи
-        List<Exercise> recommendedExercises = planManagerDAO.getExercisesForTrainingBlock(block.getId());
+        List<Exercise> recommendedExercises = planManagerDAO.recommendExercisesForTrainingBlock(block.getId());
         // 2) Отримуємо вже вибрані вправи
         List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(block.getId());
 
@@ -193,7 +192,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
             recommendChkBoxes[i] = idsExeInBlock.contains(e.getId());
         }
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this,R.style.RoundedDialogTheme2)
                 .setTitle("Редагувати вправи блоку: " + block.getName())
                 .setMultiChoiceItems(recommendNames, recommendChkBoxes,
                         (dialog, which, isChecked) ->
@@ -229,6 +228,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                                     -1, //буде в базі оновлено
                                     recEx.getId(),
                                     recEx.getName(),
+                                    recEx.getDescription(),
                                     recEx.getMotion(),
                                     recEx.getMuscleGroupList(),
                                     recEx.getEquipment(),

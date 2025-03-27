@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.dialogs;
+package com.example.gymlog.ui.programs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,7 +33,7 @@ import java.util.function.Function;
  * Діалог для створення/редагування тренувального блоку (TrainingBlock).
  * Містить логіку вибору фільтрів (рухи, м'язеві групи, обладнання).
  */
-public class DialogExeBlocCreator extends Dialog {
+public class DialogBlocCreator extends Dialog {
 
     private final Context context;
     private EditText editTextBlockName, editTextBlockDescription;
@@ -55,9 +55,9 @@ public class DialogExeBlocCreator extends Dialog {
     }
 
     // Конструктор для створення нового блоку
-    public DialogExeBlocCreator(@NonNull Context context,
-                                long gymDayId,
-                                OnTrainingBlockCreatedListener listener) {
+    public DialogBlocCreator(@NonNull Context context,
+                             long gymDayId,
+                             OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;
@@ -65,10 +65,10 @@ public class DialogExeBlocCreator extends Dialog {
     }
 
     // Конструктор для редагування існуючого блоку
-    public DialogExeBlocCreator(@NonNull Context context,
-                                long gymDayId,
-                                TrainingBlock block,
-                                OnTrainingBlockCreatedListener listener) {
+    public DialogBlocCreator(@NonNull Context context,
+                             long gymDayId,
+                             TrainingBlock block,
+                             OnTrainingBlockCreatedListener listener) {
         super(context, R.style.RoundedDialogTheme2);
         this.context = context;
         this.gymDayId = gymDayId;
@@ -237,7 +237,7 @@ public class DialogExeBlocCreator extends Dialog {
             blockId = trainingBlock.getId();
 
             // Формування чорного списку для вже виключених вправ
-            List<Exercise> recommendedExes = planManagerDAO.getExercisesForTrainingBlock(blockId);
+            List<Exercise> recommendedExes = planManagerDAO.recommendExercisesForTrainingBlock(blockId);
             List<ExerciseInBlock> blockExercises = planManagerDAO.getBlockExercises(blockId);
             idExercisesBlacklist.clear();
             Set<Long> oldSelectedIds = new HashSet<>();
@@ -255,7 +255,7 @@ public class DialogExeBlocCreator extends Dialog {
         saveFilters(blockId);
 
         // Оновлюємо список вправ
-        List<Exercise> recommendedExes = planManagerDAO.getExercisesForTrainingBlock(blockId);
+        List<Exercise> recommendedExes = planManagerDAO.recommendExercisesForTrainingBlock(blockId);
         List<ExerciseInBlock> exerciseInBlockList = new ArrayList<>();
         int position = 0;
         for (Exercise recommended : recommendedExes) {
@@ -264,11 +264,13 @@ public class DialogExeBlocCreator extends Dialog {
                         -1,
                         recommended.getId(),
                         recommended.getName(),
+                        recommended.getDescription(), // нове поле
                         recommended.getMotion(),
                         recommended.getMuscleGroupList(),
                         recommended.getEquipment(),
                         position++
                 ));
+
             }
         }
         try {
@@ -320,7 +322,7 @@ public class DialogExeBlocCreator extends Dialog {
                                        boolean[] booleansOfItems,
                                        List<String> selectedItems,
                                        Button button) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.RoundedDialogTheme2);
         builder.setTitle(title);
         builder.setMultiChoiceItems(allItems, booleansOfItems, (dialog, which, isChecked) -> {
             booleansOfItems[which] = isChecked;

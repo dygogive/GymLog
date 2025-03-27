@@ -1,5 +1,6 @@
 package com.example.gymlog.sqlopenhelper;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -43,15 +44,17 @@ public class ExerciseDAO {
     /**
      * Додає вправу в таблицю "Exercise".
      *
-     * @param exerciseName   Назва вправи
-     * @param motion         Рух (Motion)
-     * @param muscleGroups   Список м'язевих груп
-     * @param equipment      Обладнання
-     * @param isCustom       true, якщо вправа створена користувачем
+     * @param exerciseName Назва вправи
+     * @param description  Опис вправи
+     * @param motion       Рух (Motion)
+     * @param muscleGroups Список м'язевих груп
+     * @param equipment    Обладнання
+     * @param isCustom     true, якщо вправа створена користувачем
      * @return ID доданого запису (або -1, якщо сталася помилка)
      */
     public long addExercise(
             String exerciseName,
+            String description,
             Motion motion,
             List<MuscleGroup> muscleGroups,
             Equipment equipment,
@@ -59,6 +62,7 @@ public class ExerciseDAO {
     ) {
         ContentValues values = new ContentValues();
         values.put("name", exerciseName);
+        values.put("description", description);
         values.put("motion", motion.name());
         values.put(
                 "muscleGroups",
@@ -83,6 +87,7 @@ public class ExerciseDAO {
     public long addExercise(Exercise exercise) {
         return addExercise(
                 exercise.getName(),
+                exercise.getDescription(),
                 exercise.getMotion(),
                 exercise.getMuscleGroupList(),
                 exercise.getEquipment(),
@@ -100,6 +105,7 @@ public class ExerciseDAO {
     public boolean updateExercise(Exercise exercise) {
         ContentValues values = new ContentValues();
         values.put("name", exercise.getName());
+        values.put("description", exercise.getDescription());
         values.put("motion", exercise.getMotion().name());
         values.put(
                 "muscleGroups",
@@ -171,11 +177,14 @@ public class ExerciseDAO {
     public void logAllExercises() {
         for (Exercise exercise : getAllExercises()) {
             Log.d("ExerciseLog",
-                    "Name: " + exercise.getName() + "---" +
-                            "Motion: " + exercise.getMotion() + "---" +
-                            "Equipment: " + exercise.getEquipment() + "---" +
-                            "Muscle Groups: " + exercise.getMuscleGroupList() + "---" +
-                            "is custom: " + exercise.getIsCustom());
+                    "ID: " + exercise.getId() + " --- " +
+                            "Name: " + exercise.getName() + " --- " +
+                            "Description: " + exercise.getDescription() + " --- " +
+                            "Motion: " + exercise.getMotion() + " --- " +
+                            "Equipment: " + exercise.getEquipment() + " --- " +
+                            "Muscle Groups: " + exercise.getMuscleGroupList() + " --- " +
+                            "isCustom: " + exercise.getIsCustom()
+            );
         }
     }
 
@@ -191,7 +200,7 @@ public class ExerciseDAO {
                 "id = ?",
                 new String[]{String.valueOf(exercise.getId())}
         );
-        // Закриваємо базу (залежить від твоєї архітектури, можливо краще було б у finalize)
+        // Закриваємо базу (залежно від архітектури, можливо краще було б у finalize)
         database.close();
         return rowsDeleted > 0;
     }
@@ -210,6 +219,7 @@ public class ExerciseDAO {
                 boolean isCustom = cursor.getInt(cursor.getColumnIndexOrThrow("isCustom")) == 1;
                 long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
                 Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
                 String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
                 Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
@@ -239,8 +249,8 @@ public class ExerciseDAO {
                     }
                 }
 
-                // Створюємо об’єкт Exercise
-                Exercise exercise = new Exercise(id, name, motion, muscleGroups, equipment);
+                // Створюємо об’єкт Exercise з врахуванням description
+                Exercise exercise = new Exercise(id, name, description, motion, muscleGroups, equipment);
                 // Якщо потрібно, позначаємо isCustom в об’єкті
                 exercise.setCustom(isCustom);
 
@@ -253,9 +263,8 @@ public class ExerciseDAO {
         return exerciseList;
     }
 
-
     /**
-     * Logs all exercises from the database to Logcat
+     * Logs all exercises from the database to Logcat.
      */
     public void voidGetAllDatabaseInLog() {
         Cursor cursor = null;
@@ -263,43 +272,42 @@ public class ExerciseDAO {
             // Query all exercises from the database
             cursor = database.query(
                     "Exercise",
-                    null, // all columns
-                    null, // no selection
-                    null, // no selection args
-                    null, // no group by
-                    null, // no having
-                    null  // no order by
+                    null, // всі стовпці
+                    null, // без selection
+                    null, // без selection args
+                    null, // без group by
+                    null, // без having
+                    null  // без order by
             );
 
-            // Check if there are any exercises
+            // Перевіряємо, чи є записи
             if (cursor != null && cursor.getCount() > 0) {
                 Log.d("ExerciseDAO", "===== START OF EXERCISE DATABASE DUMP =====");
 
-                // Get column indices
+                // Отримуємо індекси стовпців
                 int idIndex = cursor.getColumnIndex("id");
                 int nameIndex = cursor.getColumnIndex("name");
+                int descriptionIndex = cursor.getColumnIndex("description");
                 int motionIndex = cursor.getColumnIndex("motion");
                 int muscleGroupsIndex = cursor.getColumnIndex("muscleGroups");
                 int equipmentIndex = cursor.getColumnIndex("equipment");
                 int isCustomIndex = cursor.getColumnIndex("isCustom");
 
-                // Iterate through all rows
+                // Ітеруємо всі рядки
                 while (cursor.moveToNext()) {
-                    // Get values from each column
                     int id = cursor.getInt(idIndex);
                     String name = cursor.getString(nameIndex);
+                    String description = cursor.getString(descriptionIndex);
                     String motion = cursor.getString(motionIndex);
                     String muscleGroups = cursor.getString(muscleGroupsIndex);
                     String equipment = cursor.getString(equipmentIndex);
                     int isCustom = cursor.getInt(isCustomIndex);
 
-                    // Format the log message
-                    String logMessage = String.format(
-                            "ID: %d | Name: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
-                            id, name, motion, muscleGroups, equipment, isCustom
+                    @SuppressLint("DefaultLocale") String logMessage = String.format(
+                            "ID: %d | Name: %s | Description: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
+                            id, name, description, motion, muscleGroups, equipment, isCustom
                     );
 
-                    // Log the exercise
                     Log.d("ExerciseDAO", logMessage);
                 }
                 Log.d("ExerciseDAO", "===== END OF EXERCISE DATABASE DUMP =====");
@@ -309,7 +317,6 @@ public class ExerciseDAO {
         } catch (Exception e) {
             Log.e("ExerciseDAO", "Error while dumping database to log", e);
         } finally {
-            // Always close the cursor
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }

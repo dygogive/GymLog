@@ -3,5 +3,5 @@
     android:shape="rectangle">
 
     <corners android:radius="24dp"/> <!-- Заокруглені кути -->
-    <solid android:color="@color/fab_background_tint"/> <!-- Фон діалогу -->
+    <solid android:color="@color/my_primary_container"/> <!-- Фон діалогу -->
 </shape>
