@@ -22,6 +22,7 @@
             android:backgroundTint="@color/fab_tint"
             android:ellipsize="end"
             android:hint="@string/training_block_name"
+            android:inputType="text"
             android:maxLength="30"
             android:maxLines="1"
             android:textColor="@color/fab_tint"

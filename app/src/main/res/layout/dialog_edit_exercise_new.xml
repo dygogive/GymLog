@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,12 +16,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/exercise_name"
-            android:singleLine="true"
+            android:importantForAutofill="no"
+            android:inputType="text"
             android:maxLength="30"
+            android:singleLine="true"
             android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Поле Description: 3 рядки, максимум 100 символів -->
         <EditText
@@ -31,9 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="@string/description"
+            android:importantForAutofill="no"
+            android:inputType="text|textMultiLine"
             android:maxLength="100"
             android:maxLines="3"
-            android:inputType="textMultiLine"
             android:ellipsize="end"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/editTextExerciseName"
