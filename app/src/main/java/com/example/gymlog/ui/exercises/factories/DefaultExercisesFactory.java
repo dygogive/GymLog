@@ -22,21 +22,6 @@ public class DefaultExercisesFactory {
     }
 
 
-    public static List<String> getNamesExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeType attributeType, String attribute) {
-        // Отримуємо список вправ за атрибутом через ExerciseDAO
-        List<Exercise> exercises = getExercisesForAttribute(exerciseDAO, attributeType, attribute);
-
-        // Перетворюємо список Exercise на список назв вправ
-        List<String> exerciseNames = new ArrayList<>();
-        for (Exercise exercise : exercises) {
-            exerciseNames.add(exercise.getName());
-        }
-
-        return exerciseNames;
-    }
-
-
-
 
 
     // Метод для створення базових вправ

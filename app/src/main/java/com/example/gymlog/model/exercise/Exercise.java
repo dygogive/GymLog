@@ -4,6 +4,8 @@ package com.example.gymlog.model.exercise;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.gymlog.R;
 
 import java.lang.reflect.Field;
@@ -12,7 +14,7 @@ import java.util.List;
 //test comit user1
 public class Exercise {
 
-    private long id = -1;
+    private long id;
     private String name;
     private String description;
 
@@ -30,6 +32,7 @@ public class Exercise {
         this.equipment = equipment;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;
@@ -86,7 +89,7 @@ public class Exercise {
     }
 
     public String getNameOnly(Context context) {
-        int resId = -1;
+        int resId;
         String value = getName();
         if(!isCustom){
             try {
@@ -95,7 +98,6 @@ public class Exercise {
                 value = context.getString(resId);
             } catch (Exception e) {
                 Log.e("ResourceError", "Ресурс не знайдено для " + name);
-                resId = 0;
             }
             return value;
         } else return name;

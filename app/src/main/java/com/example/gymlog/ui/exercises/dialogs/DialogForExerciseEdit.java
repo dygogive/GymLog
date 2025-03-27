@@ -2,7 +2,6 @@ package com.example.gymlog.ui.exercises.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -141,7 +140,8 @@ public class DialogForExerciseEdit {
                 for (int index : selectedIndices) {
                     preselectedMuscleGroups.add(MuscleGroup.values()[index]);
                 }
-                buttonSelectMuscleGroups.setText(context.getString(R.string.chosed) + ": " + preselectedMuscleGroups.size());
+                String txt = context.getString(R.string.chosed) + ": " + preselectedMuscleGroups.size();
+                buttonSelectMuscleGroups.setText(txt);
             });
             builder.setNegativeButton(R.string.cancel, null);
             builder.show();

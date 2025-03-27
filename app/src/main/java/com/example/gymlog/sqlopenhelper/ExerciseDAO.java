@@ -27,8 +27,10 @@ import java.util.stream.Collectors;
 public class ExerciseDAO {
 
     // База даних (readable / writable) + контекст
-    private final SQLiteDatabase database;
-    private final Context context;
+
+    private final DBHelper dbHelper;
+    Context context;
+
 
     /**
      * Конструктор, що створює DAO на базі DBHelper.
@@ -37,8 +39,8 @@ public class ExerciseDAO {
      * @param context Поточний контекст
      */
     public ExerciseDAO(Context context) {
+        this.dbHelper = new DBHelper(context);
         this.context = context;
-        this.database = new DBHelper(context).getReadableDatabase();
     }
 
     /**
@@ -60,24 +62,26 @@ public class ExerciseDAO {
             Equipment equipment,
             boolean isCustom
     ) {
-        ContentValues values = new ContentValues();
-        values.put("name", exerciseName);
-        values.put("description", description);
-        values.put("motion", motion.name());
-        values.put(
-                "muscleGroups",
-                TextUtils.join(
-                        ",",
-                        muscleGroups.stream()
-                                .map(Enum::name)
-                                .toArray(String[]::new)
-                )
-        );
-        values.put("equipment", equipment.name());
-        values.put("isCustom", isCustom ? 1 : 0);
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            ContentValues values = new ContentValues();
+            values.put("name", exerciseName);
+            values.put("description", description);
+            values.put("motion", motion.name());
+            values.put(
+                    "muscleGroups",
+                    TextUtils.join(
+                            ",",
+                            muscleGroups.stream()
+                                    .map(Enum::name)
+                                    .toArray(String[]::new)
+                    )
+            );
+            values.put("equipment", equipment.name());
+            values.put("isCustom", isCustom ? 1 : 0);
 
-        // Вставляємо запис
-        return database.insert("Exercise", null, values);
+            // Вставляємо запис
+            return database.insert("Exercise", null, values);
+        }
     }
 
     /**
@@ -103,30 +107,33 @@ public class ExerciseDAO {
      * @return true, якщо оновлено успішно
      */
     public boolean updateExercise(Exercise exercise) {
-        ContentValues values = new ContentValues();
-        values.put("name", exercise.getName());
-        values.put("description", exercise.getDescription());
-        values.put("motion", exercise.getMotion().name());
-        values.put(
-                "muscleGroups",
-                TextUtils.join(
-                        ",",
-                        exercise.getMuscleGroupList()
-                                .stream()
-                                .map(Enum::name)
-                                .toArray(String[]::new)
-                )
-        );
-        values.put("equipment", exercise.getEquipment().name());
-        values.put("isCustom", 1); // позначаємо як кастомну
+        int rowsAffected;
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            ContentValues values = new ContentValues();
+            values.put("name", exercise.getName());
+            values.put("description", exercise.getDescription());
+            values.put("motion", exercise.getMotion().name());
+            values.put(
+                    "muscleGroups",
+                    TextUtils.join(
+                            ",",
+                            exercise.getMuscleGroupList()
+                                    .stream()
+                                    .map(Enum::name)
+                                    .toArray(String[]::new)
+                    )
+            );
+            values.put("equipment", exercise.getEquipment().name());
+            values.put("isCustom", 1); // позначаємо як кастомну
 
-        // Оновлюємо запис за ID вправи
-        int rowsAffected = database.update(
-                "Exercise",
-                values,
-                "id = ?",
-                new String[]{String.valueOf(exercise.getId())}
-        );
+            // Оновлюємо запис за ID вправи
+            rowsAffected = database.update(
+                    "Exercise",
+                    values,
+                    "id = ?",
+                    new String[]{String.valueOf(exercise.getId())}
+            );
+        }
 
         return rowsAffected > 0;
     }
@@ -135,10 +142,12 @@ public class ExerciseDAO {
      * Отримуємо список усіх вправ із таблиці "Exercise".
      */
     public List<Exercise> getAllExercises() {
-        // Простий запит SELECT * FROM Exercise
-        return getExercisesFromCursor(
-                database.query("Exercise", null, null, null, null, null, null)
-        );
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            // Простий запит SELECT * FROM Exercise
+            return getExercisesFromCursor(
+                    database.query("Exercise", null, null, null, null, null, null)
+            );
+        }
     }
 
     /**
@@ -161,15 +170,11 @@ public class ExerciseDAO {
                 return new ArrayList<>();
         }
         // Використовуємо rawQuery з готовим запитом
-        return getExercisesFromCursor(database.rawQuery(query, new String[]{attribute}));
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            return getExercisesFromCursor(database.rawQuery(query, new String[]{attribute}));
+        }
     }
 
-    /**
-     * Спеціальний метод для пошуку за конкретною м’язевою групою.
-     */
-    public List<Exercise> getExercisesByMuscle(MuscleGroup muscleGroup) {
-        return getExercisesByAttribute(AttributeType.MUSCLE_GROUP, muscleGroup.name());
-    }
 
     /**
      * Логуємо всі вправи, що є в таблиці Exercise.
@@ -195,13 +200,14 @@ public class ExerciseDAO {
      * @return true, якщо успішно видалено
      */
     public boolean deleteExercise(Exercise exercise) {
-        int rowsDeleted = database.delete(
-                "Exercise",
-                "id = ?",
-                new String[]{String.valueOf(exercise.getId())}
-        );
-        // Закриваємо базу (залежно від архітектури, можливо краще було б у finalize)
-        database.close();
+        int rowsDeleted;
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            rowsDeleted = database.delete(
+                    "Exercise",
+                    "id = ?",
+                    new String[]{String.valueOf(exercise.getId())}
+            );
+        }
         return rowsDeleted > 0;
     }
 
@@ -267,58 +273,61 @@ public class ExerciseDAO {
      * Logs all exercises from the database to Logcat.
      */
     public void voidGetAllDatabaseInLog() {
-        Cursor cursor = null;
-        try {
-            // Query all exercises from the database
-            cursor = database.query(
-                    "Exercise",
-                    null, // всі стовпці
-                    null, // без selection
-                    null, // без selection args
-                    null, // без group by
-                    null, // без having
-                    null  // без order by
-            );
 
-            // Перевіряємо, чи є записи
-            if (cursor != null && cursor.getCount() > 0) {
-                Log.d("ExerciseDAO", "===== START OF EXERCISE DATABASE DUMP =====");
+        try (SQLiteDatabase database = dbHelper.getWritableDatabase()) {
+            Cursor cursor = null;
+            try {
+                // Query all exercises from the database
+                cursor = database.query(
+                        "Exercise",
+                        null, // всі стовпці
+                        null, // без selection
+                        null, // без selection args
+                        null, // без group by
+                        null, // без having
+                        null  // без order by
+                );
 
-                // Отримуємо індекси стовпців
-                int idIndex = cursor.getColumnIndex("id");
-                int nameIndex = cursor.getColumnIndex("name");
-                int descriptionIndex = cursor.getColumnIndex("description");
-                int motionIndex = cursor.getColumnIndex("motion");
-                int muscleGroupsIndex = cursor.getColumnIndex("muscleGroups");
-                int equipmentIndex = cursor.getColumnIndex("equipment");
-                int isCustomIndex = cursor.getColumnIndex("isCustom");
+                // Перевіряємо, чи є записи
+                if (cursor != null && cursor.getCount() > 0) {
+                    Log.d("ExerciseDAO", "===== START OF EXERCISE DATABASE DUMP =====");
 
-                // Ітеруємо всі рядки
-                while (cursor.moveToNext()) {
-                    int id = cursor.getInt(idIndex);
-                    String name = cursor.getString(nameIndex);
-                    String description = cursor.getString(descriptionIndex);
-                    String motion = cursor.getString(motionIndex);
-                    String muscleGroups = cursor.getString(muscleGroupsIndex);
-                    String equipment = cursor.getString(equipmentIndex);
-                    int isCustom = cursor.getInt(isCustomIndex);
+                    // Отримуємо індекси стовпців
+                    int idIndex = cursor.getColumnIndex("id");
+                    int nameIndex = cursor.getColumnIndex("name");
+                    int descriptionIndex = cursor.getColumnIndex("description");
+                    int motionIndex = cursor.getColumnIndex("motion");
+                    int muscleGroupsIndex = cursor.getColumnIndex("muscleGroups");
+                    int equipmentIndex = cursor.getColumnIndex("equipment");
+                    int isCustomIndex = cursor.getColumnIndex("isCustom");
 
-                    @SuppressLint("DefaultLocale") String logMessage = String.format(
-                            "ID: %d | Name: %s | Description: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
-                            id, name, description, motion, muscleGroups, equipment, isCustom
-                    );
+                    // Ітеруємо всі рядки
+                    while (cursor.moveToNext()) {
+                        int id = cursor.getInt(idIndex);
+                        String name = cursor.getString(nameIndex);
+                        String description = cursor.getString(descriptionIndex);
+                        String motion = cursor.getString(motionIndex);
+                        String muscleGroups = cursor.getString(muscleGroupsIndex);
+                        String equipment = cursor.getString(equipmentIndex);
+                        int isCustom = cursor.getInt(isCustomIndex);
 
-                    Log.d("ExerciseDAO", logMessage);
+                        @SuppressLint("DefaultLocale") String logMessage = String.format(
+                                "ID: %d | Name: %s | Description: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
+                                id, name, description, motion, muscleGroups, equipment, isCustom
+                        );
+
+                        Log.d("ExerciseDAO", logMessage);
+                    }
+                    Log.d("ExerciseDAO", "===== END OF EXERCISE DATABASE DUMP =====");
+                } else {
+                    Log.d("ExerciseDAO", "Database is empty - no exercises found");
                 }
-                Log.d("ExerciseDAO", "===== END OF EXERCISE DATABASE DUMP =====");
-            } else {
-                Log.d("ExerciseDAO", "Database is empty - no exercises found");
-            }
-        } catch (Exception e) {
-            Log.e("ExerciseDAO", "Error while dumping database to log", e);
-        } finally {
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+            } catch (Exception e) {
+                Log.e("ExerciseDAO", "Error while dumping database to log", e);
+            } finally {
+                if (cursor != null && !cursor.isClosed()) {
+                    cursor.close();
+                }
             }
         }
     }
