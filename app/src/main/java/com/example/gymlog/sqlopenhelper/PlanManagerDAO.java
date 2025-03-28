@@ -32,13 +32,6 @@ public class PlanManagerDAO {
         this.dbHelper = new DBHelper(context);
     }
 
-    /**
-     * Генерує "?,?,?" для SQL IN (...) залежно від кількості аргументів
-     */
-    private String getPlaceholders(int count) {
-        if (count <= 0) return "";
-        return new String(new char[count]).replace("\0", "?, ").replaceAll(", $", "");
-    }
 
 // -------------------------------------------------------
     //                   Програми (PlanCycles)

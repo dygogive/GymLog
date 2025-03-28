@@ -17,6 +17,7 @@ import com.example.gymlog.model.exercise.MuscleGroup;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * DAO (Data Access Object) для роботи з таблицею "Exercise":
@@ -236,8 +237,7 @@ public class ExerciseDAO {
                     muscleGroups = new ArrayList<>();
                 } else {
                     // Розбиваємо рядок на елементи та перетворюємо у enum
-                    muscleGroups = List.of(muscleGroupsString.split(","))
-                            .stream()
+                    muscleGroups = Stream.of(muscleGroupsString.split(","))
                             .map(String::trim)
                             .map(MuscleGroup::valueOf)
                             .collect(Collectors.toList());
@@ -289,7 +289,7 @@ public class ExerciseDAO {
                 );
 
                 // Перевіряємо, чи є записи
-                if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.getCount() > 0) {
                     Log.d("ExerciseDAO", "===== START OF EXERCISE DATABASE DUMP =====");
 
                     // Отримуємо індекси стовпців
