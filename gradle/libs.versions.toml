@@ -11,7 +11,7 @@ recyclerview = "1.4.0"
 gridlayout = "1.0.0"
 navigationFragment = "2.8.9"
 navigationUi = "2.8.9"
-kotlin = "1.9.24"
+kotlin = "2.0.21"
 coreKtx = "1.15.0"
 
 [libraries]
