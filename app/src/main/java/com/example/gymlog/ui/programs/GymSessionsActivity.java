@@ -277,6 +277,8 @@ public class GymSessionsActivity extends AppCompatActivity {
             // Переходимо до списку блоків (TrainingBlocksActivity)
             Intent intent = new Intent(GymSessionsActivity.this, TrainingBlocksActivity.class);
             intent.putExtra("gym_day_id", gymSession.getId());
+            intent.putExtra("gym_day_name", gymSession.getName());
+            intent.putExtra("gym_day_description", gymSession.getDescription());
             startActivity(intent);
         }
     }

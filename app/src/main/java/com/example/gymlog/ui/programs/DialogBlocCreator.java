@@ -114,6 +114,10 @@ public class DialogBlocCreator extends Dialog {
         Button buttonCancel = findViewById(R.id.buttonCancel);
         Button buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
 
+        buttonSelectMotion.setTag(buttonSelectMotion.getText().toString());
+        buttonSelectMuscle.setTag(buttonSelectMuscle.getText().toString());
+        buttonSelectEquipment.setTag(buttonSelectEquipment.getText().toString());
+
         // Обробники кліків для кнопок вибору фільтрів
         buttonSelectMotion.setOnClickListener(v -> showMultiSelectDialog(
                 "Оберіть рухи",
@@ -203,12 +207,11 @@ public class DialogBlocCreator extends Dialog {
      * Оновлює текст кнопки згідно з кількістю вибраних елементів.
      */
     private void updateButtonText(Button button, List<String> selectedItems) {
-        if (selectedItems.isEmpty()) {
-            button.setText(context.getString(R.string.chose));
+        String baseText = button.getTag().toString();
+        if (!selectedItems.isEmpty()) {
+            button.setText(baseText + " (" + selectedItems.size() + ")");
         } else {
-            String sb = context.getString(R.string.chosed) +
-                    ": " + selectedItems.size();
-            button.setText(sb);
+            button.setText(baseText);
         }
     }
 

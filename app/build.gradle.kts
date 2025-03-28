@@ -14,7 +14,7 @@ android {
         versionName = "1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         signingConfig = signingConfigs.getByName("debug")
-        targetSdk = 34
+        targetSdk = 36
     }
 
     buildTypes {

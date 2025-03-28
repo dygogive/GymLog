@@ -3,6 +3,7 @@ package com.example.gymlog.ui.programs;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -62,6 +63,23 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         recyclerViewTrainingBlocks = findViewById(R.id.recyclerViewTrainingBlocks);
         FloatingActionButton buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
         buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialogByFAB());
+
+        //заголовок актівіті
+        TextView textViewBlockTitle = findViewById(R.id.textViewBlockTitle);
+        TextView textViewBlockDescr = findViewById(R.id.textViewBlockDescription);
+        //заповнити інфою з попереднього актівіті
+        String name = getIntent().getStringExtra("gym_day_name");
+        String description = getIntent().getStringExtra("gym_day_description");
+        textViewBlockTitle.setText(name);
+        textViewBlockDescr.setText(description);
+        //діалог для повної інформації
+        textViewBlockDescr.setOnClickListener(v -> {
+            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                    .setTitle(name)
+                    .setMessage(description)
+                    .setPositiveButton("OK", null)
+                    .show();
+        });
     }
 
     // Налаштування RecyclerView
@@ -79,7 +97,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                 int fromPosition = viewHolder.getBindingAdapterPosition();
                 int toPosition = target.getBindingAdapterPosition();
                 trainingBlockAdapter.moveItem(fromPosition, toPosition);
-                updateTrainingBlockPositionsInDB();
+                planManagerDAO.updateTrainingBlockPositions(trainingBlocks);
                 return true;
             }
 
@@ -91,10 +109,6 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerViewTrainingBlocks);
     }
 
-    // Оновлення позицій блоків у базі даних
-    private void updateTrainingBlockPositionsInDB() {
-        planManagerDAO.updateTrainingBlockPositions(trainingBlocks);
-    }
 
     // Відкриття діалогу створення нового блоку
     private void openBlockCreationDialogByFAB() {
