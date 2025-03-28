@@ -218,9 +218,8 @@ public class ExerciseDAO {
 
     /**
      * Внутрішній метод для формування списку вправ із курсора.
-     *
-     * @param cursor Результат запиту до таблиці Exercise
-     * @return Список об’єктів Exercise
+     * Результат запиту до таблиці Exercise
+     * Список об’єктів Exercise
      */
     // Створюємо статичну мапу для відповідності ключів до ресурсних ID
     private static final Map<String, Integer> EXERCISE_NAME_MAP;
