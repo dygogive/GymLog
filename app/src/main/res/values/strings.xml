@@ -126,10 +126,10 @@
 
     <string name="day_name" translatable="false">Day %1$d</string>
     <string name="day_groups_count" translatable="false">Groups: %1$d</string>
-    <string name="no_exercise_groups" translatable="false">No groups added</string>
-    <string name="edit_day" translatable="false">Edit day</string>
-    <string name="delete_day" translatable="false">Delete Gym Session</string>
-    <string name="description" translatable="false">Description</string>
+    <string name="no_exercise_groups">No groups added</string>
+    <string name="edit_day">Edit training</string>
+    <string name="delete_day">Delete training</string>
+    <string name="description">Description</string>
     <string name="plan_management_title">Fitness Programs</string>
     <string name="add_new_plan">Add New</string>
     <string name="edit_plan">Edit Program Name</string>
@@ -149,7 +149,7 @@
     <string name="save_the_plan">Save the plan</string>
     <string name="edit_name_description">Edit name and description</string>
     <string name="do_you_really_want_to_delete">Do you really want to delete? \"</string>
-    <string name="confirm_deletion">Confirm deletion</string>
+    <string name="confirm_deletion">Confirm deletion!</string>
     <string name="edit">Edit</string>
     <string name="deleted_day">Deleted Gym Session</string>
     <string name="gym_sessions">Gym Sessions</string>
@@ -178,7 +178,7 @@
     <string name="no_block_selected">No block selected</string>
     <string name="do_not_add">Do not add</string>
     <string name="context_menu">Context menu</string>
-    <string name="clone_exercise">Clone</string>
+    <string name="clone_exercise">Clone exercise</string>
     <string name="clone">Clone</string>
     <string name="edit_programs">Programs Editor</string>
     <string name="my_gym_log">My Gym`s Logs</string>

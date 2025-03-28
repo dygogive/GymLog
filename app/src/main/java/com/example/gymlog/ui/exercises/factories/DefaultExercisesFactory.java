@@ -10,7 +10,6 @@ import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.MuscleGroup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

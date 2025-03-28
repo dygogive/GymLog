@@ -83,25 +83,6 @@ public class PlanManagerDAO {
     }
 
 
-    /**
-     * Повертає назву програми за gymDayId
-     */
-    public String getProgramNameByGymDayId(long gymDayId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String name = "Невідомий план";
-
-        Cursor cursor = db.rawQuery(
-                "SELECT p.name FROM PlanCycles p JOIN GymDays g ON p.id = g.plan_id WHERE g.id = ?",
-                new String[]{String.valueOf(gymDayId)}
-        );
-        if (cursor.moveToFirst()) {
-            name = cursor.getString(0);
-        }
-
-        cursor.close();
-        db.close();
-        return name;
-    }
 
     /**
      * Повертає всі програми з їхніми днями
@@ -227,24 +208,6 @@ public class PlanManagerDAO {
         return id;
     }
 
-    /**
-     * Повертає назву дня тренування за його ID.
-     */
-    public String getGymDayNameById(long gymDayId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String name = "Невідомий день";
-
-        Cursor cursor = db.rawQuery(
-                "SELECT day_name FROM GymDays WHERE id = ?",
-                new String[]{String.valueOf(gymDayId)}
-        );
-        if (cursor.moveToFirst()) {
-            name = cursor.getString(0);
-        }
-        cursor.close();
-        db.close();
-        return name;
-    }
 
     /**
      * Оновлює дані GymSession (назву, опис, позицію).
@@ -464,58 +427,6 @@ public class PlanManagerDAO {
 
         cursor.close();
         db.close();
-        return blocks;
-    }
-
-
-    /**
-     * Повертає блоки, які потенційно підходять під задану вправу (фільтри).
-     */
-    public List<TrainingBlock> getTrainingBlocksForExercise(Exercise exercise) {
-        List<TrainingBlock> blocks = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String query =
-                "SELECT DISTINCT tb.id, tb.gym_day_id, tb.name, tb.description " +
-                        "FROM TrainingBlock tb " +
-                        "LEFT JOIN TrainingBlockMotion tbm ON tb.id = tbm.trainingBlockId " +
-                        "LEFT JOIN TrainingBlockMuscleGroup tbg ON tb.id = tbg.trainingBlockId " +
-                        "LEFT JOIN TrainingBlockEquipment tbe ON tb.id = tbe.trainingBlockId " +
-                        "WHERE tbm.motionType = ? " +
-                        "   OR tbg.muscleGroup IN (" + getPlaceholders(exercise.getMuscleGroupList().size()) + ") " +
-                        "   OR tbe.equipment = ?";
-
-        List<String> argsList = new ArrayList<>();
-        argsList.add(exercise.getMotion().name());
-        for (MuscleGroup mg : exercise.getMuscleGroupList()) {
-            argsList.add(mg.name());
-        }
-        argsList.add(exercise.getEquipment().name());
-
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(query, argsList.toArray(new String[0]));
-
-            if (cursor.moveToFirst()) {
-                do {
-                    long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
-                    long gymDayId = cursor.getLong(cursor.getColumnIndexOrThrow("gym_day_id"));
-                    String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-                    String desc = cursor.getString(cursor.getColumnIndexOrThrow("description"));
-
-                    // Створюємо об'єкт TrainingBlock із врахуванням опису
-                    blocks.add(new TrainingBlock(id, gymDayId, name, desc));
-                } while (cursor.moveToNext());
-            }
-        } catch (Exception e) {
-            Log.e("DB_ERROR", "Помилка при пошуку блоків для вправи", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            db.close();
-        }
-
         return blocks;
     }
 
