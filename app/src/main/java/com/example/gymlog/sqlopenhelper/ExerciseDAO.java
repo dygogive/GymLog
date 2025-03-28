@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
@@ -15,7 +16,10 @@ import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.MuscleGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -218,6 +222,25 @@ public class ExerciseDAO {
      * @param cursor Результат запиту до таблиці Exercise
      * @return Список об’єктів Exercise
      */
+    // Створюємо статичну мапу для відповідності ключів до ресурсних ID
+    private static final Map<String, Integer> EXERCISE_NAME_MAP;
+    static {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("exercise_dip_weighted", R.string.exercise_dip_weighted);
+        map.put("exercise_incline_db_press", R.string.exercise_incline_db_press);
+        map.put("exercise_pullup_weighted", R.string.exercise_pullup_weighted);
+        map.put("exercise_db_row", R.string.exercise_db_row);
+        map.put("exercise_squat_barbell", R.string.exercise_squat_barbell);
+        map.put("exercise_deadlift", R.string.exercise_deadlift);
+        // Додайте інші ключі за потребою
+        EXERCISE_NAME_MAP = Collections.unmodifiableMap(map);
+    }
+
+    // Допоміжний метод для отримання ID ресурсу за ключем
+    private Integer getExerciseNameResourceId(String key) {
+        return EXERCISE_NAME_MAP.get(key);
+    }
+
     private List<Exercise> getExercisesFromCursor(Cursor cursor) {
         List<Exercise> exerciseList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -236,21 +259,16 @@ public class ExerciseDAO {
                 if (muscleGroupsString == null || muscleGroupsString.isEmpty()) {
                     muscleGroups = new ArrayList<>();
                 } else {
-                    // Розбиваємо рядок на елементи та перетворюємо у enum
                     muscleGroups = Stream.of(muscleGroupsString.split(","))
                             .map(String::trim)
                             .map(MuscleGroup::valueOf)
                             .collect(Collectors.toList());
                 }
 
-                // Якщо вправа НЕ кастомна, підвантажуємо назву з ресурсів (локалізація)
+                // Якщо вправа НЕ кастомна, підвантажуємо локалізовану назву з ресурсів
                 if (!isCustom) {
-                    int resId = context.getResources().getIdentifier(
-                            name,
-                            "string",
-                            context.getPackageName()
-                    );
-                    if (resId != 0) {
+                    Integer resId = getExerciseNameResourceId(name);
+                    if (resId != null) {
                         name = context.getString(resId);
                     }
                 }
@@ -268,7 +286,6 @@ public class ExerciseDAO {
         cursor.close();
         return exerciseList;
     }
-
     /**
      * Logs all exercises from the database to Logcat.
      */
