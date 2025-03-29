@@ -10,7 +10,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.model.exercise.MuscleGroup;
+
+import java.util.List;
 
 
 // MusclesFragment.java
@@ -31,17 +34,23 @@ public class MusclesFragment extends BaseListFragment {
         return MuscleGroup.class;
     }
 
-
+    @Override
+    public List<ListHeaderAndAttribute> getItems() {
+        return MuscleGroup.getGroupedEquipmentItems(requireContext());
+    }
 
     //що робити якщо ітем вибраний
     @Override
-    protected void onItemSelected(Enum muscleGroup) {
+    protected void onItemSelected(Object item) {
+        MuscleGroup muscleGroup  = (MuscleGroup) item;
+
+
         MuscleGroup[] enums = MuscleGroup.values();
         MuscleGroup enumMuscleGroup = null;
 
         int count = 0;
-        for(Enum item : enums) {
-            if(muscleGroup.equals(item)) enumMuscleGroup = enums[count];
+        for(MuscleGroup muscleGroup1 : enums) {
+            if(muscleGroup1.equals(muscleGroup)) enumMuscleGroup = enums[count];
             else count++;
         }
 

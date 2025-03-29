@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public enum MuscleGroup implements TypeAttributeExercises  {
 
@@ -34,7 +37,7 @@ public enum MuscleGroup implements TypeAttributeExercises  {
         this.descriptionResId = descriptionResId;
     }
 
-    @Override
+
     public int getDescriptionResId() {
         return descriptionResId;
     }
@@ -54,7 +57,7 @@ public enum MuscleGroup implements TypeAttributeExercises  {
         return descriptions;
     }
 
-    @Override
+
     public int getIconResId() {
         return R.drawable.ic_exercise;
     }
@@ -67,6 +70,42 @@ public enum MuscleGroup implements TypeAttributeExercises  {
             }
         }
         return null;
+    }
+
+
+
+    public static List<ListHeaderAndAttribute> getGroupedEquipmentItems(Context context) {
+        List<ListHeaderAndAttribute> items = new ArrayList<>();
+
+        items.add(new HeaderItem(context.getString(R.string.muscle_chest)));
+        items.add(new AttributeItem<>(CHEST_LOWER));
+        items.add(new AttributeItem<>(CHEST_UPPER));
+        items.add(new AttributeItem<>(CHEST));
+
+        items.add(new HeaderItem(context.getString(R.string.muscles_traps)));
+        items.add(new AttributeItem<>(TRAPS_UPPER));
+        items.add(new AttributeItem<>(TRAPS_MIDDLE));
+        items.add(new AttributeItem<>(TRAPS_LOWER));
+
+        items.add(new HeaderItem(context.getString(R.string.muscles_back_other)));
+        items.add(new AttributeItem<>(LATS));
+        items.add(new AttributeItem<>(LONGISSIMUS));
+
+        items.add(new HeaderItem(context.getString(R.string.muscles_arms)));
+        items.add(new AttributeItem<>(TRICEPS));
+        items.add(new AttributeItem<>(BICEPS));
+
+        items.add(new HeaderItem(context.getString(R.string.muscles_delts)));
+        items.add(new AttributeItem<>(DELTS_REAR));
+        items.add(new AttributeItem<>(DELTS_SIDE));
+        items.add(new AttributeItem<>(DELTS_FRONT));
+
+        items.add(new HeaderItem(context.getString(R.string.muscles_legs)));
+        items.add(new AttributeItem<>(GLUTES));
+        items.add(new AttributeItem<>(HAMSTRINGS));
+        items.add(new AttributeItem<>(QUADRICEPS));
+
+        return items;
     }
 
 }

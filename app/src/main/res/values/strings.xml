@@ -188,6 +188,18 @@
     <string name="please_select_all_filters">Chose all selections</string>
     <string name="menu">Menu</string>
     <string name="exe_attribute">Attribute exercise</string>
+    <string name="header_free_weights">Free weights</string>
+    <string name="header_machines">Machines</string>
+    <string name="header_others">Other</string>
+    <string name="press">Press</string>
+    <string name="pull">Pull</string>
+    <string name="press_pull_by_legs">Legs</string>
+    <string name="muscles_traps">Traps</string>
+    <string name="latissimus_dorsi_muscle">Latissimus dorsi muscle</string>
+    <string name="muscles_arms">Arms</string>
+    <string name="muscles_delts">Delts</string>
+    <string name="muscles_legs">Legs</string>
+    <string name="muscles_back_other">Back other</string>
 
 
 </resources>

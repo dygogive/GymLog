@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Equipment implements TypeAttributeExercises {
 
     // Вільна вага
@@ -39,7 +42,7 @@ public enum Equipment implements TypeAttributeExercises {
         this.descriptionResId = descriptionResId;
     }
 
-    @Override
+
     public int getIconResId() {
         return R.drawable.ic_exercise;
     }
@@ -67,7 +70,6 @@ public enum Equipment implements TypeAttributeExercises {
         return descriptions;  // Повертаємо масив з описами
     }
 
-
     public static Equipment getEquipmentByDescription(Context context, String description) {
         Equipment[] equipments = Equipment.values();  // Отримуємо всі елементи перерахування
 
@@ -82,4 +84,28 @@ public enum Equipment implements TypeAttributeExercises {
         return null;  // Якщо не знайдено відповідного опису, повертаємо null
     }
 
+
+    public static List<ListHeaderAndAttribute> getGroupedEquipmentItems(Context context) {
+        List<ListHeaderAndAttribute> items = new ArrayList<>();
+
+        items.add(new HeaderItem(context.getString(R.string.header_free_weights)));
+        items.add(new AttributeItem<>(BARBELL));
+        items.add(new AttributeItem<>(DUMBBELLS));
+        items.add(new AttributeItem<>(KETTLEBELL));
+        items.add(new AttributeItem<>(WEIGHT_PLATE));
+
+        items.add(new HeaderItem(context.getString(R.string.header_machines)));
+        items.add(new AttributeItem<>(BODYWEIGHT));
+        items.add(new AttributeItem<>(MACHINE));
+        items.add(new AttributeItem<>(CABLE_MACHINE));
+        items.add(new AttributeItem<>(PLATE_LOADED_MACHINE));
+
+        items.add(new HeaderItem(context.getString(R.string.header_others)));
+        items.add(new AttributeItem<>(RESISTANCE_BAND));
+        items.add(new AttributeItem<>(SANDBAG));
+        items.add(new AttributeItem<>(MEDICINE_BALL));
+        items.add(new AttributeItem<>(SUSPENSION_TRAINER));
+
+        return items;
+    }
 }

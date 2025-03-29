@@ -14,7 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
+import com.example.gymlog.model.exercise.AttributeItem;
 import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
+
+import java.util.Collections;
+import java.util.List;
 
 
 public class AttributeListFragment extends BaseListFragment {
@@ -36,10 +41,18 @@ public class AttributeListFragment extends BaseListFragment {
     }
 
     @Override
-    protected void onItemSelected(Enum attributeType) {
-        if (attributeType == null) {
-            throw new IllegalArgumentException("attributeType не може бути null");
+    public List<ListHeaderAndAttribute> getItems() {
+        return AttributeType.getGroupedEquipmentItems(requireContext());
+    }
+
+    @Override
+    protected void onItemSelected(Object item) {
+        if (!(item instanceof AttributeType)) {
+            Log.d("enumTest", "Clicked header or unknown item type");
+            return;  // Пропускаємо, якщо натиснуто заголовок
         }
+
+        AttributeType attributeType = (AttributeType) item;
 
         Fragment fragment;
 
@@ -49,8 +62,7 @@ public class AttributeListFragment extends BaseListFragment {
             fragment = new EquipmentFragment();
         } else if (attributeType.equals(MOTION)) {
             fragment = new MotionsFragment();
-        } else {// Логування для відладки, якщо буде невідоме значення
-            Log.d("enumTest", "Невідоме значення enum: " + attributeType);
+        } else {
             throw new IllegalStateException("Несподіване значення: " + attributeType);
         }
 
@@ -60,4 +72,5 @@ public class AttributeListFragment extends BaseListFragment {
                 .addToBackStack(null)
                 .commit();
     }
+
 }

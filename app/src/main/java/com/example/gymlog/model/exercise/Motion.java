@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Motion  implements  TypeAttributeExercises {
 
     PRESS_UPWARDS(R.string.motion_press_upwards),
@@ -30,12 +33,12 @@ public enum Motion  implements  TypeAttributeExercises {
         this.descriptionResId = descriptionResId;
     }
 
-    @Override
+
     public int getDescriptionResId() {
         return descriptionResId;
     }
 
-    @Override
+
     public int getIconResId() {
         return R.drawable.ic_exercise;
     }
@@ -62,6 +65,32 @@ public enum Motion  implements  TypeAttributeExercises {
             }
         }
         return null;
+    }
+
+
+
+    public static List<ListHeaderAndAttribute> getGroupedEquipmentItems(Context context) {
+        List<ListHeaderAndAttribute> items = new ArrayList<>();
+
+        items.add(new HeaderItem(context.getString(R.string.press)));
+        items.add(new AttributeItem<>(PRESS_UPWARDS));
+        items.add(new AttributeItem<>(PRESS_DOWNWARDS));
+        items.add(new AttributeItem<>(PRESS_MIDDLE));
+        items.add(new AttributeItem<>(PRESS_UP_MIDDLE));
+        items.add(new AttributeItem<>(PRESS_DOWN_MIDDLE));
+
+        items.add(new HeaderItem(context.getString(R.string.pull)));
+        items.add(new AttributeItem<>(PULL_UPWARDS));
+        items.add(new AttributeItem<>(PULL_DOWNWARDS));
+        items.add(new AttributeItem<>(PULL_MIDDLE));
+        items.add(new AttributeItem<>(PULL_UP_MIDDLE));
+        items.add(new AttributeItem<>(PULL_DOWN_MIDDLE));
+
+        items.add(new HeaderItem(context.getString(R.string.press_pull_by_legs)));
+        items.add(new AttributeItem<>(PRESS_BY_LEGS));
+        items.add(new AttributeItem<>(PULL_BY_LEGS));
+
+        return items;
     }
 
 }

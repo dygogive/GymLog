@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.model.exercise.TypeAttributeExercises;
 import com.example.gymlog.ui.exercises.adapters.AttributeAdapter;
 
@@ -47,13 +48,13 @@ public abstract class BaseListFragment<E extends Enum<E> & TypeAttributeExercise
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new AttributeAdapter(
-                TypeAttributeExercises.getEnumItems(getClassEnumAttribute()),
+                getItems(),
                 this::onItemSelected
         );
         recyclerView.setAdapter(adapter);
     }
 
-
+    public abstract List<ListHeaderAndAttribute> getItems();
 
 
     //взяти ресурс - це канва на якій буде прорисовано елемент списку
@@ -62,6 +63,6 @@ public abstract class BaseListFragment<E extends Enum<E> & TypeAttributeExercise
     }
 
     //Реалізація методу слухача натискання на елемент списку
-    protected abstract void onItemSelected(Enum item);
+    protected abstract void onItemSelected(Object item);
 
 }

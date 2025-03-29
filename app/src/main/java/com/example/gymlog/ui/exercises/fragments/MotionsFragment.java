@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
 import com.example.gymlog.model.exercise.Equipment;
+import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.TypeAttributeExercises;
 
@@ -36,15 +37,22 @@ public class MotionsFragment extends BaseListFragment {
         return Motion.class;
     }
 
+    @Override
+    public List<ListHeaderAndAttribute> getItems() {
+        return Motion.getGroupedEquipmentItems(requireContext());
+    }
+
     //що робити якщо ітем вибраний
     @Override
-    protected void onItemSelected(Enum motion) {
+    protected void onItemSelected(Object item) {
+        Motion motion = (Motion) item;
+
         Motion[] enums = Motion.values();
         Motion enumMotion = null;
 
         int count = 0;
-        for(Enum item : enums) {
-            if(motion.equals(item)) enumMotion = enums[count];
+        for(Motion motion1 : enums) {
+            if(motion1.equals(item)) enumMotion = enums[count];
             else count++;
         }
 

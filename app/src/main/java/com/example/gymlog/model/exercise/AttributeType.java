@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum AttributeType implements TypeAttributeExercises {
 
     EQUIPMENT(R.string.equipment_type),
@@ -29,7 +32,7 @@ public enum AttributeType implements TypeAttributeExercises {
         return R.drawable.ic_exercise; // Щось за замовчуванням
     }
 
-    @Override
+
     public int getDescriptionResId() {
         return descriptionResId;
     }
@@ -46,5 +49,17 @@ public enum AttributeType implements TypeAttributeExercises {
     //видати текст опису м'язевої групи
     public String getDescription(Context context) {
         return context.getString(descriptionResId);
+    }
+
+
+    public static List<ListHeaderAndAttribute> getGroupedEquipmentItems(Context context) {
+        List<ListHeaderAndAttribute> items = new ArrayList<>();
+
+
+        items.add(new AttributeItem<>(MUSCLE_GROUP));
+        items.add(new AttributeItem<>(EQUIPMENT));
+        items.add(new AttributeItem<>(MOTION));
+
+        return items;
     }
 }

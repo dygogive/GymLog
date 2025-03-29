@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
 import com.example.gymlog.model.exercise.Equipment;
+import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.model.exercise.TypeAttributeExercises;
 
 import java.util.Arrays;
@@ -36,15 +37,22 @@ public class EquipmentFragment extends BaseListFragment {
         return Equipment.class;
     }
 
+    @Override
+    public List<ListHeaderAndAttribute> getItems() {
+        return Equipment.getGroupedEquipmentItems(requireContext());
+    }
+
 
     @Override
-    protected void onItemSelected(Enum equipment) {
+    protected void onItemSelected(Object item) {
+        Equipment equipment = (Equipment) item;
+
         Equipment[] enums = Equipment.values();
         Equipment enumEquip = null;
 
         int count = 0;
-        for(Enum item : enums) {
-            if(equipment.equals(item)) enumEquip = enums[count];
+        for(Equipment equipment1 : enums) {
+            if(equipment1.equals(item)) enumEquip = enums[count];
             else count++;
         }
 
