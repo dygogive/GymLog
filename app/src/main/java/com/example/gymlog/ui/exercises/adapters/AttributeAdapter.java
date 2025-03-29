@@ -49,7 +49,6 @@ public class AttributeAdapter<E extends Enum<E> & TypeAttributeExercises> extend
         E attribute = items.get(position);
 
         // Якщо у вашому Enum є метод для отримання опису та іконки:
-        holder.iconImageView.setImageResource(attribute.getIconResId());
         holder.titleTextView.setText(attribute.getDescription(context));
 
         // Обробник кліку по всьому ітемі
@@ -63,12 +62,12 @@ public class AttributeAdapter<E extends Enum<E> & TypeAttributeExercises> extend
 
     // 3) ViewHolder знаходить View за ID
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView iconImageView;
+
         TextView titleTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            iconImageView = itemView.findViewById(R.id.iconImageView);
+
             titleTextView = itemView.findViewById(R.id.titleTextView);
         }
     }

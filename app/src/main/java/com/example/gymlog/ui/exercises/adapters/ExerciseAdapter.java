@@ -56,6 +56,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         Exercise exercise = exercises.get(position);
         Context context = holder.itemView.getContext();
 
+        // Початково приховати деталі
+        holder.setExpandedState(exercise.isExpanded());
+        holder.itemView.setOnClickListener(v -> {
+            exercise.setExpanded(!exercise.isExpanded());
+            notifyItemChanged(position);  // перерисовує айтем
+        });
+
         holder.exerciseName.setText(exercise.getName());
 
         String description = exercise.getDescription();
@@ -75,16 +82,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.exerciseEquipment.setText(context.getString(R.string.equipment) + ": " + exercise.getEquipment().getDescription(context));
 
         holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));
-        holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
 
-        // Оновлюємо стан згортання
-        holder.setExpandedState(exercise.isExpanded());
-
-        // Клік на dragHandle — оновлює модель
-        holder.dragHandle.setOnClickListener(v -> {
-            exercise.setExpanded(!exercise.isExpanded());
-            notifyItemChanged(position);
-        });
     }
 
 
@@ -100,7 +98,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         TextView exerciseName, exerciseDescription, exerciseMotion, exerciseMuscles, exerciseEquipment;
         ImageButton editButton;
-        ImageView dragHandle;
 
         private boolean isExpanded = false;
 
@@ -112,25 +109,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             exerciseMuscles = itemView.findViewById(R.id.exerciseMuscles);
             exerciseEquipment = itemView.findViewById(R.id.exerciseEquipment);
             editButton = itemView.findViewById(R.id.buttonInfo);
-            dragHandle = itemView.findViewById(R.id.dragHandle);
-
-            // Початково приховати деталі
-            setExpandedState(false);
-
-            dragHandle.setOnClickListener(v -> {
-                isExpanded = !isExpanded;
-                setExpandedState(isExpanded);
-            });
         }
 
-        private void setExpandedState(boolean expanded) {
-            int visibility = expanded ? View.VISIBLE : View.GONE;
+        public void setExpandedState(boolean expanded) {
+            this.isExpanded = expanded;
 
+            int visibility = expanded ? View.VISIBLE : View.GONE;
             exerciseMotion.setVisibility(visibility);
             exerciseMuscles.setVisibility(visibility);
             exerciseEquipment.setVisibility(visibility);
-
-            dragHandle.setImageResource(expanded ? R.drawable.ic_collapse : R.drawable.ic_expand);
         }
     }
 

@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_activity"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
     tools:context=".ui.MainActivity">
 
     <!-- Заголовок -->
