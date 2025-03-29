@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/my_on_primary_container"
+    android:background="@color/background_card"
     android:padding="16dp">
 
     <!-- Заголовок діалогу -->
@@ -11,45 +11,43 @@
         android:id="@+id/textViewDialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/fab_background_tint"
         android:text="Додати тренувальний день"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Поле для введення назви тренувального дня -->
+    <!-- Назва дня -->
     <EditText
         android:id="@+id/editTextDayName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Назва дня"
-        android:textColor="@color/fab_tint"
-        android:textColorHint="@color/fab_tint"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewDialogTitle" />
 
-    <!-- Поле для введення опису тренувального дня -->
+    <!-- Опис дня -->
     <EditText
         android:id="@+id/editTextDayDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/fab_tint"
         android:hint="Опис дня"
-        android:textColor="@color/fab_tint"
-        android:textColorHint="@color/fab_tint"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_hint"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextDayName" />
 
-    <!-- Кнопки "Скасувати" і "Зберегти" -->
+    <!-- Кнопки -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,9 +62,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/my_on_background"
+            android:backgroundTint="@color/button_secondary"
             android:text="Скасувати"
-            android:textColor="@color/text_color"
+            android:textColor="@color/button_text_secondary"
             android:textSize="16sp" />
 
         <Button
@@ -75,9 +73,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/my_on_background"
+            android:backgroundTint="@color/button_primary"
             android:text="Зберегти"
-            android:textColor="@color/text_color"
+            android:textColor="@color/button_text_primary"
             android:textSize="16sp" />
     </LinearLayout>
 

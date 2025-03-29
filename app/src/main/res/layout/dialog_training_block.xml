@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +10,7 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/my_on_primary_container"
+        android:background="@color/background_card"
         android:padding="16dp">
 
         <!-- Назва блоку -->
@@ -21,14 +20,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:autofillHints=""
-            android:backgroundTint="@color/fab_tint"
+            android:backgroundTint="@color/background_card"
             android:ellipsize="end"
             android:hint="@string/training_block_name"
             android:inputType="text"
             android:maxLength="30"
             android:maxLines="1"
-            android:textColor="@color/fab_tint"
-            android:textColorHint="@color/fab_tint"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,31 +41,30 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:autofillHints=""
-            android:backgroundTint="@color/fab_tint"
+            android:backgroundTint="@color/background_card"
             android:ellipsize="end"
             android:hint="@string/descr_block"
             android:inputType="textMultiLine"
             android:maxLength="200"
             android:maxLines="6"
-            android:textColor="@color/fab_tint"
-            android:textColorHint="@color/fab_tint"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editTextBlockName" />
 
         <!-- Фільтри -->
-
         <Button
             android:id="@+id/buttonSelectMotion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/my_on_secondary_container"
+            android:backgroundTint="@color/button_primary"
             android:text="@string/moove_type"
-            android:textColor="@color/fab_tint"
+            android:textColor="@color/button_text_primary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,15 +77,14 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/my_on_secondary_container"
+            android:backgroundTint="@color/button_primary"
             android:text="@string/muscle_groups"
-            android:textColor="@color/fab_tint"
+            android:textColor="@color/button_text_primary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSelectMotion" />
 
-        <!-- Кнопки "Скасувати" та "Зберегти" -->
         <Button
             android:id="@+id/buttonSelectEquipment"
             android:layout_width="0dp"
@@ -95,23 +92,24 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/my_on_secondary_container"
+            android:backgroundTint="@color/button_primary"
             android:text="@string/equipment_type"
-            android:textColor="@color/fab_tint"
+            android:textColor="@color/button_text_primary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSelectMuscle" />
 
+        <!-- Кнопки знизу -->
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/my_on_secondary_container"
+            android:backgroundTint="@color/button_secondary"
             android:text="@string/cancel"
-            android:textColor="@color/fab_tint"
+            android:textColor="@color/button_text_secondary"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/buttonSelectEquipment" />
@@ -122,9 +120,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/my_on_secondary_container"
+            android:backgroundTint="@color/button_primary"
             android:text="@string/save"
-            android:textColor="@color/fab_tint"
+            android:textColor="@color/button_text_primary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSelectEquipment" />

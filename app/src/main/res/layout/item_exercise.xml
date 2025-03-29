@@ -1,90 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@color/background"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/my_primary_container"
-        android:padding="0dp">
-
+        android:padding="8dp">
 
         <!-- Назва вправи -->
-
-        <!-- Деталі вправи -->
-
-        <!-- Кнопка для редагування -->
         <TextView
             android:id="@+id/nameExercise"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:ellipsize="end"
-            android:maxLines="2"
             android:text="@string/exercise"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/textViewExerciseDetails"
-            app:layout_constraintEnd_toStartOf="@+id/buttonInfo"
+            android:textColor="@color/text_primary"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonInfo"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Опис вправи -->
         <TextView
-            android:id="@+id/textViewExerciseDetails"
+            android:id="@+id/exerciseDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:ellipsize="end"
-            android:text="Details about the exercise"
-            android:textColor="#ABABAB"
+            android:text="Опис вправи"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/nameExercise"
-            app:layout_constraintStart_toStartOf="@+id/nameExercise"
-            app:layout_constraintTop_toBottomOf="@+id/nameExercise" />
+            android:textStyle="italic"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/nameExercise"
+            app:layout_constraintEnd_toEndOf="@id/nameExercise"
+            app:layout_constraintTop_toBottomOf="@id/nameExercise" />
 
+        <!-- Тип руху -->
+        <TextView
+            android:id="@+id/exerciseMotion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Тип руху"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="@id/nameExercise"
+            app:layout_constraintEnd_toEndOf="@id/nameExercise"
+            app:layout_constraintTop_toBottomOf="@id/exerciseDescription" />
+
+        <!-- Групи м'язів -->
+        <TextView
+            android:id="@+id/exerciseMuscles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="М'язи"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="@id/nameExercise"
+            app:layout_constraintEnd_toEndOf="@id/nameExercise"
+            app:layout_constraintTop_toBottomOf="@id/exerciseMotion" />
+
+        <!-- Спорядження -->
+        <TextView
+            android:id="@+id/exerciseEquipment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Спорядження"
+            android:textSize="16sp"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="@id/nameExercise"
+            app:layout_constraintEnd_toEndOf="@id/nameExercise"
+            app:layout_constraintTop_toBottomOf="@id/exerciseMuscles"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Кнопка редагування -->
         <ImageButton
             android:id="@+id/buttonInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/edit_exercise"
-            android:padding="8dp"
             android:src="@drawable/ic_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/primary" />
+            app:tint="@color/button_primary" />
 
-        <ImageButton
-            android:id="@+id/buttonExpandDetails"
+        <!-- Drag handle -->
+        <ImageView
+            android:id="@+id/dragHandle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/expand_details"
-            android:padding="8dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_expand"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/buttonInfo"
-            app:layout_constraintStart_toStartOf="@+id/buttonInfo"
-            app:layout_constraintTop_toBottomOf="@+id/buttonInfo"
-            app:layout_constraintVertical_bias="1.0"
-            app:tint="@color/primary" />
-
+            app:tint="@color/button_secondary"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/buttonInfo"
+            app:layout_constraintEnd_toEndOf="@id/buttonInfo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>

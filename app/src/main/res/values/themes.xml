@@ -1,28 +1,28 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.MyApp" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Кольори \"Primary\" -->
-        <item name="colorPrimary">@color/my_primary</item>
-        <item name="colorOnPrimary">@color/my_on_primary</item>
-        <item name="colorPrimaryContainer">@color/my_primary_container</item>
-        <item name="colorOnPrimaryContainer">@color/my_on_primary_container</item>
+        <!-- Primary -->
+        <item name="colorPrimary">@color/button_primary</item>
+        <item name="colorOnPrimary">@color/button_text_primary</item>
+        <item name="colorPrimaryContainer">@color/background_card</item>
+        <item name="colorOnPrimaryContainer">@color/text_primary</item>
 
-        <!-- Кольори \"Secondary\" -->
-        <item name="colorSecondary">@color/my_secondary</item>
-        <item name="colorOnSecondary">@color/my_on_secondary</item>
-        <item name="colorSecondaryContainer">@color/my_secondary_container</item>
-        <item name="colorOnSecondaryContainer">@color/my_on_secondary_container</item>
+        <!-- Secondary -->
+        <item name="colorSecondary">@color/button_secondary</item>
+        <item name="colorOnSecondary">@color/button_text_secondary</item>
+        <item name="colorSecondaryContainer">@color/background_card</item>
+        <item name="colorOnSecondaryContainer">@color/text_secondary</item>
 
-        <!-- Кольори \"Surface\" -->
-        <item name="colorSurface">@color/my_surface</item>
-        <item name="colorOnSurface">@color/my_on_surface</item>
-        <item name="colorSurfaceVariant">@color/my_surface_variant</item>
+        <!-- Surface -->
+        <item name="colorSurface">@color/background_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/text_hint</item>
 
-        <!-- Фон загальний -->
-        <item name="android:colorBackground">@color/my_background</item>
-        <item name="colorOnBackground">@color/my_on_background</item>
+        <!-- Background -->
+        <item name="android:colorBackground">@color/background_activity</item>
+        <item name="colorOnBackground">@color/text_primary</item>
 
-        <!-- Android системні кольори (для вікна, статусу) -->
+        <!-- System -->
         <item name="android:windowBackground">?attr/android:colorBackground</item>
         <item name="android:navigationBarColor">?attr/android:colorBackground</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>

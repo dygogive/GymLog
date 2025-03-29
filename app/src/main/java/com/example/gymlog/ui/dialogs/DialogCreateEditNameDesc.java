@@ -45,11 +45,10 @@ public class DialogCreateEditNameDesc extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_edit_name_description);
 
-
+        // Не обов’язково, якщо стиль вже задає фон
         if (getWindow() != null) {
-            getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+            getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            // getWindow().setBackgroundDrawableResource(R.drawable.dialog_background); // можна прибрати
         }
 
         TextView idtextViewDialogTitle = findViewById(R.id.textViewDialogTitle);
@@ -58,33 +57,32 @@ public class DialogCreateEditNameDesc extends Dialog {
         Button buttonCancel = findViewById(R.id.buttonCancel);
         Button buttonSave = findViewById(R.id.buttonSave);
 
-        //встановити заголовок
+        // Заголовок
         idtextViewDialogTitle.setText(titleDialog);
 
-        // Встановлюємо поточний текст, а не hint
+        // Початкові значення
         editTextName.setText(currentName);
         editTextDescription.setText(currentDescription);
 
-        // Кнопка "Скасувати"
+        // Кнопки
         buttonCancel.setOnClickListener(v -> dismiss());
 
-        // Кнопка "Зберегти"
         buttonSave.setOnClickListener(v -> {
             String newName = editTextName.getText().toString().trim();
-
-            // Перевірка: назва не може бути порожньою
             if (newName.isEmpty()) {
                 editTextName.setError(getContext().getString(R.string.set_name));
                 return;
             }
 
             String newDescription = editTextDescription.getText().toString().trim();
-
-            // Якщо користувач залишив поле порожнім, залишаємо старе значення
             if (newDescription.isEmpty()) newDescription = currentDescription;
 
             listener.onEditConfirmed(newName, newDescription);
             dismiss();
         });
+
+        // 🎨 Стилізуємо кнопки через DialogStyler
+        DialogStyler.styleButtonsInDialog(getContext(), buttonSave, buttonCancel);
     }
+
 }

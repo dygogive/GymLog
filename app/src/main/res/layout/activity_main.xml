@@ -5,19 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_activity"
     tools:context=".ui.MainActivity">
 
     <!-- Заголовок -->
-
-    <!-- CardView 1 -->
-
     <TextView
         android:id="@+id/textViewLOGO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_gym_log"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_primary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,6 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.16000003" />
 
+    <!-- Картка: Редактор вправ -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardNewExercises"
         android:layout_width="250dp"
@@ -43,7 +41,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
+            android:background="@color/background_card"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -57,13 +55,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/exe_editor"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Картка: Програми тренувань -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardPrograms"
         android:layout_width="250dp"
@@ -81,7 +80,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/my_primary_container"
+            android:background="@color/background_card"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
@@ -95,12 +94,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/edit_programs"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

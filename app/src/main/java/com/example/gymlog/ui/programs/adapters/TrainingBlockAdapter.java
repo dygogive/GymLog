@@ -231,7 +231,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
             Drawable icon = item.getIcon();
             if (icon != null) {
                 icon.mutate();
-                icon.setTint(ContextCompat.getColor(context, R.color.text_color));
+                icon.setTint(ContextCompat.getColor(context, R.color.text_hint));
                 item.setIcon(icon);
             }
         }

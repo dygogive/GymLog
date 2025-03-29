@@ -135,7 +135,7 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
                 Drawable icon = item1.getIcon();
                 if (icon != null) {
                     icon.mutate(); // щоб не змінювати глобальний ресурс
-                    icon.setTint(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_color)); // або Color.RED
+                    icon.setTint(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_hint)); // або Color.RED
                     item1.setIcon(icon);
                 }
             }

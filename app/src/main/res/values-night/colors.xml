@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Базовий фон і текст -->
-    <color name="background">#121212</color> <!-- Темний глибокий чорний -->
-    <color name="text_color">#B0B0B0</color> <!-- Другорядний текст -->
+    <!-- 🌚 Темна тема -->
 
-    <!-- FAB -->
-    <color name="fab_tint">#C1C1C1</color>
-    <color name="fab_background_tint">#2C2C2C</color>
+    <!-- Фон всієї активності -->
+    <color name="background_activity">#121212</color>
 
-    <!-- Основні кольори -->
-    <color name="my_primary">#26324E</color> <!-- Темно-синій -->
-    <color name="my_on_primary">#FFFFFF</color>
+    <!-- Фон карток, item'ів RecyclerView -->
+    <color name="background_card">#1E1E1E</color>
 
-    <color name="my_primary_container">#374B74</color> <!-- Світліший синій -->
-    <color name="my_on_primary_container">#2C3D61</color>
+    <!-- Основний текст -->
+    <color name="text_primary">#E0E0E0</color>
 
-    <color name="my_secondary">#7793B8</color> <!-- Сірий для другорядних елементів -->
-    <color name="my_on_secondary">#FFFFFF</color>
+    <!-- Другорядний текст -->
+    <color name="text_secondary">#B3B3B3</color>
 
-    <color name="my_secondary_container">#393E56</color>
-    <color name="my_on_secondary_container">#384C68</color>
+    <!-- Підказки, текст-заповнювач (hint) -->
+    <color name="text_hint">#616161</color>
 
+    <!-- Головні кнопки: фон -->
+    <color name="button_primary">#03A9F4</color>
 
-    <!-- Фон і поверхні -->
-    <color name="my_surface_variant">#2A2A2A</color>
+    <!-- Другорядні кнопки: фон -->
+    <color name="button_secondary">#37474F</color>
 
-    <color name="my_background">#121212</color>
-    <color name="my_on_background">#1E2756</color>
+    <!-- Текст на основних кнопках -->
+    <color name="button_text_primary">#FFFFFF</color>
+
+    <!-- Текст на другорядних кнопках -->
+    <color name="button_text_secondary">#CFD8DC</color>
+
+    <!-- Акцент: виділення, поточний вибір -->
+    <color name="accent_color">#FFB300</color>
+
+    <!-- Іконка drag handle (ручка для перетягування) -->
+    <color name="drag_handle">#546E7A</color>
+
+    <!-- Фон Snackbar -->
+    <color name="snackbar_background">#FFFFFF</color>
+
+    <!-- Текст у Snackbar -->
+    <color name="snackbar_text">#212121</color>
+
 </resources>

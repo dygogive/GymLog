@@ -5,35 +5,35 @@
     <item
         android:id="@+id/menu_edit_exercises"
         android:title="@string/exercises_edit"
-        app:iconTint="@color/text_color"
+        app:iconTint="@color/text_primary"
         android:icon="@drawable/baseline_brush_24"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_add_exercise"
         android:title="@string/add_exercise"
-        app:iconTint="@color/text_color"
+        app:iconTint="@color/text_primary"
         android:icon="@drawable/ic_add"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_edit_block"
         android:title="@string/train_block_edit"
-        app:iconTint="@color/text_color"
+        app:iconTint="@color/text_primary"
         android:icon="@drawable/ic_edit"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_clone_block"
         android:title="@string/clone"
-        app:iconTint="@color/text_color"
+        app:iconTint="@color/text_primary"
         android:icon="@drawable/baseline_copy_all_24"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_delete_block"
         android:title="@string/delete_training_block"
-        app:iconTint="@color/text_color"
+        app:iconTint="@color/text_primary"
         android:icon="@drawable/ic_delete"
         app:showAsAction="never" />
 

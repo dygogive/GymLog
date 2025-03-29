@@ -4,7 +4,7 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background_activity">
 
     <!-- FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -15,6 +15,6 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_exercise"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/fab_background_tint"
-        app:tint="@color/fab_tint" />
+        app:backgroundTint="@color/button_primary"
+        app:tint="@color/button_text_primary" />
 </FrameLayout>

@@ -4,15 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_activity"
     android:padding="8dp"
     tools:context=".ui.programs.GymSessionsActivity">
-
-
-
-
-
-
 
     <!-- Заголовок назва програми -->
     <TextView
@@ -22,13 +16,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/program_title"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_primary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <!-- Опис програми -->
     <TextView
@@ -38,7 +31,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="8dp"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:maxLines="2"
         android:ellipsize="end"
@@ -60,7 +53,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
     <!-- Floating Action Button для додавання дня -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAddDay"
@@ -70,9 +62,9 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_training_block"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/fab_background_tint"
+        app:backgroundTint="@color/button_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/fab_tint" />
+        app:tint="@color/button_text_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

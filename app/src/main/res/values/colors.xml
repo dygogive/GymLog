@@ -1,33 +1,44 @@
 <resources>
-    <color name="background">#E7E7E7</color>
-    <color name="text_color">#3C3C3C</color>
-    <color name="fab_tint">#5D5D5D</color>
-    <color name="fab_background_tint">#B6B6B6</color>
+    <!-- 🌞 Світла тема -->
 
-    <color name="primary">#615F5F</color>          <!-- Приклад фіолетового, можеш замінити на свій -->
-    <color name="primary_variant">#818080</color> <!-- Темніший відтінок -->
+    <!-- Фон всієї активності -->
+    <color name="background_activity">#FAFAFA</color>
 
-    <!-- Якщо є посилання на інші кольори: secondary, accent, і т.д.
-    <color name="secondary">#03DAC5</color>
-    <color name="accent">#FF018786</color>
-    -->
+    <!-- Фон карток, item'ів RecyclerView -->
+    <color name="background_card">#FFFFFF</color>
 
-    <!-- Приклад \"my\" кольорів -->
-    <color name="my_primary">#B1ADAD</color>
-    <color name="my_on_primary">#8C8C8C</color>
-    <color name="my_primary_container">#D7D6D6</color>
-    <color name="my_on_primary_container">#CAC7C7</color>
+    <!-- Основний текст (заголовки, основна інформація) -->
+    <color name="text_primary">#212121</color>
 
-    <color name="my_secondary">#6D6C6A</color>
-    <color name="my_on_secondary">#EBEBEB</color>
-    <color name="my_secondary_container">#DBD8D8</color>
-    <color name="my_on_secondary_container">#D3D3D3</color>
+    <!-- Другорядний текст (підписи, додаткова інформація) -->
+    <color name="text_secondary">#757575</color>
 
-    <color name="my_surface">#BDBDBD</color>
-    <color name="my_on_surface">#403E3E</color>
-    <color name="my_surface_variant">#E4E3E3</color>
+    <!-- Підказки, текст-заповнювач (hint) -->
+    <color name="text_hint">#BDBDBD</color>
 
-    <color name="my_background">#E4E2E2</color>
-    <color name="my_on_background">#CAC9C8</color>
+    <!-- Головні кнопки: фон -->
+    <color name="button_primary">#2196F3</color>
+
+    <!-- Другорядні кнопки: фон -->
+    <color name="button_secondary">#EEEEEE</color>
+
+    <!-- Текст на основних кнопках -->
+    <color name="button_text_primary">#FFFFFF</color>
+
+    <!-- Текст на другорядних кнопках -->
+    <color name="button_text_secondary">#212121</color>
+
+    <!-- Акцент: наприклад, вибраний блок, виділення -->
+    <color name="accent_color">#FFC107</color>
+
+    <!-- Іконка drag handle (ручка для перетягування) -->
+    <color name="drag_handle">#B0BEC5</color>
+
+    <!-- Фон Snackbar (сповіщення знизу) -->
+    <color name="snackbar_background">#323232</color>
+
+    <!-- Текст у Snackbar -->
+    <color name="snackbar_text">#FFFFFF</color>
+
 
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_activity"
     android:padding="8dp"
     tools:context=".ui.programs.FitnessProgramsActivity">
 
@@ -16,15 +16,13 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/plan_management_title"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_primary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Список планів -->
-
-    <!-- FloatingActionButton для додавання нового плану -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPlans"
         android:layout_width="0dp"
@@ -40,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewPlanTitle"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- FloatingActionButton для додавання нового плану -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddPlan"
         android:layout_width="wrap_content"
@@ -47,9 +46,8 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_new_plan"
         android:src="@drawable/ic_add"
-        app:backgroundTint="@color/fab_background_tint"
+        app:backgroundTint="@color/button_primary"
+        app:tint="@color/button_text_primary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/fab_tint" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

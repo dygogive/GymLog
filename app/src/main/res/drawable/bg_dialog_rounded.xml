@@ -1,14 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-
-    <!-- Колір фону діалогу -->
-    <solid android:color="@color/background" />
-
-    <!-- Заокруглені кути -->
+    <solid android:color="@color/background_card" />
     <corners android:radius="16dp" />
-
-    <!-- Можна додати відступ (padding) усередині -->
-    <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp"/>
 </shape>
-

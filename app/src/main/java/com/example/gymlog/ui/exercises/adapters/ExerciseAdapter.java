@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,34 +56,38 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         Exercise exercise = exercises.get(position);
         Context context = holder.itemView.getContext();
 
-        // Використання getDescription для отримання ресурсних рядків
-        String motionDescription = exercise.getMotion().getDescription(context);
-        String equipmentDescription = exercise.getEquipment().getDescription(context);
+        holder.exerciseName.setText(exercise.getName());
+
+        String description = exercise.getDescription();
+        holder.exerciseDescription.setText(description != null ? description : "");
+
+        holder.exerciseMotion.setText(context.getString(R.string.motion) + ": " + exercise.getMotion().getDescription(context));
+
         List<MuscleGroup> muscles = exercise.getMuscleGroupList();
         StringBuilder musclesTxt = new StringBuilder();
-        for(MuscleGroup muscleGroup : muscles){
-            musclesTxt.append(muscleGroup.getDescription(context)).append("; \n    ");
+        for(MuscleGroup mg : muscles){
+            musclesTxt.append(mg.getDescription(context)).append(", ");
         }
+        if (musclesTxt.length() > 0)
+            musclesTxt.setLength(musclesTxt.length() - 2);
 
+        holder.exerciseMuscles.setText(context.getString(R.string.muscle_group) + ": " + musclesTxt);
+        holder.exerciseEquipment.setText(context.getString(R.string.equipment) + ": " + exercise.getEquipment().getDescription(context));
 
-        String equipment = context.getString(R.string.equipment);
-        String motion = context.getString(R.string.motion);
-        String muscleGroup = context.getString(R.string.muscle_group);
-
-        holder.exerciseName.setText(exercise.getName());
-        holder.exerciseDetails.setText(motion + ": " +
-                "\n    " + motionDescription +
-                "\n" + equipment + ": " +
-                "\n    " + equipmentDescription +
-                "\n" + muscleGroup + ": " +
-                "\n    " + musclesTxt.toString());
-
-        holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
         holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));
+        holder.itemView.setOnClickListener(v -> listener.onExerciseClick(exercise));
 
-        // Передача тексту і стану в ViewHolder
-        holder.bindExpandableDetails(holder.exerciseDetails.getText().toString());
+        // Оновлюємо стан згортання
+        holder.setExpandedState(exercise.isExpanded());
+
+        // Клік на dragHandle — оновлює модель
+        holder.dragHandle.setOnClickListener(v -> {
+            exercise.setExpanded(!exercise.isExpanded());
+            notifyItemChanged(position);
+        });
     }
+
+
 
 
 
@@ -93,40 +98,42 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     // ViewHolder клас для адаптера
     static class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView exerciseName, exerciseDetails;
+        TextView exerciseName, exerciseDescription, exerciseMotion, exerciseMuscles, exerciseEquipment;
         ImageButton editButton;
-        private final ImageButton expandButton;
-        private boolean isExpanded = false; // Початковий стан
+        ImageView dragHandle;
+
+        private boolean isExpanded = false;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseName = itemView.findViewById(R.id.nameExercise);
-            exerciseDetails = itemView.findViewById(R.id.textViewExerciseDetails);
+            exerciseDescription = itemView.findViewById(R.id.exerciseDescription);
+            exerciseMotion = itemView.findViewById(R.id.exerciseMotion);
+            exerciseMuscles = itemView.findViewById(R.id.exerciseMuscles);
+            exerciseEquipment = itemView.findViewById(R.id.exerciseEquipment);
             editButton = itemView.findViewById(R.id.buttonInfo);
-            expandButton = itemView.findViewById(R.id.buttonExpandDetails); // Кнопка розширення
-        }
+            dragHandle = itemView.findViewById(R.id.dragHandle);
 
-        public void bindExpandableDetails(String fullDetails) {
-            // Встановлення початкового стану
-            setExpandableState();
+            // Початково приховати деталі
+            setExpandedState(false);
 
-            // Обробка кліку на кнопку розширення
-            expandButton.setOnClickListener(v -> {
+            dragHandle.setOnClickListener(v -> {
                 isExpanded = !isExpanded;
-                setExpandableState();
+                setExpandedState(isExpanded);
             });
         }
 
-        private void setExpandableState() {
-            if (isExpanded) {
-                // Показуємо повний текст
-                exerciseDetails.setMaxLines(Integer.MAX_VALUE);
-                expandButton.setImageResource(R.drawable.ic_collapse); // Іконка для згортання
-            } else {
-                // Обмежуємо кількість рядків
-                exerciseDetails.setMaxLines(2);
-                expandButton.setImageResource(R.drawable.ic_expand); // Іконка для розширення
-            }
+        private void setExpandedState(boolean expanded) {
+            int visibility = expanded ? View.VISIBLE : View.GONE;
+
+            exerciseMotion.setVisibility(visibility);
+            exerciseMuscles.setVisibility(visibility);
+            exerciseEquipment.setVisibility(visibility);
+
+            dragHandle.setImageResource(expanded ? R.drawable.ic_collapse : R.drawable.ic_expand);
         }
     }
+
+
+
 }

@@ -1,24 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Стиль для діалогу з заокругленим фоном -->
+    <!-- Стиль для сучасного діалогу з Material3 -->
     <style name="RoundedDialogTheme" parent="ThemeOverlay.Material3.Dialog.Alert">
-        <!-- Вимикаємо заголовок, якщо треба -->
+        <!-- Без заголовка -->
         <item name="android:windowNoTitle">true</item>
-        <!-- Застосовуємо наш фон із заокругленням -->
+        <!-- Фон із закругленням -->
         <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
-        <!-- Дозволяємо прозорість, якщо потрібно -->
+        <!-- Прозорість (не обов'язково, залежить від bg) -->
         <item name="android:windowIsTranslucent">true</item>
+        <!-- Колір тла всередині діалогу (можна зняти, якщо вже є в drawable) -->
+        <item name="backgroundTint">@color/background_card</item>
     </style>
 
-
-
-
-    <style name="RoundedDialogTheme2" parent="Theme.Material3.DayNight.Dialog" >
+    <!-- Альтернативний стиль на основі Theme.Material3.DayNight.Dialog -->
+    <style name="RoundedDialogTheme2" parent="Theme.Material3.DayNight.Dialog">
         <item name="android:windowBackground">@drawable/dialog_background</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:windowElevation">8dp</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="backgroundTint">@color/background_card</item>
+    </style>
+
+
+    <style name="MyBottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/MyBottomSheet</item>
+    </style>
+
+    <style name="MyBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_dialog_rounded</item>
     </style>
 
 </resources>

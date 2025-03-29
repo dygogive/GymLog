@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/my_primary_container"
+    android:background="@color/background_card"
     android:padding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Поле Name: 1 рядок, максимум 30 символів -->
+        <!-- Name -->
         <EditText
             android:id="@+id/editTextExerciseName"
             android:layout_width="0dp"
@@ -21,11 +22,13 @@
             android:maxLength="30"
             android:singleLine="true"
             android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Поле Description: 3 рядки, максимум 100 символів -->
+        <!-- Description -->
         <EditText
             android:id="@+id/editTextExerciseDescription"
             android:layout_width="0dp"
@@ -38,108 +41,94 @@
             android:maxLines="3"
             android:ellipsize="end"
             android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
             app:layout_constraintTop_toBottomOf="@id/editTextExerciseName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Motion (одиничний вибір через AlertDialog) -->
-        <TextView
-            android:id="@+id/textViewMotion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/motion"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/editTextExerciseDescription"
-            app:layout_constraintStart_toStartOf="parent" />
+        <!-- Motion -->
 
         <Button
             android:id="@+id/buttonSelectMotion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/chose"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewMotion"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textViewMotion"
-            app:layout_constraintTop_toTopOf="@+id/textViewMotion" />
-
-        <!-- Muscle Groups (множинний вибір через AlertDialog) -->
-        <TextView
-            android:id="@+id/textViewMuscleGroups"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/muscle_groups"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/buttonSelectMotion"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/buttonSelectMuscleGroups"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/chose"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewMuscleGroups"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textViewMuscleGroups"
-            app:layout_constraintTop_toTopOf="@+id/textViewMuscleGroups" />
-
-        <!-- Equipment (одиничний вибір через AlertDialog) -->
-        <TextView
-            android:id="@+id/textViewEquipment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/equipment"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/buttonSelectMuscleGroups"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/buttonSelectEquipment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/chose"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewEquipment"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/textViewEquipment"
-            app:layout_constraintTop_toTopOf="@+id/textViewEquipment" />
-
-        <!-- Кнопки: Cancel, Delete (тільки для редагування) та Save -->
-        <!-- Для створення горизонтального ланцюга використовуємо ширину 0dp -->
-
-        <Button
-            android:id="@+id/buttonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/button_primary"
+            android:text="@string/moove_type"
+            android:textColor="@color/button_text_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextExerciseDescription" />
+
+        <!-- Muscle Groups -->
+
+        <!-- Equipment -->
+
+        <Button
+            android:id="@+id/buttonSelectMuscleGroups"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/button_primary"
+            android:text="@string/muscle_groups"
+            android:textColor="@color/button_text_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSelectMotion" />
+
+        <Button
+            android:id="@+id/buttonSelectEquipment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/button_primary"
+            android:text="@string/equipment_type"
+            android:textColor="@color/button_text_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSelectMuscleGroups" />
+
+        <!-- Cancel -->
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/button_secondary"
             android:text="@string/cancel"
+            android:textColor="@color/button_text_secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonSaveExercise"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSelectEquipment"
             app:layout_constraintVertical_bias="0.0" />
 
+        <!-- Delete -->
         <Button
             android:id="@+id/buttonDeleteExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/delete"
+            android:backgroundTint="@color/button_secondary"
+            android:textColor="@color/button_text_secondary"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/buttonCancel"
             app:layout_constraintTop_toBottomOf="@+id/buttonCancel" />
 
+        <!-- Save -->
         <Button
             android:id="@+id/buttonSaveExercise"
             android:layout_width="0dp"
@@ -147,6 +136,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/save"
+            android:backgroundTint="@color/button_primary"
+            android:textColor="@color/button_text_primary"
             app:layout_constraintBottom_toBottomOf="@+id/buttonCancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/buttonCancel"

@@ -22,6 +22,14 @@ public class Exercise {
     private List<MuscleGroup> muscleGroupList;
     private Equipment equipment;
     private boolean isCustom = false;
+    private boolean expanded = false;
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
 
     public Exercise(Long id, String name, String description, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
         this.id = id;
