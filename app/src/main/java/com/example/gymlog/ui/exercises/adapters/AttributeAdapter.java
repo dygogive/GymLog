@@ -27,7 +27,7 @@ public class AttributeAdapter<E extends Enum<E> & TypeAttributeExercises> extend
 
     Context context;
 
-    public interface OnItemClickListener <E> {
+    public interface OnItemClickListener {
         void onItemClick(Object item);
     }
 
