@@ -5,7 +5,7 @@ import android.content.Context;
 import com.example.gymlog.R;
 
 
-public enum MuscleGroup implements ExerciseAttribute {
+public enum MuscleGroup implements TypeAttributeExercises  {
 
     CHEST_LOWER(R.string.muscle_chest_lower),
     CHEST_UPPER(R.string.muscle_chest_upper),
@@ -23,6 +23,10 @@ public enum MuscleGroup implements ExerciseAttribute {
     DELTS_REAR(R.string.muscle_delts_rear),
     DELTS_SIDE(R.string.muscle_delts_side),
     DELTS_FRONT(R.string.muscle_delts_front);
+
+    public static MuscleGroup[] getAllValues() {
+        return values(); // <- тут вже викликається рідний метод
+    }
 
     private final int descriptionResId;
 
@@ -49,6 +53,12 @@ public enum MuscleGroup implements ExerciseAttribute {
         }
         return descriptions;
     }
+
+    @Override
+    public int getIconResId() {
+        return R.drawable.ic_exercise;
+    }
+
 
     public static MuscleGroup getObjectByDescription(Context context, String description) {
         for (MuscleGroup group : values()) {

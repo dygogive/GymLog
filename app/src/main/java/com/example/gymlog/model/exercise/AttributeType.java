@@ -4,11 +4,35 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
-public enum AttributeType {
+public enum AttributeType implements TypeAttributeExercises {
 
     EQUIPMENT(R.string.equipment_type),
     MUSCLE_GROUP(R.string.muscle_group),
     MOTION(R.string.motion);
+
+    public static AttributeType[] getAllValues() {
+        return values(); // <- тут вже викликається рідний метод
+    }
+
+
+
+    // Якщо хочете зберігати посилання на ресурс:
+    public int getIconResId() {
+        switch (this) {
+            case MUSCLE_GROUP:
+                return R.drawable.ic_muscle;
+            case EQUIPMENT:
+                return R.drawable.ic_muscle;
+            case MOTION:
+                return R.drawable.ic_muscle;
+        }
+        return R.drawable.ic_exercise; // Щось за замовчуванням
+    }
+
+    @Override
+    public int getDescriptionResId() {
+        return descriptionResId;
+    }
 
 
     //посилання на строку що описує м'язеву групу

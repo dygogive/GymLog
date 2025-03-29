@@ -187,6 +187,7 @@
     <string name="select_equipment">Select equipment</string>
     <string name="please_select_all_filters">Chose all selections</string>
     <string name="menu">Menu</string>
+    <string name="exe_attribute">Attribute exercise</string>
 
 
 </resources>

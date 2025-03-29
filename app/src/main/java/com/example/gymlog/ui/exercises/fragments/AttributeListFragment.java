@@ -1,7 +1,11 @@
 package com.example.gymlog.ui.exercises.fragments;
 
-import android.content.Context;
+import static com.example.gymlog.model.exercise.AttributeType.EQUIPMENT;
+import static com.example.gymlog.model.exercise.AttributeType.MOTION;
+import static com.example.gymlog.model.exercise.AttributeType.MUSCLE_GROUP;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,12 +17,7 @@ import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-
-public class AttributeListFragment extends BaseListFragment<String> {
+public class AttributeListFragment extends BaseListFragment {
 
 
     @Override
@@ -30,49 +29,30 @@ public class AttributeListFragment extends BaseListFragment<String> {
         title.setText(R.string.head_sorting_exercises);
     }
 
+
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_item_exercises;
+    protected Class getClassEnumAttribute() {
+        return AttributeType.class;
     }
 
     @Override
-    protected List<String> getItems() {
-        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
-
-        // Отримуємо список описів м'язових груп
-        return Arrays.stream(AttributeType.values())
-                .map(attributeType -> attributeType.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    protected void onItemSelected(String attributeType) {
-        AttributeType[] enums = AttributeType.values();
-        AttributeType enumAttributeType = null;
-
-        int count = 0;
-        for(String item : getItems()) {
-            if(attributeType.equals(item)) enumAttributeType = enums[count];
-            else count++;
+    protected void onItemSelected(Enum attributeType) {
+        if (attributeType == null) {
+            throw new IllegalArgumentException("attributeType не може бути null");
         }
 
         Fragment fragment;
 
-        switch (enumAttributeType){
-            case MUSCLE_GROUP:
-                fragment = new MusclesFragment();
-                break;
-            case EQUIPMENT:
-                fragment = new EquipmentFragment();
-                break;
-            case MOTION:
-                fragment = new MotionsFragment();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + attributeType);
+        if (attributeType.equals(MUSCLE_GROUP)) {
+            fragment = new MusclesFragment();
+        } else if (attributeType.equals(EQUIPMENT)) {
+            fragment = new EquipmentFragment();
+        } else if (attributeType.equals(MOTION)) {
+            fragment = new MotionsFragment();
+        } else {// Логування для відладки, якщо буде невідоме значення
+            Log.d("enumTest", "Невідоме значення enum: " + attributeType);
+            throw new IllegalStateException("Несподіване значення: " + attributeType);
         }
-
-
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

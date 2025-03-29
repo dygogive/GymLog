@@ -66,8 +66,8 @@ public class DialogStyler {
             if (button == null) continue;
 
             String text = button.getText().toString().toLowerCase(Locale.ROOT);
-            boolean isPrimary = text.contains(context.getString(R.string.save).toLowerCase()) ||
-                    text.contains(context.getString(R.string.delete).toLowerCase());
+            boolean isPrimary = text.contains(context.getString(R.string.save).toLowerCase());
+
 
             if (isPrimary) {
                 // Основна кнопка: синій фон + білий текст

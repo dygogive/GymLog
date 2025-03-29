@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.MuscleGroup;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 // MusclesFragment.java
-public class MusclesFragment extends BaseListFragment<String> {
+public class MusclesFragment extends BaseListFragment {
 
 
     @Override
@@ -31,37 +32,21 @@ public class MusclesFragment extends BaseListFragment<String> {
         title.setText(R.string.head_muscle_group);
     }
 
-    //ресурс для ітема фрагмента
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_item_exercises;
+    protected Class getClassEnumAttribute() {
+        return MuscleGroup.class;
     }
-
-
-
-    //власне самі ітеми
-    @Override
-    protected List<String> getItems() {
-        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
-
-        // Отримуємо список описів м'язових груп
-        return Arrays.stream(MuscleGroup.values())
-                .map(muscleGroup -> muscleGroup.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
-                .collect(Collectors.toList());
-
-    }
-
 
 
 
     //що робити якщо ітем вибраний
     @Override
-    protected void onItemSelected(String muscleGroup) {
+    protected void onItemSelected(Enum muscleGroup) {
         MuscleGroup[] enums = MuscleGroup.values();
         MuscleGroup enumMuscleGroup = null;
 
         int count = 0;
-        for(String item : getItems()) {
+        for(Enum item : enums) {
             if(muscleGroup.equals(item)) enumMuscleGroup = enums[count];
             else count++;
         }

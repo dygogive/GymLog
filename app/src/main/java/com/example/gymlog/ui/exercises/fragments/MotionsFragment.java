@@ -11,13 +11,15 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Motion;
+import com.example.gymlog.model.exercise.TypeAttributeExercises;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MotionsFragment extends BaseListFragment<String> {
+public class MotionsFragment extends BaseListFragment {
 
 
     @Override
@@ -29,32 +31,19 @@ public class MotionsFragment extends BaseListFragment<String> {
         title.setText(R.string.head_motion);
     }
 
-    //ресурс для ітема фрагмента
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_item_exercises;
-    }
-
-    //власне самі ітеми
-    @Override
-    protected List<String> getItems() {
-        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
-
-        // Отримуємо список описів м'язових груп
-        return Arrays.stream(Motion.values())
-                .map(motion -> motion.getDescription(context)) // закидаємо функціональний інтерфейс для кожного елементу енам
-                .collect(Collectors.toList());
-
+    protected Class getClassEnumAttribute() {
+        return Motion.class;
     }
 
     //що робити якщо ітем вибраний
     @Override
-    protected void onItemSelected(String motion) {
+    protected void onItemSelected(Enum motion) {
         Motion[] enums = Motion.values();
         Motion enumMotion = null;
 
         int count = 0;
-        for(String item : getItems()) {
+        for(Enum item : enums) {
             if(motion.equals(item)) enumMotion = enums[count];
             else count++;
         }

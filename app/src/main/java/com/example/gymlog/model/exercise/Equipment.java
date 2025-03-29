@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
-public enum Equipment {
+public enum Equipment implements TypeAttributeExercises {
 
     // Вільна вага
     BARBELL(R.string.equipment_barbell), // Штанга
@@ -25,12 +25,23 @@ public enum Equipment {
     SUSPENSION_TRAINER(R.string.equipment_suspension_trainer); // Петлі TRX
 
 
+    public static Equipment[] getAllValues() {
+        return values(); // <- тут вже викликається рідний метод
+    }
+
+
+
     //посилання на строку що описує обладнання
     private final int descriptionResId;
 
     //конструктор
     Equipment(int descriptionResId) {
         this.descriptionResId = descriptionResId;
+    }
+
+    @Override
+    public int getIconResId() {
+        return R.drawable.ic_exercise;
     }
 
     //видати ідентифікатор опису обладнання

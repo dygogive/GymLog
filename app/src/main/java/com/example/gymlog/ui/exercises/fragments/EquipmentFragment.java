@@ -12,13 +12,14 @@ import androidx.fragment.app.Fragment;
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.AttributeType;
 import com.example.gymlog.model.exercise.Equipment;
+import com.example.gymlog.model.exercise.TypeAttributeExercises;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class EquipmentFragment extends BaseListFragment<String> {
+public class EquipmentFragment extends BaseListFragment {
 
 
     @Override
@@ -31,25 +32,18 @@ public class EquipmentFragment extends BaseListFragment<String> {
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_item_exercises;
+    protected Class getClassEnumAttribute() {
+        return Equipment.class;
     }
 
-    @Override
-    protected List<String> getItems() {
-        Context context = requireContext(); // Гарантовано отримуємо контекст фрагмента
-        return Arrays.stream(Equipment.values()).
-                map(it -> it.getDescription(context)).
-                collect(Collectors.toList());
-    }
 
     @Override
-    protected void onItemSelected(String equipment) {
+    protected void onItemSelected(Enum equipment) {
         Equipment[] enums = Equipment.values();
         Equipment enumEquip = null;
 
         int count = 0;
-        for(String item : getItems()) {
+        for(Enum item : enums) {
             if(equipment.equals(item)) enumEquip = enums[count];
             else count++;
         }

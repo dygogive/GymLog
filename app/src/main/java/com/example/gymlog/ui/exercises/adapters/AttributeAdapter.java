@@ -1,48 +1,59 @@
 package com.example.gymlog.ui.exercises.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gymlog.R;
+import com.example.gymlog.model.exercise.TypeAttributeExercises;
+
 import java.util.List;
 
-public class AttributeAdapter extends RecyclerView.Adapter<AttributeAdapter.ViewHolder> {
+public class AttributeAdapter<E extends Enum<E> & TypeAttributeExercises> extends RecyclerView.Adapter<AttributeAdapter.ViewHolder> {
 
-    private final List<String> items; // Список атрибутів (наприклад, EquipmentType)
-    private final OnItemClickListener listener; // Слухач для кліків по елементам
+    private final List<E> items;
+    private final OnItemClickListener listener;
 
-
+    Context context;
 
     public interface OnItemClickListener {
-        void onItemClick(String item);
+        void onItemClick(Enum item);
     }
 
-
-
-    public AttributeAdapter(List<String> items, OnItemClickListener listener) {
+    public AttributeAdapter(List<E> items, OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
 
+    // 1) Створюємо View з вашого item_attribute.xml
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
+        context = parent.getContext();
+
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.item_attribute, parent, false);
         return new ViewHolder(view);
     }
 
+    // 2) Прив’язуємо дані (іконка + текст) до ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String item = items.get(position);
-        if (item != null) {
-            holder.textView.setText(item);
-            holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
-        }
+        E attribute = items.get(position);
+
+        // Якщо у вашому Enum є метод для отримання опису та іконки:
+        holder.iconImageView.setImageResource(attribute.getIconResId());
+        holder.titleTextView.setText(attribute.getDescription(context));
+
+        // Обробник кліку по всьому ітемі
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(attribute));
     }
 
     @Override
@@ -50,12 +61,15 @@ public class AttributeAdapter extends RecyclerView.Adapter<AttributeAdapter.View
         return items.size();
     }
 
+    // 3) ViewHolder знаходить View за ID
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        ImageView iconImageView;
+        TextView titleTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(android.R.id.text1);
+            iconImageView = itemView.findViewById(R.id.iconImageView);
+            titleTextView = itemView.findViewById(R.id.titleTextView);
         }
     }
 }

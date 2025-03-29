@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 
-public enum Motion  implements  ExerciseAttribute {
+public enum Motion  implements  TypeAttributeExercises {
 
     PRESS_UPWARDS(R.string.motion_press_upwards),
     PRESS_DOWNWARDS(R.string.motion_press_downwards),
@@ -19,6 +19,11 @@ public enum Motion  implements  ExerciseAttribute {
     PRESS_BY_LEGS(R.string.motion_press_by_legs),
     PULL_BY_LEGS(R.string.motion_pull_by_legs);
 
+
+    public static Motion[] getAllValues() {
+        return values(); // <- тут вже викликається рідний метод
+    }
+
     private final int descriptionResId;
 
     Motion(int descriptionResId) {
@@ -28,6 +33,11 @@ public enum Motion  implements  ExerciseAttribute {
     @Override
     public int getDescriptionResId() {
         return descriptionResId;
+    }
+
+    @Override
+    public int getIconResId() {
+        return R.drawable.ic_exercise;
     }
 
     @Override

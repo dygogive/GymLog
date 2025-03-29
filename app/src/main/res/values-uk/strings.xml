@@ -123,7 +123,7 @@
     <string name="add_a_training_day">Додати тренування</string>
     <string name="save_the_plan">Зберегти програму</string>
     <string name="edit_name_description">Редагувати назву й опис</string>
-    <string name="do_you_really_want_to_delete">Видалити?</string>
+    <string name="do_you_really_want_to_delete">Видалити </string>
     <string name="confirm_deletion">Підтвердити видалення!</string>
     <string name="edit">Редагування</string>
     <string name="deleted_day">Видалено тренування</string>

@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.exercises.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.TypeAttributeExercises;
 import com.example.gymlog.ui.exercises.adapters.AttributeAdapter;
 
 import java.util.List;
 
 
 //базовий фрагмент для екрану з вправами
-public abstract class BaseListFragment<T> extends Fragment {
+public abstract class BaseListFragment<E extends Enum<E> & TypeAttributeExercises> extends Fragment {
 
     //рециклер що буде у фрагменті
     private RecyclerView recyclerView;
     //адаптер для рециклера
     private AttributeAdapter adapter;
+
+    protected abstract Class<E> getClassEnumAttribute();
 
     @Nullable
     @Override
@@ -41,17 +46,22 @@ public abstract class BaseListFragment<T> extends Fragment {
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new AttributeAdapter(getItems(), this::onItemSelected);
+        adapter = new AttributeAdapter(
+                TypeAttributeExercises.getEnumItems(getClassEnumAttribute()),
+                this::onItemSelected
+        );
         recyclerView.setAdapter(adapter);
     }
 
-    //взяти ресурс - це канва на якій буде прорисовано елемент списку
-    protected abstract int getLayoutResource();
 
-    //взяти список ітемів для відображення в списку
-    protected abstract List<String> getItems();
+
+
+    //взяти ресурс - це канва на якій буде прорисовано елемент списку
+    protected int getLayoutResource() {
+        return R.layout.fragment_item_exercises;
+    }
 
     //Реалізація методу слухача натискання на елемент списку
-    protected abstract void onItemSelected(String item);
+    protected abstract void onItemSelected(Enum item);
 
 }
