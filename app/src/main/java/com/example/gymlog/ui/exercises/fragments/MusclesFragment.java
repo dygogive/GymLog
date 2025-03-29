@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
+import com.example.gymlog.model.exercise.AttributeType;
 import com.example.gymlog.model.exercise.MuscleGroup;
 
 
