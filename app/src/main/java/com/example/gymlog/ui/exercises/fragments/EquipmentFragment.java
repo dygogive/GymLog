@@ -1,6 +1,5 @@
 package com.example.gymlog.ui.exercises.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,14 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
-import com.example.gymlog.model.exercise.TypeAttributeExercises;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class EquipmentFragment extends BaseListFragment {
@@ -58,7 +54,7 @@ public class EquipmentFragment extends BaseListFragment {
 
 
 
-        Fragment fragment = ExercisesFragment.newInstance(AttributeType.EQUIPMENT, enumEquip);
+        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.EQUIPMENT, enumEquip);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

@@ -7,13 +7,13 @@ import com.example.gymlog.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum AttributeType implements TypeAttributeExercises {
+public enum AttributeFilter implements TypeAttributeExercises {
 
     EQUIPMENT(R.string.equipment_type),
     MUSCLE_GROUP(R.string.muscle_group),
     MOTION(R.string.motion);
 
-    public static AttributeType[] getAllValues() {
+    public static AttributeFilter[] getAllValues() {
         return values(); // <- тут вже викликається рідний метод
     }
 
@@ -42,7 +42,7 @@ public enum AttributeType implements TypeAttributeExercises {
     private final int descriptionResId;
 
     //конструктор
-    AttributeType(int descriptionResId) {
+    AttributeFilter(int descriptionResId) {
         this.descriptionResId = descriptionResId;
     }
 
@@ -56,9 +56,9 @@ public enum AttributeType implements TypeAttributeExercises {
         List<ListHeaderAndAttribute> items = new ArrayList<>();
 
 
-        items.add(new AttributeItem<>(MUSCLE_GROUP));
-        items.add(new AttributeItem<>(EQUIPMENT));
-        items.add(new AttributeItem<>(MOTION));
+        items.add(new FiltreAttributes<>(MUSCLE_GROUP));
+        items.add(new FiltreAttributes<>(EQUIPMENT));
+        items.add(new FiltreAttributes<>(MOTION));
 
         return items;
     }

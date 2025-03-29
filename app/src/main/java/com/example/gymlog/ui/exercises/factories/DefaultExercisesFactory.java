@@ -4,7 +4,7 @@ package com.example.gymlog.ui.exercises.factories;
 import android.util.Log;
 
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
-import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.Motion;
@@ -15,9 +15,9 @@ import java.util.List;
 
 public class DefaultExercisesFactory {
 
-    public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeType attributeType, String attribute) {
+    public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeFilter attributeFilter, String attribute) {
         // Отримуємо список вправ за атрибутом через ExerciseDAO
-        return exerciseDAO.getExercisesByAttribute(attributeType, attribute);
+        return exerciseDAO.getExercisesByAttribute(attributeFilter, attribute);
     }
 
 

@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.gymlog.R;
 import com.example.gymlog.sqlopenhelper.ExerciseDAO;
-import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.BundleKeys;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
@@ -36,12 +36,12 @@ public class ExercisesFragment extends Fragment {
     private RecyclerView recyclerView;
     private ExerciseAdapter adapter;
 
-    public static ExercisesFragment newInstance(AttributeType attributeType, Enum attribute) {
+    public static ExercisesFragment newInstance(AttributeFilter attributeFilter, Enum attribute) {
         ExercisesFragment fragment = new ExercisesFragment();
 
         // Передача аргументів до фрагмента
         Bundle args = new Bundle();
-        args.putString(BundleKeys.ATTRIBUTE_TYPE, attributeType.name());
+        args.putString(BundleKeys.ATTRIBUTE_TYPE, attributeFilter.name());
         args.putString(BundleKeys.ATTRIBUTE, attribute.name());
 
         fragment.setArguments(args);
@@ -68,23 +68,23 @@ public class ExercisesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Отримуємо аргументи
-        AttributeType attributeType = AttributeType.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
+        AttributeFilter attributeFilter = AttributeFilter.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
         String attributeName = requireArguments().getString(BundleKeys.ATTRIBUTE);
 
         TextView title = view.findViewById(R.id.textViewTitle);
 
         // Отримуємо опис enum
-        String description = getEnumDescription(attributeType, attributeName);
+        String description = getEnumDescription(attributeFilter, attributeName);
 
         // Встановлюємо заголовок
         title.setText(getString(R.string.exercises) + " - " + description);
     }
 
     // Метод для отримання опису елемента enum
-    private String getEnumDescription(AttributeType attributeType, String attributeName) {
+    private String getEnumDescription(AttributeFilter attributeFilter, String attributeName) {
         Context context = requireContext();
 
-        switch (attributeType) {
+        switch (attributeFilter) {
             case MOTION:
                 for (Motion motion : Motion.values()) {
                     if (motion.name().equals(attributeName)) {
@@ -137,7 +137,7 @@ public class ExercisesFragment extends Fragment {
     }
 
     private List<Exercise> getExercises() {
-        AttributeType attributeType = AttributeType.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
+        AttributeFilter attributeFilter = AttributeFilter.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
         String attribute = requireArguments().getString(BundleKeys.ATTRIBUTE);
 
         // Ініціалізація DAO
@@ -146,7 +146,7 @@ public class ExercisesFragment extends Fragment {
         // Виклик методу для отримання вправ
         List<Exercise> exercises = DefaultExercisesFactory.getExercisesForAttribute(
                 exerciseDAO,
-                attributeType, // Тип атрибуту
+                attributeFilter, // Тип атрибуту
                 attribute // Значення атрибуту
         );
 

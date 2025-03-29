@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.model.exercise.MuscleGroup;
 
@@ -55,7 +55,7 @@ public class MusclesFragment extends BaseListFragment {
         }
 
 
-        Fragment fragment = ExercisesFragment.newInstance(AttributeType.MUSCLE_GROUP, enumMuscleGroup);
+        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.MUSCLE_GROUP, enumMuscleGroup);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

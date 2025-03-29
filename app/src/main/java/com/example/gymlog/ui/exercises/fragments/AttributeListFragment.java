@@ -1,8 +1,8 @@
 package com.example.gymlog.ui.exercises.fragments;
 
-import static com.example.gymlog.model.exercise.AttributeType.EQUIPMENT;
-import static com.example.gymlog.model.exercise.AttributeType.MOTION;
-import static com.example.gymlog.model.exercise.AttributeType.MUSCLE_GROUP;
+import static com.example.gymlog.model.exercise.AttributeFilter.EQUIPMENT;
+import static com.example.gymlog.model.exercise.AttributeFilter.MOTION;
+import static com.example.gymlog.model.exercise.AttributeFilter.MUSCLE_GROUP;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.AttributeItem;
-import com.example.gymlog.model.exercise.AttributeType;
+import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -37,33 +35,33 @@ public class AttributeListFragment extends BaseListFragment {
 
     @Override
     protected Class getClassEnumAttribute() {
-        return AttributeType.class;
+        return AttributeFilter.class;
     }
 
     @Override
     public List<ListHeaderAndAttribute> getItems() {
-        return AttributeType.getGroupedEquipmentItems(requireContext());
+        return AttributeFilter.getGroupedEquipmentItems(requireContext());
     }
 
     @Override
     protected void onItemSelected(Object item) {
-        if (!(item instanceof AttributeType)) {
+        if (!(item instanceof AttributeFilter)) {
             Log.d("enumTest", "Clicked header or unknown item type");
             return;  // Пропускаємо, якщо натиснуто заголовок
         }
 
-        AttributeType attributeType = (AttributeType) item;
+        AttributeFilter attributeFilter = (AttributeFilter) item;
 
         Fragment fragment;
 
-        if (attributeType.equals(MUSCLE_GROUP)) {
+        if (attributeFilter.equals(MUSCLE_GROUP)) {
             fragment = new MusclesFragment();
-        } else if (attributeType.equals(EQUIPMENT)) {
+        } else if (attributeFilter.equals(EQUIPMENT)) {
             fragment = new EquipmentFragment();
-        } else if (attributeType.equals(MOTION)) {
+        } else if (attributeFilter.equals(MOTION)) {
             fragment = new MotionsFragment();
         } else {
-            throw new IllegalStateException("Несподіване значення: " + attributeType);
+            throw new IllegalStateException("Несподіване значення: " + attributeFilter);
         }
 
         requireActivity().getSupportFragmentManager()
