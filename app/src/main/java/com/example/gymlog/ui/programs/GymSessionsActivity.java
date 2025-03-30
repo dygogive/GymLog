@@ -2,6 +2,7 @@ package com.example.gymlog.ui.programs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -223,6 +224,7 @@ public class GymSessionsActivity extends AppCompatActivity {
                     (newName, newDescription) -> {
                         gymSession.setName(newName);
                         gymSession.setDescription(newDescription);
+                        Log.d("find_bag_gymSession","1");
                         planManagerDAO.updateGymSession(gymSession);
                         gymSessionAdapter.notifyDataSetChanged();
                     }

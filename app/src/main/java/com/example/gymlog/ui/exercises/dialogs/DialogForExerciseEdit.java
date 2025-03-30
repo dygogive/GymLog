@@ -61,33 +61,38 @@ public class DialogForExerciseEdit {
         Button buttonSelectMuscleGroups = dialogView.findViewById(R.id.buttonSelectMuscleGroups);
         Button buttonSelectEquipment = dialogView.findViewById(R.id.buttonSelectEquipment);
 
-
+        // Зберігаємо базовий текст для м'язів, наприклад "М'язи"
         buttonSelectMuscleGroups.setTag(buttonSelectMuscleGroups.getText().toString());
 
-
-        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
-        Button buttonDeleteExercise = dialogView.findViewById(R.id.buttonDeleteExercise);
-        Button buttonSaveExercise = dialogView.findViewById(R.id.buttonSaveExercise);
-
         if (exercise != null) {
+            // Якщо редагуємо існуючу вправу, беремо дані з неї
             editTextExerciseName.setText(exercise.getName());
             editTextExerciseDescription.setText(exercise.getDescription());
             preselectedMotion = exercise.getMotion();
             preselectedEquipment = exercise.getEquipment();
             preselectedMuscleGroups = new ArrayList<>(exercise.getMuscleGroupList());
+        }
 
-            if (preselectedMotion != null) {
-                buttonSelectMotion.setText(Motion.getAllDescriptions(context)[preselectedMotion.ordinal()]);
-            }
-            if (preselectedEquipment != null) {
-                buttonSelectEquipment.setText(Equipment.getEquipmentDescriptions(context)[preselectedEquipment.ordinal()]);
-            }
-            if (!preselectedMuscleGroups.isEmpty()) {
-                String baseText = (String) buttonSelectMuscleGroups.getTag(); // Там має бути "М'язи"
+        // Якщо для діалогу задано попередній вибір (як при створенні нової вправи з фільтром),
+        // або якщо редагуємо існуючу вправу, оновлюємо текст кнопок:
+        if (preselectedMotion != null) {
+            buttonSelectMotion.setText(preselectedMotion.getDescription(context));
+        }
+        if (preselectedEquipment != null) {
+            buttonSelectEquipment.setText(preselectedEquipment.getDescription(context));
+        }
+        if (preselectedMuscleGroups != null && !preselectedMuscleGroups.isEmpty()) {
+            if (preselectedMuscleGroups.size() == 1) {
+                // Якщо обрано лише один м'яз – показуємо його назву
+                buttonSelectMuscleGroups.setText(preselectedMuscleGroups.get(0).getDescription(context));
+            } else {
+                // Якщо вибрано 2 і більше – показуємо базовий текст + кількість
+                String baseText = (String) buttonSelectMuscleGroups.getTag();
                 buttonSelectMuscleGroups.setText(baseText + " (" + preselectedMuscleGroups.size() + ")");
             }
         }
 
+        // Налаштування обробників натискань кнопок (залишаємо вашу поточну логіку)
         buttonSelectMotion.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(context, R.style.RoundedDialogTheme2)
                     .setTitle(R.string.select_motion)
@@ -100,7 +105,10 @@ public class DialogForExerciseEdit {
                         }
                     })
                     .setNegativeButton(R.string.cancel, (d, w) -> {
-                        buttonSelectMuscleGroups.setText(buttonSelectMuscleGroups.getTag().toString());
+                        // Якщо скасування – можна повернути базовий текст або зберегти попередній вибір
+                        buttonSelectMotion.setText(preselectedMotion != null
+                                ? preselectedMotion.getDescription(context)
+                                : Motion.getAllDescriptions(context)[0]);
                     })
                     .create();
             dialog.setOnShowListener(d -> DialogStyler.applyAlertDialogStyle(context, dialog));
@@ -130,8 +138,13 @@ public class DialogForExerciseEdit {
                         for (int index : selectedIndices) {
                             preselectedMuscleGroups.add(MuscleGroup.values()[index]);
                         }
-                        String baseText = buttonSelectMuscleGroups.getTag().toString();
-                        buttonSelectMuscleGroups.setText(baseText + " (" + preselectedMuscleGroups.size() + ")");
+                        // Оновлюємо текст кнопки залежно від кількості вибраних м'язів
+                        if (preselectedMuscleGroups.size() == 1) {
+                            buttonSelectMuscleGroups.setText(preselectedMuscleGroups.get(0).getDescription(context));
+                        } else {
+                            String baseText = (String) buttonSelectMuscleGroups.getTag();
+                            buttonSelectMuscleGroups.setText(baseText + " (" + preselectedMuscleGroups.size() + ")");
+                        }
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .create();
@@ -161,6 +174,11 @@ public class DialogForExerciseEdit {
                 .setView(dialogView)
                 .create();
 
+        // Інші кнопки діалогу
+        Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+        Button buttonDeleteExercise = dialogView.findViewById(R.id.buttonDeleteExercise);
+        Button buttonSaveExercise = dialogView.findViewById(R.id.buttonSaveExercise);
+
         buttonCancel.setOnClickListener(v -> alertDialog.dismiss());
 
         if (exercise != null) {
@@ -188,6 +206,7 @@ public class DialogForExerciseEdit {
         }
 
         buttonSaveExercise.setOnClickListener(v -> {
+            // Ваша логіка збереження вправи
             String name = editTextExerciseName.getText().toString().trim();
             String description = editTextExerciseDescription.getText().toString().trim();
 
@@ -235,6 +254,7 @@ public class DialogForExerciseEdit {
         alertDialog.show();
         DialogStyler.styleButtonsInDialog(context, buttonCancel, buttonSaveExercise, buttonDeleteExercise);
     }
+
 
     public void showWithPreselectedFilters(@Nullable Exercise exercise, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
         this.preselectedMotion = motion;
