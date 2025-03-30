@@ -20,6 +20,8 @@ import com.example.gymlog.model.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * DAO-клас для управління програмами (PlanCycles)
@@ -619,12 +621,23 @@ public class PlanManagerDAO {
 
     /**
      * Повертає список вправ, що відповідають фільтрам блоку.
+     * Фільтри вибираються з таблиць:
+     * - TrainingBlockMotion (motionType)
+     * - TrainingBlockEquipment (equipment)
+     * - TrainingBlockMuscleGroup (muscleGroup)
+     *
+     * Якщо хоча б один з цих фільтрів присутній, повертаються вправи,
+     * які відповідають усім заданим умовам.
+     * Якщо фільтрів немає – повертається порожній список.
+     *
+     * @param trainingBlockId ID блоку тренування
+     * @return список вправ, що відповідають фільтрам блоку
      */
     public List<Exercise> recommendExercisesForTrainingBlock(long trainingBlockId) {
         List<Exercise> exercises = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // Отримуємо фільтри motion
+        // Отримання motionType фільтрів
         List<String> motionFilters = new ArrayList<>();
         Cursor cursor = db.rawQuery(
                 "SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = ?",
@@ -635,7 +648,7 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
-        // Отримуємо фільтри equipment
+        // Отримання equipment фільтрів
         List<String> equipmentFilters = new ArrayList<>();
         cursor = db.rawQuery(
                 "SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = ?",
@@ -646,51 +659,82 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
-        // Створюємо запит
+        // Отримання muscleGroup фільтрів
+        List<String> muscleFilters = new ArrayList<>();
+        cursor = db.rawQuery(
+                "SELECT muscleGroup FROM TrainingBlockMuscleGroup WHERE trainingBlockId = ?",
+                new String[]{String.valueOf(trainingBlockId)}
+        );
+        while (cursor.moveToNext()) {
+            muscleFilters.add(cursor.getString(0));
+        }
+        cursor.close();
+
+        // Якщо жоден з фільтрів не задано – повертаємо порожній список
+        if (motionFilters.isEmpty() && equipmentFilters.isEmpty() && muscleFilters.isEmpty()) {
+            db.close();
+            return exercises;
+        }
+
+        // Побудова запиту динамічно, залежно від наявних фільтрів
         StringBuilder queryBuilder = new StringBuilder();
         List<String> args = new ArrayList<>();
 
-        queryBuilder.append(
-                "SELECT DISTINCT e.id, e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom " +
-                        "FROM Exercise e " +
-                        "JOIN TrainingBlockMuscleGroup tmg " +
-                        "ON ',' || e.muscleGroups || ',' LIKE '%,' || tmg.muscleGroup || ',%' " +
-                        "WHERE tmg.trainingBlockId = ?"
-        );
-        args.add(String.valueOf(trainingBlockId));
+        // Базовий запит – вибірка з таблиці Exercise
+        queryBuilder.append("SELECT DISTINCT e.id, e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom FROM Exercise e WHERE 1=1 ");
 
+        // Якщо задані motion фільтри – додаємо умову
         if (!motionFilters.isEmpty()) {
             queryBuilder.append(" AND e.motion IN (");
             for (int i = 0; i < motionFilters.size(); i++) {
                 queryBuilder.append("?");
-                if (i < motionFilters.size() - 1) queryBuilder.append(", ");
+                if (i < motionFilters.size() - 1) {
+                    queryBuilder.append(", ");
+                }
                 args.add(motionFilters.get(i));
             }
-            queryBuilder.append(")");
+            queryBuilder.append(") ");
         }
 
+        // Якщо задані equipment фільтри – додаємо умову
         if (!equipmentFilters.isEmpty()) {
             queryBuilder.append(" AND e.equipment IN (");
             for (int i = 0; i < equipmentFilters.size(); i++) {
                 queryBuilder.append("?");
-                if (i < equipmentFilters.size() - 1) queryBuilder.append(", ");
+                if (i < equipmentFilters.size() - 1) {
+                    queryBuilder.append(", ");
+                }
                 args.add(equipmentFilters.get(i));
             }
-            queryBuilder.append(")");
+            queryBuilder.append(") ");
+        }
+
+        // Якщо задані muscleGroup фільтри – додаємо умову
+        // Поле muscleGroups містить текстовий список (наприклад, через коми), тому використовуємо оператор LIKE
+        if (!muscleFilters.isEmpty()) {
+            queryBuilder.append(" AND (");
+            for (int i = 0; i < muscleFilters.size(); i++) {
+                queryBuilder.append("e.muscleGroups LIKE ?");
+                args.add("%" + muscleFilters.get(i) + "%");
+                if (i < muscleFilters.size() - 1) {
+                    queryBuilder.append(" OR ");
+                }
+            }
+            queryBuilder.append(") ");
         }
 
         String query = queryBuilder.toString();
-
         Cursor result = db.rawQuery(query, args.toArray(new String[0]));
 
+        // Обробка результатів запиту – створення об'єктів Exercise
         if (result.moveToFirst()) {
             do {
                 long id = result.getLong(0);
                 String name = result.getString(1);
                 String description = result.getString(2);
-                Motion motion = parseMotion(result.getString(3));
-                List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(4));
-                Equipment equipment = parseEquipment(result.getString(5));
+                Motion motion = parseMotion(result.getString(3));             // Метод перетворення рядка у Motion
+                List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(4)); // Метод перетворення рядка у список MuscleGroup
+                Equipment equipment = parseEquipment(result.getString(5));      // Метод перетворення рядка у Equipment
 
                 exercises.add(new Exercise(id, name, description, motion, muscleGroups, equipment));
             } while (result.moveToNext());
@@ -700,6 +744,7 @@ public class PlanManagerDAO {
         db.close();
         return exercises;
     }
+
 
 
     /**
