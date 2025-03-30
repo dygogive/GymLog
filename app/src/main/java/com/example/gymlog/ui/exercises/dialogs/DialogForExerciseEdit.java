@@ -77,18 +77,22 @@ public class DialogForExerciseEdit {
         // або якщо редагуємо існуючу вправу, оновлюємо текст кнопок:
         if (preselectedMotion != null) {
             buttonSelectMotion.setText(preselectedMotion.getDescription(context));
+            DialogStyler.styleButtonsInDialog(context, buttonSelectMotion);
         }
         if (preselectedEquipment != null) {
             buttonSelectEquipment.setText(preselectedEquipment.getDescription(context));
+            DialogStyler.styleButtonsInDialog(context, buttonSelectEquipment);
         }
         if (preselectedMuscleGroups != null && !preselectedMuscleGroups.isEmpty()) {
             if (preselectedMuscleGroups.size() == 1) {
                 // Якщо обрано лише один м'яз – показуємо його назву
                 buttonSelectMuscleGroups.setText(preselectedMuscleGroups.get(0).getDescription(context));
+                DialogStyler.styleButtonsInDialog(context, buttonSelectMuscleGroups);
             } else {
                 // Якщо вибрано 2 і більше – показуємо базовий текст + кількість
                 String baseText = (String) buttonSelectMuscleGroups.getTag();
                 buttonSelectMuscleGroups.setText(baseText + " (" + preselectedMuscleGroups.size() + ")");
+                DialogStyler.styleButtonsInDialog(context, buttonSelectMuscleGroups);
             }
         }
 
