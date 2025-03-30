@@ -67,11 +67,30 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         //заголовок актівіті
         TextView textViewBlockTitle = findViewById(R.id.textViewBlockTitle);
         TextView textViewBlockDescr = findViewById(R.id.textViewBlockDescription);
+
         //заповнити інфою з попереднього актівіті
         String name = getIntent().getStringExtra("gym_day_name");
         String description = getIntent().getStringExtra("gym_day_description");
+
+        // Обрізаємо довгий опис і додаємо три крапки (…)
+        if (description.length() > 50) {
+            textViewBlockDescr.setText(description.substring(0, 50) + "...");
+        } else {
+            textViewBlockDescr.setText(description);
+        }
+
+        // При натисканні на обрізаний опис показуємо AlertDialog з повним текстом
+        textViewBlockDescr.setOnClickListener(v -> {
+            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                    .setTitle(name)
+                    .setMessage(description)
+                    .setPositiveButton("OK", null)
+                    .show();
+        });
+
         textViewBlockTitle.setText(name);
         textViewBlockDescr.setText(description);
+
         //діалог для повної інформації
         textViewBlockDescr.setOnClickListener(v -> {
             new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
