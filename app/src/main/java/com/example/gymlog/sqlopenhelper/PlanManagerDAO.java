@@ -209,17 +209,17 @@ public class PlanManagerDAO {
     public void updateGymSession(GymSession gymSession) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        int newPosition = 0;
-        Cursor cursor = db.rawQuery(
-                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM GymDays WHERE plan_id = ?",
-                new String[]{String.valueOf(gymSession.getPlanId())}
-        );
-        if (cursor.moveToFirst()) {
-            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
-        }
-        cursor.close();
-
-        gymSession.setPosition(newPosition);
+//        int newPosition = 0;
+//        Cursor cursor = db.rawQuery(
+//                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM GymDays WHERE plan_id = ?",
+//                new String[]{String.valueOf(gymSession.getPlanId())}
+//        );
+//        if (cursor.moveToFirst()) {
+//            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
+//        }
+//        cursor.close();
+//
+//        gymSession.setPosition(newPosition);
 
         ContentValues values = new ContentValues();
         values.put("day_name",    gymSession.getName());

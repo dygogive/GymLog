@@ -189,7 +189,7 @@ public class ExercisesFragment extends Fragment {
         }
     }
 
-    private void refreshExerciseList() {
+    public void refreshExerciseList() {
         // Оновлюємо список вправ
         List<Exercise> updatedExercises = getExercises();
 
