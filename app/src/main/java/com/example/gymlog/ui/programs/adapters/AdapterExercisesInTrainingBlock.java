@@ -1,74 +1,65 @@
 package com.example.gymlog.ui.programs.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gymlog.R;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Адаптер для списку вправ у конкретному тренувальному блоці.
+ * Реалізує перетягування вправ тільки за іконку (довге натискання).
+ */
 public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
 
-    private final Context context;
-    private final List<ExerciseInBlock> exercises;
-    private final ExerciseListener exerciseListener;
-    private final OnStartDragListener onStartDragListener;
-
-    // Інтерфейс для кліку на елемент вправи
-    public interface ExerciseListener {
+    // Інтерфейс для кліку на вправу
+    public interface ExerciseTouchListener {
         void onClick(ExerciseInBlock exercise);
     }
 
-    // Інтерфейс для старту перетягування (натискання на drag handle)
-    public interface OnStartDragListener {
-        void onStartDrag(RecyclerView.ViewHolder viewHolder);
+    // Інтерфейс для запуску перетягування (drag&drop)
+    public interface OnLongPressImageListener {
+        void onLongPressImage(RecyclerView.ViewHolder viewHolder);
     }
 
-    public AdapterExercisesInTrainingBlock(Context context, List<ExerciseInBlock> exercises,
-                                           ExerciseListener exerciseListener, OnStartDragListener onStartDragListener) {
+    private final Context context;
+    private final List<ExerciseInBlock> exercises;
+    private final ExerciseTouchListener clickListener;
+    private final OnLongPressImageListener dragListener;
+
+    public AdapterExercisesInTrainingBlock(Context context,
+                                           List<ExerciseInBlock> exercises,
+                                           ExerciseTouchListener clickListener,
+                                           OnLongPressImageListener dragListener) {
         this.context = context;
         this.exercises = exercises;
-        this.exerciseListener = exerciseListener;
-        this.onStartDragListener = onStartDragListener;
+        this.clickListener = clickListener;
+        this.dragListener = dragListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_exercise_for_training_block, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(LayoutInflater.from(context)
+                .inflate(R.layout.item_exercise_for_training_block, parent, false));
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseInBlock exercise = exercises.get(position);
-        holder.nameExercise.setText(exercise.getNameOnly(context));
-
-        // Клік на назву вправи
-        holder.nameExercise.setOnClickListener(v -> exerciseListener.onClick(exercise));
-
-
-        // тільки цей слухач має бути, інших бути не повинно
-        holder.buttonInfo.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                onStartDragListener.onStartDrag(holder);
-                return true;
-            }
-            return false;
-        });
-
-
+        holder.bind(exercise);
     }
 
     @Override
@@ -77,43 +68,55 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
     }
 
     /**
-     * Переміщує елемент у списку та оновлює позиції у базі.
-     *
-     * @param fromPosition Початкова позиція.
-     * @param toPosition   Кінцева позиція.
-     * @param dao          DAO для роботи з БД.
-     * @param blockID      ID тренувального блоку.
+     * Переміщує елементи списку вправ і оновлює їх позиції в БД.
      */
-    public void moveItem(int fromPosition, int toPosition, PlanManagerDAO dao, long blockID) {
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(exercises, i, i + 1);
-            }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(exercises, i, i - 1);
-            }
-        }
-        // Оновлюємо позиції у списку
+    public void moveItem(int fromPos, int toPos, PlanManagerDAO dao, long blockId) {
+        Collections.swap(exercises, fromPos, toPos);
+
+        // Оновлюємо індекси вправ після переміщення
         for (int i = 0; i < exercises.size(); i++) {
             exercises.get(i).setPosition(i);
         }
-        dao.updateTrainingBlockExercises(blockID, exercises);
-        notifyItemMoved(fromPosition, toPosition);
+
+        dao.updateTrainingBlockExercises(blockId, exercises);
+        notifyItemMoved(fromPos, toPos);
     }
 
     public List<ExerciseInBlock> getItems() {
         return exercises;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameExercise;
-        ImageButton buttonInfo;
+    // ViewHolder, який представляє окрему вправу у списку
+    class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameExercise;
+        final ImageButton buttonDragHandle;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameExercise = itemView.findViewById(R.id.nameExercise);
-            buttonInfo = itemView.findViewById(R.id.buttonInfo);
+            buttonDragHandle = itemView.findViewById(R.id.buttonInfo);
+
+            setupListeners();
+        }
+
+        void bind(ExerciseInBlock exercise) {
+            nameExercise.setText(exercise.getNameOnly(context));
+            nameExercise.setOnClickListener(v -> clickListener.onClick(exercise));
+        }
+
+        private void setupListeners() {
+            // Повністю вимикаємо стандартні кліки та звуки для кнопки
+            buttonDragHandle.setClickable(false);
+            buttonDragHandle.setLongClickable(true);
+            buttonDragHandle.setHapticFeedbackEnabled(false);
+            buttonDragHandle.setSoundEffectsEnabled(false);
+
+            // Лише довге натискання активує перетягування
+            buttonDragHandle.setOnLongClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); // вібрація
+                dragListener.onLongPressImage(this); // запуск перетягування
+                return true;
+            });
         }
     }
 }
