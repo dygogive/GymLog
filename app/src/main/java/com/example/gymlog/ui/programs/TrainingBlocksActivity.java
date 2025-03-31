@@ -124,6 +124,11 @@ public class TrainingBlocksActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 // Swipe ігнорується
             }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return false; // Вимкни longPressDrag зовнішнього RecyclerView
+            }
         };
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerViewTrainingBlocks);
     }
