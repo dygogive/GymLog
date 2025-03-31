@@ -14,12 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
+import com.example.gymlog.model.exercise.Motion;
+import com.example.gymlog.model.exercise.MuscleGroup;
 import com.example.gymlog.model.plan.TrainingBlock;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 
@@ -111,11 +115,69 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
         void bind(TrainingBlock block) {
             name.setText(block.getName());
-            description.setText(block.getDescription());
-
+            setupDescription(block);
             setupMenu(block);
             setupExercises(block);
         }
+
+        // Налаштовує текст опису блоку з урахуванням фільтрів
+        void setupDescription(TrainingBlock block) {
+            StringBuilder sb = new StringBuilder();
+            String string = block.getDescription();
+
+            // Основний опис
+            if (!string.isEmpty()) {
+                sb.append(string).append("\n");
+            }
+
+            int count = 0;
+
+            // М'язи
+            if (!block.getMuscleGroupList().isEmpty()) {
+                sb.append(context.getString(R.string.muscles)).append(": ");
+                for (MuscleGroup muscle : block.getMuscleGroupList()) {
+                    sb.append(muscle.getDescription(context)).append("; ");
+                    if(count++ >= 1) break;
+                }
+                sb.append("\n");
+                count = 0;
+            }
+
+            // Тип руху
+            if (!block.getMotions().isEmpty()) {
+                sb.append(context.getString(R.string.motion)).append(": ");
+                for (Motion motion : block.getMotions()) {
+                    sb.append(motion.getDescription(context)).append("; ");
+                    if(count++ >= 1) break;
+                }
+                sb.append("\n");
+                count = 0;
+            }
+
+            // Обладнання
+            if (!block.getEquipmentList().isEmpty()) {
+                sb.append(context.getString(R.string.equipment)).append(": ");
+                for (Equipment eq : block.getEquipmentList()) {
+                    sb.append(eq.getDescription(context)).append("; ");
+                    if(count++ >= 1) break;
+                }
+                sb.append("\n");
+                count = 0;
+            }
+
+            description.setText(sb.toString().trim());
+
+            // При натисканні на обрізаний опис показуємо AlertDialog з повним текстом
+            description.setOnClickListener(v -> {
+                new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
+                        .setTitle(context.getString(R.string.description))
+                        .setMessage(sb.toString().trim())
+                        .setPositiveButton("OK", null)
+                        .show();
+            });
+
+        }
+
 
         // Налаштовує меню блоку (три крапки)
         void setupMenu(TrainingBlock block) {

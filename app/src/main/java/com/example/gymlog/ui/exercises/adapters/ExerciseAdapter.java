@@ -86,9 +86,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
 
-
-
-
     @Override
     public int getItemCount() {
         return exercises.size();

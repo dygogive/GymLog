@@ -20,6 +20,7 @@ import com.example.gymlog.ui.exercises.fragments.ExercisesFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExerciseManagementActivity extends AppCompatActivity {
@@ -29,7 +30,6 @@ public class ExerciseManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_exercise_management);
-
 
         // Ініціалізація бази даних
         ExerciseDAO exerciseDAO = new ExerciseDAO(this);
@@ -67,8 +67,8 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                 // В залежності від типу фільтра передаємо відповідні параметри в діалог
                 if (AttributeFilter.MOTION.name().equals(attributeType)) {
                     Motion motion = Motion.valueOf(attributeValue);
-                    // Для інших параметрів передаємо дефолтні значення (null або пустий список)
-                    dialog.showWithPreselectedFilters(null, motion, new ArrayList<>(), null);
+                    // Передаємо список з одним елементом для Motion, а для інших параметрів дефолтні значення
+                    dialog.showWithPreselectedFilters(null, Collections.singletonList(motion), new ArrayList<>(), null);
                     return;
                 } else if (AttributeFilter.MUSCLE_GROUP.name().equals(attributeType)) {
                     MuscleGroup muscleGroup = MuscleGroup.valueOf(attributeValue);
@@ -78,16 +78,15 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                     return;
                 } else if (AttributeFilter.EQUIPMENT.name().equals(attributeType)) {
                     Equipment equipment = Equipment.valueOf(attributeValue);
-                    dialog.showWithPreselectedFilters(null, null, new ArrayList<>(), equipment);
+                    // Передаємо список з одним елементом для Equipment
+                    dialog.showWithPreselectedFilters(null, null, new ArrayList<>(), Collections.singletonList(equipment));
                     return;
                 }
             }
         }
 
-        dialog.show(null); // Викликаємо діалог для створення нової вправи
-
+        dialog.show(null); // Викликаємо діалог для створення нової вправи, якщо фільтр не заданий
     }
-
 
     private void updateCurrentFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);

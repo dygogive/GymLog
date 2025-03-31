@@ -28,9 +28,11 @@ public class DialogForExerciseEdit {
     private final ExerciseDialogListener listener;
     private OnExerciseCreatedListener createdListener;
 
-    private Motion preselectedMotion = null;
+    // Для Exercise зберігаємо одиночні значення для motion та equipment,
+    // а для muscleGroups – список (як і було)
+    private Motion preselectedMotion;
     private List<MuscleGroup> preselectedMuscleGroups = new ArrayList<>();
-    private Equipment preselectedEquipment = null;
+    private Equipment preselectedEquipment;
 
     public interface ExerciseDialogListener {
         void onExerciseSaved();
@@ -61,7 +63,7 @@ public class DialogForExerciseEdit {
         Button buttonSelectMuscleGroups = dialogView.findViewById(R.id.buttonSelectMuscleGroups);
         Button buttonSelectEquipment = dialogView.findViewById(R.id.buttonSelectEquipment);
 
-        // Зберігаємо базовий текст для м'язів, наприклад "М'язи"
+        // Зберігаємо базовий текст для кнопки м'язів (наприклад, "М'язи")
         buttonSelectMuscleGroups.setTag(buttonSelectMuscleGroups.getText().toString());
 
         if (exercise != null) {
@@ -73,8 +75,7 @@ public class DialogForExerciseEdit {
             preselectedMuscleGroups = new ArrayList<>(exercise.getMuscleGroupList());
         }
 
-        // Якщо для діалогу задано попередній вибір (як при створенні нової вправи з фільтром),
-        // або якщо редагуємо існуючу вправу, оновлюємо текст кнопок:
+        // Оновлюємо текст кнопок залежно від попереднього вибору або значень з вправи
         if (preselectedMotion != null) {
             buttonSelectMotion.setText(preselectedMotion.getDescription(context));
             DialogStyler.styleButtonsInDialog(context, buttonSelectMotion);
@@ -89,14 +90,14 @@ public class DialogForExerciseEdit {
                 buttonSelectMuscleGroups.setText(preselectedMuscleGroups.get(0).getDescription(context));
                 DialogStyler.styleButtonsInDialog(context, buttonSelectMuscleGroups);
             } else {
-                // Якщо вибрано 2 і більше – показуємо базовий текст + кількість
+                // Якщо вибрано 2 і більше – показуємо базовий текст із кількістю
                 String baseText = (String) buttonSelectMuscleGroups.getTag();
                 buttonSelectMuscleGroups.setText(baseText + " (" + preselectedMuscleGroups.size() + ")");
                 DialogStyler.styleButtonsInDialog(context, buttonSelectMuscleGroups);
             }
         }
 
-        // Налаштування обробників натискань кнопок (залишаємо вашу поточну логіку)
+        // Обробник вибору Motion (одинарний вибір)
         buttonSelectMotion.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(context, R.style.RoundedDialogTheme2)
                     .setTitle(R.string.select_motion)
@@ -109,7 +110,7 @@ public class DialogForExerciseEdit {
                         }
                     })
                     .setNegativeButton(R.string.cancel, (d, w) -> {
-                        // Якщо скасування – можна повернути базовий текст або зберегти попередній вибір
+                        // При скасуванні повертаємо попередній вибір або базове значення
                         buttonSelectMotion.setText(preselectedMotion != null
                                 ? preselectedMotion.getDescription(context)
                                 : Motion.getAllDescriptions(context)[0]);
@@ -119,6 +120,7 @@ public class DialogForExerciseEdit {
             dialog.show();
         });
 
+        // Обробник вибору Muscle Groups (множинний вибір)
         buttonSelectMuscleGroups.setOnClickListener(v -> {
             String[] muscleDescriptions = MuscleGroup.getAllDescriptions(context);
             boolean[] checkedItems = new boolean[muscleDescriptions.length];
@@ -142,7 +144,7 @@ public class DialogForExerciseEdit {
                         for (int index : selectedIndices) {
                             preselectedMuscleGroups.add(MuscleGroup.values()[index]);
                         }
-                        // Оновлюємо текст кнопки залежно від кількості вибраних м'язів
+                        // Оновлюємо текст кнопки залежно від кількості обраних м'язів
                         if (preselectedMuscleGroups.size() == 1) {
                             buttonSelectMuscleGroups.setText(preselectedMuscleGroups.get(0).getDescription(context));
                         } else {
@@ -156,6 +158,7 @@ public class DialogForExerciseEdit {
             dialog.show();
         });
 
+        // Обробник вибору Equipment (одинарний вибір)
         buttonSelectEquipment.setOnClickListener(v -> {
             AlertDialog dialog = new AlertDialog.Builder(context, R.style.RoundedDialogTheme2)
                     .setTitle(R.string.select_equipment)
@@ -178,7 +181,7 @@ public class DialogForExerciseEdit {
                 .setView(dialogView)
                 .create();
 
-        // Інші кнопки діалогу
+        // Налаштування інших кнопок діалогу
         Button buttonCancel = dialogView.findViewById(R.id.buttonCancel);
         Button buttonDeleteExercise = dialogView.findViewById(R.id.buttonDeleteExercise);
         Button buttonSaveExercise = dialogView.findViewById(R.id.buttonSaveExercise);
@@ -210,7 +213,7 @@ public class DialogForExerciseEdit {
         }
 
         buttonSaveExercise.setOnClickListener(v -> {
-            // Ваша логіка збереження вправи
+            // Логіка збереження вправи
             String name = editTextExerciseName.getText().toString().trim();
             String description = editTextExerciseDescription.getText().toString().trim();
 
@@ -259,11 +262,17 @@ public class DialogForExerciseEdit {
         DialogStyler.styleButtonsInDialog(context, buttonCancel, buttonSaveExercise, buttonDeleteExercise);
     }
 
-
-    public void showWithPreselectedFilters(@Nullable Exercise exercise, Motion motion, List<MuscleGroup> muscleGroupList, Equipment equipment) {
-        this.preselectedMotion = motion;
-        this.preselectedMuscleGroups = muscleGroupList;
-        this.preselectedEquipment = equipment;
+    /**
+     * Оновлено метод для попереднього встановлення фільтрів. Тепер приймає списки для Motion та Equipment,
+     * але оскільки Exercise використовує одиничні поля для цих фільтрів, вибираємо перший елемент зі списку.
+     */
+    public void showWithPreselectedFilters(@Nullable Exercise exercise,
+                                           @Nullable List<Motion> motions,
+                                           @Nullable List<MuscleGroup> muscleGroupList,
+                                           @Nullable List<Equipment> equipmentList) {
+        this.preselectedMotion = (motions != null && !motions.isEmpty()) ? motions.get(0) : null;
+        this.preselectedMuscleGroups = muscleGroupList != null ? muscleGroupList : new ArrayList<>();
+        this.preselectedEquipment = (equipmentList != null && !equipmentList.isEmpty()) ? equipmentList.get(0) : null;
         show(exercise);
     }
 }

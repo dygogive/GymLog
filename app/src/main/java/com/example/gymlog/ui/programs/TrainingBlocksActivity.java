@@ -196,8 +196,10 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                 loadTrainingBlocks();
                 Toast.makeText(TrainingBlocksActivity.this, "Вправу додано в блок: " + newExercise.getName(), Toast.LENGTH_SHORT).show();
             });
-            dialog.showWithPreselectedFilters(null, block.getMotion(), block.getMuscleGroupList(), block.getEquipment());
+            // Передаємо повні списки фільтрів із TrainingBlock
+            dialog.showWithPreselectedFilters(null, block.getMotions(), block.getMuscleGroupList(), block.getEquipmentList());
         }
+
 
         @Override
         public void onEditExercises(TrainingBlock block) {
