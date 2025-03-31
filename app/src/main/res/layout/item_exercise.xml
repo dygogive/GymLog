@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -67,6 +68,8 @@
             app:layout_constraintTop_toBottomOf="@id/exerciseMotion" />
 
         <!-- Спорядження -->
+
+        <!-- Кнопка редагування -->
         <TextView
             android:id="@+id/exerciseEquipment"
             android:layout_width="0dp"
@@ -74,12 +77,10 @@
             android:text="@string/equipment"
             android:textColor="@color/text_secondary"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/nameExercise"
             app:layout_constraintStart_toStartOf="@id/nameExercise"
-            app:layout_constraintTop_toBottomOf="@id/exerciseMuscles" />
+            app:layout_constraintTop_toBottomOf="@+id/exerciseMuscles" />
 
-        <!-- Кнопка редагування -->
         <ImageButton
             android:id="@+id/buttonInfo"
             android:layout_width="wrap_content"
@@ -89,6 +90,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/button_primary" />
+
+        <ImageView
+            android:id="@+id/imageIsExpand"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/exerciseEquipment"
+            app:srcCompat="@android:drawable/arrow_down_float" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

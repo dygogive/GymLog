@@ -64,10 +64,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
 
         holder.exerciseName.setText(exercise.getName());
-
         String description = exercise.getDescription();
-        holder.exerciseDescription.setText(description != null ? description : "");
 
+
+        holder.exerciseDescription.setText(description != null ? description : "");
         holder.exerciseMotion.setText(context.getString(R.string.motion) + ": " + exercise.getMotion().getDescription(context));
 
         List<MuscleGroup> muscles = exercise.getMuscleGroupList();
@@ -81,7 +81,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.exerciseMuscles.setText(context.getString(R.string.muscle_group) + ": " + musclesTxt);
         holder.exerciseEquipment.setText(context.getString(R.string.equipment) + ": " + exercise.getEquipment().getDescription(context));
 
-        holder.editButton.setOnClickListener(v -> listener.onEditClick(exercise));
+        holder.imageButton.setOnClickListener(v -> listener.onEditClick(exercise));
 
     }
 
@@ -97,9 +97,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     // ViewHolder клас для адаптера
     static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         TextView exerciseName, exerciseDescription, exerciseMotion, exerciseMuscles, exerciseEquipment;
-        ImageButton editButton;
+        ImageButton imageButton;
+        ImageView imageIsExpand;
 
         private boolean isExpanded = false;
+
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,7 +110,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             exerciseMotion = itemView.findViewById(R.id.exerciseMotion);
             exerciseMuscles = itemView.findViewById(R.id.exerciseMuscles);
             exerciseEquipment = itemView.findViewById(R.id.exerciseEquipment);
-            editButton = itemView.findViewById(R.id.buttonInfo);
+            imageButton = itemView.findViewById(R.id.buttonInfo);
+            imageIsExpand = itemView.findViewById(R.id.imageIsExpand);
         }
 
         public void setExpandedState(boolean expanded) {
@@ -118,6 +121,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             exerciseMotion.setVisibility(visibility);
             exerciseMuscles.setVisibility(visibility);
             exerciseEquipment.setVisibility(visibility);
+
+            imageIsExpand.setImageResource(expanded ?
+                    android.R.drawable.arrow_up_float :
+                    android.R.drawable.arrow_down_float);
         }
     }
 
