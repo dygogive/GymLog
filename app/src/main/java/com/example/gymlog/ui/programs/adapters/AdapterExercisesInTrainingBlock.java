@@ -1,7 +1,9 @@
 package com.example.gymlog.ui.programs.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -9,51 +11,36 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
+import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Адаптер для відображення списку вправ у тренувальному блоці.
- * Відповідає за створення, оновлення та взаємодію з елементами списку.
- */
 public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<AdapterExercisesInTrainingBlock.ViewHolder> {
 
-    private final Context context; // Контекст для доступу до ресурсів
-    private final List<ExerciseInBlock> exercises; // Список вправ у блоці
-    private final ExerciseListener exerciseListener; // Обробник подій для вправ
+    private final Context context;
+    private final List<ExerciseInBlock> exercises;
+    private final ExerciseListener exerciseListener;
+    private final OnStartDragListener onStartDragListener;
 
-    /**
-     * Інтерфейс для обробки кліків на вправи.
-     */
+    // Інтерфейс для кліку на елемент вправи
     public interface ExerciseListener {
-        void onClickListener(ExerciseInBlock exercise);
+        void onClick(ExerciseInBlock exercise);
     }
 
-    /**
-     * Конструктор адаптера.
-     *
-     * @param context          Контекст.
-     * @param exercises        Список вправ.
-     * @param exerciseListener Обробник подій для вправ.
-     */
-    public AdapterExercisesInTrainingBlock(Context context, List<ExerciseInBlock> exercises, ExerciseListener exerciseListener) {
+    // Інтерфейс для старту перетягування (натискання на drag handle)
+    public interface OnStartDragListener {
+        void onStartDrag(RecyclerView.ViewHolder viewHolder);
+    }
+
+    public AdapterExercisesInTrainingBlock(Context context, List<ExerciseInBlock> exercises,
+                                           ExerciseListener exerciseListener, OnStartDragListener onStartDragListener) {
         this.context = context;
         this.exercises = exercises;
         this.exerciseListener = exerciseListener;
+        this.onStartDragListener = onStartDragListener;
     }
 
-    /**
-     * Повертає список вправ.
-     */
-    public List<ExerciseInBlock> getItems() {
-        return exercises;
-    }
-
-    /**
-     * Створює новий ViewHolder для елемента списку.
-     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,38 +49,43 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
         return new ViewHolder(view);
     }
 
-    /**
-     * Прив'язує дані до ViewHolder на певній позиції.
-     */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ExerciseInBlock exercise = exercises.get(position);
-
-        // Встановлюємо назву вправи
         holder.nameExercise.setText(exercise.getNameOnly(context));
 
-        // Обробник кліку на кнопку "Інформація"
-        holder.buttonInfo.setOnClickListener(v -> exerciseListener.onClickListener(exercise));
+        // Клік на назву вправи
+        holder.nameExercise.setOnClickListener(v -> exerciseListener.onClick(exercise));
+
+
+        // тільки цей слухач має бути, інших бути не повинно
+        holder.buttonInfo.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                onStartDragListener.onStartDrag(holder);
+                return true;
+            }
+            return false;
+        });
+
+
     }
 
-    /**
-     * Повертає кількість елементів у списку.
-     */
     @Override
     public int getItemCount() {
-        return exercises != null ? exercises.size() : 0;
+        return exercises.size();
     }
 
     /**
-     * Переміщує елемент у списку та оновлює позиції в базі даних.
+     * Переміщує елемент у списку та оновлює позиції у базі.
      *
-     * @param fromPosition Початкова позиція елемента.
-     * @param toPosition   Кінцева позиція елемента.
-     * @param dao          DAO для роботи з базою даних.
-     * @param blockID      Ідентифікатор тренувального блоку.
+     * @param fromPosition Початкова позиція.
+     * @param toPosition   Кінцева позиція.
+     * @param dao          DAO для роботи з БД.
+     * @param blockID      ID тренувального блоку.
      */
     public void moveItem(int fromPosition, int toPosition, PlanManagerDAO dao, long blockID) {
-        // Переміщення елемента у списку
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(exercises, i, i + 1);
@@ -103,23 +95,21 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
                 Collections.swap(exercises, i, i - 1);
             }
         }
-
-        // Оновлення позицій у списку
+        // Оновлюємо позиції у списку
         for (int i = 0; i < exercises.size(); i++) {
             exercises.get(i).setPosition(i);
         }
-
-        // Оновлення даних у базі
         dao.updateTrainingBlockExercises(blockID, exercises);
-        notifyItemMoved(fromPosition, toPosition); // Сповіщення адаптера про зміну
+        notifyItemMoved(fromPosition, toPosition);
     }
 
-    /**
-     * ViewHolder для елемента списку вправ.
-     */
+    public List<ExerciseInBlock> getItems() {
+        return exercises;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameExercise; // Назва вправи
-        ImageButton buttonInfo; // Кнопка "Інформація"
+        TextView nameExercise;
+        ImageButton buttonInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,48 +118,3 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
         }
     }
 }
-
-/**
- * Основні пояснення:
- * Конструктор (AdapterExercisesInTrainingBlock):
-     *
-     *      Приймає контекст, список вправ і обробник подій для вправ.
-     *
-     *      Ініціалізує поля класу.
-     *
- * Метод onCreateViewHolder:
-     *
-     * Створює новий ViewHolder для елемента списку, використовуючи XML-розмітку (item_exercise_for_training_block).
-     *
- * Метод onBindViewHolder:
-     *
-             * Прив'язує дані до елемента списку на певній позиції.
-             *
-             * Встановлює назву вправи та обробник кліку на кнопку "Інформація".
-     *
- * Метод getItemCount:
-     *
-     * Повертає кількість елементів у списку вправ.
-     *
- * Метод moveItem:
-     *
-     * Переміщує елемент у списку з однієї позиції на іншу.
-     *
-     * Оновлює позиції в базі даних та сповіщає адаптер про зміну.
-     *
- * Клас ViewHolder:
-     *
-     * Зберігає посилання на елементи UI (назва вправи та кнопка "Інформація").
-     *
-     * Використовується для оптимізації роботи з RecyclerView.
-     *
- * Для новачків:
-     * RecyclerView.Adapter: Відповідає за створення та оновлення елементів списку.
-     *
-     * ViewHolder: Зберігає посилання на елементи UI для швидкого доступу.
-     *
-     * onBindViewHolder: Викликається для прив'язки даних до елемента списку.
-     *
-     * moveItem: Дозволяє змінювати порядок елементів у списку та оновлювати дані в базі.
-     *
- */

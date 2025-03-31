@@ -97,6 +97,9 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                 exercise -> {
                     // Просто покажемо Toast із назвою вправи
                     Toast.makeText(context, exercise.getNameOnly(context), Toast.LENGTH_SHORT).show();
+                },
+                viewHolder -> {
+                    holder.itemTouchHelper.startDrag(viewHolder);
                 }
         );
 
@@ -111,54 +114,41 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
      */
     private void setupItemTouchHelper(@NonNull TrainingBlockViewHolder holder,
                                       @NonNull TrainingBlock block,
-                                      @NonNull AdapterExercisesInTrainingBlock exerciseAdapter) {
+                                      @NonNull AdapterExercisesInTrainingBlock adapter) {
+        // Якщо вже існує ItemTouchHelper, від'єднуємо його
         if (holder.itemTouchHelper != null) {
-            // Від'єднуємо, щоб не було дублювання
             holder.itemTouchHelper.attachToRecyclerView(null);
         }
 
+// Створюємо новий callback із відключеним автоматичним long press drag
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN,
-                ItemTouchHelper.LEFT
-        ) {
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+
             @Override
-            public boolean onMove(@NonNull RecyclerView rv,
+            public boolean isLongPressDragEnabled() {
+                return false;
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
                                   @NonNull RecyclerView.ViewHolder target) {
                 int fromPos = viewHolder.getBindingAdapterPosition();
-                int toPos   = target.getBindingAdapterPosition();
-
-                // Змінюємо позиції в локальному списку
-                exerciseAdapter.moveItem(fromPos, toPos, planManagerDAO, block.getId());
+                int toPos = target.getBindingAdapterPosition();
+                adapter.moveItem(fromPos, toPos, planManagerDAO, block.getId());
                 return true;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                if (direction == ItemTouchHelper.LEFT) {
-                    int pos = viewHolder.getBindingAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
-                        // Видаляємо вправу з бази і локального списку
-                        ExerciseInBlock removedEx = exerciseAdapter.getItems().get(pos);
-                        planManagerDAO.removeExerciseFromBlock(block.getId(), removedEx.getId(), removedEx.getPosition());
-
-                        // Видаляємо з адаптера
-                        exerciseAdapter.getItems().remove(pos);
-                        exerciseAdapter.notifyItemRemoved(pos);
-
-                        // Перепризначимо позиції решті вправ
-                        for (int i = pos; i < exerciseAdapter.getItems().size(); i++) {
-                            exerciseAdapter.getItems().get(i).setPosition(i);
-                        }
-                        planManagerDAO.updateTrainingBlockExercises(block.getId(), exerciseAdapter.getItems());
-                    }
-                }
+                // нічого не робимо, якщо swipe не потрібен
             }
         };
 
         holder.itemTouchHelper = new ItemTouchHelper(callback);
         holder.itemTouchHelper.attachToRecyclerView(holder.recyclerViewExercises);
     }
+
 
     /**
      * Налаштовує контекстне меню (три крапки) із опціями блоку: редагувати, видалити, додати вправу, клонувати тощо.
