@@ -6,7 +6,7 @@
         android:id="@+id/menu_edit_exercises"
         android:title="@string/exercises_edit"
         app:iconTint="@color/text_primary"
-        android:icon="@drawable/baseline_brush_24"
+        android:icon="@drawable/ic_exercise"
         app:showAsAction="never" />
 
     <item
