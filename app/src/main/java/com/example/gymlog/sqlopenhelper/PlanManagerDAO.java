@@ -20,8 +20,7 @@ import com.example.gymlog.model.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 /**
  * DAO-клас для управління програмами (PlanCycles)
@@ -556,7 +555,6 @@ public class PlanManagerDAO {
         db.close();
         return filters;
     }
-
     /**
      * Завантажує всі фільтри (motion, muscleGroups, equipment)
      * для блоку і присвоює їх у відповідні поля об'єкта `block`.
@@ -565,19 +563,23 @@ public class PlanManagerDAO {
         long blockId = block.getId();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // 1. Motion (беремо лише перший — за задумом тільки один)
+        // 1. Motion (може бути кілька)
         Cursor cMotion = db.rawQuery(
                 "SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = ?",
                 new String[]{String.valueOf(blockId)}
         );
+        List<Motion> motions = new ArrayList<>();
         if (cMotion.moveToFirst()) {
-            try {
-                block.setMotion(Motion.valueOf(cMotion.getString(0)));
-            } catch (Exception e) {
-                Log.e("DB_DEBUG", "Unknown motion: " + cMotion.getString(0), e);
-            }
+            do {
+                try {
+                    motions.add(Motion.valueOf(cMotion.getString(0)));
+                } catch (Exception e) {
+                    Log.e("DB_DEBUG", "Unknown motion: " + cMotion.getString(0), e);
+                }
+            } while (cMotion.moveToNext());
         }
         cMotion.close();
+        block.setMotions(motions);
 
         // 2. MuscleGroups (може бути кілька)
         Cursor cMuscle = db.rawQuery(
@@ -597,19 +599,23 @@ public class PlanManagerDAO {
         cMuscle.close();
         block.setMuscleGroupList(muscleGroups);
 
-        // 3. Equipment (беремо перший, якщо є)
+        // 3. Equipment (може бути кілька)
         Cursor cEquip = db.rawQuery(
                 "SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = ?",
                 new String[]{String.valueOf(blockId)}
         );
+        List<Equipment> equipmentList = new ArrayList<>();
         if (cEquip.moveToFirst()) {
-            try {
-                block.setEquipment(Equipment.valueOf(cEquip.getString(0)));
-            } catch (Exception e) {
-                Log.e("DB_DEBUG", "Unknown equipment: " + cEquip.getString(0), e);
-            }
+            do {
+                try {
+                    equipmentList.add(Equipment.valueOf(cEquip.getString(0)));
+                } catch (Exception e) {
+                    Log.e("DB_DEBUG", "Unknown equipment: " + cEquip.getString(0), e);
+                }
+            } while (cEquip.moveToNext());
         }
         cEquip.close();
+        block.setEquipmentList(equipmentList);
 
         db.close();
     }
@@ -1034,7 +1040,6 @@ public class PlanManagerDAO {
 //
 //  КЛОНУВАННЯ БЛОКУ (TRAININGBLOCK)
 //
-
     /**
      * Клонує блок (TrainingBlock) із фільтрами та вправами.
      * Викликається з cloneGymSession(...) або окремо через onStartCloneTrainingBlock(...).
@@ -1052,15 +1057,14 @@ public class PlanManagerDAO {
         cursor.close();
 
         // 2) Створюємо клонований блок
-        //    (можна додати суфікс у назві, наприклад block.getName() + " (C)")
         TrainingBlock clone = new TrainingBlock(
                 0,
                 newDayId,
                 block.getName() + " (C)",
                 block.getDescription(),
-                block.getMotion(),
+                new ArrayList<>(block.getMotions()),           // нове: додаємо список фільтрів
                 new ArrayList<>(block.getMuscleGroupList()),
-                block.getEquipment(),
+                new ArrayList<>(block.getEquipmentList()),     // нове: додаємо список фільтрів
                 newPosition,
                 new ArrayList<>()
         );
@@ -1079,7 +1083,29 @@ public class PlanManagerDAO {
         clone.setId(newId);
 
         // 4) Клонуємо фільтри (motion, muscleGroup, equipment)
-        cloneBlockFilters(block.getId(), newId, db);
+        // Motion
+        for (Motion motion : block.getMotions()) {
+            ContentValues motionValues = new ContentValues();
+            motionValues.put("trainingBlockId", newId);
+            motionValues.put("motionType", motion.name());
+            db.insert("TrainingBlockMotion", null, motionValues);
+        }
+
+        // Muscle Groups
+        for (MuscleGroup muscle : block.getMuscleGroupList()) {
+            ContentValues muscleValues = new ContentValues();
+            muscleValues.put("trainingBlockId", newId);
+            muscleValues.put("muscleGroup", muscle.name());
+            db.insert("TrainingBlockMuscleGroup", null, muscleValues);
+        }
+
+        // Equipment
+        for (Equipment equipment : block.getEquipmentList()) {
+            ContentValues equipmentValues = new ContentValues();
+            equipmentValues.put("trainingBlockId", newId);
+            equipmentValues.put("equipment", equipment.name());
+            db.insert("TrainingBlockEquipment", null, equipmentValues);
+        }
 
         // 5) Клонуємо вправи (ExerciseInBlock)
         List<ExerciseInBlock> newExercises = new ArrayList<>();
@@ -1090,6 +1116,7 @@ public class PlanManagerDAO {
 
         return clone;
     }
+
 
     /**
      * Окрема транзакція клонування блоків (без днів і планів).
