@@ -4,10 +4,8 @@ import static com.example.gymlog.ui.programs.adapters.BasePlanAdapter.forceShowI
 import static com.example.gymlog.ui.programs.adapters.BasePlanAdapter.tintMenuIcons;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +23,6 @@ import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.model.plan.TrainingBlock;
 import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +31,7 @@ import java.util.List;
  */
 public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdapter.TrainingBlockViewHolder> {
 
-    public interface OnTrainingBlockClickListener {
+    public interface OnMenuTrainingBlockListener {
         void onEditClick(TrainingBlock block);       // Редагувати блок
         void onDeleteClick(TrainingBlock block);     // Видалити блок
         void onAddExercise(TrainingBlock block);     // Додати вправу
@@ -44,17 +39,23 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         void onCloneTrainingBlock(TrainingBlock block); // Клонувати блок
     }
 
+    public interface OnLongMenuTrainBlockListener {
+        void onLongPress(RecyclerView.ViewHolder viewHolder);
+    }
+
     private final Context context;
     private final List<TrainingBlock> blocks;
     private final PlanManagerDAO dao;
-    private final OnTrainingBlockClickListener listener;
+    private final OnMenuTrainingBlockListener menuTrainingBlockListener;
+    private final OnLongMenuTrainBlockListener longMenuTrainBlockListener;
 
     public TrainingBlockAdapter(Context context, List<TrainingBlock> blocks,
-                                PlanManagerDAO dao, OnTrainingBlockClickListener listener) {
+                                PlanManagerDAO dao, OnMenuTrainingBlockListener menuTrainingBlockListener, OnLongMenuTrainBlockListener longMenuTrainBlockListener) {
         this.context = context;
         this.blocks = blocks != null ? blocks : new ArrayList<>();
         this.dao = dao;
-        this.listener = listener;
+        this.menuTrainingBlockListener = menuTrainingBlockListener;
+        this.longMenuTrainBlockListener = longMenuTrainBlockListener;
         setHasStableIds(true);
     }
 
@@ -125,20 +126,32 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                 popup.setOnMenuItemClickListener(item -> {
                     int itemId = item.getItemId();
                     if (itemId == R.id.menu_edit_block) {
-                        listener.onEditClick(block);
+                        menuTrainingBlockListener.onEditClick(block);
                     } else if (itemId == R.id.menu_delete_block) {
-                        listener.onDeleteClick(block);
+                        menuTrainingBlockListener.onDeleteClick(block);
                     } else if (itemId == R.id.menu_add_exercise) {
-                        listener.onAddExercise(block);
+                        menuTrainingBlockListener.onAddExercise(block);
                     } else if (itemId == R.id.menu_edit_exercises) {
-                        listener.onEditExercises(block);
+                        menuTrainingBlockListener.onEditExercises(block);
                     } else if (itemId == R.id.menu_clone_block) {
-                        listener.onCloneTrainingBlock(block);
+                        menuTrainingBlockListener.onCloneTrainingBlock(block);
                     }
                     return true;
                 });
                 tintMenuIcons(popup.getMenu(), TrainingBlockViewHolder.this);
                 popup.show();
+            });
+
+
+            // Повністю вимикаємо стандартні кліки та звуки для кнопки
+            menu.setClickable(true);
+            menu.setLongClickable(true);
+            menu.setHapticFeedbackEnabled(false);
+            menu.setSoundEffectsEnabled(false);
+            menu.setOnLongClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); //відрація довгого натискання
+                longMenuTrainBlockListener.onLongPress(TrainingBlockViewHolder.this);
+                return true;
             });
         }
 

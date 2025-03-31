@@ -33,6 +33,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrainingBlocks;
     private TrainingBlockAdapter trainingBlockAdapter;
+    private ItemTouchHelper itemTouchHelper = null;
     private final List<TrainingBlock> trainingBlocks = new ArrayList<>();
     private PlanManagerDAO planManagerDAO;
     private long gymDayId;
@@ -54,8 +55,10 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         planManagerDAO = new PlanManagerDAO(this); // Ініціалізація DAO
         initUI(); // Налаштування UI
         setupRecyclerView(); // Налаштування RecyclerView
-        setupDragAndDrop(); // Налаштування drag & drop
+
         loadTrainingBlocks(); // Завантаження даних
+        setupDragAndDrop(); // Налаштування drag & drop
+
     }
 
     // Ініціалізація UI
@@ -104,12 +107,24 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     // Налаштування RecyclerView
     private void setupRecyclerView() {
         recyclerViewTrainingBlocks.setLayoutManager(new LinearLayoutManager(this));
-        trainingBlockAdapter = new TrainingBlockAdapter(this, trainingBlocks, planManagerDAO, new TrainingBlockListener());
+        trainingBlockAdapter = new TrainingBlockAdapter(
+                this,
+                trainingBlocks,
+                planManagerDAO,
+                new MenuTrainingBlockListener(),
+                blockViewHolder -> {
+                    itemTouchHelper.startDrag(blockViewHolder);
+                });
         recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
     }
 
     // Налаштування drag & drop
     private void setupDragAndDrop() {
+        //відкріпити recyclerViewTrainingBlocks від старого exercisesItemTouchHelper
+        if (itemTouchHelper != null)
+            itemTouchHelper.attachToRecyclerView(null);
+
+
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -130,7 +145,8 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                 return false; // Вимкни longPressDrag зовнішнього RecyclerView
             }
         };
-        new ItemTouchHelper(callback).attachToRecyclerView(recyclerViewTrainingBlocks);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewTrainingBlocks);
     }
 
 
@@ -155,7 +171,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     }
 
     // Обробник подій для тренувальних блоків
-    private class TrainingBlockListener implements TrainingBlockAdapter.OnTrainingBlockClickListener {
+    private class MenuTrainingBlockListener implements TrainingBlockAdapter.OnMenuTrainingBlockListener {
         @Override
         public void onEditClick(TrainingBlock block) {
             openBlockEditDialog(block);
