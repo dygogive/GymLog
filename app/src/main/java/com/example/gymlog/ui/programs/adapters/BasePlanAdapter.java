@@ -1,6 +1,5 @@
 package com.example.gymlog.ui.programs.adapters;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,26 +23,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Узагальнений адаптер для відображення списку BasePlanItem (наприклад, FitnessProgram, GymSession).
- * Містить:
- *  - Поля назви та опису
- *  - Кнопки "Редагувати" та "Видалити"
- *  - Метод "onItemClick" для переходу чи детального перегляду
+ * Адаптер для відображення списку елементів, що наслідують BasePlanItem.
+ * Підтримує редагування, клонування та видалення через контекстне меню.
+ * Простий та зрозумілий для розуміння навіть для джуніорів.
  */
 public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapter<BasePlanAdapter.BasePlanViewHolder> {
 
-
-
-
-    public List<T> getItems() {
-        return items;
-    }
+    private final List<T> items;
+    private final OnPlanItemClickListener<T> listener;
 
     /**
-     * Інтерфейс для обробки кліків:
-     * - onEditClick()   => редагування
-     * - onDeleteClick() => видалення
-     * - onItemClick()   => простий клік на весь елемент
+     * Інтерфейс для обробки кліків на елементи списку.
      */
     public interface OnPlanItemClickListener<T> {
         void onItemClick(T item);
@@ -52,98 +42,61 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
         void onDeleteClick(T item);
     }
 
-    // Список елементів та слухач кліків
-    private final List<T> items;
-    public final OnPlanItemClickListener<T> listener;
-
     /**
      * Конструктор адаптера.
      *
-     * @param items    Список об'єктів, що реалізують BasePlanItem
-     * @param listener Слухач подій (редагування, видалення, клік)
+     * @param items    Список елементів для відображення.
+     * @param listener Слухач подій (редагування, клонування, видалення, простий клік).
      */
     public BasePlanAdapter(List<T> items, OnPlanItemClickListener<T> listener) {
         this.items = items;
         this.listener = listener;
     }
 
+    public List<T> getItems() {
+        return items;
+    }
+
     @NonNull
     @Override
     public BasePlanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Інфлюємо item_plan_day.xml для відображення назв та описів
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_plan_day, parent, false);
+        // Інфлюємо розмітку елемента списку
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plan_day, parent, false);
         return new BasePlanViewHolder(view);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onBindViewHolder(@NonNull BasePlanViewHolder holder, int position) {
-        // Поточний об'єкт (наприклад, FitnessProgram чи GymSession)
         T item = items.get(position);
-
-        // Відображення назви та опису
+        // Встановлюємо назву та опис
         holder.textViewName.setText(item.getName());
         holder.textViewDescription.setText(item.getDescription());
 
-        // Обробники натискань
-        // 1) натискання на весь item
+        // Обробка простого кліку по елементу
         holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
-        // 2) контекстне меню і відразу ж назначаємо слухач на пункти меню
+
+        // Налаштування контекстного меню при кліку на кнопку
         holder.buttonMenu.setOnClickListener(v -> {
-            // Створюємо PopupMenu
-            PopupMenu popup = new PopupMenu(v.getContext(),v);
-            popup.getMenuInflater().inflate(R.menu.program_context_menu,popup.getMenu());
-
-            // Показати іконки
-            try {
-                Field[] fields = popup.getClass().getDeclaredFields();
-                for (Field field : fields) {
-                    if ("mPopup".equals(field.getName())) {
-                        field.setAccessible(true);
-                        Object menuPopupHelper = field.get(popup);
-                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-                        setForceIcons.invoke(menuPopupHelper, true);
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Обробник вибору пунктів меню
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
+            popup.getMenuInflater().inflate(R.menu.program_context_menu, popup.getMenu());
+            forceShowIcons(popup); // Примусове відображення іконок у меню
             popup.setOnMenuItemClickListener(menuItem -> {
-                int itemId = menuItem.getItemId();
-                if (itemId == R.id.menu_edit) {
-                    listener.onEditClick(item); // Редагувати
+                int id = menuItem.getItemId();
+                if (id == R.id.menu_edit) {
+                    listener.onEditClick(item);
                     return true;
-                } else if (itemId == R.id.menu_clone) {
-                    listener.onCloneClick(item); // Клонувати
+                } else if (id == R.id.menu_clone) {
+                    listener.onCloneClick(item);
                     return true;
-                } else if (itemId == R.id.menu_delete) {
-                    listener.onDeleteClick(item); // Видалити
+                } else if (id == R.id.menu_delete) {
+                    listener.onDeleteClick(item);
                     return true;
                 }
                 return false;
             });
-
-            // Програмно встановити колір іконок
-            Menu menu = popup.getMenu();
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem item1 = menu.getItem(i);
-                Drawable icon = item1.getIcon();
-                if (icon != null) {
-                    icon.mutate(); // щоб не змінювати глобальний ресурс
-                    icon.setTint(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_hint)); // або Color.RED
-                    item1.setIcon(icon);
-                }
-            }
-
-            // Показати меню
+            tintMenuIcons(popup.getMenu(), holder);
             popup.show();
         });
-
     }
 
     @Override
@@ -152,33 +105,62 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
     }
 
     /**
-     * Метод для переміщення елементів (Drag & Drop).
-     * Викликається з ItemTouchHelper.
+     * Переміщення елемента в списку (Drag & Drop).
      *
-     * @param fromPosition Поточна позиція
-     * @param toPosition   Цільова позиція
+     * @param fromPosition Початкова позиція.
+     * @param toPosition   Цільова позиція.
      */
     public void moveItem(int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
-            // зсув вниз
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(items, i, i + 1);
             }
         } else {
-            // зсув вгору
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(items, i, i - 1);
             }
         }
         notifyItemMoved(fromPosition, toPosition);
-
-
     }
 
-
+    /**
+     * Примусове відображення іконок у PopupMenu за допомогою reflection.
+     *
+     * @param popup PopupMenu, для якого потрібно показати іконки.
+     */
+    public static void forceShowIcons(PopupMenu popup) {
+        try {
+            Field field = popup.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            Object menuPopupHelper = field.get(popup);
+            Method setForceShowIcon = menuPopupHelper.getClass().getMethod("setForceShowIcon", boolean.class);
+            setForceShowIcon.invoke(menuPopupHelper, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
-     * ViewHolder містить посилання на назву, опис і кнопки (редагувати, видалити).
+     * Накладання тінту на іконки меню.
+     *
+     * @param menu   Меню з іконками.
+     * @param holder ViewHolder для отримання контексту.
+     */
+    public static  void tintMenuIcons(Menu menu, RecyclerView.ViewHolder holder) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem menuItem = menu.getItem(i);
+            Drawable icon = menuItem.getIcon();
+            if (icon != null) {
+                icon.mutate();
+                icon.setTint(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_hint));
+                menuItem.setIcon(icon);
+            }
+        }
+    }
+
+    /**
+     * ViewHolder для елемента списку.
+     * Містить посилання на текстові поля та кнопку меню.
      */
     public static class BasePlanViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName, textViewDescription;
@@ -186,9 +168,9 @@ public class BasePlanAdapter<T extends BasePlanItem> extends RecyclerView.Adapte
 
         public BasePlanViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewName        = itemView.findViewById(R.id.textViewDayName);
+            textViewName = itemView.findViewById(R.id.textViewDayName);
             textViewDescription = itemView.findViewById(R.id.tvDayDescription);
-            buttonMenu          = itemView.findViewById(R.id.buttonMenu);
+            buttonMenu = itemView.findViewById(R.id.buttonMenu);
         }
     }
 }
