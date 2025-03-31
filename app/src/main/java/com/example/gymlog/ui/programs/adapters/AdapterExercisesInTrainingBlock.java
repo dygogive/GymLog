@@ -61,7 +61,6 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
 
         // тільки цей слухач має бути, інших бути не повинно
         holder.buttonInfo.setOnTouchListener((v, event) -> {
-            //v.getParent().requestDisallowInterceptTouchEvent(true);
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 onStartDragListener.onStartDrag(holder);
                 return true;
