@@ -81,6 +81,15 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
         // Налаштовуємо внутрішній список вправ
         setupExercisesRecyclerView(holder, block);
+
+        // Зовнішній адаптер
+//        holder.outerDragHandle.setOnTouchListener((v, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                outerItemTouchHelper.startDrag(holder);
+//                return true;
+//            }
+//            return false;
+//        });
     }
 
     /**
