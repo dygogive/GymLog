@@ -96,15 +96,15 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
             nameExercise = itemView.findViewById(R.id.nameExercise);
             buttonDragHandle = itemView.findViewById(R.id.buttonInfo);
 
-            setupListeners();
+
         }
 
         void bind(ExerciseInBlock exercise) {
             nameExercise.setText(exercise.getNameOnly(context));
-            nameExercise.setOnClickListener(v -> clickListener.onClick(exercise));
+            setupListeners(exercise);
         }
 
-        private void setupListeners() {
+        private void setupListeners(ExerciseInBlock exercise) {
             // Повністю вимикаємо стандартні кліки та звуки для кнопки
             buttonDragHandle.setClickable(false);
             buttonDragHandle.setLongClickable(true);
@@ -117,6 +117,9 @@ public class AdapterExercisesInTrainingBlock extends RecyclerView.Adapter<Adapte
                 dragListener.onLongPressImage(this); // запуск перетягування
                 return true;
             });
+
+
+            nameExercise.setOnClickListener(v -> clickListener.onClick(exercise));
         }
     }
 }
