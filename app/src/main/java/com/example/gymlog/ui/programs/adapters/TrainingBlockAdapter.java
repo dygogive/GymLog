@@ -4,6 +4,7 @@ import static com.example.gymlog.ui.programs.adapters.BasePlanAdapter.forceShowI
 import static com.example.gymlog.ui.programs.adapters.BasePlanAdapter.tintMenuIcons;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -223,7 +224,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
             AdapterExercisesInTrainingBlock adapterExercises = new AdapterExercisesInTrainingBlock(
                     context, exercises,
-                    exercise -> Toast.makeText(context, exercise.getNameOnly(context), Toast.LENGTH_SHORT).show(),
+                    TrainingBlockAdapter.this::onClickExerciseInBlock,
                     viewHolder -> exercisesItemTouchHelper.startDrag(viewHolder)
             );
 
@@ -266,4 +267,61 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
             exercisesItemTouchHelper.attachToRecyclerView(exercisesRecycler);
         }
     }
+
+
+    private void onClickExerciseInBlock(ExerciseInBlock exerciseInBlock) {
+//        Toast.makeText(context, exerciseInBlock.getNameOnly(context), Toast.LENGTH_SHORT).show();
+
+        new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
+                .setTitle(context.getString(R.string.exercise_description))
+                .setMessage(buildExerciseFullDescription(exerciseInBlock))
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    // окремий метод для побудови повного опису вправи
+    private CharSequence buildExerciseFullDescription(ExerciseInBlock exercise) {
+        StringBuilder sb = new StringBuilder();
+
+        // Назва вправи (жирний шрифт)
+        sb.append("<b>").append(exercise.getNameOnly(context)).append("</b><br><br>");
+
+        // Опис (перевірка на порожній рядок)
+        if (!exercise.getDescription().isEmpty()) {
+            sb.append(exercise.getDescription()).append("<br><br>");
+        }
+
+        // Обладнання
+        if (exercise.getEquipment() != null) {
+            sb.append("<b>")
+                    .append(context.getString(R.string.equipment))
+                    .append(": </b>")
+                    .append(exercise.getEquipment().getDescription(context))
+                    .append("<br><br>");
+        }
+
+        // Тип руху
+        if (exercise.getMotion() != null) {
+            sb.append("<b>")
+                    .append(context.getString(R.string.motion))
+                    .append(": </b>")
+                    .append(exercise.getMotion().getDescription(context))
+                    .append("<br><br>");
+        }
+
+        // Групи м'язів
+        if (!exercise.getMuscleGroupList().isEmpty()) {
+            sb.append("<b>")
+                    .append(context.getString(R.string.muscle_groups))
+                    .append(": </b><br>");
+
+            for (MuscleGroup muscleGroup : exercise.getMuscleGroupList()) {
+                sb.append("• ").append(muscleGroup.getDescription(context)).append("<br>");
+            }
+        }
+
+        // Підтримка HTML-тексту для AlertDialog
+        return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
+    }
+
 }
