@@ -9,7 +9,7 @@
     <color name="background_card">#1E1E1E</color>
 
     <!-- Фон карток, item'ів RecyclerView -->
-    <color name="background_card2">#545454</color>
+    <color name="background_card2">#4D4B4B</color>
 
     <!-- Основний текст -->
     <color name="text_primary">#FAFAFA</color>
