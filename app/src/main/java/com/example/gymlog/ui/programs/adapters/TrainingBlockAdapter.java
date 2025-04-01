@@ -127,7 +127,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
             // Основний опис
             if (!string.isEmpty()) {
-                sb.append(string).append("\n");
+                sb.append(string).append(" • ");
             }
 
             int count = 0;
@@ -139,7 +139,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                     sb.append(muscle.getDescription(context)).append("; ");
                     if(count++ >= 1) break;
                 }
-                sb.append("\n");
+                sb.append(" • ");
                 count = 0;
             }
 
@@ -150,7 +150,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                     sb.append(motion.getDescription(context)).append("; ");
                     if(count++ >= 1) break;
                 }
-                sb.append("\n");
+                sb.append(" • ");
                 count = 0;
             }
 
@@ -161,7 +161,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
                     sb.append(eq.getDescription(context)).append("; ");
                     if(count++ >= 1) break;
                 }
-                sb.append("\n");
+                sb.append(" • ");
                 count = 0;
             }
 
