@@ -22,13 +22,17 @@ import androidx.room.PrimaryKey
  */
 
 
+
+
+// ТАблиця з результатами в базі
+//для зберігання об'єктів ExerciseResult (щойно зрозумів)
 @Entity(tableName = "exercise_results")
 data class ExerciseResult(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val exerciseId: Long,
-    val trainingBlockId: Long,
+    val exerciseId: Long, // ід вправи в таблиці вправ
+    val trainingBlockId: Long, //ід тренувального блоку в таблиці з блоками
     val timestamp: Long, // дата і час (Unix-час)
-    val weight: Float,
-    val repetitions: Int,
-    val notes: String? = null
+    val weight: Float, // вага спорядження
+    val repetitions: Int, //к-сть повторень
+    val notes: String? = null // нотатки виконаного повторення
 )

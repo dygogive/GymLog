@@ -44,7 +44,7 @@ android {
 
 
 dependencies {
-    val roomVersion = "2.5.1"
+    val roomVersion = "2.6.1"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion") // корисні Kotlin-розширення (не обов'язково, але рекомендую)
