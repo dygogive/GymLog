@@ -13,7 +13,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.database.PlanManagerDAO;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.ExerciseInBlock;

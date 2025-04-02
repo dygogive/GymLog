@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.database.ExerciseDAO;
 import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.BundleKeys;
 import com.example.gymlog.model.exercise.Equipment;

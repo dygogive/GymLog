@@ -1,4 +1,4 @@
-package com.example.gymlog.sqlopenhelper;
+package com.example.gymlog.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

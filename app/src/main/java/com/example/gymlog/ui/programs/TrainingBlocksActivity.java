@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
-import com.example.gymlog.sqlopenhelper.PlanManagerDAO;
+import com.example.gymlog.database.PlanManagerDAO;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.ExerciseInBlock;
 import com.example.gymlog.model.plan.TrainingBlock;

@@ -15,7 +15,7 @@ import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;
 import com.example.gymlog.model.exercise.MuscleGroup;
 import com.example.gymlog.model.exercise.Motion;
-import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.database.ExerciseDAO;
 import com.example.gymlog.ui.dialogs.DialogStyler;
 
 import java.util.ArrayList;

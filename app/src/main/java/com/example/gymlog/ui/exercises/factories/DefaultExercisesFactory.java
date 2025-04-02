@@ -3,7 +3,7 @@ package com.example.gymlog.ui.exercises.factories;
 
 import android.util.Log;
 
-import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.database.ExerciseDAO;
 import com.example.gymlog.model.exercise.AttributeFilter;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Exercise;

@@ -12,7 +12,7 @@ import com.example.gymlog.model.exercise.BundleKeys;
 import com.example.gymlog.model.exercise.Equipment;
 import com.example.gymlog.model.exercise.Motion;
 import com.example.gymlog.model.exercise.MuscleGroup;
-import com.example.gymlog.sqlopenhelper.ExerciseDAO;
+import com.example.gymlog.database.ExerciseDAO;
 import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.exercises.factories.DefaultExercisesFactory;
 import com.example.gymlog.ui.exercises.fragments.AttributeListFragment;
