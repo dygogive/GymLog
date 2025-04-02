@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt") // для Room
 }
 
 android {
@@ -33,12 +34,22 @@ android {
 
     buildToolsVersion = "36.0.0"
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17" // відповідність з Java 17
     }
 
 }
 
+
+
+
+
 dependencies {
+    val roomVersion = "2.5.1"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion") // корисні Kotlin-розширення (не обов'язково, але рекомендую)
+    kapt("androidx.room:room-compiler:$roomVersion")
+
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -49,7 +60,10 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.core.ktx)
+    implementation(libs.room.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+
 }
