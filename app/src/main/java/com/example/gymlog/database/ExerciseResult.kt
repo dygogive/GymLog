@@ -1,6 +1,8 @@
 package com.example.gymlog.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -26,13 +28,19 @@ import androidx.room.PrimaryKey
 
 // ТАблиця з результатами в базі
 //для зберігання об'єктів ExerciseResult (щойно зрозумів)
-@Entity(tableName = "exercise_results")
+@Entity(tableName = "exercise_results",
+        indices = [
+            Index(value = ["exerciseId"]),
+            Index(value = ["trainingBlockId"]),
+            Index(value = ["timestamp"])
+        ]
+    )
 data class ExerciseResult(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val exerciseId: Long, // ід вправи в таблиці вправ
     val trainingBlockId: Long, //ід тренувального блоку в таблиці з блоками
     val timestamp: Long, // дата і час (Unix-час)
-    val weight: Float, // вага спорядження
-    val repetitions: Int, //к-сть повторень
-    val notes: String? = null // нотатки виконаного повторення
+    @ColumnInfo(name = "weight") val weight: Float = 0f,  // використовуйте @ColumnInfo для явного вказання імені стовпця
+    @ColumnInfo(name = "repetitions") val repetitions: Int,
+    @ColumnInfo(name = "notes") val notes: String? = null
 )

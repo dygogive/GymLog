@@ -22,5 +22,10 @@
         <item name="android:navigationBarColor">?attr/android:colorBackground</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
+  <!-- Base application theme. -->
+    <style name="Base.Theme.MyApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
 
 </resources>
