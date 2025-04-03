@@ -27,7 +27,7 @@ import androidx.room.PrimaryKey
 
 
 // ТАблиця з результатами в базі
-//для зберігання об'єктів ExerciseResult (щойно зрозумів)
+//для зберігання об'єктів ExerciseResult
 @Entity(tableName = "exercise_results",
         indices = [
             Index(value = ["exerciseId"]),
@@ -37,10 +37,19 @@ import androidx.room.PrimaryKey
     )
 data class ExerciseResult(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val exerciseId: Long, // ід вправи в таблиці вправ
-    val trainingBlockId: Long, //ід тренувального блоку в таблиці з блоками
-    val timestamp: Long, // дата і час (Unix-час)
-    @ColumnInfo(name = "weight") val weight: Float = 0f,  // використовуйте @ColumnInfo для явного вказання імені стовпця
+    val exerciseId:         Long, // ід вправи в таблиці вправ
+    val trainingBlockId:    Long, //ід тренувального блоку в таблиці з блоками
+    val timestamp:          Long, // дата і час (Unix-час)
+    @ColumnInfo(name = "weight") val weight: Int,  // використовуйте @ColumnInfo для явного вказання імені стовпця
     @ColumnInfo(name = "repetitions") val repetitions: Int,
     @ColumnInfo(name = "notes") val notes: String? = null
-)
+) {
+    // Гетери для Java
+    fun getid(): Long {return id}
+    fun getexerciseId(): Long {return exerciseId}
+    fun gettrainingBlockId(): Long {return trainingBlockId}
+    fun gettimestamp(): Long {return timestamp}
+    fun getweight(): Int {return weight}
+    fun getrepetitions(): Int {return repetitions}
+    fun getnotes(): String? {return notes}
+}
