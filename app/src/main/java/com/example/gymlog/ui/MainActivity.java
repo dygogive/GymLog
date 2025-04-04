@@ -4,6 +4,7 @@ package com.example.gymlog.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,30 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-        // код тесту бд коли немає suspend в DAO
-//        Executors.newSingleThreadExecutor().execute(() -> {
-//            try{
-//                TestKt.testDatabase(getApplicationContext());
-//            }catch (Exception e){
-//                Log.d(TestKt.TAG,"Помилка роботи з БД", e);
-//            }
-//        });
-
-
-
-        TestKt.testDatabaseWithCallback(getApplicationContext(), () -> {
-            Log.d(TestKt.TAG, "Операція завершена");
-            return null;
-        });
-
-
-
-        TestKt.testDatabaseJavaWrapper(getApplicationContext(), () -> {
-            Log.d(TestKt.TAG, "Операція завершена");
-            return null;
-        });
+        // У MainActivity.java
+        TestKt.testDatabaseJavaWrapper(
+                this, // LifecycleOwner
+                getApplicationContext(),
+                () -> {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Операція завершена", Toast.LENGTH_SHORT).show();
+                    });
+                    return null;
+                }
+        );
 
 
 

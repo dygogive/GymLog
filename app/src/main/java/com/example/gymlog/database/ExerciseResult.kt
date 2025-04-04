@@ -40,7 +40,7 @@ data class ExerciseResult(
     val exerciseId:         Long, // ід вправи в таблиці вправ
     val trainingBlockId:    Long, //ід тренувального блоку в таблиці з блоками
     val timestamp:          Long, // дата і час (Unix-час)
-    @ColumnInfo(name = "weight") val weight: Int,  // використовуйте @ColumnInfo для явного вказання імені стовпця
+    @ColumnInfo(name = "weight") val weight: Float,  // використовуйте @ColumnInfo для явного вказання імені стовпця
     @ColumnInfo(name = "repetitions") val repetitions: Int,
     @ColumnInfo(name = "notes") val notes: String? = null
 ) {
@@ -49,7 +49,7 @@ data class ExerciseResult(
     fun getexerciseId(): Long {return exerciseId}
     fun gettrainingBlockId(): Long {return trainingBlockId}
     fun gettimestamp(): Long {return timestamp}
-    fun getweight(): Int {return weight}
+    fun getweight(): Float {return weight}
     fun getrepetitions(): Int {return repetitions}
     fun getnotes(): String? {return notes}
 }

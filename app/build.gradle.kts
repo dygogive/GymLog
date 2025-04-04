@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")  // Правильний спосіб підключити KAPT
+    id("kotlin-kapt")
 }
 
 android {
@@ -39,17 +39,21 @@ android {
     }
 }
 
+
+
 dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
+    // Room
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")  // Тепер kapt буде розпізнано
+    kapt("androidx.room:room-compiler:$roomVersion")
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.7.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)

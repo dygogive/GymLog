@@ -2,61 +2,66 @@ package com.example.gymlog.database
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers;
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlin.coroutines.Continuation;
-import kotlin.jvm.functions.Function2;
-
+import kotlinx.coroutines.withContext
 
 const val TAG = "RoomTest"
 
-// Test.kt
+// Основна suspend-функція (залишаємо без змін)
 suspend fun testDatabase(context: Context) {
     val db = AppDatabase.getInstance(context)
     val dao = db.getExerciseDao()
 
     // Вставка даних
-    val id = dao.insert(
+    dao.insert(
         ExerciseResult(
             id = 0,
             exerciseId = 2,
             trainingBlockId = 3,
             timestamp = System.currentTimeMillis(),
-            weight = 100,
+            weight = 100f,
             repetitions = 10,
             notes = "Exercise done"
         )
-    );
+    )
 
-    val allExerciseResults = dao.getAll();
-
+    val allExerciseResults = dao.getAll()
 
     allExerciseResults.forEach { e ->
-        run {
-            Log.d(TAG, "ID: $id; exeID: ${e.exerciseId}; Notes: ${e.notes}")
+        Log.d(TAG, "ID: ${e.id}; exeID: ${e.exerciseId}; Notes: ${e.notes ?: "no notes"}")
+    }
+}
+
+// Новий варіант з lifecycleScope (рекомендований)
+fun testDatabaseLifecycleAware(
+    owner: LifecycleOwner,
+    context: Context,
+    onSuccess: () -> Unit = {},
+    onError: (Throwable) -> Unit = {}
+) {
+    owner.lifecycleScope.launch {
+        try {
+            // Виконуємо операції з БД у IO потоці
+            withContext(Dispatchers.IO) {
+                testDatabase(context)
+            }
+            // Повертаємось на головний потік для callback
+            onSuccess()
+        } catch (e: Exception) {
+            Log.e(TAG, "Database error", e)
+            onError(e)
         }
     }
 }
 
-
-//для використання suspend
-fun testDatabaseWithCallback(context: Context, callback: () -> Unit) {
-    runBlocking {
-        testDatabase(context)
-        callback()
-    }
-}
-
-
-
-//для використання suspend використовується функція-обгортка
-fun testDatabaseJavaWrapper(context: Context, callback: () -> Unit) {
-
-    CoroutineScope(Dispatchers.IO).launch {
-        testDatabase(context)
-        callback()
-    }
-
+// Для Java-сумісності (якщо потрібно)
+fun testDatabaseJavaWrapper(
+    owner: LifecycleOwner,
+    context: Context,
+    callback: () -> Unit
+) {
+    testDatabaseLifecycleAware(owner, context, callback)
 }
