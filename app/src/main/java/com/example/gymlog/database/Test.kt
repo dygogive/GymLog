@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 const val TAG = "RoomTest"
 
 // Основна suspend-функція (залишаємо без змін)
@@ -65,3 +66,5 @@ fun testDatabaseJavaWrapper(
 ) {
     testDatabaseLifecycleAware(owner, context, callback)
 }
+
+

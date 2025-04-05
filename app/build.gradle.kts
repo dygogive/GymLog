@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.gymlog"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.gymlog"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -64,6 +64,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.8")
+
+    
+    //using Material Design 3
+    val material3_version = "1.3.1"
+    implementation("androidx.compose.material3:material3:$material3_version")
+
+
+
+
 
     //Room database
     val room_version = "2.6.1"
