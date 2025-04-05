@@ -31,7 +31,7 @@ import com.example.gymlog.ui.exercises.activities.ExerciseManagementActivity
 import com.example.gymlog.ui.programs.FitnessProgramsActivity
 import com.example.gymlog.ui.theme.MyAppTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Включаємо edge-to-edge режим
         WindowCompat.setDecorFitsSystemWindows(window, false)
