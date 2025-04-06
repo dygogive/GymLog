@@ -126,7 +126,8 @@ fun MainScreen() {
                 Text(
                     text = stringResource(id = R.string.edit_programs),
                     fontSize = 24.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displayLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
                 )
             }
         }
@@ -162,7 +163,8 @@ fun MainScreen() {
                 Text(
                     text = stringResource(id = R.string.exe_editor),
                     fontSize = 24.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displayLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
                 )
             }
         }
