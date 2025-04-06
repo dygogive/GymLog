@@ -7,6 +7,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.unit.sp
 import com.example.gymlog.R
 
 @Composable
@@ -68,10 +74,70 @@ fun MyAppTheme(
         onError = Color.Black
     )
 
+    //Кастомний шрифт
+    val CustomFontFamily = FontFamily(
+        Font(R.font.roboto_regular, FontWeight.Normal),
+        // Якщо треба інші варіанти (Bold, Italic), додаєте ще
+        Font(R.font.roboto_bold, FontWeight.Bold),
+        Font(R.font.roboto_italic, FontWeight.Normal)
+    )
+
+
+    // Визначте типографіку
+    val typography = Typography(
+        displayLarge = TextStyle(
+            fontFamily = CustomFontFamily, //застосування кастомного шрифту
+            fontWeight = FontWeight.Normal,
+            fontSize = 57.sp,
+            lineHeight = 64.sp,
+            letterSpacing = (-0.25).sp
+        ),
+        displayMedium = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 45.sp,
+            lineHeight = 52.sp,
+            letterSpacing = 0.sp
+        ),
+        displaySmall = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 36.sp,
+            lineHeight = 44.sp,
+            letterSpacing = 0.sp
+        ),
+        // Додайте інші текстові стилі за необхідності
+        bodyLarge = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            letterSpacing = 0.5.sp
+        ),
+        bodyMedium = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            letterSpacing = 0.25.sp
+        ),
+        // Спеціальні стилі
+        labelLarge = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            lineHeight = 24.sp,
+            letterSpacing = 0.1.sp
+        )
+    )
+
+
+
     val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
+        typography = typography, // Додаємо нашу типографіку
         content = content
     )
 }

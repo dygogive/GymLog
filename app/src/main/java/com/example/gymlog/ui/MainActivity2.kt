@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +33,18 @@ import com.example.gymlog.ui.programs.FitnessProgramsActivity
 import com.example.gymlog.ui.theme.MyAppTheme
 
 class MainActivity2 : ComponentActivity() {
+
+    /**
+     * Ключові моменти:
+     *
+     * WindowCompat.setDecorFitsSystemWindows(window, false) - встановлює edge-to-edge режим, коли контент відображається під системними панелями.
+     *
+     * ExerciseDAO(this) - ініціалізує доступ до бази даних.
+     *
+     * testDatabaseJavaWrapper - тестує роботу бази даних Room.
+     *
+     * setContent - встановлює UI за допомогою Jetpack Compose.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         // Включаємо edge-to-edge режим
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -41,11 +54,8 @@ class MainActivity2 : ComponentActivity() {
         val exerciseDAO = ExerciseDAO(this)
         exerciseDAO.logAllExercises()
 
-        //тест бази Room
-        testDatabaseJavaWrapper(
-            this,
-            applicationContext
-        ) {
+        // Тест бази Room
+        testDatabaseJavaWrapper(this, applicationContext) {
             runOnUiThread {
                 Toast.makeText(this, "Операція завершена", Toast.LENGTH_SHORT).show()
             }
@@ -53,7 +63,6 @@ class MainActivity2 : ComponentActivity() {
         }
 
         setContent {
-            // Використовуємо MyAppTheme для автоматичного підбору кольорів
             MyAppTheme {
                 MainScreen()
             }
@@ -61,40 +70,45 @@ class MainActivity2 : ComponentActivity() {
     }
 }
 
+val sizeElevationCards = 20
+
+
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
-
-    // Використовуємо кольори з MaterialTheme, які встановлюються через MyAppTheme
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
+        verticalArrangement = Arrangement.SpaceEvenly,
+    )
+    {
         // Заголовок
         Text(
             text = stringResource(id = R.string.my_gym_log),
             fontSize = 24.sp,
             color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.labelLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
             modifier = Modifier.padding(top = 16.dp)
         )
 
         // Картка: Програми тренувань
+
         Card(
             modifier = Modifier
                 .width(250.dp)
                 .height(100.dp)
-                .clickable {
+                .clickable { //слухач натискань
                     Log.d("LogTag", "Programs clicked")
                     context.startActivity(
                         Intent(context, FitnessProgramsActivity::class.java)
                     )
                 },
             shape = RoundedCornerShape(100.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            //тіні?
+            elevation = CardDefaults.cardElevation(defaultElevation = sizeElevationCards.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -122,14 +136,15 @@ fun MainScreen() {
             modifier = Modifier
                 .width(250.dp)
                 .height(100.dp)
-                .clickable {
+                .clickable { //слухач натискань
                     Log.d("LogTag", "New Exercises clicked")
                     context.startActivity(
                         Intent(context, ExerciseManagementActivity::class.java)
                     )
                 },
             shape = RoundedCornerShape(100.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            //тіні?
+            elevation = CardDefaults.cardElevation(defaultElevation = sizeElevationCards.dp)
         ) {
             Column(
                 modifier = Modifier
