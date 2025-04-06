@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.example.gymlog.R
 import com.example.gymlog.database.ExerciseDAO
-import com.example.gymlog.database.testDatabaseJavaWrapper
+import com.example.gymlog.database.testroom.testDatabaseJavaWrapper
 import com.example.gymlog.ui.exercises.activities.ExerciseManagementActivity
 import com.example.gymlog.ui.programs.FitnessProgramsActivity
 import com.example.gymlog.ui.theme.MyAppTheme

@@ -13,14 +13,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gymlog.R;
-import com.example.gymlog.database.AppDatabase;
+import com.example.gymlog.database.testroom.AppDatabase;
 import com.example.gymlog.database.ExerciseDAO;
-import com.example.gymlog.database.ExerciseResultDao;
-import com.example.gymlog.database.TestKt;
+import com.example.gymlog.database.testroom.ExerciseResultDao;
+import com.example.gymlog.database.testroom.TestKt;
 import com.example.gymlog.ui.exercises.activities.ExerciseManagementActivity;
 import com.example.gymlog.ui.programs.FitnessProgramsActivity;
-
-import java.util.concurrent.Executors;
 
 
 public class OldMainActivity extends AppCompatActivity {
