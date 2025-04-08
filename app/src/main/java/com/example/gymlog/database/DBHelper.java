@@ -10,12 +10,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    private static final int version = 15;
+    public static final int VERSION = 15;
     private final Context context;
 
     // Конструктор
     public DBHelper(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, version);
+        super(context, DATABASE_NAME, null, VERSION);
         this.context = context;
     }
 
