@@ -8,13 +8,13 @@ import androidx.room.PrimaryKey
     tableName = "WorkoutGymDay",
     foreignKeys = [
         ForeignKey(
-            entity = PlanCycles::class, //Ентіті з батьківської таблиці
+            entity = PlanCycle::class, //Ентіті з батьківської таблиці
             parentColumns = ["id"], //батьківський ід
             childColumns = ["plansID"], //дочірній ід
             onDelete = ForeignKey.SET_NULL //якщо видалити батьківський рядок в PlanCycles то planCycleID = null
         ),
         ForeignKey(
-            entity = GymDays::class, //Ентіті з батьківської таблиці
+            entity = GymDay::class, //Ентіті з батьківської таблиці
             parentColumns = ["id"], //батьківський ід
             childColumns = ["gymDaysID"], //дочірній ід
             onDelete = ForeignKey.SET_NULL //якщо видалити батьківський рядок в PlanCycles то planCycleID = null

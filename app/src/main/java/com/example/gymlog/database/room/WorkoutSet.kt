@@ -14,20 +14,18 @@ import androidx.room.PrimaryKey
             onDelete =          ForeignKey.CASCADE      //якщо видалити батьківський рядок в PlanCycles то planCycleID = null
         ),
         ForeignKey(
-            entity =            GymDays::class,         //Ентіті з батьківської таблиці
+            entity =            TrainingBlock::class,         //Ентіті з батьківської таблиці
             parentColumns =     ["id"],                 //батьківський ід
-            childColumns =      ["gymDays_id"],         //дочірній ід
+            childColumns =      ["tr_block_id"],        //дочірній ід
             onDelete =          ForeignKey.SET_NULL     //якщо видалити батьківський рядок в PlanCycles то planCycleID = null
         )
     ]
 )
 
 data class WorkoutSet(
-    @PrimaryKey(autoGenerate = true)
-    val id:           Long = 0,
-    val workout_id:   Int,
-    val gymDays_id:   Int,
-    val day_name:     String,
-    val description:  String,
-    val position:     Int
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val tr_block_id: Long,
+    val name: String,
+    val description: String?,
+    val position: Int
 )
