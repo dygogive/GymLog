@@ -32,10 +32,10 @@ interface WorkoutGymDayDao {
     suspend fun insert(workoutGymDay: WorkoutGymDay): Long
 
     @Update
-    suspend fun update(workoutGymDay: WorkoutGymDay): Long
+    suspend fun update(workoutGymDay: WorkoutGymDay): Int
 
     @Delete
-    suspend fun delete(workoutGymDay: WorkoutGymDay): Long
+    suspend fun delete(workoutGymDay: WorkoutGymDay): Int
 
     @Query("SELECT * FROM WorkoutGymDay ORDER BY datetime DESC")
     suspend fun getAll(): List<WorkoutGymDay>
@@ -48,10 +48,10 @@ interface WorkoutSetDao {
     suspend fun insert(workoutSet: WorkoutSet): Long
 
     @Update
-    suspend fun update(workoutSet: WorkoutSet): Long
+    suspend fun update(workoutSet: WorkoutSet): Int
 
     @Delete
-    suspend fun delete(workoutSet: WorkoutSet ): Long
+    suspend fun delete(workoutSet: WorkoutSet ): Int
 
     @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workGymDayID ORDER BY position ASC")
     suspend fun getWorkSetByWorkDayID(workGymDayID: Long): List<WorkoutSet>
@@ -64,10 +64,10 @@ interface WorkoutExerciseDao {
     suspend fun insert(workoutExercise: WorkoutExercise): Long
 
     @Update
-    suspend fun update(workoutExercise: WorkoutExercise): Long
+    suspend fun update(workoutExercise: WorkoutExercise): Int
 
     @Delete
-    suspend fun delete(workoutExercise: WorkoutExercise): Long
+    suspend fun delete(workoutExercise: WorkoutExercise): Int
 
     @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
     suspend fun getWorkSetByWorkDayID(workGymDayID: Long): List<WorkoutExercise>

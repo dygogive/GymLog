@@ -94,43 +94,6 @@ fun MainScreen() {
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        // Картка: Програми тренувань
-
-        Card(
-            modifier = Modifier
-                .width(250.dp)
-                .height(100.dp)
-                .clickable { //слухач натискань
-                    Log.d("LogTag", "Programs clicked")
-                    context.startActivity(
-                        Intent(context, FitnessProgramsActivity::class.java)
-                    )
-                },
-            shape = RoundedCornerShape(100.dp),
-            //тіні?
-            elevation = CardDefaults.cardElevation(defaultElevation = sizeElevationCards.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_exercise),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Text(
-                    text = stringResource(id = R.string.edit_programs),
-                    fontSize = 24.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.displayLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
-                )
-            }
-        }
 
         // Картка: Редактор вправ
         Card(
@@ -168,5 +131,80 @@ fun MainScreen() {
                 )
             }
         }
+
+
+
+        // Картка: Програми тренувань
+        Card(
+            modifier = Modifier
+                .width(250.dp)
+                .height(100.dp)
+                .clickable { //слухач натискань
+                    Log.d("LogTag", "Programs clicked")
+                    context.startActivity(
+                        Intent(context, FitnessProgramsActivity::class.java)
+                    )
+                },
+            shape = RoundedCornerShape(100.dp),
+            //тіні?
+            elevation = CardDefaults.cardElevation(defaultElevation = sizeElevationCards.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_exercise),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = stringResource(id = R.string.edit_programs),
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displayLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
+                )
+            }
+        }
+
+        // Картка: Почати тренування
+        Card(
+            modifier = Modifier
+                .width(250.dp)
+                .height(100.dp)
+                .clickable { //слухач натискань
+                    Log.d("LogTag", "Workout screen start")
+                    //треба стартувати показ нового екрану з секундоміром та WorkoutGymDay, що відповідає вибраному GymDay
+                },
+            shape = RoundedCornerShape(100.dp),
+            //тіні?
+            elevation = CardDefaults.cardElevation(defaultElevation = sizeElevationCards.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_exercise),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    text = stringResource(id = R.string.workout),
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.displayLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
+                )
+            }
+        }
     }
+
 }
