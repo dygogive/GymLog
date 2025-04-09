@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -105,4 +106,17 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+
+
+
+    val nav_version = "2.8.9"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+
+
+    // Runtime
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    // Code‑gen через KSP  ⬇️
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
 }
+
