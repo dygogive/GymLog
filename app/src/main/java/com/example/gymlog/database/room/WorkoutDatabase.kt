@@ -2,6 +2,7 @@ package com.example.gymlog.database.room
 
 import androidx.room.*
 import com.example.gymlog.database.DBHelper
+import kotlinx.coroutines.flow.Flow
 
 
 @Database(
@@ -39,6 +40,9 @@ interface WorkoutGymDayDao {
 
     @Query("SELECT * FROM WorkoutGymDay ORDER BY datetime DESC")
     suspend fun getAll(): List<WorkoutGymDay>
+
+    @Query("SELECT * FROM WorkoutGymDay ORDER BY datetime DESC")
+    fun getAllFlow(): Flow<List<WorkoutGymDay>>
 }
 
 
@@ -55,6 +59,9 @@ interface WorkoutSetDao {
 
     @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workGymDayID ORDER BY position ASC")
     suspend fun getWorkSetByWorkDayID(workGymDayID: Long): List<WorkoutSet>
+
+    @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workGymDayID ORDER BY position ASC")
+    fun getWorkSetByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutSet>>
 }
 
 
@@ -71,4 +78,7 @@ interface WorkoutExerciseDao {
 
     @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
     suspend fun getWorkSetByWorkDayID(workGymDayID: Long): List<WorkoutExercise>
+
+    @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
+    fun getWorkExerciseByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutExercise>>
 }

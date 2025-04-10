@@ -35,7 +35,7 @@ class MainActivity2 : ComponentActivity() {
         val exerciseDAO = ExerciseDAO(this)
         exerciseDAO.logAllExercises()
 
-        // Тест бази Room
+        // Тест бази Room в пакеті package com.example.gymlog.database.testroom
         testDatabaseJavaWrapper(this, applicationContext) {
             runOnUiThread {
                 Toast.makeText(this, "Операція завершена", Toast.LENGTH_SHORT).show()
@@ -52,10 +52,3 @@ class MainActivity2 : ComponentActivity() {
         }
     }
 }
-
-
-
-
-
-
-
