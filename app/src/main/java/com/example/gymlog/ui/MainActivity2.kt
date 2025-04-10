@@ -5,15 +5,14 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
 import com.example.gymlog.database.ExerciseDAO
 import com.example.gymlog.database.testroom.testDatabaseJavaWrapper
-import com.example.gymlog.ui.screens.main.MainScreen
-import com.example.gymlog.ui.screens.workout.WorkoutScreen
+import com.example.gymlog.ui.navigation.AppNavHost
 import com.example.gymlog.ui.theme.MyAppTheme
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint           // коли вже підключив Hilt
 class MainActivity2 : ComponentActivity() {
 
     /**
@@ -48,10 +47,7 @@ class MainActivity2 : ComponentActivity() {
         setContent {
             MyAppTheme {
                 val navController = rememberNavController()
-                NavHost(navController, startDestination = "mainScreen") {
-                    composable("mainScreen") { MainScreen(navController) }
-                    composable("workoutScreen") { WorkoutScreen() }
-                }
+                AppNavHost(navController)          // 👈 лише виклик
             }
         }
     }
