@@ -36,6 +36,8 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+
 }
 
 dependencies {
@@ -69,7 +71,7 @@ dependencies {
 
     
     //using Material Design 3
-    val material3_version = "1.3.1"
+    val material3_version = "1.3.2"
     implementation("androidx.compose.material3:material3:$material3_version")
 
 
@@ -77,7 +79,7 @@ dependencies {
 
 
     //Room database
-    val room_version = "2.6.1"
+    val room_version = "2.7.0"
 
     implementation("androidx.room:room-runtime:$room_version")
 
@@ -115,8 +117,13 @@ dependencies {
 
 
     // Runtime
-    implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation("com.google.dagger:hilt-android:2.56.1")
     // Code‑gen через KSP  ⬇️
-    ksp("com.google.dagger:hilt-compiler:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.56.1")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8")
 }
 

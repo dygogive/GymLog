@@ -8,10 +8,14 @@ import javax.inject.Singleton
 
 @Singleton
 class WorkoutRepository @Inject constructor(
+    //посилання на ДАО об'єкти в DatabaseModule
     private val workGymDayDao: WorkoutGymDayDao,
     private val workSetDao: WorkoutSetDao,
     private val workExerciseDao: WorkoutExerciseDao
 ){
+
+    //перевикористання фуну=кцій ДАО
+
     /* ----- WorkoutGymDay ------*/
     suspend fun insertGymDay(day: WorkoutGymDay): Long {
         return workGymDayDao.insert(day)
