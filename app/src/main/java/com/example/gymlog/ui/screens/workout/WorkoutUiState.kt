@@ -8,6 +8,14 @@ import kotlinx.collections.immutable.persistentListOf
 data class WorkoutUiState(
     val totalTimeMs: Long = 0L,
     val restTimeMs: Long = 0L,
+    val sets: ImmutableList<WorkoutSet> = persistentListOf<WorkoutSet>(),
 
-    val sets: ImmutableList<WorkoutSet> = persistentListOf<WorkoutSet>()
-)
+    // Додаткові можливі поля:
+    val isRunning: Boolean = false,          // Чи активне тренування
+    val currentSetId: Long? = null,         // Поточний активний сет
+    val error: String? = null,              // Помилки
+    val isLoading: Boolean = false          // Стан завантаження
+) {
+    // Допоміжні функції для бізнес-логіки
+    fun getCurrentSet(): WorkoutSet? = sets.find { it.id == currentSetId }
+}

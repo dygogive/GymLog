@@ -7,19 +7,45 @@ import androidx.navigation.compose.composable
 import com.example.gymlog.ui.screens.main.MainScreen
 import com.example.gymlog.ui.screens.workout.WorkoutScreen
 
+/**
+ * Головний компонент навігації додатка, що використовує Jetpack Navigation.
+ * Визначає граф навігації між екранами додатка.
+ *
+ * @param navController - контролер навігації, який керує переходами між екранами
+ */
 @Composable
 fun AppNavHost(navController: NavHostController) {
-    NavHost(navController, startDestination = "main") {
+    // Створення NavHost - контейнера для навігації
+    NavHost(
+        navController = navController,  // Контролер для управління навігацією
+        startDestination = "main"      // Стартовий екран додатка
+    ) {
+        // Визначення точок навігації (екранів) додатка
 
+        /**
+         * Екран "main" - головний екран додатка
+         *
+         * @param navController передається для можливості навігації з цього екрана
+         */
         composable("main") {
             MainScreen(navController)
         }
 
+        /**
+         * Екран "workout" - екран тренування
+         *
+         * Наразі не отримує navController, але може бути додано при необхідності
+         */
         composable("workout") {
             WorkoutScreen()
         }
 
-        // тут легко додавати інші маршрути:
-        // composable("templateSelect") { TemplateSelectScreen(navController) }
+        /*
+         * Приклад додавання нового екрана (закоментовано):
+         *
+         * composable("templateSelect") {
+         *     TemplateSelectScreen(navController)
+         * }
+         */
     }
 }

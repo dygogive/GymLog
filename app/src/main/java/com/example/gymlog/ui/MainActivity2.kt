@@ -12,42 +12,49 @@ import com.example.gymlog.ui.navigation.AppNavHost
 import com.example.gymlog.ui.theme.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint           // коли вже підключив Hilt
+/**
+ * Головна Activity додатка, що використовує Jetpack Compose для UI.
+ *
+ * @AndroidEntryPoint - анотація Dagger Hilt для підтримки dependency injection в Activity
+ */
+@AndroidEntryPoint
 class MainActivity2 : ComponentActivity() {
 
     /**
-     * Ключові моменти:
-     *
-     * WindowCompat.setDecorFitsSystemWindows(window, false) - встановлює edge-to-edge режим, коли контент відображається під системними панелями.
-     *
-     * ExerciseDAO(this) - ініціалізує доступ до бази даних.
-     *
-     * testDatabaseJavaWrapper - тестує роботу бази даних Room.
-     *
-     * setContent - встановлює UI за допомогою Jetpack Compose.
+     * Життєвий цикл Activity - створення.
+     * Виконує наступні ключові дії:
+     * 1. Налаштовує edge-to-edge відображення
+     * 2. Ініціалізує та тестує роботу з базою даних
+     * 3. Встановлює Compose UI з навігацією
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Включаємо edge-to-edge режим
+        // 1. Налаштування edge-to-edge режиму (контент під системними панелями)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        // Ініціалізація бази даних
+        // 2. Робота з базою даних
+        // Ініціалізація DAO для вправ
         val exerciseDAO = ExerciseDAO(this)
+        // Логування всіх вправ для дебагінгу
         exerciseDAO.logAllExercises()
 
-        // Тест бази Room в пакеті package com.example.gymlog.database.testroom
+        // Тестування роботи Room бази даних через Java-обгортку
         testDatabaseJavaWrapper(this, applicationContext) {
+            // Callback при завершенні тесту
             runOnUiThread {
                 Toast.makeText(this, "Операція завершена", Toast.LENGTH_SHORT).show()
             }
             null
         }
 
-
+        // 3. Налаштування UI з Jetpack Compose
         setContent {
+            // Застосування теми додатка
             MyAppTheme {
+                // Ініціалізація контролера навігації
                 val navController = rememberNavController()
-                AppNavHost(navController)          // 👈 лише виклик
+                // Встановлення графа навігації
+                AppNavHost(navController = navController)
             }
         }
     }

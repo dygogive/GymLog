@@ -12,26 +12,44 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gymlog.viewmodel.WorkoutViewModel
 
-
+/**
+ * Екран тренування, що відображає:
+ * - Таймери (загальний та відпочинку)
+ * - Керування таймерами (старт/стоп)
+ * - Список підходів (сетів)
+ *
+ * Використовує ViewModel для бізнес-логіки (WorkoutViewModel)
+ */
 @Composable
 fun WorkoutScreen(
+    // Ін'єкція ViewModel через Hilt
     viewModel: WorkoutViewModel = hiltViewModel()
 ) {
+    // Отримання стану з ViewModel як State
     val state by viewModel.uiState.collectAsState()
 
+    // Основний макет екрану
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        /* ---- Таймери ---- */
+        /* ---- Секція таймерів ---- */
+        // Загальний час тренування
         Text("Загальний: ${format(state.totalTimeMs)}")
+        // Час відпочинку
         Text("Відпочинок: ${format(state.restTimeMs)}")
 
-        Button(onClick = { viewModel.startTimers() }) { Text("Старт") }
-        Button(onClick = { viewModel.stopTimers() })  { Text("Стоп")  }
+        // Кнопки керування таймерами
+        Button(onClick = { viewModel.startTimers() }) {
+            Text("Старт")
+        }
+        Button(onClick = { viewModel.stopTimers() }) {
+            Text("Стоп")
+        }
 
-        /* ---- Список сетів ---- */
+        /* ---- Секція списку підходів ---- */
         LazyColumn {
             items(state.sets) { set ->
                 Text("Сет: ${set.name}")
@@ -40,11 +58,16 @@ fun WorkoutScreen(
     }
 }
 
-
+/**
+ * Допоміжна функція для форматування часу (мс → HH:MM:SS)
+ *
+ * @param ms Час у мілісекундах
+ * @return Рядок у форматі HH:MM:SS
+ */
 private fun format(ms: Long): String {
-    val s = ms / 1000
-    val h = s / 3600
-    val m = (s % 3600) / 60
-    val sec = s % 60
-    return "%02d:%02d:%02d".format(h, m, sec)
+    val s = ms / 1000      // Конвертація в секунди
+    val h = s / 3600       // Години
+    val m = (s % 3600) / 60 // Хвилини
+    val sec = s % 60        // Секунди
+    return "%02d:%02d:%02d".format(h, m, sec) // Форматування з ведучими нулями
 }
