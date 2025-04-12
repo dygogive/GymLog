@@ -121,6 +121,13 @@ fun MyAppTheme(
             lineHeight = 20.sp,
             letterSpacing = 0.25.sp
         ),
+        bodySmall = TextStyle(
+            fontFamily = CustomFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 10.sp,
+            lineHeight = 16.sp,
+            letterSpacing = 0.25.sp
+        ),
         // Спеціальні стилі
         labelLarge = TextStyle(
             fontFamily = CustomFontFamily,

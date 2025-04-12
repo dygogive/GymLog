@@ -22,8 +22,7 @@ import javax.inject.Inject                       // Аннотація для і
 import kotlin.time.Duration.Companion.seconds    // Конвертація часу
 
 // Аннотація для автоматичної генерації залежностей через Hilt
-@HiltViewModel
-// Оголошення класу ViewModel з ін'єкцією репозиторію через конструктор
+@HiltViewModel // Оголошення класу ViewModel з ін'єкцією репозиторію через конструктор
 class WorkoutViewModel @Inject constructor(
     private val repo: WorkoutRepository  // Ін'єкція репозиторію Хілтом (Hilt)
 ) : ViewModel() {  // Наслідування від базового ViewModel
@@ -63,7 +62,7 @@ class WorkoutViewModel @Inject constructor(
                     it.copy( //Створює нову копію об'єкта стану
                         //Дозволяє змінити тільки потрібні поля
                         totalTimeMs = now - startTs,    // Загальний час = поточний час - час старту
-                        restTimeMs = now - restStartTs  // Час відпочинку = поточний час - час старту відпочинку
+                        lastSetTimeMs = now - restStartTs  // Час відпочинку = поточний час - час старту відпочинку
                     )
                     //Замінює стан на нове значення, яке повертається з лямбди
                 }

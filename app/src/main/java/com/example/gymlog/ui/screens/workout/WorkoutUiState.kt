@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class WorkoutUiState(
     val totalTimeMs: Long = 0L,
-    val restTimeMs: Long = 0L,
+    val lastSetTimeMs: Long = 0L,
     val sets: ImmutableList<WorkoutSet> = persistentListOf<WorkoutSet>(),
 
     // Додаткові можливі поля:

@@ -201,6 +201,10 @@
     <string name="muscles_legs">Legs</string>
     <string name="muscles_back_other">Back other</string>
 
+    <string name="total_time">Total time:</string>
+    <string name="since_last_set_time">Since last set:</string>
+
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -238,6 +242,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="workout">Workout</string>
+    <string name="stop_gym">Stop Gym</string>
 
 
 </resources>
