@@ -24,11 +24,17 @@ import com.example.gymlog.viewmodel.WorkoutViewModel
  */
 @Composable
 fun WorkoutScreen(
-    // Ін'єкція ViewModel через Hilt
+    // Ін'єкція ViewModel через Hilt - не потрібно нічого передавати - Хілт сам все дасть
     viewModel: WorkoutViewModel = hiltViewModel()
 ) {
+    //    val state = viewModel.uiState.collectAsState().value // Неправильно!
     // Отримання стану з ViewModel як State
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState // Це "стіл секретаря" (стан, який зберігається у ViewModel).
+        //Але це не просто звичайний об'єкт — це StateFlow (спеціальна "підписка" на зміни).
+        .collectAsState()  //Це "підключення до оновлень".Кажемо Compose:
+    //"Стеж за цим станом (uiState) і перемальовуй екран щоразу, коли дані змінюються!"
+
+
 
     // Основний макет екрану
     Column(

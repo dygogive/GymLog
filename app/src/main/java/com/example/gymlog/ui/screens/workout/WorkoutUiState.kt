@@ -16,6 +16,6 @@ data class WorkoutUiState(
     val error: String? = null,              // Помилки
     val isLoading: Boolean = false          // Стан завантаження
 ) {
-    // Допоміжні функції для бізнес-логіки
+    // функція бере список WorkoutSet і функцією find, перебираючи кожен (it) знаходить потрібний, у якому id == currentSetId
     fun getCurrentSet(): WorkoutSet? = sets.find { it.id == currentSetId }
 }

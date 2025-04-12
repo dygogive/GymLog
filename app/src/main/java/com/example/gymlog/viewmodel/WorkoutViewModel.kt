@@ -4,15 +4,21 @@ package com.example.gymlog.viewmodel
 // Імпорт необхідних бібліотек і класів
 import androidx.lifecycle.ViewModel                // Базовий клас ViewModel
 import androidx.lifecycle.viewModelScope          // Coroutine Scope для ViewModel
+
 import com.example.gymlog.data.repository.WorkoutRepository  // Репозиторій для роботи з даними
 import com.example.gymlog.ui.screens.workout.WorkoutUiState  // Клас стану UI
+
 import dagger.hilt.android.lifecycle.HiltViewModel // Аннотація для Hilt DI
+
 import kotlinx.collections.immutable.toPersistentList // Конвертація у незмінний список
+
 import kotlinx.coroutines.Job                    // Об'єкт для керування корутинами
 import kotlinx.coroutines.delay                  // Функція затримки
 import kotlinx.coroutines.flow.*                 // Імпорт потоків
 import kotlinx.coroutines.launch                 // Запуск корутини
+
 import javax.inject.Inject                       // Аннотація для ін'єкції залежностей
+
 import kotlin.time.Duration.Companion.seconds    // Конвертація часу
 
 // Аннотація для автоматичної генерації залежностей через Hilt
@@ -26,7 +32,7 @@ class WorkoutViewModel @Inject constructor(
 
     // Приватний MutableStateFlow для внутрішнього керування станом
     private val _uiState = MutableStateFlow(WorkoutUiState())
-    // Публічний StateFlow для спостереження стану з UI
+    // Публічний StateFlow для спостереження стану з UI (в класі UI ми його використовуємо)
     val uiState: StateFlow<WorkoutUiState> = _uiState.asStateFlow()
 
     /* ---------------- Таймери ---------------- */
@@ -95,12 +101,20 @@ class WorkoutViewModel @Inject constructor(
     fun observeSetsForDay(dayId: Long) {
         // Запускаємо корутину в viewModelScope (автоматично скасовується при знищенні ViewModel)
         viewModelScope.launch {
-            // Отримуємо Flow з репозиторію і підписуємось на зміни
+            // Отримуємо Flow (підписка на інформацію) з репозиторію
             repo.getSetsForDay(dayId)
-                .collect { list ->  // Обробляємо кожне оновлення списку
-                    // Оновлюємо стан з новим списком підходів (конвертуємо до незмінного списку)
-                    _uiState.update { it.copy(sets = list.toPersistentList()) }
+                //даємо задачу кур'єрській доставці приносити нову інформацію якщо вона з'явиться
+                .collect { list ->  // Кур’єр чекає біля поштової скриньки і відразу несе новий журнал (дані) до тебе, як тільки він приходить.
+                    // Ти (ViewModel) береш новий список сетів з журналу і кладеш його на стіл (_uiState).
+                    _uiState.update { it.copy(sets = list.toPersistentList()) } //Чому toPersistentList()? Це як заламінувати журнал перед тим, як покласти на стіл:
                 }
+            /**
+             * Хто і коли скасовує підписку?
+             *
+             * Секретар (viewModelScope) сам це робить при звільненні (знищенні ViewModel).
+             *
+             * Без цього кур’єр (корутина) вічно стояв би біля скриньки, витрачаючи ресурси.
+             * */
         }
     }
 }
