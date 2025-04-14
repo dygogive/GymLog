@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities =
     [
-        ExerciseResult::class
+        ExerciseResultEntity::class
     ],
     version = 1
 )

@@ -1,9 +1,8 @@
 package com.example.gymlog.data.local.room.mapper
 
-import com.example.gymlog.data.local.room.WorkoutExerciseEntity
-import com.example.gymlog.data.local.room.WorkoutGymDayEntity
-import com.example.gymlog.data.local.room.WorkoutSetEntity
-import com.example.gymlog.domain.model.*
+import com.example.gymlog.data.local.room.entity.WorkoutExerciseEntity
+import com.example.gymlog.data.local.room.entity.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
 import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.model.workout.WorkoutGymDay
 import com.example.gymlog.domain.model.workout.WorkoutSet

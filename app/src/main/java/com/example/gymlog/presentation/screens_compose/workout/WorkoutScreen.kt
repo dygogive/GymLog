@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
-import com.example.gymlog.data.local.room.TrainingBlockEntity
-import com.example.gymlog.data.local.room.WorkoutSetEntity
+import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
+import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
 import com.example.gymlog.presentation.theme.MyAppTheme
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 

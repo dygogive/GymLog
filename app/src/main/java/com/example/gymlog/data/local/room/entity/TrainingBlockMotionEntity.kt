@@ -1,9 +1,9 @@
-package com.example.gymlog.data.local.room
+package com.example.gymlog.data.local.room.entity
 
 import androidx.room.*
 
 @Entity(
-    tableName = "TrainingBlockMuscleGroup",
+    tableName = "TrainingBlockMotion",
     foreignKeys = [
         ForeignKey(
             entity = TrainingBlockEntity::class,
@@ -16,9 +16,9 @@ import androidx.room.*
         Index(value = ["trainingBlockId"])
     ]
 )
-data class TrainingBlockMuscleGroupEntity(
+data class TrainingBlockMotionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long?,
     val trainingBlockId: Long?,
-    val muscleGroup: String?
+    val motionType: String?
 )

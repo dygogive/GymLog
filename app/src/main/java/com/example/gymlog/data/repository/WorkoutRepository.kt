@@ -3,14 +3,14 @@ package com.example.gymlog.data.repository
 
 // Імпортуємо необхідні бібліотеки та класи
 import android.util.Log
-import com.example.gymlog.data.local.room.TrainingBlockEntity
-import com.example.gymlog.data.local.room.TrainingBlockDao
-import com.example.gymlog.data.local.room.WorkoutExerciseEntity
-import com.example.gymlog.data.local.room.WorkoutExerciseDao
-import com.example.gymlog.data.local.room.WorkoutGymDayEntity
-import com.example.gymlog.data.local.room.WorkoutGymDayDao
-import com.example.gymlog.data.local.room.WorkoutSetEntity
-import com.example.gymlog.data.local.room.WorkoutSetDao
+import com.example.gymlog.data.local.room.dao.TrainingBlockDao
+import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
+import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.dao.WorkoutSetDao
+import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
+import com.example.gymlog.data.local.room.entity.WorkoutExerciseEntity
+import com.example.gymlog.data.local.room.entity.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
 
 import kotlinx.coroutines.flow.Flow
 
@@ -30,7 +30,6 @@ class WorkoutRepository @Inject constructor(
     private val workGymDayDao: WorkoutGymDayDao,     // Для роботи з тренувальними днями
     private val workSetDao: WorkoutSetDao,           // Для роботи з підходами
     private val workExerciseDao: WorkoutExerciseDao,   // Для роботи з вправами
-    private val trainingBlockDao: TrainingBlockDao   // Для роботи з вправами
 ) {
 
 
@@ -121,71 +120,9 @@ class WorkoutRepository @Inject constructor(
 
 
 
-    /* ----- Робота з тренувальними блоками (TrainingBlocks) ----- */
 
-    suspend fun insertTrainingBlock(trainingBlockEntity: TrainingBlockEntity): Long {
-        return trainingBlockDao.insert(trainingBlockEntity)
-    }
-
-    /**
-     * Отримує всі вправи для конкретного тренувального дня
-     *
-     * @param dayId ID тренувального дня
-     * @return Flow<List<WorkoutExercise>> - стрім вправ
-     */
-    fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlockEntity>> {
-        Log.d("findError", "in getTrainingBlockByGymDay")
-        return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID)
-    }
 }
 
 
 
 
-
-
-/**
- * Ключові моменти:
- *
- * Архітектурна роль:
- *
- * Репозиторій є частиною шаблону "Repository Pattern"
- *
- * Виступає проміжним шаром між ViewModel (UI логіка) і DAO (доступ до даних)
- *
- * Інкапсулює всю логіку роботи з даними
- *
- * Dependency Injection:
- *
- * Використовує Dagger Hilt для отримання DAO
- *
- * Позначений як @Singleton для уникнення дублювання екземплярів
- *
- * Функціональність:
- *
- * Надає методи для всіх основних операцій CRUD
- *
- * Для отримання даних використовує Flow для реактивного програмування
- *
- * Для модифікації даних використовує suspend функції
- *
- * Переваги:
- *
- * Централізоване управління логікою доступу до даних
- *
- * Легкість тестування (можна мокувати репозиторій)
- *
- * Відокремлення логіки доступу до даних від UI логіки
- *
- * Сучасні підходи:
- *
- * Використання Kotlin Coroutines (suspend функції)
- *
- * Реактивне програмування через Flow
- *
- * Чітке розділення відповідальностей
- *
- * Цей репозиторій є ключовим елементом архітектури додатка, який забезпечує чистий API для роботи з тренувальними даними та спрощує подальшу підтримку та розширення функціоналу.
- *
- * New chat
- * */

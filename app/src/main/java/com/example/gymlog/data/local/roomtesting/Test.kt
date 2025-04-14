@@ -18,7 +18,7 @@ suspend fun testDatabase(context: Context) {
 
     // Вставка даних
     dao.insert(
-        ExerciseResult(
+        ExerciseResultEntity(
             id = 0,
             exerciseId = 2,
             trainingBlockId = 3,

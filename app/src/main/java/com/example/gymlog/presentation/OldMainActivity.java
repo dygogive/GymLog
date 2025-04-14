@@ -17,7 +17,7 @@ import com.example.gymlog.data.local.roomtesting.TestKt;
 import com.example.gymlog.data.local.roomtesting.AppDatabase;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
 import com.example.gymlog.data.local.roomtesting.ExerciseResultDao;
-import com.example.gymlog.presentation.exercises_ui_xml.activities.ExerciseManagementActivity;
+import com.example.gymlog.presentation.exercises_ui_xml.ExerciseManagementActivity;
 import com.example.gymlog.presentation.programs_ui_xml.FitnessProgramsActivity;
 
 

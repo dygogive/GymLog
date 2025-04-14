@@ -5,8 +5,8 @@ import androidx.room.*
 @Dao
 interface ExerciseResultDao {
     @Insert
-    suspend fun insert(exercise: ExerciseResult): Long
+    suspend fun insert(exercise: ExerciseResultEntity): Long
 
     @Query("SELECT * FROM exercise_results")
-    suspend fun getAll(): List<ExerciseResult>
+    suspend fun getAll(): List<ExerciseResultEntity>
 }

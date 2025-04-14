@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.activities;
+package com.example.gymlog.presentation.exercises_ui_xml;
 
 import android.os.Bundle;
 

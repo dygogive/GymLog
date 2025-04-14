@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.presentation.exercises_ui_xml.activities.ExerciseManagementActivity
+import com.example.gymlog.presentation.exercises_ui_xml.ExerciseManagementActivity
 import com.example.gymlog.presentation.programs_ui_xml.FitnessProgramsActivity
 
 

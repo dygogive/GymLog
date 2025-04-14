@@ -1,6 +1,6 @@
 package com.example.gymlog.presentation.screens_compose.workout
 
-import com.example.gymlog.data.local.room.TrainingBlockEntity
+import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

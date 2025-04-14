@@ -35,7 +35,7 @@ import androidx.room.PrimaryKey
             Index(value = ["timestamp"])
         ]
     )
-data class ExerciseResult(
+data class ExerciseResultEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val exerciseId:         Long, // ід вправи в таблиці вправ
     val trainingBlockId:    Long, //ід тренувального блоку в таблиці з блоками

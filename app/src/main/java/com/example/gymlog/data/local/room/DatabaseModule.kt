@@ -5,6 +5,10 @@ package com.example.gymlog.data.local.room
 import android.content.Context
 
 import androidx.room.Room
+import com.example.gymlog.data.local.room.dao.TrainingBlockDao
+import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
+import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 
 import dagger.Module
 import dagger.Provides
