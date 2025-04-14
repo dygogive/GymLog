@@ -27,4 +27,11 @@ interface TrainingBlockDao {
     @Query("SELECT * FROM TrainingBlock WHERE gym_day_id = :gym_day_id")
     fun getTrainingBlockByGymDayIDFlow(gym_day_id: Long): Flow<List<TrainingBlockEntity>>
 
+
+    //Отримати TrainingBlockEntity по колонці gym_day_id в порядку зростання позиції
+    @Query("SELECT * FROM TrainingBlock " +
+            "WHERE gym_day_id = :gymDayId " +
+            "ORDER BY position ASC")
+    suspend fun getBlocksByGymDayId(gymDayId: Long): List<TrainingBlockEntity>
+
 }
