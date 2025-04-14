@@ -46,7 +46,7 @@ class TrainingBlockRepository @Inject constructor(
         for (block in blocks) {
             //
             val filters = filterDao.getAllFiltersForBlock(block.id)
-            val exercises = exeInBlockDao.get
+//            val exercises = exeInBlockDao.get
             //
             block.motions           = filters.motions
             block.equipmentList     = filters.equipment
