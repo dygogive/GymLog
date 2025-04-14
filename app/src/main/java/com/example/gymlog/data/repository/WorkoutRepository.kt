@@ -2,6 +2,7 @@
 package com.example.gymlog.data.repository
 
 // Імпортуємо необхідні бібліотеки та класи
+import android.util.Log
 import com.example.gymlog.database.room.*
 
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,11 @@ class WorkoutRepository @Inject constructor(
     // Отримуємо DAO через dependency injection
     private val workGymDayDao: WorkoutGymDayDao,     // Для роботи з тренувальними днями
     private val workSetDao: WorkoutSetDao,           // Для роботи з підходами
-    private val workExerciseDao: WorkoutExerciseDao   // Для роботи з вправами
+    private val workExerciseDao: WorkoutExerciseDao,   // Для роботи з вправами
+    private val trainingBlockDao: TrainingBlockDao   // Для роботи з вправами
 ) {
+
+
     /* ----- Робота з тренувальними днями (WorkoutGymDay) ----- */
 
     /**
@@ -44,6 +48,13 @@ class WorkoutRepository @Inject constructor(
     fun getAllGymDays(): Flow<List<WorkoutGymDay>> {
         return workGymDayDao.getAllFlow()
     }
+
+
+
+
+
+
+
 
     /* ----- Робота з підходами (WorkoutSet) ----- */
 
@@ -67,6 +78,14 @@ class WorkoutRepository @Inject constructor(
         return workSetDao.getWorkSetByWorkDayIDFlow(dayId)
     }
 
+
+
+
+
+
+
+
+
     /* ----- Робота з вправами (WorkoutExercise) ----- */
 
     /**
@@ -88,7 +107,35 @@ class WorkoutRepository @Inject constructor(
     fun getExercisesForDay(dayId: Long): Flow<List<WorkoutExercise>> {
         return workExerciseDao.getWorkExerciseByWorkDayIDFlow(dayId)
     }
+
+
+
+
+
+
+
+    /* ----- Робота з тренувальними блоками (TrainingBlocks) ----- */
+
+    suspend fun insertTrainingBlock(trainingBlock: TrainingBlock): Long {
+        return trainingBlockDao.insert(trainingBlock)
+    }
+
+    /**
+     * Отримує всі вправи для конкретного тренувального дня
+     *
+     * @param dayId ID тренувального дня
+     * @return Flow<List<WorkoutExercise>> - стрім вправ
+     */
+    fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlock>> {
+        Log.d("findError", "in getTrainingBlockByGymDay")
+        return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID)
+    }
 }
+
+
+
+
+
 
 /**
  * Ключові моменти:

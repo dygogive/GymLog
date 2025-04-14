@@ -2,35 +2,38 @@ package com.example.gymlog.database.room
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "WorkoutGymDay",
     foreignKeys = [
         ForeignKey(
-            entity = PlanCycle::class, //Ентіті з батьківської таблиці
-            parentColumns = ["id"], //батьківський ід
-            childColumns = ["plansID"], //дочірній ід
-            onDelete = ForeignKey.SET_NULL //якщо видалити батьківський рядок в PlanCycles то planCycleID = null
+            entity = PlanCycle::class,
+            parentColumns = ["id"],
+            childColumns = ["plansID"],
+            onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
-            entity = GymDay::class, //Ентіті з батьківської таблиці
-            parentColumns = ["id"], //батьківський ід
-            childColumns = ["gymDaysID"], //дочірній ід
-            onDelete = ForeignKey.SET_NULL //якщо видалити батьківський рядок в PlanCycles то planCycleID = null
+            entity = GymDay::class,
+            parentColumns = ["id"],
+            childColumns = ["gymDaysID"],
+            onDelete = ForeignKey.SET_NULL
         )
+    ],
+    indices = [                      // ← ДОДАЙ ОЦЕ
+        Index(value = ["plansID"]),
+        Index(value = ["gymDaysID"])
     ]
 )
-
 data class WorkoutGymDay(
-    @PrimaryKey(autoGenerate = true)
-    val id:             Long = 0,   //id
-    val datetime:       Long,       //дата й час
-    val plansID:        Long?,      //ссилка на таблицю PlanCycles
-    val gymDaysID:      Long?,      //ссилка на таблицю GymDays
-    val sets:           Int,        // к-сть сетів
-    val blocks:         Int,        // к-сть виконаних блоків
-    val minutes:        Int,        // к-сть хвилин тренування
-    val name:           String,     // Назва програми
-    val description:    String      // Опис програми
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    val datetime: Long?,
+    val plansID: Long?,
+    val gymDaysID: Long?,
+    val sets: Int?,
+    val blocks: Int?,
+    val minutes: Int?,
+    val name: String?,
+    val description: String?
 )

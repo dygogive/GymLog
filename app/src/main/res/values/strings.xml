@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GymLog</string>
-    <string name="start_gym">Start Gym</string>
+    <string name="start_gym">Start</string>
+    <string name="stop_gym">Stop</string>
     <string name="history">History</string>
     <string name="add_set">Add set</string>
     <string name="repetitions">Repetitions</string>
@@ -242,7 +243,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="workout">Workout</string>
-    <string name="stop_gym">Stop Gym</string>
+    <string name="new_count">New count</string>
 
 
 </resources>

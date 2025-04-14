@@ -28,13 +28,17 @@ import kotlinx.coroutines.flow.Flow
         TrainingBlockEquipment::class,   // Таблиця обладнання для блоків
         TrainingBlockExercise::class     // Таблиця вправ у тренувальних блоках
     ],
-    version = DBHelper.VERSION
+    version = DBHelper.VERSION,
+//    autoMigrations = [
+//        AutoMigration (from = 1, to = 2)
+//    ]
 )
 abstract class WorkoutDatabase: RoomDatabase() {
     // Оголошуємо методи для отримання DAO (Data Access Object) для кожної таблиці
     abstract fun workoutGymDayDao(): WorkoutGymDayDao    // DAO для тренувальних днів
     abstract fun workoutSetDao(): WorkoutSetDao          // DAO для підходів
     abstract fun workoutExerciseDao(): WorkoutExerciseDao // DAO для вправ
+    abstract fun trainingBlockDao(): TrainingBlockDao // DAO для тренув блоків
 }
 
 /**
@@ -107,6 +111,29 @@ interface WorkoutExerciseDao {
     @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
     fun getWorkExerciseByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutExercise>>
 }
+
+
+
+/**
+ * Інтерфейс DAO для роботи з таблицею WorkoutExercises (вправи у тренуванні).
+ */
+@Dao
+interface TrainingBlockDao {
+    @Insert
+    suspend fun insert(trainingBlock: TrainingBlock): Long
+
+    @Update
+    suspend fun update(trainingBlock: TrainingBlock): Int
+
+    @Delete
+    suspend fun delete(trainingBlock: TrainingBlock): Int
+
+    // запит з Flow для реактивного програмування
+    @Query("SELECT * FROM TrainingBlock WHERE gym_day_id = :gym_day_id")
+    fun getTrainingBlockByGymDayIDFlow(gym_day_id: Long): Flow<List<TrainingBlock>>
+
+}
+
 
 /**
  *Ключові моменти:

@@ -17,11 +17,16 @@ import androidx.room.*
             childColumns = ["exerciseId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [                     // ← ДОДАЙ
+        Index(value = ["trainingBlockId"]),
+        Index(value = ["exerciseId"])
     ]
 )
 data class TrainingBlockExercise(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val trainingBlockId: Long,
-    val exerciseId: Long,
-    val position: Int
+    @PrimaryKey(autoGenerate = true)
+    val id: Long?,
+    val trainingBlockId: Long?,
+    val exerciseId: Long?,
+    val position: Int?
 )

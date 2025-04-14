@@ -5,11 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Exercise")
 data class Exercise(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long?,
+    val name: String?,
     val description: String?,
-    val motion: String,
-    val muscleGroups: String,
-    val equipment: String,
-    val isCustom: Int = 0
+    val motion: String?,
+    val muscleGroups: String?,
+    val equipment: String?,
+    val isCustom: Int? = 0
 )

@@ -73,6 +73,17 @@ object DatabaseModule {
     fun provideWorkoutExerciseDao(db: WorkoutDatabase): WorkoutExerciseDao {
         return db.workoutExerciseDao() // Отримуємо DAO з бази даних
     }
+
+    /**
+     * Провайдер для отримання DAO для роботи з вправами у тренуваннях.
+     *
+     * @param db Екземпляр бази даних
+     * @return Екземпляр WorkoutExerciseDao
+     */
+    @Provides
+    fun provideTrainingBlockDao(db: WorkoutDatabase): TrainingBlockDao {
+        return db.trainingBlockDao() // Отримуємо DAO з бази даних
+    }
 }
 
 

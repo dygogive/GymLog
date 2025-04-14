@@ -2,6 +2,7 @@ package com.example.gymlog.database.room
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
@@ -21,16 +22,20 @@ import androidx.room.PrimaryKey
             childColumns = ["exerciseId"],
             onDelete = ForeignKey.SET_NULL
         )
+    ],
+    indices = [                     // ← ДОДАЙ
+        Index(value = ["workout_gymday_ID"]),
+        Index(value = ["exerciseId"])
     ]
 )
 data class WorkoutExercise(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val workout_gymday_ID: Long, // Тип Long для сумісності з батьком
+    @PrimaryKey(autoGenerate = true)
+    val id: Long?,
+    val workout_gymday_ID: Long?, // Тип Long для сумісності з батьком
     val exerciseId: Long?,       // nullable, SET_NULL
-    val name: String,
+    val name: String?,
     val description: String?,
-    val motion: String,
-    val muscleGroups: String,
-    val equipment: String,
-    val isCustom: Int = 0
+    val motion: String?,
+    val muscleGroups: String?,
+    val equipment: String?
 )

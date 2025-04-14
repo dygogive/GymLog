@@ -11,10 +11,14 @@ import androidx.room.*
             childColumns = ["trainingBlockId"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [                     // ← ДОДАЙ
+        Index(value = ["trainingBlockId"])
     ]
 )
 data class TrainingBlockMuscleGroup(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val trainingBlockId: Long,
-    val muscleGroup: String
+    @PrimaryKey(autoGenerate = true)
+    val id: Long?,
+    val trainingBlockId: Long?,
+    val muscleGroup: String?
 )

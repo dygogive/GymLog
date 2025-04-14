@@ -18,16 +18,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
+import com.example.gymlog.database.room.TrainingBlock
 import com.example.gymlog.database.room.WorkoutSet
 import com.example.gymlog.ui.theme.MyAppTheme
 import com.example.gymlog.viewmodel.WorkoutViewModel
@@ -38,15 +39,24 @@ import com.example.gymlog.viewmodel.WorkoutViewModel
  */
 @Composable
 fun WorkoutScreen(
-    viewModel: WorkoutViewModel = hiltViewModel()
+    viewModel: WorkoutViewModel = hiltViewModel(),
+    gymDayId: Long = 1L // або приймай параметр, якщо потрібен динамічно
 ) {
+
+
+    // Викликаємо функцію завантаження тренувальних блоків один раз при старті цього екрану.
+    LaunchedEffect(key1 = gymDayId) {
+        viewModel.observeSetsForDay(gymDayId)
+    }
+
+
     val state by viewModel.uiState.collectAsState()
     WorkoutScreenContent(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
-        sets = state.sets,
-        onStart = { viewModel.startTimers() },
-        onStop = { viewModel.stopTimers() }
+        trainingBlocks = state.blocks,
+        onStart = { viewModel.startGym() },
+        onStop  = { viewModel.stopGym()  }
     )
 }
 
@@ -58,7 +68,7 @@ fun WorkoutScreen(
  *
  * @param totalTimeMs Загальний час тренування у мілісекундах.
  * @param lastSetTimeMs Час відпочинку після останнього підходу у мілісекундах.
- * @param sets Список підходів типу [WorkoutSet].
+ * @param trainingBlocks Список підходів типу [WorkoutSet].
  * @param onStart Callback для старту таймерів.
  * @param onStop Callback для зупинки таймерів.
  * @param modifier Додатковий модифікатор для налаштування UI.
@@ -67,7 +77,7 @@ fun WorkoutScreen(
 fun WorkoutScreenContent(
     totalTimeMs: Long,
     lastSetTimeMs: Long,
-    sets: List<WorkoutSet>,
+    trainingBlocks: List<TrainingBlock>,
     onStart: () -> Unit,
     onStop: () -> Unit,
     modifier: Modifier = Modifier
@@ -78,7 +88,7 @@ fun WorkoutScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         // Верхня секція: таймери та кнопки
         Row(
@@ -87,12 +97,12 @@ fun WorkoutScreenContent(
                 .padding(screenPadding)
                 .weight(1f, fill = false),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.Center
         ) {
             // Секція таймерів
             Column(
-                modifier = Modifier.weight(2f),
-                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 // Відображення загального часу
@@ -116,27 +126,27 @@ fun WorkoutScreenContent(
             ) {
                 Button(
                     onClick = onStart,
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(200.dp)
                 ) {
                     Text(text = stringResource(R.string.start_gym))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = onStop,
-                    modifier = Modifier.width(120.dp)
+                    modifier = Modifier.width(200.dp)
                 ) {
-                    Text(text = stringResource(R.string.stop_gym))
+                    Text(text = stringResource(R.string.new_count))
                 }
             }
         }
 
         // Секція списку підходів (сетів)
         LazyColumn(
-            modifier = Modifier.weight(2f)
+            modifier = Modifier.weight(2f),
         ) {
-            items(sets) { set ->
+            this.items<TrainingBlock>(trainingBlocks) { trBlock ->
                 Text(
-                    text = "Сет: ${set.name}",
+                    text = "Тренувальний блок: ${trBlock.name}",
                     modifier = Modifier.padding(screenPadding),
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -187,26 +197,27 @@ private fun format(ms: Long): String {
 /**
  * Preview-версія екрану з хардкорними даними.
  * Використовує [WorkoutScreenContent] для відображення UI у темному режимі.
+ * @Preview(
+ *     showBackground = true,
+ *     device = Devices.,
+ *     apiLevel = 35,
+ *     showSystemUi = true,
+ *     uiMode = android.content.res.Configuration.UI_MODE_TYPE_NORMAL or
+ *             android.content.res.Configuration.UI_MODE_TYPE_NORMAL
+ * )
  */
-@Preview(
-    showBackground = true,
-    device = Devices.PIXEL_7_PRO,
-    apiLevel = 35,
-    showSystemUi = true,
-    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES or
-            android.content.res.Configuration.UI_MODE_TYPE_NORMAL
-)
+@Preview(device = "id:Nexus 6P")
 @Composable
 fun WorkoutScreenPreview() {
     MyAppTheme {
         WorkoutScreenContent(
             totalTimeMs = 1234567,
             lastSetTimeMs = 45000,
-            sets = listOf(
-                WorkoutSet(0, 0, 0, "Присідання", "Присідання", 1),
-                WorkoutSet(0, 0, 0, "Жим лежа", "Жим лежа", 1),
-                WorkoutSet(0, 0, 0, "Мертва тяга", "Мертва тяга", 1),
-                WorkoutSet(0, 0, 0, "Бруси з гирею", "Бруси з гирею", 1)
+            trainingBlocks = listOf(
+                TrainingBlock(0,0,"Присідання", "Присідання",0),
+                TrainingBlock(0, 0, "Жим лежа", "Жим лежа", 1),
+                TrainingBlock(0, 0, "Мертва тяга", "Мертва тяга", 1),
+                TrainingBlock(0, 0, "Бруси з гирею", "Бруси з гирею", 1)
             ),
             onStart = { /* Дії в прев'ю не виконуються */ },
             onStop = { /* Дії в прев'ю не виконуються */ }

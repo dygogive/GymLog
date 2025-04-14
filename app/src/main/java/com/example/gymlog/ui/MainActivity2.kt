@@ -1,5 +1,6 @@
 package com.example.gymlog.ui
 
+import android.database.sqlite.SQLiteProgram
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -7,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.gymlog.database.ExerciseDAO
+import com.example.gymlog.database.PlanManagerDAO
 import com.example.gymlog.database.testroom.testDatabaseJavaWrapper
 import com.example.gymlog.ui.navigation.AppNavHost
 import com.example.gymlog.ui.theme.MyAppTheme
@@ -35,8 +37,11 @@ class MainActivity2 : ComponentActivity() {
         // 2. Робота з базою даних
         // Ініціалізація DAO для вправ
         val exerciseDAO = ExerciseDAO(this)
+        //і для програм
+        val planManagerDAO = PlanManagerDAO(this)
         // Логування всіх вправ для дебагінгу
         exerciseDAO.logAllExercises()
+        planManagerDAO.logAllData()
 
         // Тестування роботи Room бази даних через Java-обгортку
         testDatabaseJavaWrapper(this, applicationContext) {
