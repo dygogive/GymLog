@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.ExerciseInBlock;
-import com.example.gymlog.database.PlanManagerDAO;
+import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
+import com.example.gymlog.data.local.legacy.PlanManagerDAO;
 
 import java.util.Collections;
 import java.util.List;

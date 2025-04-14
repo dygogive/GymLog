@@ -13,10 +13,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gymlog.R;
-import com.example.gymlog.database.testroom.AppDatabase;
-import com.example.gymlog.database.ExerciseDAO;
-import com.example.gymlog.database.testroom.ExerciseResultDao;
-import com.example.gymlog.database.testroom.TestKt;
+import com.example.gymlog.data.local.roomtesting.TestKt;
+import com.example.gymlog.data.local.roomtesting.AppDatabase;
+import com.example.gymlog.data.local.legacy.ExerciseDAO;
+import com.example.gymlog.data.local.roomtesting.ExerciseResultDao;
 import com.example.gymlog.ui.exercises.activities.ExerciseManagementActivity;
 import com.example.gymlog.ui.programs.FitnessProgramsActivity;
 

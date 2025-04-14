@@ -28,8 +28,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
-import com.example.gymlog.database.room.TrainingBlock
-import com.example.gymlog.database.room.WorkoutSet
+import com.example.gymlog.data.local.room.TrainingBlockEntity
+import com.example.gymlog.data.local.room.WorkoutSetEntity
 import com.example.gymlog.ui.theme.MyAppTheme
 import com.example.gymlog.viewmodel.WorkoutViewModel
 
@@ -54,7 +54,7 @@ fun WorkoutScreen(
     WorkoutScreenContent(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
-        trainingBlocks = state.blocks,
+        trainingBlockEntities = state.blocks,
         onStart = { viewModel.startGym() },
         onStop  = { viewModel.stopGym()  }
     )
@@ -68,7 +68,7 @@ fun WorkoutScreen(
  *
  * @param totalTimeMs Загальний час тренування у мілісекундах.
  * @param lastSetTimeMs Час відпочинку після останнього підходу у мілісекундах.
- * @param trainingBlocks Список підходів типу [WorkoutSet].
+ * @param trainingBlockEntities Список підходів типу [WorkoutSetEntity].
  * @param onStart Callback для старту таймерів.
  * @param onStop Callback для зупинки таймерів.
  * @param modifier Додатковий модифікатор для налаштування UI.
@@ -77,7 +77,7 @@ fun WorkoutScreen(
 fun WorkoutScreenContent(
     totalTimeMs: Long,
     lastSetTimeMs: Long,
-    trainingBlocks: List<TrainingBlock>,
+    trainingBlockEntities: List<TrainingBlockEntity>,
     onStart: () -> Unit,
     onStop: () -> Unit,
     modifier: Modifier = Modifier
@@ -144,7 +144,7 @@ fun WorkoutScreenContent(
         LazyColumn(
             modifier = Modifier.weight(2f),
         ) {
-            this.items<TrainingBlock>(trainingBlocks) { trBlock ->
+            this.items<TrainingBlockEntity>(trainingBlockEntities) { trBlock ->
                 Text(
                     text = "Тренувальний блок: ${trBlock.name}",
                     modifier = Modifier.padding(screenPadding),
@@ -213,11 +213,11 @@ fun WorkoutScreenPreview() {
         WorkoutScreenContent(
             totalTimeMs = 1234567,
             lastSetTimeMs = 45000,
-            trainingBlocks = listOf(
-                TrainingBlock(0,0,"Присідання", "Присідання",0),
-                TrainingBlock(0, 0, "Жим лежа", "Жим лежа", 1),
-                TrainingBlock(0, 0, "Мертва тяга", "Мертва тяга", 1),
-                TrainingBlock(0, 0, "Бруси з гирею", "Бруси з гирею", 1)
+            trainingBlockEntities = listOf(
+                TrainingBlockEntity(0,0,"Присідання", "Присідання",0),
+                TrainingBlockEntity(0, 0, "Жим лежа", "Жим лежа", 1),
+                TrainingBlockEntity(0, 0, "Мертва тяга", "Мертва тяга", 1),
+                TrainingBlockEntity(0, 0, "Бруси з гирею", "Бруси з гирею", 1)
             ),
             onStart = { /* Дії в прев'ю не виконуються */ },
             onStop = { /* Дії в прев'ю не виконуються */ }

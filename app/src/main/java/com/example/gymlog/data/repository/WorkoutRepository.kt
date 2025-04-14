@@ -3,7 +3,14 @@ package com.example.gymlog.data.repository
 
 // Імпортуємо необхідні бібліотеки та класи
 import android.util.Log
-import com.example.gymlog.database.room.*
+import com.example.gymlog.data.local.room.TrainingBlockEntity
+import com.example.gymlog.data.local.room.TrainingBlockDao
+import com.example.gymlog.data.local.room.WorkoutExerciseEntity
+import com.example.gymlog.data.local.room.WorkoutExerciseDao
+import com.example.gymlog.data.local.room.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.WorkoutSetEntity
+import com.example.gymlog.data.local.room.WorkoutSetDao
 
 import kotlinx.coroutines.flow.Flow
 
@@ -35,7 +42,7 @@ class WorkoutRepository @Inject constructor(
      * @param day Об'єкт WorkoutGymDay для збереження
      * @return ID нового запису (Long)
      */
-    suspend fun insertGymDay(day: WorkoutGymDay): Long {
+    suspend fun insertGymDay(day: WorkoutGymDayEntity): Long {
         return workGymDayDao.insert(day)
     }
 
@@ -45,7 +52,7 @@ class WorkoutRepository @Inject constructor(
      *
      * @return Flow<List<WorkoutGymDay>> - стрім даних
      */
-    fun getAllGymDays(): Flow<List<WorkoutGymDay>> {
+    fun getAllGymDays(): Flow<List<WorkoutGymDayEntity>> {
         return workGymDayDao.getAllFlow()
     }
 
@@ -64,7 +71,7 @@ class WorkoutRepository @Inject constructor(
      * @param set Об'єкт WorkoutSet для збереження
      * @return ID нового запису (Long)
      */
-    suspend fun insertSet(set: WorkoutSet): Long {
+    suspend fun insertSet(set: WorkoutSetEntity): Long {
         return workSetDao.insert(set)
     }
 
@@ -74,7 +81,7 @@ class WorkoutRepository @Inject constructor(
      * @param dayId ID тренувального дня
      * @return Flow<List<WorkoutSet>> - стрім підходів
      */
-    fun getSetsForDay(dayId: Long): Flow<List<WorkoutSet>> {
+    fun getSetsForDay(dayId: Long): Flow<List<WorkoutSetEntity>> {
         return workSetDao.getWorkSetByWorkDayIDFlow(dayId)
     }
 
@@ -94,7 +101,7 @@ class WorkoutRepository @Inject constructor(
      * @param ex Об'єкт WorkoutExercise для збереження
      * @return ID нового запису (Long)
      */
-    suspend fun insertExercise(ex: WorkoutExercise): Long {
+    suspend fun insertExercise(ex: WorkoutExerciseEntity): Long {
         return workExerciseDao.insert(ex)
     }
 
@@ -104,7 +111,7 @@ class WorkoutRepository @Inject constructor(
      * @param dayId ID тренувального дня
      * @return Flow<List<WorkoutExercise>> - стрім вправ
      */
-    fun getExercisesForDay(dayId: Long): Flow<List<WorkoutExercise>> {
+    fun getExercisesForDay(dayId: Long): Flow<List<WorkoutExerciseEntity>> {
         return workExerciseDao.getWorkExerciseByWorkDayIDFlow(dayId)
     }
 
@@ -116,8 +123,8 @@ class WorkoutRepository @Inject constructor(
 
     /* ----- Робота з тренувальними блоками (TrainingBlocks) ----- */
 
-    suspend fun insertTrainingBlock(trainingBlock: TrainingBlock): Long {
-        return trainingBlockDao.insert(trainingBlock)
+    suspend fun insertTrainingBlock(trainingBlockEntity: TrainingBlockEntity): Long {
+        return trainingBlockDao.insert(trainingBlockEntity)
     }
 
     /**
@@ -126,7 +133,7 @@ class WorkoutRepository @Inject constructor(
      * @param dayId ID тренувального дня
      * @return Flow<List<WorkoutExercise>> - стрім вправ
      */
-    fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlock>> {
+    fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlockEntity>> {
         Log.d("findError", "in getTrainingBlockByGymDay")
         return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID)
     }

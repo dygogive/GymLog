@@ -11,11 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.AttributeItem;
-import com.example.gymlog.model.exercise.FiltreAttributes;
-import com.example.gymlog.model.exercise.HeaderItem;
-import com.example.gymlog.model.exercise.ListHeaderAndAttribute;
-import com.example.gymlog.model.exercise.TypeAttributeExercises;
+import com.example.gymlog.domain.model.exercise.AttributeItem;
+import com.example.gymlog.domain.model.exercise.FiltreAttributes;
+import com.example.gymlog.domain.model.exercise.HeaderItem;
+import com.example.gymlog.domain.model.exercise.ListHeaderAndAttribute;
+import com.example.gymlog.domain.model.exercise.TypeAttributeExercises;
 
 
 import java.util.List;

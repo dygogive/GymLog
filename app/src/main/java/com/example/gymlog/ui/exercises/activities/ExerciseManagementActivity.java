@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.AttributeFilter;
-import com.example.gymlog.model.exercise.BundleKeys;
-import com.example.gymlog.model.exercise.Equipment;
-import com.example.gymlog.model.exercise.Motion;
-import com.example.gymlog.model.exercise.MuscleGroup;
-import com.example.gymlog.database.ExerciseDAO;
+import com.example.gymlog.domain.model.exercise.AttributeFilter;
+import com.example.gymlog.domain.model.exercise.BundleKeys;
+import com.example.gymlog.domain.model.exercise.Equipment;
+import com.example.gymlog.domain.model.exercise.Motion;
+import com.example.gymlog.domain.model.exercise.MuscleGroup;
+import com.example.gymlog.data.local.legacy.ExerciseDAO;
 import com.example.gymlog.ui.exercises.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.ui.exercises.factories.DefaultExercisesFactory;
 import com.example.gymlog.ui.exercises.fragments.AttributeListFragment;

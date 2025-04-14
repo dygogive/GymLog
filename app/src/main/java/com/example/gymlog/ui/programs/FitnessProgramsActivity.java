@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.database.PlanManagerDAO;
-import com.example.gymlog.model.plan.FitnessProgram;
+import com.example.gymlog.data.local.legacy.PlanManagerDAO;
+import com.example.gymlog.domain.model.plan.FitnessProgram;
 import com.example.gymlog.ui.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.dialogs.DialogCreateEditNameDesc;
 import com.example.gymlog.ui.programs.adapters.BasePlanAdapter;

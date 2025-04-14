@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.plan.BasePlanItem;
+import com.example.gymlog.domain.model.plan.BasePlanItem;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

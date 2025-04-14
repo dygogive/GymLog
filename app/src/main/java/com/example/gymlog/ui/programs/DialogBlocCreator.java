@@ -13,13 +13,13 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
-import com.example.gymlog.database.PlanManagerDAO;
-import com.example.gymlog.model.exercise.Equipment;
-import com.example.gymlog.model.exercise.Exercise;
-import com.example.gymlog.model.exercise.ExerciseInBlock;
-import com.example.gymlog.model.exercise.Motion;
-import com.example.gymlog.model.exercise.MuscleGroup;
-import com.example.gymlog.model.plan.TrainingBlock;
+import com.example.gymlog.data.local.legacy.PlanManagerDAO;
+import com.example.gymlog.domain.model.exercise.Equipment;
+import com.example.gymlog.domain.model.exercise.Exercise;
+import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
+import com.example.gymlog.domain.model.exercise.Motion;
+import com.example.gymlog.domain.model.exercise.MuscleGroup;
+import com.example.gymlog.domain.model.plan.TrainingBlock;
 import com.example.gymlog.ui.dialogs.DialogStyler;
 
 import java.util.ArrayList;

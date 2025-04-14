@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.model.exercise.Exercise;
-import com.example.gymlog.model.exercise.MuscleGroup;
+import com.example.gymlog.domain.model.exercise.Exercise;
+import com.example.gymlog.domain.model.exercise.MuscleGroup;
 
 import java.util.List;
 

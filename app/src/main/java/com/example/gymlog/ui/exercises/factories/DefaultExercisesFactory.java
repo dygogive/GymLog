@@ -3,12 +3,12 @@ package com.example.gymlog.ui.exercises.factories;
 
 import android.util.Log;
 
-import com.example.gymlog.database.ExerciseDAO;
-import com.example.gymlog.model.exercise.AttributeFilter;
-import com.example.gymlog.model.exercise.Equipment;
-import com.example.gymlog.model.exercise.Exercise;
-import com.example.gymlog.model.exercise.Motion;
-import com.example.gymlog.model.exercise.MuscleGroup;
+import com.example.gymlog.data.local.legacy.ExerciseDAO;
+import com.example.gymlog.domain.model.exercise.AttributeFilter;
+import com.example.gymlog.domain.model.exercise.Equipment;
+import com.example.gymlog.domain.model.exercise.Exercise;
+import com.example.gymlog.domain.model.exercise.Motion;
+import com.example.gymlog.domain.model.exercise.MuscleGroup;
 
 import java.util.Arrays;
 import java.util.List;

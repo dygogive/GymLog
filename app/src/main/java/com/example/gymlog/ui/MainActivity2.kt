@@ -1,15 +1,14 @@
 package com.example.gymlog.ui
 
-import android.database.sqlite.SQLiteProgram
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.gymlog.database.ExerciseDAO
-import com.example.gymlog.database.PlanManagerDAO
-import com.example.gymlog.database.testroom.testDatabaseJavaWrapper
+import com.example.gymlog.data.local.legacy.ExerciseDAO
+import com.example.gymlog.data.local.legacy.PlanManagerDAO
+import com.example.gymlog.data.local.roomtesting.testDatabaseJavaWrapper
 import com.example.gymlog.ui.navigation.AppNavHost
 import com.example.gymlog.ui.theme.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
