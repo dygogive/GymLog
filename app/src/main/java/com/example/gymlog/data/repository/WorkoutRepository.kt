@@ -32,7 +32,6 @@ class WorkoutRepository @Inject constructor(
     private val workExerciseDao: WorkoutExerciseDao,   // Для роботи з вправами
 ) {
 
-
     /* ----- Робота з тренувальними днями (WorkoutGymDay) ----- */
 
     /**
