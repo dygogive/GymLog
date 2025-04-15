@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.PlanManagerDAO;
+import com.example.gymlog.data.repository.TrainingBlockRepository;
+import com.example.gymlog.data.repository.TrainingBlockRepositoryAdapter;
+import com.example.gymlog.data.repository.TrainingBlocksCallback;
 import com.example.gymlog.domain.model.exercise.Exercise;
 import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
 import com.example.gymlog.domain.model.plan.TrainingBlock;
@@ -21,14 +24,22 @@ import com.example.gymlog.presentation.dialogs_xml.ConfirmDeleteDialog;
 import com.example.gymlog.presentation.exercises_ui_xml.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.presentation.programs_ui_xml.adapters.TrainingBlockAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Активність для редагування тренувальних блоків (створення, видалення, переміщення).
  */
+@AndroidEntryPoint
 public class TrainingBlocksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewTrainingBlocks;
@@ -36,6 +47,8 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     private ItemTouchHelper itemTouchHelper = null;
     private final List<TrainingBlock> trainingBlocks = new ArrayList<>();
     private PlanManagerDAO planManagerDAO;
+    @Inject
+    protected TrainingBlockRepository trainingBlockRepository; // Ініціалізуйте як потрібно
     private long gymDayId;
 
     @Override
@@ -53,6 +66,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         }
 
         planManagerDAO = new PlanManagerDAO(this); // Ініціалізація DAO
+
         initUI(); // Налаштування UI
         setupRecyclerView(); // Налаштування RecyclerView
 
@@ -163,11 +177,35 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     }
 
     // Завантаження тренувальних блоків з бази даних
-    @SuppressLint("NotifyDataSetChanged")
+//    @SuppressLint("NotifyDataSetChanged")
+//    public void loadTrainingBlocks() {
+//        trainingBlocks.clear();
+//        trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
+//        trainingBlockAdapter.notifyDataSetChanged();
+//    }
+    //Альтернативний метод Завантаження тренувальних блоків з бази даних Room
+    // Припустимо, у вас є спосіб отримати репозиторій, наприклад, через конструктор або DI
+
+
     public void loadTrainingBlocks() {
+        // Очищаємо поточний список блоків, щоб уникнути дублювання
         trainingBlocks.clear();
-        trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
-        trainingBlockAdapter.notifyDataSetChanged();
+
+        // Викликаємо метод з адаптера. Передаємо gymDayId, екземпляр репозиторію та реалізацію callback
+        TrainingBlockRepositoryAdapter.loadTrainingBlocks(gymDayId, trainingBlockRepository, new TrainingBlocksCallback() {
+              @Override
+            public void onResult(@NotNull List<? extends @NotNull TrainingBlock> blocks) {
+                trainingBlocks.addAll(blocks);
+                trainingBlockAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable exception) {
+                Toast.makeText(TrainingBlocksActivity.this, "Помилка: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("TrainingBlocksActivity", "Error loading training blocks", exception);
+            }
+        });
+
     }
 
     // Обробник подій для тренувальних блоків
@@ -208,11 +246,9 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         @Override
         public void onCloneTrainingBlock(TrainingBlock block) {
-            loadTrainingBlocks();
-            Log.d("trainingBlocksError", "1");
+//            loadTrainingBlocks();
             // Додаємо клонований елемент до бази даних
             TrainingBlock clonedBlock = planManagerDAO.onStartCloneTrainingBlock(block);
-            Log.d("trainingBlocksError", "2");
             if (clonedBlock != null) {
                 trainingBlocks.add(clonedBlock);
                 Log.d("trainingBlocksError", "3");
