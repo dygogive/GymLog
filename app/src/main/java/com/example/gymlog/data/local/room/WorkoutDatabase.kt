@@ -4,7 +4,9 @@ package com.example.gymlog.data.local.room
 // Імпортуємо необхідні бібліотеки та класи
 import androidx.room.*
 import com.example.gymlog.data.local.legacy.DBHelper
+import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
+import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
@@ -51,6 +53,8 @@ abstract class WorkoutDatabase: RoomDatabase() {
     abstract fun workoutSetDao(): WorkoutSetDao          // DAO для підходів
     abstract fun workoutExerciseDao(): WorkoutExerciseDao // DAO для вправ
     abstract fun trainingBlockDao(): TrainingBlockDao // DAO для тренув блоків
+    abstract fun exerciseInBlockDao(): ExerciseInBlockDao //
+    abstract fun trainingBlockFilterDao(): TrainingBlockFilterDao //
 }
 
 

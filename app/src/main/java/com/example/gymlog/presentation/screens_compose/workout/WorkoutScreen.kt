@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
 import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
 import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
+import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.presentation.theme.MyAppTheme
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 
@@ -46,7 +47,7 @@ fun WorkoutScreen(
 
     // Викликаємо функцію завантаження тренувальних блоків один раз при старті цього екрану.
     LaunchedEffect(key1 = gymDayId) {
-        viewModel.observeSetsForDay(gymDayId)
+        viewModel.loadTrainingBlocksOnce(gymDayId)
     }
 
 
@@ -54,7 +55,7 @@ fun WorkoutScreen(
     WorkoutScreenContent(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
-        trainingBlockEntities = state.blocks,
+        trainingBlockList = state.blocks,
         onStart = { viewModel.startGym() },
         onStop  = { viewModel.stopGym()  }
     )
@@ -68,7 +69,7 @@ fun WorkoutScreen(
  *
  * @param totalTimeMs Загальний час тренування у мілісекундах.
  * @param lastSetTimeMs Час відпочинку після останнього підходу у мілісекундах.
- * @param trainingBlockEntities Список підходів типу [WorkoutSetEntity].
+ * @param trainingBlockList Список підходів типу [WorkoutSetEntity].
  * @param onStart Callback для старту таймерів.
  * @param onStop Callback для зупинки таймерів.
  * @param modifier Додатковий модифікатор для налаштування UI.
@@ -77,7 +78,7 @@ fun WorkoutScreen(
 fun WorkoutScreenContent(
     totalTimeMs: Long,
     lastSetTimeMs: Long,
-    trainingBlockEntities: List<TrainingBlockEntity>,
+    trainingBlockList: List<TrainingBlock>,
     onStart: () -> Unit,
     onStop: () -> Unit,
     modifier: Modifier = Modifier
@@ -144,7 +145,7 @@ fun WorkoutScreenContent(
         LazyColumn(
             modifier = Modifier.weight(2f),
         ) {
-            this.items<TrainingBlockEntity>(trainingBlockEntities) { trBlock ->
+            this.items<TrainingBlock>(trainingBlockList) { trBlock ->
                 Text(
                     text = "Тренувальний блок: ${trBlock.name}",
                     modifier = Modifier.padding(screenPadding),
@@ -213,11 +214,11 @@ fun WorkoutScreenPreview() {
         WorkoutScreenContent(
             totalTimeMs = 1234567,
             lastSetTimeMs = 45000,
-            trainingBlockEntities = listOf(
-                TrainingBlockEntity(0,0,"Присідання", "Присідання",0),
-                TrainingBlockEntity(0, 0, "Жим лежа", "Жим лежа", 1),
-                TrainingBlockEntity(0, 0, "Мертва тяга", "Мертва тяга", 1),
-                TrainingBlockEntity(0, 0, "Бруси з гирею", "Бруси з гирею", 1)
+            trainingBlockList = listOf(
+                TrainingBlock(0,0,"Присідання", "Присідання"),
+                TrainingBlock(0, 0, "Жим лежа", "Жим лежа"),
+                TrainingBlock(0, 0, "Мертва тяга", "Мертва тяга"),
+                TrainingBlock(0, 0, "Бруси з гирею", "Бруси з гирею")
             ),
             onStart = { /* Дії в прев'ю не виконуються */ },
             onStop = { /* Дії в прев'ю не виконуються */ }

@@ -5,7 +5,9 @@ package com.example.gymlog.data.local.room
 import android.content.Context
 
 import androidx.room.Room
+import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
+import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
@@ -88,6 +90,18 @@ object DatabaseModule {
     fun provideTrainingBlockDao(db: WorkoutDatabase): TrainingBlockDao {
         return db.trainingBlockDao() // Отримуємо DAO з бази даних
     }
+
+    @Provides
+    fun provideExerciseInBlockDao(db: WorkoutDatabase): ExerciseInBlockDao {
+        return db.exerciseInBlockDao() // Отримуємо DAO з бази даних
+    }
+
+    @Provides
+    fun provideTrainingBlockFilterDao(db: WorkoutDatabase): TrainingBlockFilterDao {
+        return db.trainingBlockFilterDao() // Отримуємо DAO з бази даних
+    }
+
+
 }
 
 

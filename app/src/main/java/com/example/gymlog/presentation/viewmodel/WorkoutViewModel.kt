@@ -2,7 +2,6 @@
 package com.example.gymlog.presentation.viewmodel
 
 // Імпорт необхідних бібліотек і класів
-import android.util.Log
 import androidx.lifecycle.ViewModel                // Базовий клас ViewModel
 import androidx.lifecycle.viewModelScope          // Coroutine Scope для ViewModel
 import com.example.gymlog.data.repository.TrainingBlockRepository
@@ -141,27 +140,30 @@ class WorkoutViewModel @Inject constructor(
 
     /* ---------------- Завантаження даних ---------------- */
 
-    // Функція спостереження за підходами для конкретного дня
-    fun observeSetsForDay(gymDayID: Long) {
-        // Запускаємо корутину в viewModelScope (автоматично скасовується при знищенні ViewModel)
+//    // Функція спостереження за підходами для конкретного дня
+//    fun observeTrainingBlocks(gymDayID: Long) {
+//        // Запускаємо корутину в viewModelScope (автоматично скасовується при знищенні ViewModel)
+//
+//        var observerTrainingBlocks: Job? = viewModelScope.launch {
+//            // Отримуємо Flow (підписка на інформацію) з репозиторію
+//            trBlkRepo.observeTrainingBlocksByDayId(gymDayID)
+//                //даємо задачу кур'єрській доставці приносити нову інформацію якщо вона з'явиться
+//                .collect { list ->  // Кур’єр чекає біля поштової скриньки і відразу несе новий журнал (дані) до тебе, як тільки він приходить.
+//                    // Ти (ViewModel) береш новий список сетів з журналу і кладеш його на стіл (_uiState).
+//                    _uiState.update { it.copy(blocks = list.toPersistentList()) } //Чому toPersistentList()? Це як заламінувати журнал перед тим, як покласти на стіл:
+//                }
+//
+//        }
+//    }
 
-        Log.d("observeSetsForDay", "test1");
-
-        var observerGymBlocks: Job? = viewModelScope.launch {
-            // Отримуємо Flow (підписка на інформацію) з репозиторію
-            trBlkRepo.getTrainingBlockByGymDay(gymDayID)
-                //даємо задачу кур'єрській доставці приносити нову інформацію якщо вона з'явиться
-                .collect { list ->  // Кур’єр чекає біля поштової скриньки і відразу несе новий журнал (дані) до тебе, як тільки він приходить.
-                    // Ти (ViewModel) береш новий список сетів з журналу і кладеш його на стіл (_uiState).
-                    _uiState.update { it.copy(blocks = list.toPersistentList()) } //Чому toPersistentList()? Це як заламінувати журнал перед тим, як покласти на стіл:
-                }
-            /**
-             * Хто і коли скасовує підписку?
-             *
-             * Секретар (viewModelScope) сам це робить при звільненні (знищенні ViewModel).
-             *
-             * Без цього кур’єр (корутина) вічно стояв би біля скриньки, витрачаючи ресурси.
-             * */
+    //одногразовий запит до бази
+    //Оновити  val blocks: PersistentList<TrainingBlock> у WorkoutUiState
+    fun loadTrainingBlocksOnce(gymDayID: Long) {
+        viewModelScope.launch {
+            val blocks = trBlkRepo.getTrainingBlocksByDayId(gymDayID)
+            _uiState.update { it.copy(blocks = blocks.toPersistentList()) }
         }
     }
+
+
 }

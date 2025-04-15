@@ -10,6 +10,7 @@ import com.example.gymlog.data.local.room.mapper.toDomain
 import com.example.gymlog.domain.model.exercise.Motion
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +18,6 @@ import javax.inject.Singleton
 @Singleton
 class TrainingBlockRepository @Inject constructor(
     private val trainingBlockDao: TrainingBlockDao,         // Для роботи з вправами
-    private val legacyDao: PlanManagerDAO,                  //старий Дао
     private val exeInBlockDao: ExerciseInBlockDao,
     private val filterDao: TrainingBlockFilterDao,
 )  {
@@ -58,6 +58,7 @@ class TrainingBlockRepository @Inject constructor(
         }
         return blocks
     }
+
 
 
 
