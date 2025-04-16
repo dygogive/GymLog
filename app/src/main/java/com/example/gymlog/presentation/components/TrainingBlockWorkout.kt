@@ -1,5 +1,6 @@
 package com.example.gymlog.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.domain.model.exercise.Equipment
@@ -24,7 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun TrainingBlockWorkout(
     block: TrainingBlock,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface  // <- дефолт
 ) {
     val context = LocalContext.current
 
@@ -33,16 +36,18 @@ fun TrainingBlockWorkout(
     Column(
         modifier
             .fillMaxWidth()
+            .background(backgroundColor)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         // Заголовок
         Text(
             text = block.name,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.height(8.dp))
@@ -51,29 +56,42 @@ fun TrainingBlockWorkout(
         if (block.description.isNotBlank()) {
             Text(
                 text = block.description,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(Modifier.height(8.dp))
         }
 
         // Список типів руху
-        Text("Типи руху:", style = MaterialTheme.typography.bodyMedium)
+        Text("Типи руху:",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium)
         block.motions.forEach { motion ->
-            Text("- ${motion.getDescription(context)}", style = MaterialTheme.typography.bodySmall)
+            Text("- ${motion.getDescription(context)}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodySmall)
         }
         Spacer(Modifier.height(8.dp))
 
         // Список обладнання
-        Text("Обладнання:", style = MaterialTheme.typography.bodyMedium)
+        Text("Обладнання:",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium)
         block.equipmentList.forEach { eq ->
-            Text("- ${eq.getDescription(context)}", style = MaterialTheme.typography.bodySmall)
+            Text("- ${eq.getDescription(context)}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodySmall)
         }
         Spacer(Modifier.height(8.dp))
 
         // Список м’язових груп
-        Text("М’язові групи:", style = MaterialTheme.typography.bodyMedium)
+        Text("М’язові групи:",
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium)
         block.muscleGroupList.forEach { mg ->
-            Text("- ${mg.getDescription(context)}", style = MaterialTheme.typography.bodySmall)
+            Text("- ${mg.getDescription(context)}",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodySmall)
         }
         Spacer(Modifier.height(8.dp))
 
@@ -81,6 +99,7 @@ fun TrainingBlockWorkout(
         block.exercises.forEach { ex ->
             Text(
                 text = ex.getNameOnly(context),
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(8.dp))

@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
@@ -95,16 +98,19 @@ fun WorkoutScreenContent(
     val screenPadding = 16.dp
 
     Column(
-        modifier = modifier
+        modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
         // Верхня секція: таймери та кнопки
         Row(
             modifier = Modifier
-                .padding(WindowInsets.systemBars.asPaddingValues())
-                .padding(screenPadding)
-                .weight(1f, fill = false),
+                .fillMaxWidth()
+                .padding(WindowInsets
+                    .systemBars
+                    .only(WindowInsetsSides.Top)
+                    .asPaddingValues())
+                .padding(screenPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -151,13 +157,12 @@ fun WorkoutScreenContent(
 
         // Секція списку підходів (сетів)
         LazyColumn(
-            modifier = Modifier.weight(2f),
+            modifier = Modifier
+                .weight(1f)                           // 2. Зайняти весь вільний простір
+                .fillMaxWidth()
         ) {
-            this.items<TrainingBlock>(trainingBlockList) { trBlock ->
-                TrainingBlockWorkout(
-                    trBlock,
-                    modifier = Modifier.padding(16.dp)
-                )
+            items(trainingBlockList) { block ->
+                TrainingBlockWorkout(block = block, modifier = Modifier.padding(8.dp))
             }
         }
     }
