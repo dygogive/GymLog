@@ -2,18 +2,14 @@
 package com.example.gymlog.data.repository
 
 // Імпортуємо необхідні бібліотеки та класи
-import android.util.Log
-import com.example.gymlog.data.local.room.dao.TrainingBlockDao
+
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
-import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
 import com.example.gymlog.data.local.room.entity.WorkoutExerciseEntity
 import com.example.gymlog.data.local.room.entity.WorkoutGymDayEntity
 import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
-
 import kotlinx.coroutines.flow.Flow
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
