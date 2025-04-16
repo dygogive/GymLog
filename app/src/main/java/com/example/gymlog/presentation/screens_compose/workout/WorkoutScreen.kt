@@ -31,6 +31,9 @@ import com.example.gymlog.R
 import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
 import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
 import com.example.gymlog.domain.model.plan.TrainingBlock
+import com.example.gymlog.presentation.components.TrainingBlockWorkout
+import com.example.gymlog.presentation.components.TrainingBlockWorkoutPreview
+import com.example.gymlog.presentation.components.createPreviewTrainingBlock
 import com.example.gymlog.presentation.theme.MyAppTheme
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 
@@ -41,7 +44,7 @@ import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 @Composable
 fun WorkoutScreen(
     viewModel: WorkoutViewModel = hiltViewModel(),
-    gymDayId: Long = 1L // або приймай параметр, якщо потрібен динамічно
+    gymDayId: Long = 2L // або приймай параметр, якщо потрібен динамічно
 ) {
     // Викликаємо функцію завантаження тренувальних блоків один раз при старті цього екрану.
     LaunchedEffect(key1 = gymDayId) {
@@ -151,10 +154,9 @@ fun WorkoutScreenContent(
             modifier = Modifier.weight(2f),
         ) {
             this.items<TrainingBlock>(trainingBlockList) { trBlock ->
-                Text(
-                    text = "Тренувальний блок: ${trBlock.name}",
-                    modifier = Modifier.padding(screenPadding),
-                    color = MaterialTheme.colorScheme.onBackground
+                TrainingBlockWorkout(
+                    trBlock,
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
@@ -223,10 +225,10 @@ fun WorkoutScreenPreview() {
             totalTimeMs = 1234567,
             lastSetTimeMs = 45000,
             trainingBlockList = listOf(
-                TrainingBlock(0,0,"Присідання", "Присідання"),
-                TrainingBlock(0, 0, "Жим лежа", "Жим лежа"),
-                TrainingBlock(0, 0, "Мертва тяга", "Мертва тяга"),
-                TrainingBlock(0, 0, "Бруси з гирею", "Бруси з гирею")
+                createPreviewTrainingBlock(),
+                createPreviewTrainingBlock(),
+                createPreviewTrainingBlock(),
+                createPreviewTrainingBlock(),
             ),
             onStart = { /* Дії в прев'ю не виконуються */ },
             onStop = { /* Дії в прев'ю не виконуються */ }
