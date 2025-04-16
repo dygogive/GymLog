@@ -43,15 +43,15 @@ fun WorkoutScreen(
     viewModel: WorkoutViewModel = hiltViewModel(),
     gymDayId: Long = 1L // або приймай параметр, якщо потрібен динамічно
 ) {
-
-
     // Викликаємо функцію завантаження тренувальних блоків один раз при старті цього екрану.
     LaunchedEffect(key1 = gymDayId) {
+        //load training blockList to view model
         viewModel.loadTrainingBlocksOnce(gymDayId)
     }
-
-
     val state by viewModel.uiState.collectAsState()
+
+
+
     WorkoutScreenContent(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
@@ -60,6 +60,11 @@ fun WorkoutScreen(
         onStop  = { viewModel.stopGym()  }
     )
 }
+
+
+
+
+
 
 /**
  * Спільний UI-компонент, що відповідає за відображення:
@@ -180,6 +185,9 @@ fun TimerDisplay(
         )
     }
 }
+
+
+
 
 /**
  * Форматує час з мілісекунд у рядок формату HH:MM:SS.
