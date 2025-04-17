@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.gymlog.presentation.screens_compose.main.MainScreen
-import com.example.gymlog.presentation.screens_compose.workout.WorkoutScreen
+import com.example.gymlog.presentation.screens.main.MainScreen
+import com.example.gymlog.presentation.screens.workout.WorkoutScreen
 
 /**
  * Головний компонент навігації додатка, що використовує Jetpack Navigation.

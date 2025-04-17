@@ -1,20 +1,16 @@
-// Визначаємо пакет, де знаходиться цей файл
-package com.example.gymlog.data.local.room
+package com.example.gymlog.di
 
-// Імпортуємо необхідні бібліотеки та класи
 import android.content.Context
-
 import androidx.room.Room
+import com.example.gymlog.data.local.room.WorkoutDatabase
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
-
 import dagger.Module
 import dagger.Provides
-
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent

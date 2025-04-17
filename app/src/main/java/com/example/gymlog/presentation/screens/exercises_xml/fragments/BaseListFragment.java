@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.fragments;
+package com.example.gymlog.presentation.screens.exercises_xml.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gymlog.R;
 import com.example.gymlog.domain.model.exercise.ListHeaderAndAttribute;
 import com.example.gymlog.domain.model.exercise.TypeAttributeExercises;
-import com.example.gymlog.presentation.exercises_ui_xml.adapters.AttributeAdapter;
+import com.example.gymlog.presentation.screens.exercises_xml.adapters.AttributeAdapter;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.screens_compose.workout
+package com.example.gymlog.presentation.screens.workout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -174,7 +174,8 @@ private fun TimerDisplay(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(labelRes),
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground,
         )
         Text(
             text = formatTime(timeMs),

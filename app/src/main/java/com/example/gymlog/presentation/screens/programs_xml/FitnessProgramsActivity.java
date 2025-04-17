@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.programs_ui_xml;
+package com.example.gymlog.presentation.screens.programs_xml;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import com.example.gymlog.data.local.legacy.PlanManagerDAO;
 import com.example.gymlog.domain.model.plan.FitnessProgram;
 import com.example.gymlog.presentation.dialogs_xml.ConfirmDeleteDialog;
 import com.example.gymlog.presentation.dialogs_xml.DialogCreateEditNameDesc;
-import com.example.gymlog.presentation.programs_ui_xml.adapters.BasePlanAdapter;
+import com.example.gymlog.presentation.screens.programs_xml.adapters.BasePlanAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

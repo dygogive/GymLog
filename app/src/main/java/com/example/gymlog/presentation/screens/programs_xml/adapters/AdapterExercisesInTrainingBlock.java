@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.programs_ui_xml.adapters;
+package com.example.gymlog.presentation.screens.programs_xml.adapters;
 
 import android.content.Context;
 import android.view.HapticFeedbackConstants;

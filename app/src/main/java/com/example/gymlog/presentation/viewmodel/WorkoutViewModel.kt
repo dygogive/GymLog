@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.data.repository.TrainingBlockRepository
 import com.example.gymlog.data.repository.WorkoutRepository
-import com.example.gymlog.presentation.screens_compose.workout.WorkoutUiState
+import com.example.gymlog.presentation.screens.workout.WorkoutUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Job

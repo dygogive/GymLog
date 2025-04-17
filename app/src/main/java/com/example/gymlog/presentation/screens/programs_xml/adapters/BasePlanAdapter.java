@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.programs_ui_xml.adapters;
+package com.example.gymlog.presentation.screens.programs_xml.adapters;
 
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;

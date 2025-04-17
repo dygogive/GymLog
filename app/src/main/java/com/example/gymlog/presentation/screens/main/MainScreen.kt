@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.screens_compose.main
+package com.example.gymlog.presentation.screens.main
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.presentation.exercises_ui_xml.ExerciseManagementActivity
-import com.example.gymlog.presentation.programs_ui_xml.FitnessProgramsActivity
+import com.example.gymlog.presentation.screens.exercises_xml.ExerciseManagementActivity
+import com.example.gymlog.presentation.screens.programs_xml.FitnessProgramsActivity
 
 
 private const val CARD_WIDTH = 250

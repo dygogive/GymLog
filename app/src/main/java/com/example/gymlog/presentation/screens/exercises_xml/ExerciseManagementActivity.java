@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml;
+package com.example.gymlog.presentation.screens.exercises_xml;
 
 import android.os.Bundle;
 
@@ -13,10 +13,10 @@ import com.example.gymlog.domain.model.exercise.Equipment;
 import com.example.gymlog.domain.model.exercise.Motion;
 import com.example.gymlog.domain.model.exercise.MuscleGroup;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
-import com.example.gymlog.presentation.exercises_ui_xml.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.presentation.screens.exercises_xml.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.domain.usecase.DefaultExercisesFactory;
-import com.example.gymlog.presentation.exercises_ui_xml.fragments.AttributeListFragment;
-import com.example.gymlog.presentation.exercises_ui_xml.fragments.ExercisesFragment;
+import com.example.gymlog.presentation.screens.exercises_xml.fragments.AttributeListFragment;
+import com.example.gymlog.presentation.screens.exercises_xml.fragments.ExercisesFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

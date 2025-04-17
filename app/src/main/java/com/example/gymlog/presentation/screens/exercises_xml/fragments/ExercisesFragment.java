@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.fragments;
+package com.example.gymlog.presentation.screens.exercises_xml.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -24,8 +24,8 @@ import com.example.gymlog.domain.model.exercise.Equipment;
 import com.example.gymlog.domain.model.exercise.Exercise;
 import com.example.gymlog.domain.model.exercise.Motion;
 import com.example.gymlog.domain.model.exercise.MuscleGroup;
-import com.example.gymlog.presentation.exercises_ui_xml.adapters.ExerciseAdapter;
-import com.example.gymlog.presentation.exercises_ui_xml.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.presentation.screens.exercises_xml.adapters.ExerciseAdapter;
+import com.example.gymlog.presentation.screens.exercises_xml.dialogs.DialogForExerciseEdit;
 import com.example.gymlog.domain.usecase.DefaultExercisesFactory;
 
 import java.util.List;

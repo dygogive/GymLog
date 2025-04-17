@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.programs_ui_xml;
+package com.example.gymlog.presentation.screens.programs_xml;
 
 import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;

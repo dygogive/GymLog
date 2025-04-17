@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.fragments;
+package com.example.gymlog.presentation.screens.exercises_xml.fragments;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.domain.model.exercise.AttributeFilter;
-import com.example.gymlog.domain.model.exercise.Equipment;
 import com.example.gymlog.domain.model.exercise.ListHeaderAndAttribute;
+import com.example.gymlog.domain.model.exercise.Motion;
 
 import java.util.List;
 
-
-public class EquipmentFragment extends BaseListFragment {
+public class MotionsFragment extends BaseListFragment {
 
 
     @Override
@@ -25,36 +24,35 @@ public class EquipmentFragment extends BaseListFragment {
 
         // Встановлюємо заголовок фрагмента
         TextView title = view.findViewById(R.id.textViewTitle);
-        title.setText(R.string.head_weight_type);
+        title.setText(R.string.head_motion);
     }
 
     @Override
     protected Class getClassEnumAttribute() {
-        return Equipment.class;
+        return Motion.class;
     }
 
     @Override
     public List<ListHeaderAndAttribute> getItems() {
-        return Equipment.getGroupedEquipmentItems(requireContext());
+        return Motion.getGroupedEquipmentItems(requireContext());
     }
 
-
+    //що робити якщо ітем вибраний
     @Override
     protected void onItemSelected(Object item) {
-        Equipment equipment = (Equipment) item;
+        Motion motion = (Motion) item;
 
-        Equipment[] enums = Equipment.values();
-        Equipment enumEquip = null;
+        Motion[] enums = Motion.values();
+        Motion enumMotion = null;
 
         int count = 0;
-        for(Equipment equipment1 : enums) {
-            if(equipment1.equals(item)) enumEquip = enums[count];
+        for(Motion motion1 : enums) {
+            if(motion1.equals(item)) enumMotion = enums[count];
             else count++;
         }
 
 
-
-        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.EQUIPMENT, enumEquip);
+        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.MOTION, enumMotion);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

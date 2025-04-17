@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.screens_compose.workout
+package com.example.gymlog.presentation.screens.workout
 
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import kotlinx.collections.immutable.PersistentList

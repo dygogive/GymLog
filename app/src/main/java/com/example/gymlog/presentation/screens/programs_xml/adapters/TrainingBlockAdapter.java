@@ -1,7 +1,7 @@
-package com.example.gymlog.presentation.programs_ui_xml.adapters;
+package com.example.gymlog.presentation.screens.programs_xml.adapters;
 
-import static com.example.gymlog.presentation.programs_ui_xml.adapters.BasePlanAdapter.forceShowIcons;
-import static com.example.gymlog.presentation.programs_ui_xml.adapters.BasePlanAdapter.tintMenuIcons;
+import static com.example.gymlog.presentation.screens.programs_xml.adapters.BasePlanAdapter.forceShowIcons;
+import static com.example.gymlog.presentation.screens.programs_xml.adapters.BasePlanAdapter.tintMenuIcons;
 
 import android.content.Context;
 import android.text.Html;

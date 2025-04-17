@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.programs_ui_xml;
+package com.example.gymlog.presentation.screens.programs_xml;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import com.example.gymlog.domain.model.exercise.Exercise;
 import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
 import com.example.gymlog.domain.model.plan.TrainingBlock;
 import com.example.gymlog.presentation.dialogs_xml.ConfirmDeleteDialog;
-import com.example.gymlog.presentation.exercises_ui_xml.dialogs.DialogForExerciseEdit;
-import com.example.gymlog.presentation.programs_ui_xml.adapters.TrainingBlockAdapter;
+import com.example.gymlog.presentation.screens.exercises_xml.dialogs.DialogForExerciseEdit;
+import com.example.gymlog.presentation.screens.programs_xml.adapters.TrainingBlockAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;

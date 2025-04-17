@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.adapters;
+package com.example.gymlog.presentation.screens.exercises_xml.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

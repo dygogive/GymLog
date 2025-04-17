@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation.exercises_ui_xml.fragments;
+package com.example.gymlog.presentation.screens.exercises_xml.fragments;
 
 import static com.example.gymlog.domain.model.exercise.AttributeFilter.EQUIPMENT;
 import static com.example.gymlog.domain.model.exercise.AttributeFilter.MOTION;
