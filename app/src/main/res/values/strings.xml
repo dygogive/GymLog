@@ -206,7 +206,7 @@
     <string name="since_last_set_time">Since last set:</string>
 
 
-    <string name="lorem_ipsum">
+    <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -245,7 +245,7 @@
     <string name="workout">Workout</string>
     <string name="new_count">New count</string>
     <string name="since_last_note">Since last note:</string>
-    <string name="set_finished">Set finished</string>
+    <string name="set_finished">Noted</string>
 
 
 </resources>

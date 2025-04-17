@@ -21,7 +21,8 @@
     <string name="muscle_delts_front">Дельти передні</string>
     <string name="muscle_longissimus">Довгі м\'язи спини</string>
     <string name="muscle_lats">Широкі спини</string>
-    <string name="start_gym">Старт тренування</string>
+    <string name="start_gym">Старт</string>
+    <string name="stop_gym">Стоп</string>
     <string name="history">Історія</string>
     <string name="add_set">Додати підхід</string>
     <string name="repetitions">Повторення</string>
@@ -162,6 +163,25 @@
     <string name="select_equipment">Вибрати інвертар</string>
     <string name="please_select_all_filters">Вибрати усе</string>
     <string name="menu">Меню</string>
+    <string name="exe_attribute">Атрибути вправ</string>
+    <string name="header_free_weights">Вільна вага</string>
+    <string name="header_machines">Тренажери</string>
+    <string name="header_others">Інші</string>
+    <string name="press">Жим</string>
+    <string name="pull">Тяга</string>
+    <string name="press_pull_by_legs">Ноги</string>
+    <string name="muscles_traps">Трапеції</string>
+    <string name="latissimus_dorsi_muscle">Великі широкі</string>
+    <string name="muscles_arms">Руки</string>
+    <string name="muscles_delts">Дельти</string>
+    <string name="muscles_legs">Ноги</string>
+    <string name="muscles_back_other">Спина (інші)</string>
+    <string name="total_time">Загальний час:</string>
+    <string name="since_last_set_time">Тривалість сета:</string>
+    <string name="workout">Тренування</string>
+    <string name="new_count">Новий відлік</string>
+    <string name="since_last_note">З останнього запису</string>
+    <string name="set_finished">Занотовано</string>
 
 
 </resources>
