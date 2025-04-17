@@ -244,6 +244,8 @@
     </string>
     <string name="workout">Workout</string>
     <string name="new_count">New count</string>
+    <string name="since_last_note">Since last note:</string>
+    <string name="set_finished">Set finished</string>
 
 
 </resources>

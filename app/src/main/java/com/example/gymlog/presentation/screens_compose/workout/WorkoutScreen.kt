@@ -31,11 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
-import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
 import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.presentation.components.TrainingBlockWorkout
-import com.example.gymlog.presentation.components.TrainingBlockWorkoutPreview
 import com.example.gymlog.presentation.components.createPreviewTrainingBlock
 import com.example.gymlog.presentation.theme.MyAppTheme
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
@@ -62,8 +60,9 @@ fun WorkoutScreen(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
         trainingBlockList = state.blocks,
-        onStart = { viewModel.startGym() },
-        onStop  = { viewModel.stopGym()  }
+        btnTxtStartStop = state.textButtonStartStop,
+        onStartStop = { viewModel.startStopGym() },
+        onSetFinish  = { viewModel.onSetFinish()  }
     )
 }
 
@@ -81,8 +80,8 @@ fun WorkoutScreen(
  * @param totalTimeMs Загальний час тренування у мілісекундах.
  * @param lastSetTimeMs Час відпочинку після останнього підходу у мілісекундах.
  * @param trainingBlockList Список підходів типу [WorkoutSetEntity].
- * @param onStart Callback для старту таймерів.
- * @param onStop Callback для зупинки таймерів.
+ * @param onStartStop Callback для старту таймерів.
+ * @param onSetFinish Callback для зупинки таймерів.
  * @param modifier Додатковий модифікатор для налаштування UI.
  */
 @Composable
@@ -90,12 +89,20 @@ fun WorkoutScreenContent(
     totalTimeMs: Long,
     lastSetTimeMs: Long,
     trainingBlockList: List<TrainingBlock>,
-    onStart: () -> Unit,
-    onStop: () -> Unit,
+    btnTxtStartStop: String,
+    onStartStop: () -> Unit,
+    onSetFinish: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Константи для відступів
     val screenPadding = 16.dp
+    var textBtnStartStop = ""
+
+    if (btnTxtStartStop.equals("start")) {textBtnStartStop = stringResource(R.string.start_gym)}
+    else {textBtnStartStop = stringResource(R.string.stop_gym)}
+
+
+
 
     Column(
         modifier
@@ -128,7 +135,7 @@ fun WorkoutScreenContent(
                 Spacer(modifier = Modifier.height(screenPadding))
                 // Відображення часу відпочинку
                 TimerDisplay(
-                    label = stringResource(R.string.since_last_set_time),
+                    label = stringResource(R.string.since_last_note),
                     time = format(lastSetTimeMs)
                 )
             }
@@ -140,17 +147,19 @@ fun WorkoutScreenContent(
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = onStart,
+                    onClick = onStartStop,
                     modifier = Modifier.width(200.dp)
                 ) {
-                    Text(text = stringResource(R.string.start_gym))
+                    Text(
+                        textBtnStartStop
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = onStop,
+                    onClick = onSetFinish,
                     modifier = Modifier.width(200.dp)
                 ) {
-                    Text(text = stringResource(R.string.new_count))
+                    Text(stringResource(R.string.set_finished))
                 }
             }
         }
@@ -235,8 +244,9 @@ fun WorkoutScreenPreview() {
                 createPreviewTrainingBlock(),
                 createPreviewTrainingBlock(),
             ),
-            onStart = { /* Дії в прев'ю не виконуються */ },
-            onStop = { /* Дії в прев'ю не виконуються */ }
+            btnTxtStartStop = "Start",
+            onStartStop = { /* Дії в прев'ю не виконуються */ },
+            onSetFinish = { /* Дії в прев'ю не виконуються */ }
         )
     }
 }

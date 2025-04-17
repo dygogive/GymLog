@@ -2,6 +2,7 @@
 package com.example.gymlog.presentation.viewmodel
 
 // Імпорт необхідних бібліотек і класів
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel                // Базовий клас ViewModel
 import androidx.lifecycle.viewModelScope          // Coroutine Scope для ViewModel
 import com.example.gymlog.data.repository.TrainingBlockRepository
@@ -21,6 +22,8 @@ import kotlinx.coroutines.launch                 // Запуск корутин�
 import javax.inject.Inject                       // Аннотація для ін'єкції залежностей
 
 import kotlin.time.Duration.Companion.seconds    // Конвертація часу
+
+import com.example.gymlog.R
 
 // Аннотація для автоматичної генерації залежностей через Hilt
 @HiltViewModel // Оголошення класу ViewModel з ін'єкцією репозиторію через конструктор
@@ -46,39 +49,42 @@ class WorkoutViewModel @Inject constructor(
 
 
 
+
+
+
+
     /* ---------------- Таймери ---------------- */
 
     // Об'єкт Job для керування корутиною таймера
     private var timerJob: Job? = null
     // Час початку тренування (мс)
-    private var startTs = 0L
+    private var startWorkoutTime = 0L
     // Час початку нового сету (мс)
-    private var newSetStartTs = 0L
-
-
-
-
-
-
+    private var startSetTime = 0L
+    //текст кнопки
+    var textButton = "start"
 
 
     // Функція запуску таймерів
-    fun startGym() {
-
-        //переведення стану тренування у активне
-        _uiState.update { it.copy(isGymRunning = true) }
+    fun startStopGym() {
+        //переведення стану тренування у активне якщо не активне
+        if(!_uiState.value.isGymRunning) {
+            _uiState.update { it.copy(isGymRunning = true) }
+        } else {
+            onStop()
+            return
+        }
 
 
         // Фіксуємо поточний час як час старту
-        startTs = System.currentTimeMillis()
-        newSetStartTs = startTs
-
+        startWorkoutTime = System.currentTimeMillis()
+        startSetTime = startWorkoutTime
+        textButton = "stop"
 
         // Скасовуємо попередню корутину таймера, якщо воно було
         timerJob?.cancel()
         // Запускаємо нову корутину для таймера
         timerJob = viewModelScope.launch {
-
 
             // Безкінечний цикл оновлення часу
             while (true) {
@@ -89,47 +95,39 @@ class WorkoutViewModel @Inject constructor(
                     //Надає доступ до поточного значення стану через параметр it
                     it.copy( //Створює нову копію об'єкта стану
                         //Дозволяє змінити тільки потрібні поля
-                        totalTimeMs = now - startTs,    // Загальний час = поточний час - час старту
-                        lastSetTimeMs = now - newSetStartTs  // Час відпочинку = поточний час - час старту відпочинку
+                        totalTimeMs = now - startWorkoutTime,    // Загальний час = поточний час - час старту
+                        lastSetTimeMs = now - startSetTime,  // Час відпочинку = поточний час - час старту відпочинку
+                        textButtonStartStop = textButton
                     )
                     //Замінює стан на нове значення, яке повертається з лямбди
                 }
                 // Затримка 1 секунда перед наступним оновленням
                 delay(1.seconds)
-
-                /**
-                 * Аналогічний код без використання update і copy:
-                 * val currentState = _uiState.value
-                 * val newState = currentState.copy(
-                 *     totalTimeMs = now - startTs,
-                 *     restTimeMs = now - restStartTs
-                 * )
-                 * _uiState.value = newState
-                 * */
-
             }
         }
     }
 
+
     // Функція зупинки таймерів
-    fun stopGym() {
-        //тренування зупинити
-        _uiState.update { it.copy(isGymRunning = false) }
+    fun onStop() {
+        textButton = "start"
         timerJob?.cancel()  // Скасовуємо корутину таймера
+        //тренування зупинити
+        _uiState.update { it.copy(
+            isGymRunning = false,
+            textButtonStartStop = textButton
+        ) }
+    }
 
+    // Функція зупинки таймерів
+    fun onSetFinish() {
+
+        startSetTime = System.currentTimeMillis()
+
+        _uiState.update { it.copy(lastSetTimeMs = System.currentTimeMillis() - startSetTime) }
     }
 
 
-
-
-
-
-
-
-    // Функція скидання таймера відпочинку
-    fun resetRestTimer() {
-        newSetStartTs = System.currentTimeMillis()  // Оновлюємо час старту відпочинку
-    }
 
 
 
@@ -139,6 +137,15 @@ class WorkoutViewModel @Inject constructor(
 
 
     /* ---------------- Завантаження даних ---------------- */
+
+    //одногразовий запит до бази
+    //Оновити  val blocks: PersistentList<TrainingBlock> у WorkoutUiState
+    fun loadTrainingBlocksOnce(gymDayID: Long) {
+        viewModelScope.launch {
+            val blocks = trBlkRepo.getTrainingBlocksByDayId(gymDayID)
+            _uiState.update { it.copy(blocks = blocks.toPersistentList()) }
+        }
+    }
 
 //    // Функція спостереження за підходами для конкретного дня
 //    fun observeTrainingBlocks(gymDayID: Long) {
@@ -155,15 +162,5 @@ class WorkoutViewModel @Inject constructor(
 //
 //        }
 //    }
-
-    //одногразовий запит до бази
-    //Оновити  val blocks: PersistentList<TrainingBlock> у WorkoutUiState
-    fun loadTrainingBlocksOnce(gymDayID: Long) {
-        viewModelScope.launch {
-            val blocks = trBlkRepo.getTrainingBlocksByDayId(gymDayID)
-            _uiState.update { it.copy(blocks = blocks.toPersistentList()) }
-        }
-    }
-
 
 }
