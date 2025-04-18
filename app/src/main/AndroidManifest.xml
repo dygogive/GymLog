@@ -16,20 +16,20 @@
         tools:targetApi="31" >
 
         <activity
-            android:name=".feature.program.ui.TrainingBlocksActivity"
+            android:name=".ui.legacy.program.TrainingBlocksActivity"
             android:exported="false" />
         <activity
-            android:name=".feature.program.ui.GymSessionsActivity"
+            android:name=".ui.legacy.program.GymSessionsActivity"
             android:exported="false" />
         <activity
-            android:name=".feature.program.ui.FitnessProgramsActivity"
+            android:name=".ui.legacy.program.FitnessProgramsActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApp" />
         <activity
-            android:name=".feature.exercise.ui.ExerciseManagementActivity"
+            android:name=".ui.legacy.exercise.ExerciseManagementActivity"
             android:exported="false" />
         <activity
-            android:name=".feature.main.ui.MainActivity"
+            android:name=".ui.feature.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

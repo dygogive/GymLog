@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_activity"
     android:padding="8dp"
-    tools:context=".feature.program.ui.TrainingBlocksActivity">
+    tools:context=".ui.legacy.program.TrainingBlocksActivity">
 
     <!-- Заголовок екрана -->
     <TextView

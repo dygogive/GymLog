@@ -34,7 +34,7 @@ class WorkoutRepository @Inject constructor(
      * @param day Об'єкт WorkoutGymDay для збереження
      * @return ID нового запису (Long)
      */
-    override suspend fun insertGymDay(day: WorkoutGymDayEntity): Long {
+    override suspend fun insertWorkGymDay(day: WorkoutGymDayEntity): Long {
         return workGymDayDao.insert(day)
     }
 
@@ -44,7 +44,7 @@ class WorkoutRepository @Inject constructor(
      *
      * @return Flow<List<WorkoutGymDay>> - стрім даних
      */
-    override fun getAllGymDays(): Flow<List<WorkoutGymDayEntity>> {
+    override fun getAllWorkGymDays(): Flow<List<WorkoutGymDayEntity>> {
         return workGymDayDao.getAllFlow()
     }
 
