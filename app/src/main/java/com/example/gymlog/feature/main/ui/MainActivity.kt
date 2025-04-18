@@ -7,7 +7,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.gymlog.data.local.legacy.ExerciseDAO
 import com.example.gymlog.data.local.legacy.PlanManagerDAO
-import com.example.gymlog.feature.AppNavHost
+import com.example.gymlog.feature.navigation.AppNavHost
 import com.example.gymlog.feature.theme.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

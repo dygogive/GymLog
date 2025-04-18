@@ -1,4 +1,4 @@
-package com.example.gymlog.feature
+package com.example.gymlog.feature.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

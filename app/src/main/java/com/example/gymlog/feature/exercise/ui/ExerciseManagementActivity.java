@@ -15,8 +15,8 @@ import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
 import com.example.gymlog.legacy.dialogs.exercises.DialogForExerciseEdit;
 import com.example.gymlog.domain.usecase.exercise.DefaultExercisesFactory;
-import com.example.gymlog.legacy.fragments.exercises.AttributeListFragment;
-import com.example.gymlog.legacy.fragments.exercises.ExercisesFragment;
+import com.example.gymlog.feature.exercise.ui.fragments.AttributeListFragment;
+import com.example.gymlog.feature.exercise.ui.fragments.ExercisesFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

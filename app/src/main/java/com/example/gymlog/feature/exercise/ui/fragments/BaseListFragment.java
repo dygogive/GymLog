@@ -1,4 +1,4 @@
-package com.example.gymlog.legacy.fragments.exercises;
+package com.example.gymlog.feature.exercise.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

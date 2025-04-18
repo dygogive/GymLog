@@ -1,4 +1,4 @@
-package com.example.gymlog.legacy.fragments.exercises;
+package com.example.gymlog.feature.exercise.ui.fragments;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +10,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
 import com.example.gymlog.domain.model.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
 
 import java.util.List;
 
 
-// MusclesFragment.java
-public class MusclesFragment extends BaseListFragment {
+public class EquipmentFragment extends BaseListFragment {
 
 
     @Override
@@ -26,36 +25,36 @@ public class MusclesFragment extends BaseListFragment {
 
         // Встановлюємо заголовок фрагмента
         TextView title = view.findViewById(R.id.textViewTitle);
-        title.setText(R.string.head_muscle_group);
+        title.setText(R.string.head_weight_type);
     }
 
     @Override
     protected Class getClassEnumAttribute() {
-        return MuscleGroup.class;
+        return Equipment.class;
     }
 
     @Override
     public List<ListHeaderAndAttribute> getItems() {
-        return MuscleGroup.getGroupedEquipmentItems(requireContext());
+        return Equipment.getGroupedEquipmentItems(requireContext());
     }
 
-    //що робити якщо ітем вибраний
+
     @Override
     protected void onItemSelected(Object item) {
-        MuscleGroup muscleGroup  = (MuscleGroup) item;
+        Equipment equipment = (Equipment) item;
 
-
-        MuscleGroup[] enums = MuscleGroup.values();
-        MuscleGroup enumMuscleGroup = null;
+        Equipment[] enums = Equipment.values();
+        Equipment enumEquip = null;
 
         int count = 0;
-        for(MuscleGroup muscleGroup1 : enums) {
-            if(muscleGroup1.equals(muscleGroup)) enumMuscleGroup = enums[count];
+        for(Equipment equipment1 : enums) {
+            if(equipment1.equals(item)) enumEquip = enums[count];
             else count++;
         }
 
 
-        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.MUSCLE_GROUP, enumMuscleGroup);
+
+        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.EQUIPMENT, enumEquip);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
