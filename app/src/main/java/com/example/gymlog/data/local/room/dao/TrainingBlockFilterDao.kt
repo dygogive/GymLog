@@ -2,11 +2,11 @@ package com.example.gymlog.data.local.room.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.example.gymlog.domain.model.exercise.Equipment
-import com.example.gymlog.domain.model.exercise.Motion
-import com.example.gymlog.domain.model.exercise.MuscleGroup
+import com.example.gymlog.domain.model.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.attribute.motion.Motion
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.BlockFilters
-import com.example.gymlog.utils.parseEnumOrNull
+import com.example.gymlog.core.utils.parseEnumOrNull
 
 @Dao
 interface TrainingBlockFilterDao {

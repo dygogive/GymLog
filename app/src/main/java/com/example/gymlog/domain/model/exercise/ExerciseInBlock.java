@@ -1,5 +1,9 @@
 package com.example.gymlog.domain.model.exercise;
 
+import com.example.gymlog.domain.model.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.attribute.motion.Motion;
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
+
 import java.util.List;
 
 //вправи, що в списках для тренувальних блоків

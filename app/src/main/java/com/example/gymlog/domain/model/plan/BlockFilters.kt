@@ -1,8 +1,8 @@
 package com.example.gymlog.domain.model.plan
 
-import com.example.gymlog.domain.model.exercise.Equipment
-import com.example.gymlog.domain.model.exercise.Motion
-import com.example.gymlog.domain.model.exercise.MuscleGroup
+import com.example.gymlog.domain.model.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.attribute.motion.Motion
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 
 data class BlockFilters(
     val motions: List<Motion>,

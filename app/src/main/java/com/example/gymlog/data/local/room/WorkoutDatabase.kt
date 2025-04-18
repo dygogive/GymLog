@@ -10,18 +10,17 @@ import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
-import com.example.gymlog.data.local.room.entity.ExerciseEntity
-import com.example.gymlog.data.local.room.entity.GymDayEntity
-import com.example.gymlog.data.local.room.entity.PlanCycleEntity
-import com.example.gymlog.data.local.room.entity.TrainingBlockEntity
-import com.example.gymlog.data.local.room.entity.TrainingBlockEquipmentEntity
-import com.example.gymlog.data.local.room.entity.TrainingBlockExerciseEntity
-import com.example.gymlog.data.local.room.entity.TrainingBlockMotionEntity
-import com.example.gymlog.data.local.room.entity.TrainingBlockMuscleGroupEntity
-import com.example.gymlog.data.local.room.entity.WorkoutExerciseEntity
-import com.example.gymlog.data.local.room.entity.WorkoutGymDayEntity
-import com.example.gymlog.data.local.room.entity.WorkoutSetEntity
-import kotlinx.coroutines.flow.Flow
+import com.example.gymlog.data.local.room.entity.exercise.ExerciseEntity
+import com.example.gymlog.data.local.room.entity.plan.GymDayEntity
+import com.example.gymlog.data.local.room.entity.plan.PlanCycleEntity
+import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
+import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEquipmentEntity
+import com.example.gymlog.data.local.room.entity.plan.TrainingBlockExerciseEntity
+import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMotionEntity
+import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMuscleGroupEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
 
 /**
  * Абстрактний клас бази даних Room, який визначає структуру бази даних додатка.

@@ -7,6 +7,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
+import com.example.gymlog.domain.model.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.attribute.motion.Motion;
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
 
 import java.lang.reflect.Field;
 import java.util.List;

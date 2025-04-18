@@ -8,7 +8,7 @@
     android:background="@color/background_activity"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    tools:context=".presentation.MainActivity2">
+    tools:context=".feature.main.ui.MainActivity">
 
     <!-- Заголовок -->
     <TextView
