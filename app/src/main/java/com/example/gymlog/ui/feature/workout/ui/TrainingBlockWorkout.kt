@@ -42,13 +42,13 @@ fun TrainingBlockWorkout(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp),
+            .padding(vertical = 16.dp, horizontal = 8.dp),
     ) {
         // Заголовок
         Text(
             text = block.name,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
         Spacer(Modifier.height(8.dp))
 

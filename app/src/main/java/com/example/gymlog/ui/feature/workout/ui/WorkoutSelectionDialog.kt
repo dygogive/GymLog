@@ -13,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymSession
 import com.example.gymlog.ui.theme.MyAppTheme
@@ -70,8 +72,9 @@ fun WorkoutSelectionDialog(
                 ) {
                     Text(
                         text = if (selectionState == SelectionState.PROGRAMS)
-                            "Виберіть програму тренувань"
-                        else "Виберіть тренування",
+                            stringResource(R.string.select_program)
+                        else
+                            stringResource(R.string.select_training),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.align(Alignment.Center)

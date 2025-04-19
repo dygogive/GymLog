@@ -182,6 +182,8 @@
     <string name="new_count">Новий відлік</string>
     <string name="since_last_note">З останнього запису</string>
     <string name="set_finished">Занотовано</string>
+    <string name="select_program">Вибрати програму тренування</string>
+    <string name="select_training">Вибрати тренування</string>
 
 
 </resources>

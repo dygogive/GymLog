@@ -74,9 +74,6 @@ class WorkoutViewModel @Inject constructor(
 
 
 
-
-
-
     // Виклик, коли користувач обрав програму
     fun onProgramSelected(program: FitnessProgram) {
         _uiState.update { it.copy(
@@ -97,6 +94,8 @@ class WorkoutViewModel @Inject constructor(
         // відразу підвантажуємо блоки для цього дня
         loadTrainingBlocksOnce(session.id)
     }
+
+
 
     /**
      * Loads training blocks once for given gymDayId.

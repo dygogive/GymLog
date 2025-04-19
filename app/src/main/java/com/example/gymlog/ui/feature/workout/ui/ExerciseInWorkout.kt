@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.domain.model.attribute.equipment.Equipment
@@ -24,8 +25,9 @@ import com.example.gymlog.ui.theme.MyAppTheme
 fun ExerciseInWorkoutUI(
     exerciseInBlock : ExerciseInBlock,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface  // Виправлено на surface
+    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer  // Виправлено на surface
 ) {
+
     Column(
         modifier
             .fillMaxWidth()
@@ -35,11 +37,11 @@ fun ExerciseInWorkoutUI(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
     ){
         // Заголовок
         Text(
-            text = exerciseInBlock.name,
+            text = exerciseInBlock.getNameOnly(LocalContext.current),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge
         )  // Видалено зайві фігурні дужки {}

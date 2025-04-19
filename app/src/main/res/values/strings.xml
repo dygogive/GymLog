@@ -246,6 +246,8 @@
     <string name="new_count">New count</string>
     <string name="since_last_note">Since last note:</string>
     <string name="set_finished">Noted</string>
+    <string name="select_program">Select program</string>
+    <string name="select_training">Select training</string>
 
 
 </resources>
