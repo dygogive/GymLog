@@ -58,6 +58,15 @@ public class GymSession implements BasePlanItem {
         this.trainingBlocks = trainingBlocks;
     }
 
+    public GymSession(long id, long fitProgramId, String name, String description, int position, List<TrainingBlock> trainingBlocks) {
+        this.id = id;
+        this.planId = (int) fitProgramId;
+        this.name = name;
+        this.description = description;
+        this.position = position;
+        this.trainingBlocks = trainingBlocks;
+    }
+
 
     public long getId() {
         return id;

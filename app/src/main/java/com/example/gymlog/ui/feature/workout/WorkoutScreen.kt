@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,204 +23,49 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
+import com.example.gymlog.ui.feature.workout.ui.TimerSection
 import com.example.gymlog.ui.feature.workout.ui.TrainingBlockWorkout
+import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.createPreviewTrainingBlock
 import com.example.gymlog.ui.theme.MyAppTheme
 
 @Composable
 fun WorkoutScreen(
-    viewModel: WorkoutViewModel = hiltViewModel(),
-    gymDayId: Long = 2L
+    viewModel: WorkoutViewModel = hiltViewModel()
 ) {
-    LaunchedEffect(gymDayId) {
-        viewModel.loadTrainingBlocksOnce(gymDayId)
-    }
-
     val state by viewModel.uiState.collectAsState()
 
-    WorkoutScreenContent(
-        totalTimeMs = state.totalTimeMs,
-        lastSetTimeMs = state.lastSetTimeMs,
-        blocks = state.blocks,
-        isRunning = state.isGymRunning,
-        onStartStop = viewModel::startStopGym,
-        onSetFinish = viewModel::onSetFinish
-    )
-}
-
-@Composable
-private fun WorkoutScreenContent(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    blocks: List<TrainingBlock>,
-    isRunning: Boolean,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val buttonText = stringResource(if (isRunning) R.string.stop_gym else R.string.start_gym)
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(WindowInsets.systemBars.asPaddingValues())
-    ) {
-        TopSection(
-            totalTimeMs = totalTimeMs,
-            lastSetTimeMs = lastSetTimeMs,
-            buttonText = buttonText,
-            onStartStop = onStartStop,
-            onSetFinish = onSetFinish
+    // Поки користувач не вибрав усе — показуємо діалог
+    if (state.showSelectionDialog) {
+        WorkoutSelectionDialog(
+            programs = state.availablePrograms,
+            workoutsByProgram = state.availableGymSessions,
+            onProgramSelected = viewModel::onProgramSelected,
+            onWorkoutSelected = viewModel::onSessionSelected,
+            onDismiss = { /*можете дозволити закриття, якщо потрібно*/ }
         )
+        return  // не рендеримо основний UI поки не вибрано
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp)
-        ) {
-            items(blocks) { block ->
-                TrainingBlockWorkout(
-                    block = block,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
-            }
+    // Після вибору — показ активності
+    state.selectedGymSession?.let { session ->
+        // LaunchedEffect з gymDayId тепер із вибраної сесії
+        LaunchedEffect(session.id) {
+            viewModel.loadTrainingBlocksOnce(session.id)
         }
-    }
-}
 
-@Composable
-private fun TopSection(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    buttonText: String,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TimerColumn(
-            totalTimeMs = totalTimeMs,
-            lastSetTimeMs = lastSetTimeMs,
-            modifier = Modifier.weight(1f)
-        )
-
-        ControlsColumn(
-            buttonText = buttonText,
-            onStartStop = onStartStop,
-            onSetFinish = onSetFinish,
-            modifier = Modifier.weight(1f)
-        )
-    }
-}
-
-@Composable
-private fun TimerColumn(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TimerDisplay(labelRes = R.string.total_time, timeMs = totalTimeMs)
-        Spacer(modifier = Modifier.height(8.dp))
-        TimerDisplay(labelRes = R.string.since_last_note, timeMs = lastSetTimeMs)
-    }
-}
-
-@Composable
-private fun ControlsColumn(
-    buttonText: String,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = onStartStop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
-            Text(text = buttonText)
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = onSetFinish,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
-            Text(text = stringResource(R.string.set_finished))
-        }
-    }
-}
-
-@Composable
-private fun TimerDisplay(
-    labelRes: Int,
-    timeMs: Long
-) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = stringResource(labelRes),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Text(
-            text = formatTime(timeMs),
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-    }
-}
-
-private fun formatTime(ms: Long): String {
-    val totalSeconds = ms / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-    return "%02d:%02d:%02d".format(hours, minutes, seconds)
-}
-
-@Preview(showBackground = true, name = "WorkoutScreenContent Preview")
-@Composable
-private fun WorkoutScreenContentPreview() {
-    MyAppTheme {
         WorkoutScreenContent(
-            totalTimeMs = 1234567L,
-            lastSetTimeMs = 45000L,
-            blocks = List(4) { createPreviewTrainingBlock() },
-            isRunning = false,
-            onStartStop = {},
-            onSetFinish = {}
+            totalTimeMs = state.totalTimeMs,
+            lastSetTimeMs = state.lastSetTimeMs,
+            blocks = state.blocks,
+            isRunning = state.isGymRunning,
+            onStartStop = viewModel::startStopGym,
+            onSetFinish = viewModel::onSetFinish
         )
     }
 }
 
-@Preview(showBackground = true, name = "TopSection Preview")
-@Composable
-private fun TopSectionPreview() {
-    MyAppTheme {
-        TopSection(
-            totalTimeMs = 3600000,
-            lastSetTimeMs = 150000,
-            buttonText = stringResource(R.string.start_gym),
-            onStartStop = {},
-            onSetFinish = {}
-        )
-    }
-}
+
+
+
+

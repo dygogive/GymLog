@@ -2,14 +2,15 @@ package com.example.gymlog.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymlog.data.repository.plan.TrainingBlockRepository
-import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.domain.model.plan.FitnessProgram
+import com.example.gymlog.domain.model.plan.GymSession
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
-import com.example.gymlog.domain.usecase.workout.GetAllGymDaysUseCase
-import com.example.gymlog.domain.usecase.workout.InsertGymDayUseCase
+import com.example.gymlog.domain.usecase.gym_day.GetGymSessionByProgramIdUseCase
+import com.example.gymlog.domain.usecase.gym_plan.GetFitnessProgramsUseCase
 import com.example.gymlog.presentation.state.WorkoutUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val getTrainingBlocksByDayIdUseCase: GetTrainingBlocksByDayIdUseCase,
-    private val getAllGymDaysUseCase: GetAllGymDaysUseCase,
-    private val insertGymDayUseCase: InsertGymDayUseCase
+    private val getFitnessProgramsUseCase: GetFitnessProgramsUseCase,
+    private val getGymSessionByProgramIdUseCase: GetGymSessionByProgramIdUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WorkoutUiState())
@@ -35,6 +36,79 @@ class WorkoutViewModel @Inject constructor(
     private var timerJob: Job? = null
     private var startWorkoutTime = 0L
     private var startSetTime = 0L
+
+    init {
+        loadPrograms()
+    }
+
+
+
+    private fun loadPrograms() {
+        viewModelScope.launch {
+            val programs = getFitnessProgramsUseCase()
+            _uiState.update { currentState ->
+                currentState.copy(availablePrograms = programs.toPersistentList())
+            }
+
+            // Завантажуємо тренування для кожної програми
+            val gymSessionByProgram = mutableMapOf<Long, List<GymSession>>()
+            programs.forEach { program ->
+                val gymSessions = getGymSessionByProgramIdUseCase(program.id)
+                gymSessionByProgram[program.id] = gymSessions
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(availableGymSessions = gymSessionByProgram.toPersistentMap() )
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // Виклик, коли користувач обрав програму
+    fun onProgramSelected(program: FitnessProgram) {
+        _uiState.update { it.copy(
+            selectedProgram = program,
+            // початково не обрана жодна сесія
+            selectedGymSession = null
+        )}
+    }
+
+
+
+    // Виклик, коли користувач обрав сесію
+    fun onSessionSelected(session: GymSession) {
+        _uiState.update { it.copy(
+            selectedGymSession = session,
+            showSelectionDialog = false  // більше не потрібен діалог
+        )}
+        // відразу підвантажуємо блоки для цього дня
+        loadTrainingBlocksOnce(session.id)
+    }
+
+    /**
+     * Loads training blocks once for given gymDayId.
+     */
+    fun loadTrainingBlocksOnce(gymDayId: Long) {
+        viewModelScope.launch {
+            val blocks = getTrainingBlocksByDayIdUseCase(gymDayId)
+                .toPersistentList()
+            _uiState.update { it.copy(blocks = blocks) }
+        }
+    }
+
+
+
+
 
     /**
      * Toggles workout timer: starts if stopped, stops if running.
@@ -78,36 +152,7 @@ class WorkoutViewModel @Inject constructor(
         _uiState.update { it.copy(lastSetTimeMs = 0L) }
     }
 
-    /**
-     * Loads training blocks once for given gymDayId.
-     */
-    fun loadTrainingBlocksOnce(gymDayId: Long) {
-        viewModelScope.launch {
-            val blocks = getTrainingBlocksByDayIdUseCase(gymDayId)
-                .toPersistentList()
-            _uiState.update { it.copy(blocks = blocks) }
-        }
-    }
 
-    /**
-     * Loads all workout days via domain use case.
-     * You can update UI state to hold days if needed.
-     */
-    fun loadAllGymDays() {
-        viewModelScope.launch {
-            getAllGymDaysUseCase()
-                .collect { days ->
-                    // TODO: handle `days` in UI state when introduced
-                }
-        }
-    }
 
-    /**
-     * Inserts a new workout day via domain use case.
-     */
-    fun insertGymDay(day: WorkoutGymDayEntity) {
-        viewModelScope.launch {
-            insertGymDayUseCase(day)
-        }
-    }
+
 }

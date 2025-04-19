@@ -11,13 +11,13 @@ import com.example.gymlog.ui.feature.workout.WorkoutScreen
  * Головний компонент навігації додатка, що використовує Jetpack Navigation.
  * Визначає граф навігації між екранами додатка.
  *
- * @param navController - контролер навігації, який керує переходами між екранами
+ * @param navHostController - контролер навігації, який керує переходами між екранами
  */
 @Composable
-fun AppNavHost(navController: NavHostController) {
+fun AppNavHost(navHostController: NavHostController) {
     // Створення NavHost - контейнера для навігації
     NavHost(
-        navController = navController,  // Контролер для управління навігацією
+        navController = navHostController,  // Контролер для управління навігацією
         startDestination = "main"      // Стартовий екран додатка
     ) {
         // Визначення точок навігації (екранів) додатка
@@ -25,10 +25,10 @@ fun AppNavHost(navController: NavHostController) {
         /**
          * Екран "main" - головний екран додатка
          *
-         * @param navController передається для можливості навігації з цього екрана
+         * @param navHostController передається для можливості навігації з цього екрана
          */
         composable("main") {
-            MainScreen(navController)
+            MainScreen(navHostController)
         }
 
         /**

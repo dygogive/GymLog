@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                 // Ініціалізація контролера навігації
                 val navController = rememberNavController()
                 // Встановлення графа навігації
-                AppNavHost(navController = navController)
+                AppNavHost(navHostController = navController)
             }
         }
     }

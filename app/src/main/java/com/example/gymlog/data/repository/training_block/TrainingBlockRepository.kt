@@ -1,4 +1,4 @@
-package com.example.gymlog.data.repository.plan
+package com.example.gymlog.data.repository.training_block
 
 import android.util.Log
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
@@ -24,7 +24,6 @@ class TrainingBlockRepository @Inject constructor(
     }
 
     override fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlockEntity>> {
-        Log.d("findError", "in getTrainingBlockByGymDay")
         return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID)
     }
 

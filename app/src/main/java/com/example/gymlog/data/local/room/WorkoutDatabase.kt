@@ -5,6 +5,8 @@ package com.example.gymlog.data.local.room
 import androidx.room.*
 import com.example.gymlog.data.local.legacy.DBHelper
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
+import com.example.gymlog.data.local.room.dao.GymPlansDao
+import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
@@ -54,6 +56,8 @@ abstract class WorkoutDatabase: RoomDatabase() {
     abstract fun trainingBlockDao(): TrainingBlockDao // DAO для тренув блоків
     abstract fun exerciseInBlockDao(): ExerciseInBlockDao //
     abstract fun trainingBlockFilterDao(): TrainingBlockFilterDao //
+    abstract fun gymPlansDao(): GymPlansDao //
+    abstract fun gymSessionDao(): GymSessionDao //
 }
 
 

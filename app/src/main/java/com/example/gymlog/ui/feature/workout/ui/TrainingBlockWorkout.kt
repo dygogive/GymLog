@@ -97,11 +97,7 @@ fun TrainingBlockWorkout(
 
         // Вправи в блоці
         block.exercises.forEach { ex ->
-            Text(
-                text = ex.getNameOnly(context),
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleLarge
-            )
+            ExerciseInWorkoutUI(ex)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }

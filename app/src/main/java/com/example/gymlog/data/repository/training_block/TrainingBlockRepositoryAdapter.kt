@@ -1,4 +1,4 @@
-package com.example.gymlog.data.repository.plan
+package com.example.gymlog.data.repository.training_block
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

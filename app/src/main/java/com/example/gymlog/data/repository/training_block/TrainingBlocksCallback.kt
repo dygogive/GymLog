@@ -1,4 +1,4 @@
-package com.example.gymlog.data.repository.plan
+package com.example.gymlog.data.repository.training_block
 
 import com.example.gymlog.domain.model.plan.TrainingBlock
 
