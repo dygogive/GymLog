@@ -25,7 +25,7 @@ public class DialogForExerciseEdit {
 
     private final Context context;
     private final ExerciseDAO exerciseDAO;
-    private final ExerciseDialogListener listener;
+    private final OnExerciseEditedListener onExerciseEditedListener;
     private OnExerciseCreatedListener createdListener;
 
     // Для Exercise зберігаємо одиночні значення для motion та equipment,
@@ -34,7 +34,7 @@ public class DialogForExerciseEdit {
     private List<MuscleGroup> preselectedMuscleGroups = new ArrayList<>();
     private Equipment preselectedEquipment;
 
-    public interface ExerciseDialogListener {
+    public interface OnExerciseEditedListener {
         void onExerciseSaved();
     }
 
@@ -46,13 +46,14 @@ public class DialogForExerciseEdit {
         this.createdListener = listener;
     }
 
-    public DialogForExerciseEdit(Context context, ExerciseDialogListener listener) {
+    public DialogForExerciseEdit(Context context, OnExerciseEditedListener onExerciseEditedListener) {
         this.context = context;
         this.exerciseDAO = new ExerciseDAO(context);
-        this.listener = listener;
+        this.onExerciseEditedListener = onExerciseEditedListener;
     }
 
     public void show(@Nullable Exercise exercise) {
+
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_edit_exercise_new, null);
 
@@ -197,7 +198,7 @@ public class DialogForExerciseEdit {
                         .setPositiveButton(R.string.yes, (dialog, which) -> {
                             if (exerciseDAO.deleteExercise(exercise)) {
                                 Toast.makeText(context, R.string.exercise_deleted, Toast.LENGTH_SHORT).show();
-                                listener.onExerciseSaved();
+                                onExerciseEditedListener.onExerciseSaved();
                                 alertDialog.dismiss();
                             } else {
                                 Toast.makeText(context, R.string.delete_failed, Toast.LENGTH_SHORT).show();
@@ -234,7 +235,7 @@ public class DialogForExerciseEdit {
                 if (newId != -1) {
                     newExercise.setId(newId);
                     Toast.makeText(context, R.string.exercise_added, Toast.LENGTH_SHORT).show();
-                    listener.onExerciseSaved();
+                    onExerciseEditedListener.onExerciseSaved();
                     if (createdListener != null) {
                         createdListener.onExerciseCreated(newExercise);
                     }
@@ -250,7 +251,7 @@ public class DialogForExerciseEdit {
                 exercise.setEquipment(preselectedEquipment);
                 if (exerciseDAO.updateExercise(exercise)) {
                     Toast.makeText(context, R.string.exercise_updated, Toast.LENGTH_SHORT).show();
-                    listener.onExerciseSaved();
+                    onExerciseEditedListener.onExerciseSaved();
                     alertDialog.dismiss();
                 } else {
                     Toast.makeText(context, R.string.update_failed, Toast.LENGTH_SHORT).show();

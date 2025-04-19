@@ -27,6 +27,8 @@ enum class SelectionState {
     GYM_SESSIONS
 }
 
+
+
 @Composable
 fun WorkoutSelectionDialog(
     programs: List<FitnessProgram>,

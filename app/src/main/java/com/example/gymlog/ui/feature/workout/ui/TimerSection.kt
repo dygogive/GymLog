@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -90,7 +91,7 @@ private fun ControlsColumn(
             onClick = onStartStop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .wrapContentSize()
         ) {
             Text(text = buttonText)
         }
@@ -99,7 +100,7 @@ private fun ControlsColumn(
             onClick = onSetFinish,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
+                .wrapContentSize()
         ) {
             Text(text = stringResource(R.string.set_finished))
         }

@@ -42,307 +42,230 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TrainingBlocksActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewTrainingBlocks;
-    private TrainingBlockAdapter trainingBlockAdapter;
-    private ItemTouchHelper itemTouchHelper = null;
-    private final List<TrainingBlock> trainingBlocks = new ArrayList<>();
-    private PlanManagerDAO planManagerDAO;
-    @Inject
-    protected TrainingBlockRepository trainingBlockRepository; // Ініціалізуйте як потрібно
+    // UI Components
+    private RecyclerView recyclerView;
+    private TrainingBlockAdapter adapter;
+    private ItemTouchHelper touchHelper;
+
+    // Data
+    private final List<TrainingBlock> blocks = new ArrayList<>();
+    private PlanManagerDAO dao;
     private long gymDayId;
+
+    @Inject
+    TrainingBlockRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this); // Повноекранний режим
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_training_block_edit);
 
-        // Перевірка переданого ідентифікатора дня тренування
+        if (!retrieveIntentData()) return;
+        dao = new PlanManagerDAO(this);
+
+        bindViews();
+        configureRecyclerView();
+        configureDragAndDrop();
+        loadBlocks();
+    }
+
+    // === Initialization ===
+    private boolean retrieveIntentData() {
         gymDayId = getIntent().getLongExtra("gym_day_id", -1);
-        if (gymDayId == -1) {
-            Toast.makeText(this, "Помилка: Невідомий день тренування", Toast.LENGTH_SHORT).show();
+        if (gymDayId < 0) {
+            showToast("Помилка: невідомий день тренування");
             finish();
-            return;
+            return false;
         }
-
-        planManagerDAO = new PlanManagerDAO(this); // Ініціалізація DAO
-
-        initUI(); // Налаштування UI
-        setupRecyclerView(); // Налаштування RecyclerView
-
-        loadTrainingBlocks(); // Завантаження даних
-        setupDragAndDrop(); // Налаштування drag & drop
-
+        return true;
     }
 
-    // Ініціалізація UI
-    private void initUI() {
-        recyclerViewTrainingBlocks = findViewById(R.id.recyclerViewTrainingBlocks);
-        FloatingActionButton buttonAddTrainingBlock = findViewById(R.id.buttonAddTrainingBlock);
-        buttonAddTrainingBlock.setOnClickListener(v -> openBlockCreationDialogByFAB());
+    private void bindViews() {
+        recyclerView = findViewById(R.id.recyclerViewTrainingBlocks);
+        FloatingActionButton fab = findViewById(R.id.buttonAddTrainingBlock);
+        fab.setOnClickListener(v -> openBlockDialog(null));
 
-        //заголовок актівіті
-        TextView textViewBlockTitle = findViewById(R.id.textViewBlockTitle);
-        TextView textViewBlockDescr = findViewById(R.id.textViewBlockDescription);
+        setupHeader();
+    }
 
-        //заповнити інфою з попереднього актівіті
+    private void setupHeader() {
+        TextView title = findViewById(R.id.textViewBlockTitle);
+        TextView desc  = findViewById(R.id.textViewBlockDescription);
+
         String name = getIntent().getStringExtra("gym_day_name");
-        String description = getIntent().getStringExtra("gym_day_description");
+        String details = getIntent().getStringExtra("gym_day_description");
 
-        // Обрізаємо довгий опис і додаємо три крапки (…)
-        if (description.length() > 50) {
-            textViewBlockDescr.setText(description.substring(0, 50) + "...");
-        } else {
-            textViewBlockDescr.setText(description);
-        }
-
-        // При натисканні на обрізаний опис показуємо AlertDialog з повним текстом
-        textViewBlockDescr.setOnClickListener(v -> {
-            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                    .setTitle(name)
-                    .setMessage(description)
-                    .setPositiveButton("OK", null)
-                    .show();
-        });
-
-        textViewBlockTitle.setText(name);
-        textViewBlockDescr.setText(description);
-
-        //діалог для повної інформації
-        textViewBlockDescr.setOnClickListener(v -> {
-            new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
-                    .setTitle(name)
-                    .setMessage(description)
-                    .setPositiveButton("OK", null)
-                    .show();
-        });
+        title.setText(name);
+        setTruncatedDescription(desc, details, 50);
     }
 
-    // Налаштування RecyclerView
-    private void setupRecyclerView() {
-        recyclerViewTrainingBlocks.setLayoutManager(new LinearLayoutManager(this));
-        trainingBlockAdapter = new TrainingBlockAdapter(
-                this,
-                trainingBlocks,
-                planManagerDAO,
-                new MenuTrainingBlockListener(),
-                blockViewHolder -> {
-                    itemTouchHelper.startDrag(blockViewHolder);
-                });
-        recyclerViewTrainingBlocks.setAdapter(trainingBlockAdapter);
+    private void setTruncatedDescription(TextView view, String text, int limit) {
+        String display = text.length() <= limit ? text : text.substring(0, limit) + "...";
+        view.setText(display);
+        view.setOnClickListener(v -> showFullText(getIntent().getStringExtra("gym_day_name"), text));
     }
 
-    // Налаштування drag & drop
-    private void setupDragAndDrop() {
-        //відкріпити recyclerViewTrainingBlocks від старого exercisesItemTouchHelper
-        if (itemTouchHelper != null)
-            itemTouchHelper.attachToRecyclerView(null);
+    private void showFullText(String title, String message) {
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
+    }
 
+    // === RecyclerView Setup ===
+    private void configureRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new TrainingBlockAdapter(
+                this, blocks, dao,
+                new BlockMenuListener(),
+                holder -> touchHelper.startDrag(holder)
+        );
+        recyclerView.setAdapter(adapter);
+    }
 
-        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+    private void configureDragAndDrop() {
+        if (touchHelper != null) touchHelper.attachToRecyclerView(null);
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                0
+        ) {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                int fromPosition = viewHolder.getBindingAdapterPosition();
-                int toPosition = target.getBindingAdapterPosition();
-                trainingBlockAdapter.moveItem(fromPosition, toPosition);
-                planManagerDAO.updateTrainingBlockPositions(trainingBlocks);
+            public boolean onMove(RecyclerView rv, RecyclerView.ViewHolder vh, RecyclerView.ViewHolder target) {
+                int from = vh.getBindingAdapterPosition();
+                int to   = target.getBindingAdapterPosition();
+                adapter.moveItem(from, to);
+                dao.updateTrainingBlockPositions(blocks);
                 return true;
             }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                // Swipe ігнорується
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return false; // Вимкни longPressDrag зовнішнього RecyclerView
-            }
+            @Override public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int dir) { /* no-op */ }
+            @Override public boolean isLongPressDragEnabled() { return false; }
         };
-        itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerViewTrainingBlocks);
+
+        touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
     }
 
+    // === Data Loading ===
+    private void loadBlocks() {
 
-    // Відкриття діалогу створення нового блоку
-    private void openBlockCreationDialogByFAB() {
-        DialogBlocCreator dialog = new DialogBlocCreator(this, gymDayId, this::loadTrainingBlocks);
-        dialog.show();
+        TrainingBlockRepositoryAdapter.loadTrainingBlocks(
+                gymDayId, repository,
+                new TrainingBlocksCallback() {
+                    @Override public void onResult(@NotNull List<? extends TrainingBlock> list) {
+                        // 1) Очищаємо старий список
+                        blocks.clear();
+                        // 2) Додаємо новий
+                        blocks.addAll(list);
+                        // 3) Повідомляємо адаптер, що дані змінилися
+                        adapter.notifyDataSetChanged();
+                    }
+                    @Override public void onError(@NonNull Throwable ex) {
+                        showToast("Помилка: " + ex.getMessage());
+                        Log.e("TrainingBlocks", "Loading failed", ex);
+                    }
+                }
+        );
     }
 
-    // Відкриття діалогу редагування блоку
-    public void openBlockEditDialog(TrainingBlock block) {
-        DialogBlocCreator dialog = new DialogBlocCreator(this, gymDayId, block, this::loadTrainingBlocks);
-        dialog.show();
+    // === Actions ===
+    private void openBlockDialog(TrainingBlock block) {
+        new DialogBlocCreator(
+                this, gymDayId, block, this::loadBlocks
+        ).show();
     }
 
-    // Завантаження тренувальних блоків з бази даних
-//    @SuppressLint("NotifyDataSetChanged")
-//    public void loadTrainingBlocks() {
-//        trainingBlocks.clear();
-//        trainingBlocks.addAll(planManagerDAO.getTrainingBlocksByDayId(gymDayId));
-//        trainingBlockAdapter.notifyDataSetChanged();
-//    }
-    //Альтернативний метод Завантаження тренувальних блоків з бази даних Room
-    // Припустимо, у вас є спосіб отримати репозиторій, наприклад, через конструктор або DI
-
-
-    public void loadTrainingBlocks() {
-        // Очищаємо поточний список блоків, щоб уникнути дублювання
-        trainingBlocks.clear();
-
-        // Викликаємо метод з адаптера. Передаємо gymDayId, екземпляр репозиторію та реалізацію callback
-        TrainingBlockRepositoryAdapter.loadTrainingBlocks(gymDayId, trainingBlockRepository, new TrainingBlocksCallback() {
-              @Override
-            public void onResult(@NotNull List<? extends @NotNull TrainingBlock> blocks) {
-                trainingBlocks.addAll(blocks);
-                trainingBlockAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onError(@NonNull Throwable exception) {
-                Toast.makeText(TrainingBlocksActivity.this, "Помилка: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("TrainingBlocksActivity", "Error loading training blocks", exception);
-            }
-        });
-
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    // Обробник подій для тренувальних блоків
-    private class MenuTrainingBlockListener implements TrainingBlockAdapter.OnMenuTrainingBlockListener {
-        @Override
-        public void onEditClick(TrainingBlock block) {
-            openBlockEditDialog(block);
-        }
+    // === Inner Listener ===
+    private class BlockMenuListener implements TrainingBlockAdapter.OnMenuTrainingBlockListener {
+        @Override public void onEditClick(TrainingBlock block) { openBlockDialog(block); }
 
         @SuppressLint("NotifyDataSetChanged")
-        @Override
-        public void onDeleteClick(TrainingBlock block) {
-            ConfirmDeleteDialog.show(TrainingBlocksActivity.this, block.getName(), () -> {
-                planManagerDAO.deleteTrainingBlock(block.getId());
-                trainingBlocks.remove(block);
-                trainingBlockAdapter.notifyDataSetChanged();
-                Toast.makeText(TrainingBlocksActivity.this, "Блок видалено", Toast.LENGTH_SHORT).show();
+        @Override public void onDeleteClick(TrainingBlock block) {
+            ConfirmDeleteDialog.show(
+                    TrainingBlocksActivity.this,
+                    block.getName(),
+                    () -> {
+                        dao.deleteTrainingBlock(block.getId());
+                        blocks.remove(block);
+                        adapter.notifyDataSetChanged();
+                        showToast("Блок видалено");
+                    }
+            );
+        }
+
+        @Override public void onAddExercise(TrainingBlock block) {
+            DialogForExerciseEdit dialog = new DialogForExerciseEdit(
+                    TrainingBlocksActivity.this, TrainingBlocksActivity.this::loadBlocks
+            );
+            dialog.setOnExerciseCreatedListener(ex -> {
+                dao.addExerciseToBlock(block.getId(), ex.getId());
+                loadBlocks();
             });
+            dialog.showWithPreselectedFilters(
+                    null, block.getMotions(), block.getMuscleGroupList(), block.getEquipmentList()
+            );
         }
 
-        @Override
-        public void onAddExercise(TrainingBlock block) {
-            DialogForExerciseEdit dialog = new DialogForExerciseEdit(TrainingBlocksActivity.this, TrainingBlocksActivity.this::loadTrainingBlocks);
-            dialog.setOnExerciseCreatedListener(newExercise -> {
-                planManagerDAO.addExerciseToBlock(block.getId(), newExercise.getId());
-                loadTrainingBlocks();
-                Toast.makeText(TrainingBlocksActivity.this, "Вправу додано в блок: " + newExercise.getName(), Toast.LENGTH_SHORT).show();
-            });
-            // Передаємо повні списки фільтрів із TrainingBlock
-            dialog.showWithPreselectedFilters(null, block.getMotions(), block.getMuscleGroupList(), block.getEquipmentList());
+        @Override public void onEditExercises(TrainingBlock block) {
+            showExerciseSelection(block);
         }
 
-
-        @Override
-        public void onEditExercises(TrainingBlock block) {
-            showExerciseSelectionDialog(block);
-        }
-
-        @Override
-        public void onCloneTrainingBlock(TrainingBlock block) {
-//            loadTrainingBlocks();
-            // Додаємо клонований елемент до бази даних
-            TrainingBlock clonedBlock = planManagerDAO.onStartCloneTrainingBlock(block);
-            if (clonedBlock != null) {
-                trainingBlocks.add(clonedBlock);
-                Log.d("trainingBlocksError", "3");
-                loadTrainingBlocks();
-                Log.d("trainingBlocksError", "4");
-                Toast.makeText(TrainingBlocksActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
-            } else Toast.makeText(TrainingBlocksActivity.this, "Помилка при клонуванні", Toast.LENGTH_SHORT).show();
+        @Override public void onCloneTrainingBlock(TrainingBlock block) {
+            TrainingBlock clone = dao.onStartCloneTrainingBlock(block);
+            if (clone != null) {
+                showToast("План клоновано!");
+                loadBlocks();
+            } else showToast("Помилка при клонуванні");
         }
     }
 
-    // Діалог вибору вправ для блоку
-    private void showExerciseSelectionDialog(TrainingBlock block) {
-        // 1) Отримуємо потенційно рекомендовані вправи
-        List<Exercise> recommendedExercises = planManagerDAO.recommendExercisesForTrainingBlock(block.getId());
-        // 2) Отримуємо вже вибрані вправи
-        List<ExerciseInBlock> oldSelected = planManagerDAO.getBlockExercises(block.getId());
+    // === Exercise Selection Dialog ===
+    private void showExerciseSelection(TrainingBlock block) {
+        List<Exercise> all = dao.recommendExercisesForTrainingBlock(block.getId());
+        List<ExerciseInBlock> selected = dao.getBlockExercises(block.getId());
+        Set<Long> ids = new HashSet<>();
+        selected.forEach(e -> ids.add(e.getId()));
 
-        // Зберігаємо їх ID у set, щоб швидко перевіряти
-        Set<Long> idsExeInBlock = new HashSet<>();
-        for (ExerciseInBlock ex : oldSelected) {
-            idsExeInBlock.add(ex.getId());
+        String[] names = new String[all.size()];
+        boolean[] checks = new boolean[all.size()];
+        for (int i = 0; i < all.size(); i++) {
+            Exercise e = all.get(i);
+            names[i]  = e.getNameOnly(this);
+            checks[i] = ids.contains(e.getId());
         }
 
-        // Формуємо масив назв і масив checked
-        final String[] recommendNames = new String[recommendedExercises.size()];
-        final boolean[] recommendChkBoxes = new boolean[recommendedExercises.size()];
-
-        for (int i = 0; i < recommendedExercises.size(); i++) {
-            Exercise e = recommendedExercises.get(i);
-            recommendNames[i] = e.getNameOnly(this);
-
-            // Позначимо галочкою, якщо ця вправа була у блоці (ID у idsExeInBlock)
-            recommendChkBoxes[i] = idsExeInBlock.contains(e.getId());
-        }
-
-        new AlertDialog.Builder(this,R.style.RoundedDialogTheme2)
+        new AlertDialog.Builder(this, R.style.RoundedDialogTheme2)
                 .setTitle("Редагувати вправи блоку: " + block.getName())
-                .setMultiChoiceItems(recommendNames, recommendChkBoxes,
-                        (dialog, which, isChecked) ->
-                        recommendChkBoxes[which] = isChecked
-                ).setPositiveButton("Зберегти", (dialog, whichBtn) -> {
-                    // 1) Збираємо ID всіх вправ, що стали позначені
-                    Set<Long> newIds = new HashSet<>();
-                    for (int i = 0; i < recommendedExercises.size(); i++) {
-                        if (recommendChkBoxes[i]) {
-                            newIds.add(recommendedExercises.get(i).getId());
-                        }
-                    }
-
-                    // 2) Формуємо підсумковий список ExerciseInBlock (зберігаючи порядки старих)
-                    List<ExerciseInBlock> updatedList = new ArrayList<>();
-
-                    // (а) Додаємо старі вправи, якщо вони досі в newIds
-                    //     і зберігаємо стару position
-                    for (ExerciseInBlock oldEx : oldSelected) {
-                        if (newIds.contains(oldEx.getId())) {
-                            updatedList.add(oldEx);
-                            // при цьому oldEx уже має свою стару position
-                            // при бажанні можна заново призначати position
-                            newIds.remove(oldEx.getId());
-                        }
-                    }
-
-                    // (б) Додаємо нові вправи (яких раніше не було)
-                    for (Exercise recEx : recommendedExercises) {
-                        if (newIds.contains(recEx.getId())) {
-                            // Створюємо ExerciseInBlock зі позицією = 0 або будь-якою
-                            ExerciseInBlock newEIB = new ExerciseInBlock(
-                                    -1, //буде в базі оновлено
-                                    recEx.getId(),
-                                    recEx.getName(),
-                                    recEx.getDescription(),
-                                    recEx.getMotion(),
-                                    recEx.getMuscleGroupList(),
-                                    recEx.getEquipment(),
-                                    -1 //буде далі оновлено
-                            );
-                            updatedList.add(newEIB);
-                        }
-                    }
-
-                    // 3) Перепризначимо position, щоб вони йшли 0..N
-                    for (int i = 0; i < updatedList.size(); i++) {
-                        updatedList.get(i).setPosition(i);
-                    }
-
-                    // 4) Оновлюємо базу
-                    planManagerDAO.updateTrainingBlockExercises(block.getId(), updatedList);
-
-                    // 5) Перевантажуємо блоки з бази (щоб отримати актуальний стан)
-                    loadTrainingBlocks();
-                })
+                .setMultiChoiceItems(names, checks, (dlg, idx, isChecked) -> checks[idx] = isChecked)
+                .setPositiveButton("Зберегти", (dlg, w) -> applyExerciseChanges(block, all, checks))
                 .setNegativeButton("Скасувати", null)
                 .show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void applyExerciseChanges(TrainingBlock block, List<Exercise> all, boolean[] checks) {
+        List<ExerciseInBlock> result = new ArrayList<>();
+        Set<Long> newIds = new HashSet<>();
+        for (int i = 0; i < all.size(); i++) if (checks[i]) newIds.add(all.get(i).getId());
+
+        // Keep existing
+        dao.getBlockExercises(block.getId()).forEach(old -> {
+            if (newIds.remove(old.getId())) result.add(old);
+        });
+        // Add new
+        all.stream()
+                .filter(e -> newIds.contains(e.getId()))
+                .forEach(e -> result.add(new ExerciseInBlock(-1, e.getId(), e.getName(), e.getDescription(), e.getMotion(), e.getMuscleGroupList(), e.getEquipment(), -1)));
+
+        // Reassign positions
+        for (int i = 0; i < result.size(); i++) result.get(i).setPosition(i);
+        dao.updateTrainingBlockExercises(block.getId(), result);
+        loadBlocks();
+    }
 }
