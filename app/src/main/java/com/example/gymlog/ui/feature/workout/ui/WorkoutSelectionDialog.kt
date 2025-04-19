@@ -1,4 +1,4 @@
-package com.example.gymlog.ui.feature.workout
+package com.example.gymlog.ui.feature.workout.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,11 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymSession
+import com.example.gymlog.ui.theme.MyAppTheme
 
 enum class SelectionState {
     PROGRAMS,
@@ -39,16 +41,20 @@ fun WorkoutSelectionDialog(
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
             usePlatformDefaultWidth = false
         )
     ) {
         Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor   = MaterialTheme.colorScheme.onSurface
+            ),
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .fillMaxHeight(0.7f),
-            shape = RoundedCornerShape(16.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -70,9 +76,17 @@ fun WorkoutSelectionDialog(
                     )
                 }
 
-                // Step indicator
+                // Step indicator with click support
                 StepIndicator(
                     currentStep = selectionState,
+                    onStepClick = { newState ->
+                        // дозволяє повертатися між станами
+                        if (newState == SelectionState.PROGRAMS) {
+                            selectionState = SelectionState.PROGRAMS
+                        } else if (selectedProgram != null) {
+                            selectionState = SelectionState.GYM_SESSIONS
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
@@ -85,6 +99,7 @@ fun WorkoutSelectionDialog(
                             programs = programs,
                             onProgramSelected = { program ->
                                 selectedProgram = program
+                                onProgramSelected(program)
                                 selectionState = SelectionState.GYM_SESSIONS
                             },
                             modifier = Modifier.weight(1f)
@@ -101,32 +116,47 @@ fun WorkoutSelectionDialog(
                     }
                 }
 
-                // Bottom navigation
+                // Bottom navigation arrow (залишаємо для зручності)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-                    if (selectionState == SelectionState.GYM_SESSIONS) {
-                        IconButton(
-                            onClick = { selectionState = SelectionState.PROGRAMS },
-                            modifier = Modifier.align(Alignment.CenterStart)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Назад до програм"
-                            )
+                    when (selectionState) {
+                        SelectionState.GYM_SESSIONS -> {
+                            IconButton(
+                                onClick = { selectionState = SelectionState.PROGRAMS },
+                                modifier = Modifier.align(Alignment.CenterStart)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Назад до програм"
+                                )
+                            }
+                        }
+                        SelectionState.PROGRAMS -> {
+                            IconButton(
+                                onClick = onDismiss,
+                                modifier = Modifier.align(Alignment.CenterStart)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Вийти із діалогу"
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }
 
 @Composable
 fun StepIndicator(
     currentStep: SelectionState,
+    onStepClick: (SelectionState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -134,9 +164,11 @@ fun StepIndicator(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Dot для програм
         StepDot(
             isActive = currentStep == SelectionState.PROGRAMS,
-            text = "Програми"
+            text = "Програми",
+            modifier = Modifier.clickable { onStepClick(SelectionState.PROGRAMS) }
         )
 
         Divider(
@@ -146,9 +178,11 @@ fun StepIndicator(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
         )
 
+        // Dot для тренувань
         StepDot(
             isActive = currentStep == SelectionState.GYM_SESSIONS,
-            text = "Тренування"
+            text = "Тренування",
+            modifier = Modifier.clickable { onStepClick(SelectionState.GYM_SESSIONS) }
         )
     }
 }
@@ -184,7 +218,6 @@ fun StepDot(
     }
 }
 
-
 @Composable
 fun ProgramsList(
     programs: List<FitnessProgram>,
@@ -210,6 +243,11 @@ fun ProgramItem(
     modifier: Modifier = Modifier
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor   = MaterialTheme.colorScheme.onSurface
+        ),
+        shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -231,6 +269,8 @@ fun ProgramItem(
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
+
+
     }
 }
 
@@ -259,6 +299,11 @@ fun WorkoutItem(
     modifier: Modifier = Modifier
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor   = MaterialTheme.colorScheme.onSurface
+        ),
+        shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -282,5 +327,31 @@ fun WorkoutItem(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, name = "WorkoutSelectionDialog – Programs")
+@Composable
+fun WorkoutSelectionDialogPreview_Programs() {
+    MyAppTheme {
+        WorkoutSelectionDialog(
+            programs = listOf(
+                FitnessProgram(1L, "Початківці", "Проста базова програма", emptyList()),
+                FitnessProgram(2L, "Просунуті", "Складніший план", emptyList())
+            ),
+            workoutsByProgram = mapOf(
+                1L to listOf(
+                    GymSession(1, 1, "День 1", "Ноги й корпус", emptyList()),
+                    GymSession(2, 1, "День 2", "Груди й спина", emptyList())
+                ),
+                2L to listOf(
+                    GymSession(3, 2, "День A", "Повне тіло", emptyList()),
+                    GymSession(4, 2, "День B", "Кардіо", emptyList())
+                )
+            ),
+            onProgramSelected = {},
+            onWorkoutSelected = {},
+            onDismiss = {}
+        )
     }
 }

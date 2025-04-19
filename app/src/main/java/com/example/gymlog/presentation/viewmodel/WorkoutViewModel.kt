@@ -64,7 +64,10 @@ class WorkoutViewModel @Inject constructor(
     }
 
 
-
+    // закрити діалог
+    fun dismissSelectionDialog() {
+        _uiState.update { it.copy(showSelectionDialog = false) }
+    }
 
 
 

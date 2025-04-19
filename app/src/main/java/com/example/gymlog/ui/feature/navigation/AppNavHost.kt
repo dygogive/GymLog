@@ -37,7 +37,7 @@ fun AppNavHost(navHostController: NavHostController) {
          * Наразі не отримує navController, але може бути додано при необхідності
          */
         composable("workout") {
-            WorkoutScreen()
+            WorkoutScreen(navHostController)
         }
 
         /*
