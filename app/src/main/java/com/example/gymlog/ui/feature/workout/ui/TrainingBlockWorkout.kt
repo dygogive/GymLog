@@ -3,6 +3,7 @@ package com.example.gymlog.ui.feature.workout.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,45 +28,71 @@ import androidx.compose.ui.platform.LocalContext
 fun TrainingBlockWorkout(
     trainBlock: TrainingBlock,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,  // <- дефолт
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,  // <- дефолт
     onClickFixResults: () -> Unit
 ) {
     val context = LocalContext.current
 
-
-
     Column(
         modifier
             .fillMaxWidth()
-            .background(backgroundColor)
+            .background(color = MaterialTheme.colorScheme.background)
             .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(vertical = 16.dp, horizontal = 8.dp),
+            .padding(vertical = 8.dp, horizontal = 8.dp),
     ) {
-        // Заголовок
-        Text(
-            text = trainBlock.name,
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.titleLarge,
-        )
+
+
+        Row(
+            modifier = Modifier  // <-- Використовуємо переданий модифікатор
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.12f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(vertical = 0.dp, horizontal = 0.dp)
+        ) {
+            Column(
+                modifier = Modifier  // <-- Використовуємо переданий модифікатор
+                    .fillMaxWidth()
+                    .background(backgroundColor)
+            ) {
+                // Заголовок
+                Text(
+                    text = trainBlock.name,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+
+                // Опис
+                if (trainBlock.description.isNotBlank()) {
+                    Text(
+                        text = trainBlock.description,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
+        }
+
+
         Spacer(Modifier.height(8.dp))
 
-        // Опис
-        if (trainBlock.description.isNotBlank()) {
-            Text(
-                text = trainBlock.description,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(Modifier.height(8.dp))
-        }
+
+
+
+
+
 
         // Список типів руху
         Attributes(
-            trainingBlock = trainBlock
+            trainingBlock = trainBlock,
+            modifier = Modifier.fillMaxWidth()
         )
 
         // Вправи в блоці
