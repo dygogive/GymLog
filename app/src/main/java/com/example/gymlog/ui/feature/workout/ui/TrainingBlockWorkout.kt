@@ -1,7 +1,9 @@
 package com.example.gymlog.ui.feature.workout.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +29,8 @@ import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.ui.theme.MyAppTheme
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.gymlog.R
 
 @Composable
 fun TrainingBlockWorkout(
@@ -32,6 +40,8 @@ fun TrainingBlockWorkout(
     onClickFixResults: () -> Unit
 ) {
     val context = LocalContext.current
+
+    var expanded by remember { mutableStateOf(false) }
 
     Column(
         modifier
@@ -64,15 +74,15 @@ fun TrainingBlockWorkout(
                 // Заголовок
                 Text(
                     text = trainBlock.name,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.labelLarge,
                 )
 
                 // Опис
                 if (trainBlock.description.isNotBlank()) {
                     Text(
                         text = trainBlock.description,
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(Modifier.height(8.dp))
@@ -85,15 +95,30 @@ fun TrainingBlockWorkout(
 
 
 
-
-
-
-
-        // Список типів руху
-        Attributes(
-            trainingBlock = trainBlock,
-            modifier = Modifier.fillMaxWidth()
+        // Кнопка чи текст
+        Text(
+            text = if (expanded)
+                stringResource(R.string.collapse_attributes)
+            else stringResource(R.string.show_attributes),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .clickable { expanded = !expanded }
+                .padding(vertical = 4.dp)
         )
+
+        // Анімований блок атрибутів
+        AnimatedVisibility(visible = expanded) {
+            Attributes(
+                trainingBlock = trainBlock,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+
+        Spacer(Modifier.height(8.dp))
+
+
 
         // Вправи в блоці
         trainBlock.exercises.forEach { ex ->
