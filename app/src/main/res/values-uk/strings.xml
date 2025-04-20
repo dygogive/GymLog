@@ -184,6 +184,8 @@
     <string name="set_finished">Занотовано</string>
     <string name="select_program">Вибрати програму тренування</string>
     <string name="select_training">Вибрати тренування</string>
+    <string name="collapse_attributes">Сховати атрибути</string>
+    <string name="show_attributes">Показати атрибути</string>
 
 
 </resources>
