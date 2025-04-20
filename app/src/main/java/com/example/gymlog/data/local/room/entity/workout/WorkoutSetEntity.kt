@@ -32,7 +32,20 @@ data class WorkoutSetEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     val workout_id: Long?,
     val tr_block_id: Long?,
-    val name: String?,
+    val name: String,
     val description: String?,
-    val position: Int?
+    val position: Int,
+    val physicalСondition: Int?, //суб'єктивна оцінка фізичних кондицій при виконанні блоку 1...5
+    val comments: String? //записані коментарі
 )
+
+/**
+val id: Long?, // ід в базі
+val workoutId: Long?, //ід виконаного тренування
+val trainingBlockId: Long?, //ід тренувального блоку, що є шаблоном цього
+val name: String, //назва - збігається з назвоб шаблону трен блоку
+val description: String?,//опис - збігається з назвоб шаблону трен блоку
+val position: Int, //позиція в тренуванні - збігається з позицією в шаблоні трен блоку
+val physicalСondition: Int?, //суб'єктивна оцінка фізичних кондицій при виконанні блоку 1...5
+val comments: String? //записані коментарі
+ */
