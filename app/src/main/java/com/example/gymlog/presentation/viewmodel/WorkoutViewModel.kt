@@ -157,4 +157,9 @@ class WorkoutViewModel @Inject constructor(
 
 
 
+    //function for fixing results of set in gym
+    fun onSetWeightRepeats() {
+
+    }
+
 }

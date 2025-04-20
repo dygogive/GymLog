@@ -27,7 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 fun TrainingBlockWorkout(
     trainBlock: TrainingBlock,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface  // <- дефолт
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,  // <- дефолт
+    onClickFixResults: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -69,7 +70,9 @@ fun TrainingBlockWorkout(
 
         // Вправи в блоці
         trainBlock.exercises.forEach { ex ->
-            ExerciseInWorkoutUI(ex)
+            ExerciseInWorkoutUI(
+                ex,
+                onClickFixResults = onClickFixResults)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
@@ -129,7 +132,8 @@ fun TrainingBlockWorkoutPreview() {
     MyAppTheme {
         TrainingBlockWorkout(
             trainBlock = createPreviewTrainingBlock(),
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onClickFixResults = { }
         )
     }
 }

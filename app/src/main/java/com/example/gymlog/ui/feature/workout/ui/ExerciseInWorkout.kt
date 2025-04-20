@@ -1,7 +1,9 @@
 package com.example.gymlog.ui.feature.workout.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +27,8 @@ import com.example.gymlog.ui.theme.MyAppTheme
 fun ExerciseInWorkoutUI(
     exerciseInBlock : ExerciseInBlock,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer  // Виправлено на surface
+    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,  // Виправлено на surface
+    onClickFixResults: () -> Unit
 ) {
 
     Column(
@@ -39,14 +42,44 @@ fun ExerciseInWorkoutUI(
             )
             .padding(vertical = 16.dp)
     ){
+        ExerciseInBlockTexts(
+            modifier = modifier.clickable { Log.d(TAG, "ExerciseInWorkoutUI: click") },
+            exerciseInBlock = exerciseInBlock
+        )
+    }
+}
+
+@Composable
+fun ExerciseInBlockTexts(
+    modifier: Modifier = Modifier,
+    exerciseInBlock: ExerciseInBlock,
+){
+    Column(
+        modifier = modifier
+    ) {
         // Заголовок
         Text(
             text = exerciseInBlock.getNameOnly(LocalContext.current),
             color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyLarge
-        )  // Видалено зайві фігурні дужки {}
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+        )
+
+        if (exerciseInBlock.description.isNotBlank()){
+            Text(
+                text = exerciseInBlock.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .padding(horizontal = 8.dp)
+            )
+        }
     }
+
 }
+
 
 
 
@@ -67,7 +100,8 @@ fun ExerciseInWorkoutUIPreview() {
                 listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES),
                 Equipment.BARBELL,
                 1
-            )
+            ),
+            onClickFixResults = {}
         )
     }
 }

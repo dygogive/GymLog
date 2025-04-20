@@ -31,7 +31,8 @@ fun WorkoutScreenContent(
     isRunning: Boolean,
     onStartStop: () -> Unit,
     onSetFinish: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickFixResults: () -> Unit
 ) {
     val buttonText = stringResource(if (isRunning) R.string.stop_gym else R.string.start_gym)
 
@@ -64,7 +65,8 @@ fun WorkoutScreenContent(
                     trainBlock = block,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
+                    onClickFixResults = onClickFixResults
                 )
             }
         }
@@ -85,7 +87,8 @@ private fun WorkoutScreenContentPreview() {
             blocks = List(4) { createPreviewTrainingBlock() },
             isRunning = false,
             onStartStop = {},
-            onSetFinish = {}
+            onSetFinish = {},
+            onClickFixResults = {}
         )
     }
 }

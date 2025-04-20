@@ -29,7 +29,8 @@ fun WorkoutScreen(
         blocks = state.blocks,
         isRunning = state.isGymRunning,
         onStartStop = viewModel::startStopGym,
-        onSetFinish = viewModel::onSetFinish
+        onSetFinish = viewModel::onSetFinish,
+        onClickFixResults = viewModel::onSetWeightRepeats
     )
 
 
