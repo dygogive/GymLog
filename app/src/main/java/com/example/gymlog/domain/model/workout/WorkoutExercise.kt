@@ -1,13 +1,16 @@
 package com.example.gymlog.domain.model.workout
 
-// WorkoutExercise модель
+// WorkoutExercise - вправа що виконана
 data class WorkoutExercise(
-    val id: Long?,
-    val workoutGymDayId: Long?,
-    val exerciseId: Long?,
-    val name: String?,
-    val description: String?,
-    val motion: String?,
-    val muscleGroups: String?,
-    val equipment: String?
+    val id: Long?, //ід вправи
+    val workoutGymDayId: Long?, //ід шаблону тренувального дня (тренування)
+    val exerciseId: Long?, // ід вправи в списку вправ Exercise
+    val name: String?, // назва вправи
+    val description: String?, //опис
+    val motion: String?, //тип руху
+    val muscleGroups: String?, //групи м'язів
+    val equipment: String?, //обладнання
+    val weight: Int?, // вага
+    val iteration: Int?, // к-сть повторень
+    val orderedInWorkSet: Int, // к-сть повторень
 )

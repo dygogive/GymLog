@@ -1,11 +1,11 @@
 package com.example.gymlog.domain.model.workout
 
-// WorkoutSet модель
+// WorkoutSet виконаний блок тренування
 data class WorkoutSet(
-    val id: Long?,
-    val workoutId: Long?,
-    val trainingBlockId: Long?,
-    val name: String?,
-    val description: String?,
-    val position: Int?
+    val id: Long?, // ід в базі
+    val workoutId: Long?, //ід виконаного тренування
+    val trainingBlockId: Long?, //ід тренувального блоку, що є шаблоном цього
+    val name: String?, //назва - збігається з назвоб шаблону трен блоку
+    val description: String?,//опис - збігається з назвоб шаблону трен блоку
+    val position: Int?//позиція в тренуванні - збігається з назвоб шаблону трен блоку
 )

@@ -30,7 +30,7 @@ import com.example.gymlog.data.local.room.entity.exercise.ExerciseEntity
 )
 data class WorkoutExerciseEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long?,
+    val id: Long?, //
     val workout_gymday_ID: Long?, // Тип Long для сумісності з батьком
     val exerciseId: Long?,       // nullable, SET_NULL
     val name: String?,
