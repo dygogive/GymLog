@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -43,9 +42,9 @@ fun WorkoutScreen(
         ) {
             WorkoutSelectionDialog(
                 programs = state.availablePrograms,
-                workoutsByProgram = state.availableGymSessions,
+                workoutsByProgramId = state.availableGymSessions,
                 onProgramSelected = viewModel::onProgramSelected,
-                onWorkoutSelected = viewModel::onSessionSelected,
+                onGymSelected = viewModel::onSessionSelected,
                 onDismiss = {
                     // 1) приховуємо UI діалогу
                     viewModel.dismissSelectionDialog()

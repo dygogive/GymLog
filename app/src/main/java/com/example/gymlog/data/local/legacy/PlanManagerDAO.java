@@ -15,7 +15,7 @@ import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
 import com.example.gymlog.domain.model.attribute.motion.Motion;
 import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
 import com.example.gymlog.domain.model.plan.FitnessProgram;
-import com.example.gymlog.domain.model.plan.GymSession;
+import com.example.gymlog.domain.model.plan.Gym;
 import com.example.gymlog.domain.model.plan.TrainingBlock;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class PlanManagerDAO {
                 String desc     = cursor.getString(2);
                 int position    = cursor.getInt(3);
 
-                List<GymSession> sessions = getGymDaysByPlanId(id);
+                List<Gym> sessions = getGymDaysByPlanId(id);
                 FitnessProgram plan = new FitnessProgram(id, name, desc, sessions);
                 plan.setPosition(position);
                 plans.add(plan);
@@ -167,7 +167,7 @@ public class PlanManagerDAO {
     }
 
     // ------------------------------------------------------
-//         РОБОТА З ТАБЛИЦЕЮ GymDays (GymSession)
+//         РОБОТА З ТАБЛИЦЕЮ GymDays (Gym)
 // ------------------------------------------------------
 
     /**
@@ -204,30 +204,30 @@ public class PlanManagerDAO {
 
 
     /**
-     * Оновлює дані GymSession (назву, опис, позицію).
+     * Оновлює дані Gym (назву, опис, позицію).
      * Позиція розраховується автоматично.
      */
-    public void updateGymSession(GymSession gymSession) {
+    public void updateGymSession(Gym gym) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
 //        int newPosition = 0;
 //        Cursor cursor = db.rawQuery(
 //                "SELECT IFNULL(MAX(position), -1) + 1 AS nextPos FROM GymDays WHERE plan_id = ?",
-//                new String[]{String.valueOf(gymSession.getPlanId())}
+//                new String[]{String.valueOf(gym.getPlanId())}
 //        );
 //        if (cursor.moveToFirst()) {
 //            newPosition = cursor.getInt(cursor.getColumnIndexOrThrow("nextPos"));
 //        }
 //        cursor.close();
 //
-//        gymSession.setPosition(newPosition);
+//        gym.setPosition(newPosition);
 
         ContentValues values = new ContentValues();
-        values.put("day_name",    gymSession.getName());
-        values.put("description", gymSession.getDescription());
-        values.put("position",    gymSession.getPosition());
+        values.put("day_name",    gym.getName());
+        values.put("description", gym.getDescription());
+        values.put("position",    gym.getPosition());
 
-        db.update("GymDays", values, "id = ?", new String[]{String.valueOf(gymSession.getId())});
+        db.update("GymDays", values, "id = ?", new String[]{String.valueOf(gym.getId())});
         db.close();
     }
 
@@ -260,10 +260,10 @@ public class PlanManagerDAO {
 
 
     /**
-     * Повертає всі дні тренування певного плану (GymSession), включаючи блоки.
+     * Повертає всі дні тренування певного плану (Gym), включаючи блоки.
      */
-    public List<GymSession> getGymDaysByPlanId(long planId) {
-        List<GymSession> sessions = new ArrayList<>();
+    public List<Gym> getGymDaysByPlanId(long planId) {
+        List<Gym> sessions = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
@@ -280,7 +280,7 @@ public class PlanManagerDAO {
 
                 List<TrainingBlock> blocks = getTrainingBlocksByDayId(id);
 
-                GymSession session = new GymSession(id, (int) planId, blocks);
+                Gym session = new Gym(id, (int) planId, blocks);
                 session.setName(name);
                 session.setDescription(desc);
                 session.setPosition(position);
@@ -296,12 +296,12 @@ public class PlanManagerDAO {
     /**
      * Оновлює порядок (position) днів у GymDays після drag & drop.
      */
-    public void updateGymDaysPositions(List<GymSession> gymSessions) {
+    public void updateGymDaysPositions(List<Gym> gyms) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (int i = 0; i < gymSessions.size(); i++) {
-                GymSession session = gymSessions.get(i);
+            for (int i = 0; i < gyms.size(); i++) {
+                Gym session = gyms.get(i);
 
                 ContentValues values = new ContentValues();
                 values.put("position", i);
@@ -895,7 +895,7 @@ public class PlanManagerDAO {
 
     /**
      * Запускає процес клонування програми (FitnessProgram) з усіма вкладеннями:
-     * GymSession (дні), TrainingBlock (блоки), фільтри (motion/muscle/equipment), вправи (ExerciseInBlock).
+     * Gym (дні), TrainingBlock (блоки), фільтри (motion/muscle/equipment), вправи (ExerciseInBlock).
      */
     public FitnessProgram onStartCloneFitProgram(FitnessProgram programToClone) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -917,7 +917,7 @@ public class PlanManagerDAO {
 
     /**
      * Клонує саму програму (PlanCycles), присвоює нову позицію та ID.
-     * Далі рекурсивно клонує всі GymSession, TrainingBlock і т.д.
+     * Далі рекурсивно клонує всі Gym, TrainingBlock і т.д.
      */
     private FitnessProgram cloneProgram(FitnessProgram program, SQLiteDatabase db) {
         // 1) Обчислюємо нову position
@@ -954,9 +954,9 @@ public class PlanManagerDAO {
         }
         clone.setId(newId);
 
-        // 4) Клонуємо всі GymSession
-        List<GymSession> clonedSessions = new ArrayList<>();
-        for (GymSession session : program.getGymSessions()) {
+        // 4) Клонуємо всі Gym
+        List<Gym> clonedSessions = new ArrayList<>();
+        for (Gym session : program.getGymSessions()) {
             clonedSessions.add(cloneGymSession(session, newId, db));
         }
         clone.setGymSessions(clonedSessions);
@@ -969,10 +969,10 @@ public class PlanManagerDAO {
 //
 
     /**
-     * Клонує окремий GymSession разом із блоками, викликається під час клонування програми
+     * Клонує окремий Gym разом із блоками, викликається під час клонування програми
      * або окремо через onStartCloneGymSession(...).
      */
-    private GymSession cloneGymSession(GymSession session, long newProgramId, SQLiteDatabase db) {
+    private Gym cloneGymSession(Gym session, long newProgramId, SQLiteDatabase db) {
         // 1) Знаходимо нову position серед GymDays, що належать planId = newProgramId
         int newPosition = 0;
         Cursor cursor = db.rawQuery(
@@ -984,9 +984,9 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
-        // 2) Створюємо новий об'єкт GymSession
+        // 2) Створюємо новий об'єкт Gym
         //    (змінюємо назву, додаємо суфікс "(C)" за бажанням)
-        GymSession clone = new GymSession(
+        Gym clone = new Gym(
                 0,
                 (int) newProgramId,
                 session.getName() + " (C)",
@@ -1004,7 +1004,7 @@ public class PlanManagerDAO {
 
         long newId = db.insert("GymDays", null, values);
         if (newId == -1) {
-            throw new SQLException("Помилка вставки дня при клонуванні GymSession");
+            throw new SQLException("Помилка вставки дня при клонуванні Gym");
         }
         clone.setId(newId);
 
@@ -1019,18 +1019,18 @@ public class PlanManagerDAO {
     }
 
     /**
-     * Запускає транзакцію клонування для окремого GymSession
+     * Запускає транзакцію клонування для окремого Gym
      * (без клонування всієї програми).
      */
-    public GymSession onStartCloneGymSession(GymSession gymSession) {
+    public Gym onStartCloneGymSession(Gym gym) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            GymSession clone = cloneGymSession(gymSession, gymSession.getPlanId(), db);
+            Gym clone = cloneGymSession(gym, gym.getPlanId(), db);
             db.setTransactionSuccessful();
             return clone;
         } catch (Exception e) {
-            Log.e("DB_ERROR", "Помилка при клонуванні GymSession", e);
+            Log.e("DB_ERROR", "Помилка при клонуванні Gym", e);
             return null;
         } finally {
             db.endTransaction();

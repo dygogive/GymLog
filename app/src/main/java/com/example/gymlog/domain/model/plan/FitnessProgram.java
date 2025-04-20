@@ -24,7 +24,7 @@ public class FitnessProgram implements BasePlanItem {
     }
 
     private String creation_date; //дата створення
-    private List<GymSession> gymSessions; // Список тренувальних днів
+    private List<Gym> gyms; // Список тренувальних днів
 
     private int position = 0;
 
@@ -41,12 +41,12 @@ public class FitnessProgram implements BasePlanItem {
         this.is_active = is_active;
     }
 
-    public FitnessProgram(long id, String name, String description, List<GymSession> gymSessions) {
+    public FitnessProgram(long id, String name, String description, List<Gym> gyms) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.creation_date = "///";
-        this.gymSessions = gymSessions;
+        this.gyms = gyms;
         this.position = -1;
     }
 
@@ -83,11 +83,11 @@ public class FitnessProgram implements BasePlanItem {
         return position;
     }
 
-    public List<GymSession> getGymSessions() {
-        return gymSessions;
+    public List<Gym> getGymSessions() {
+        return gyms;
     }
 
-    public void setGymSessions(List<GymSession> gymSessions) {
-        this.gymSessions = gymSessions;
+    public void setGymSessions(List<Gym> gyms) {
+        this.gyms = gyms;
     }
 }

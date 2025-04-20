@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun TrainingBlockWorkout(
-    block: TrainingBlock,
+    trainBlock: TrainingBlock,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface  // <- дефолт
 ) {
@@ -46,16 +46,16 @@ fun TrainingBlockWorkout(
     ) {
         // Заголовок
         Text(
-            text = block.name,
+            text = trainBlock.name,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
         )
         Spacer(Modifier.height(8.dp))
 
         // Опис
-        if (block.description.isNotBlank()) {
+        if (trainBlock.description.isNotBlank()) {
             Text(
-                text = block.description,
+                text = trainBlock.description,
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -63,40 +63,12 @@ fun TrainingBlockWorkout(
         }
 
         // Список типів руху
-        Text("Типи руху:",
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium)
-        block.motions.forEach { motion ->
-            Text("- ${motion.getDescription(context)}",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall)
-        }
-        Spacer(Modifier.height(8.dp))
-
-        // Список обладнання
-        Text("Обладнання:",
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium)
-        block.equipmentList.forEach { eq ->
-            Text("- ${eq.getDescription(context)}",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall)
-        }
-        Spacer(Modifier.height(8.dp))
-
-        // Список м’язових груп
-        Text("М’язові групи:",
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium)
-        block.muscleGroupList.forEach { mg ->
-            Text("- ${mg.getDescription(context)}",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodySmall)
-        }
-        Spacer(Modifier.height(8.dp))
+        Attributes(
+            trainingBlock = trainBlock
+        )
 
         // Вправи в блоці
-        block.exercises.forEach { ex ->
+        trainBlock.exercises.forEach { ex ->
             ExerciseInWorkoutUI(ex)
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -156,7 +128,7 @@ fun createPreviewTrainingBlock(): TrainingBlock {
 fun TrainingBlockWorkoutPreview() {
     MyAppTheme {
         TrainingBlockWorkout(
-            block = createPreviewTrainingBlock(),
+            trainBlock = createPreviewTrainingBlock(),
             modifier = Modifier.padding(16.dp)
         )
     }

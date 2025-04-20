@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.GymSession
+import com.example.gymlog.domain.model.plan.Gym
 import com.example.gymlog.ui.theme.MyAppTheme
 
 enum class SelectionState {
@@ -34,9 +34,9 @@ enum class SelectionState {
 @Composable
 fun WorkoutSelectionDialog(
     programs: List<FitnessProgram>,
-    workoutsByProgram: Map<Long, List<GymSession>>,
+    workoutsByProgramId: Map<Long, List<Gym>>,
     onProgramSelected: (FitnessProgram) -> Unit,
-    onWorkoutSelected: (GymSession) -> Unit,
+    onGymSelected: (Gym) -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectionState by remember { mutableStateOf(SelectionState.PROGRAMS) }
@@ -113,8 +113,8 @@ fun WorkoutSelectionDialog(
                     SelectionState.GYM_SESSIONS -> {
                         selectedProgram?.let { program ->
                             WorkoutsList(
-                                workouts = workoutsByProgram[program.id] ?: emptyList(),
-                                onWorkoutSelected = onWorkoutSelected,
+                                workouts = workoutsByProgramId[program.id] ?: emptyList(),
+                                onWorkoutSelected = onGymSelected,
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -281,8 +281,8 @@ fun ProgramItem(
 
 @Composable
 fun WorkoutsList(
-    workouts: List<GymSession>,
-    onWorkoutSelected: (GymSession) -> Unit,
+    workouts: List<Gym>,
+    onWorkoutSelected: (Gym) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -299,10 +299,12 @@ fun WorkoutsList(
 
 @Composable
 fun WorkoutItem(
-    workout: GymSession,
+    workout: Gym,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -344,18 +346,18 @@ fun WorkoutSelectionDialogPreview_Programs() {
                 FitnessProgram(1L, "Початківці", "Проста базова програма", emptyList()),
                 FitnessProgram(2L, "Просунуті", "Складніший план", emptyList())
             ),
-            workoutsByProgram = mapOf(
+            workoutsByProgramId = mapOf(
                 1L to listOf(
-                    GymSession(1, 1, "День 1", "Ноги й корпус", emptyList()),
-                    GymSession(2, 1, "День 2", "Груди й спина", emptyList())
+                    Gym(1, 1, "День 1", "Ноги й корпус", emptyList()),
+                    Gym(2, 1, "День 2", "Груди й спина", emptyList())
                 ),
                 2L to listOf(
-                    GymSession(3, 2, "День A", "Повне тіло", emptyList()),
-                    GymSession(4, 2, "День B", "Кардіо", emptyList())
+                    Gym(3, 2, "День A", "Повне тіло", emptyList()),
+                    Gym(4, 2, "День B", "Кардіо", emptyList())
                 )
             ),
             onProgramSelected = {},
-            onWorkoutSelected = {},
+            onGymSelected = {},
             onDismiss = {}
         )
     }

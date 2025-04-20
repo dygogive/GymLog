@@ -61,7 +61,7 @@ fun WorkoutScreenContent(
         ) {
             items(blocks) { block ->
                 TrainingBlockWorkout(
-                    block = block,
+                    trainBlock = block,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)

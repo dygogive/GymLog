@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.PlanManagerDAO;
-import com.example.gymlog.domain.model.plan.GymSession;
+import com.example.gymlog.domain.model.plan.Gym;
 import com.example.gymlog.ui.legacy.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.legacy.dialogs.DialogCreateEditNameDesc;
 import com.example.gymlog.ui.legacy.program.adapters.BasePlanAdapter;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Активність для відображення та редагування списку тренувальних днів (GymSession)
+ * Активність для відображення та редагування списку тренувальних днів (Gym)
  * у рамках обраної програми (plan).
  */
 public class GymSessionsActivity extends AppCompatActivity {
@@ -36,10 +36,10 @@ public class GymSessionsActivity extends AppCompatActivity {
     private TextView tvProgramTitle, tvProgramDescription;
     private FloatingActionButton buttonAddDay;
 
-    // DAO і список GymSession
+    // DAO і список Gym
     private PlanManagerDAO planManagerDAO;
-    private BasePlanAdapter<GymSession> gymSessionAdapter;
-    private List<GymSession> gymSessions;
+    private BasePlanAdapter<Gym> gymSessionAdapter;
+    private List<Gym> gyms;
 
     // Ідентифікатор плану + назва/опис програми
     private long planId;
@@ -125,14 +125,14 @@ public class GymSessionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Налаштовуємо RecyclerView для списку GymSession
+     * Налаштовуємо RecyclerView для списку Gym
      */
     private void setupRecyclerView() {
         recyclerViewDays = findViewById(R.id.recyclerViewDays);
         recyclerViewDays.setLayoutManager(new LinearLayoutManager(this));
 
-        gymSessions = new ArrayList<>();
-        gymSessionAdapter = new BasePlanAdapter<>(gymSessions, new PlanItemClickListener());
+        gyms = new ArrayList<>();
+        gymSessionAdapter = new BasePlanAdapter<>(gyms, new PlanItemClickListener());
         recyclerViewDays.setAdapter(gymSessionAdapter);
     }
 
@@ -178,16 +178,16 @@ public class GymSessionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Завантажуємо список GymSession з бази даних і оновлюємо адаптер
+     * Завантажуємо список Gym з бази даних і оновлюємо адаптер
      */
     private void loadGymSessions() {
-        gymSessions.clear();
-        gymSessions.addAll(planManagerDAO.getGymDaysByPlanId(planId));
+        gyms.clear();
+        gyms.addAll(planManagerDAO.getGymDaysByPlanId(planId));
         gymSessionAdapter.notifyDataSetChanged();
     }
 
     /**
-     * Відкриваємо діалог для створення нового тренувального дня (GymSession)
+     * Відкриваємо діалог для створення нового тренувального дня (Gym)
      */
     private void createGymSession() {
         DialogCreateEditNameDesc dialog = new DialogCreateEditNameDesc(
@@ -207,25 +207,25 @@ public class GymSessionsActivity extends AppCompatActivity {
     }
 
     /**
-     * Внутрішній клас-слухач подій на кожному GymSession:
+     * Внутрішній клас-слухач подій на кожному Gym:
      *  - редагувати
      *  - видалити
      *  - натиснути (перехід до TrainingBlocks)
      */
-    private class PlanItemClickListener implements BasePlanAdapter.OnPlanItemClickListener<GymSession> {
+    private class PlanItemClickListener implements BasePlanAdapter.OnPlanItemClickListener<Gym> {
 
         @Override
-        public void onEditClick(GymSession gymSession) {
+        public void onEditClick(Gym gym) {
             // Діалог редагування назви та опису
             DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
                     GymSessionsActivity.this,
-                    gymSession.getName(),
-                    gymSession.getDescription(),
+                    gym.getName(),
+                    gym.getDescription(),
                     (newName, newDescription) -> {
-                        gymSession.setName(newName);
-                        gymSession.setDescription(newDescription);
+                        gym.setName(newName);
+                        gym.setDescription(newDescription);
                         Log.d("find_bag_gymSession","1");
-                        planManagerDAO.updateGymSession(gymSession);
+                        planManagerDAO.updateGymSession(gym);
                         gymSessionAdapter.notifyDataSetChanged();
                     }
             );
@@ -233,12 +233,12 @@ public class GymSessionsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onCloneClick(GymSession item) {
+        public void onCloneClick(Gym item) {
 
             loadGymSessions();
 
             // Клонування елемента
-            GymSession copiedItem = new GymSession(
+            Gym copiedItem = new Gym(
                     (int) item.getId(), // ID буде згенеровано базою даних
                     item.getPlanId(),
                     item.getName() + " (Копія)",
@@ -247,20 +247,20 @@ public class GymSessionsActivity extends AppCompatActivity {
             );
 
             // Додаємо клонований елемент до бази даних
-            GymSession clonedItem = planManagerDAO.onStartCloneGymSession(copiedItem);
+            Gym clonedItem = planManagerDAO.onStartCloneGymSession(copiedItem);
             planManagerDAO.getAllPlans();
             if (clonedItem != null) {
-                gymSessions.add(clonedItem);
+                gyms.add(clonedItem);
                 loadGymSessions();
                 Toast.makeText(GymSessionsActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
             } else Toast.makeText(GymSessionsActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onDeleteClick(GymSession gymSession) {
+        public void onDeleteClick(Gym gym) {
             // Підтвердження перед видаленням
             ConfirmDeleteDialog.OnDeleteConfirmedListener onDeleteConfirmedListener = () -> {
-                planManagerDAO.deleteGymSession(gymSession.getId());
+                planManagerDAO.deleteGymSession(gym.getId());
                 loadGymSessions();
                 Toast.makeText(GymSessionsActivity.this,
                         getString(R.string.deleted_day),
@@ -269,18 +269,18 @@ public class GymSessionsActivity extends AppCompatActivity {
 
             ConfirmDeleteDialog.show(
                     GymSessionsActivity.this,
-                    gymSession.getName(),
+                    gym.getName(),
                     onDeleteConfirmedListener
             );
         }
 
         @Override
-        public void onItemClick(GymSession gymSession) {
+        public void onItemClick(Gym gym) {
             // Переходимо до списку блоків (TrainingBlocksActivity)
             Intent intent = new Intent(GymSessionsActivity.this, TrainingBlocksActivity.class);
-            intent.putExtra("gym_day_id", gymSession.getId());
-            intent.putExtra("gym_day_name", gymSession.getName());
-            intent.putExtra("gym_day_description", gymSession.getDescription());
+            intent.putExtra("gym_day_id", gym.getId());
+            intent.putExtra("gym_day_name", gym.getName());
+            intent.putExtra("gym_day_description", gym.getDescription());
             startActivity(intent);
         }
     }
