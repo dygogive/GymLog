@@ -116,46 +116,56 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "        FOREIGN KEY(trainingBlockId) REFERENCES TrainingBlock(id) ON DELETE CASCADE,\n" +
                 "        FOREIGN KEY(exerciseId)      REFERENCES Exercise(id)      ON DELETE CASCADE)");
 
-        //нові таблиці - для ROOM
-        db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutGymDay (\n" +
-                "    id          INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "    datetime    INTEGER,\n" +
-                "    plansID     INTEGER,\n" +
-                "    gymDaysID   INTEGER,\n" +
-                "    sets        INTEGER,                -- було INTEGERL\n" +
-                "    blocks      INTEGER,\n" +
-                "    minutes     INTEGER,\n" +
-                "    name        TEXT,\n" +
-                "    description TEXT,\n" +
-                "    FOREIGN KEY (plansID)  REFERENCES PlanCycles(id) ON DELETE SET NULL,\n" +
-                "    FOREIGN KEY (gymDaysID) REFERENCES GymDays(id) ON DELETE SET NULL\n" +
-                ");");
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutSet (\n" +
-                "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "    workout_id INTEGER,\n" +
-                "    tr_block_id INTEGER,\n" +
-                "    name TEXT,\n" +
-                "    description TEXT,\n" +
-                "    position INTEGER,\n" +
-                "    FOREIGN KEY (workout_id) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE,\n" +
-                "    FOREIGN KEY (tr_block_id) REFERENCES TrainingBlock(id) ON DELETE SET NULL\n" +
-                ");\n");
-
-
+        // WorkoutExercises - додаємо NOT NULL обмеження згідно Entity
         db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutExercises (\n" +
                 "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                 "    workout_gymday_ID INTEGER,\n" +
                 "    exerciseId INTEGER,\n" +
-                "    name TEXT,\n" +
+                "    name TEXT NOT NULL,\n" +                     // додано NOT NULL
                 "    description TEXT,\n" +
-                "    motion TEXT,\n" +
-                "    muscleGroups TEXT,\n" +
-                "    equipment TEXT,\n" +
+                "    motion TEXT NOT NULL,\n" +                   // додано NOT NULL
+                "    muscleGroups TEXT NOT NULL,\n" +             // додано NOT NULL
+                "    equipment TEXT NOT NULL,\n" +                // додано NOT NULL
+                "    weight INTEGER,\n" +
+                "    iteration INTEGER NOT NULL,\n" +
+                "    worktime INTEGER,\n" +
+                "    orderInWorkSet INTEGER NOT NULL,\n" +
+                "    orderInWorkGymDay INTEGER NOT NULL,\n" +
+                "    minutesSinceStartWorkout INTEGER NOT NULL,\n" +
                 "    FOREIGN KEY (workout_gymday_ID) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE SET NULL\n" +
                 ");\n");
 
+// WorkoutGymDay - додаємо NOT NULL обмеження згідно Entity
+        db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutGymDay (\n" +
+                "    id          INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    datetime    INTEGER NOT NULL,\n" +           // додано NOT NULL
+                "    plansID     INTEGER,\n" +
+                "    gymDaysID   INTEGER,\n" +
+                "    sets        INTEGER NOT NULL,\n" +           // додано NOT NULL
+                "    blocks      INTEGER NOT NULL,\n" +           // додано NOT NULL
+                "    minutes     INTEGER,\n" +
+                "    name        TEXT NOT NULL,\n" +              // додано NOT NULL
+                "    description TEXT,\n" +
+                "    physicalСondition INTEGER,\n" +
+                "    comments    TEXT,\n" +
+                "    FOREIGN KEY (plansID)  REFERENCES PlanCycles(id) ON DELETE SET NULL,\n" +
+                "    FOREIGN KEY (gymDaysID) REFERENCES GymDays(id) ON DELETE SET NULL\n" +
+                ");");
+
+// WorkoutSet - додаємо NOT NULL обмеження згідно Entity
+        db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutSet (\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    workout_id INTEGER,\n" +
+                "    tr_block_id INTEGER,\n" +
+                "    name TEXT NOT NULL,\n" +                     // додано NOT NULL
+                "    description TEXT,\n" +
+                "    position INTEGER NOT NULL,\n" +              // додано NOT NULL
+                "    physicalСondition INTEGER,\n" +
+                "    comments TEXT,\n" +
+                "    FOREIGN KEY (workout_id) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE,\n" +
+                "    FOREIGN KEY (tr_block_id) REFERENCES TrainingBlock(id) ON DELETE SET NULL\n" +
+                ");\n");
 
 
         // ───── ІНДЕКСИ, які Room очікує бачити ──────────────────────────

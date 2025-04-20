@@ -13,7 +13,9 @@ fun WorkoutSetEntity.toDomain() = WorkoutSet(
     trainingBlockId = tr_block_id,
     name = name,
     description = description,
-    position = position
+    position = position,
+    physicalСondition = physicalСondition,
+    comments = comments,
 )
 
 fun WorkoutSet.toEntity() = WorkoutSetEntity(
@@ -22,7 +24,9 @@ fun WorkoutSet.toEntity() = WorkoutSetEntity(
     tr_block_id = trainingBlockId,
     name = name,
     description = description,
-    position = position
+    position = position,
+    physicalСondition = physicalСondition,
+    comments = comments
 )
 
 fun WorkoutGymDayEntity.toDomain() = WorkoutGymDay(
@@ -34,7 +38,9 @@ fun WorkoutGymDayEntity.toDomain() = WorkoutGymDay(
     blocks = blocks,
     minutes = minutes,
     name = name,
-    description = description
+    description = description,
+    physicalСondition = physicalСondition,
+    comments = comments
 )
 
 fun WorkoutGymDay.toEntity() = WorkoutGymDayEntity(
@@ -46,7 +52,9 @@ fun WorkoutGymDay.toEntity() = WorkoutGymDayEntity(
     blocks = blocks,
     minutes = minutes,
     name = name,
-    description = description
+    description = description,
+    physicalСondition = physicalСondition,
+    comments = comments
 )
 
 fun WorkoutExerciseEntity.toDomain() = WorkoutExercise(
@@ -57,7 +65,13 @@ fun WorkoutExerciseEntity.toDomain() = WorkoutExercise(
     description = description,
     motion = motion,
     muscleGroups = muscleGroups,
-    equipment = equipment
+    equipment = equipment,
+    weight = weight,
+    iteration = iteration,
+    worktime = worktime,
+    orderInWorkSet = orderInWorkSet,
+    orderInWorkGymDay = orderInWorkGymDay,
+    minutesSinceStartWorkout = minutesSinceStartWorkout,
 )
 
 fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
@@ -68,5 +82,11 @@ fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
     description = description,
     motion = motion,
     muscleGroups = muscleGroups,
-    equipment = equipment
+    equipment = equipment,
+    weight = weight,
+    iteration = iteration,
+    worktime = worktime,
+    orderInWorkSet = orderInWorkSet,
+    orderInWorkGymDay = orderInWorkGymDay,
+    minutesSinceStartWorkout = minutesSinceStartWorkout,
 )
