@@ -21,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.Gym
+import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.ui.theme.MyAppTheme
 
 enum class SelectionState {
@@ -34,9 +34,9 @@ enum class SelectionState {
 @Composable
 fun WorkoutSelectionDialog(
     programs: List<FitnessProgram>,
-    workoutsByProgramId: Map<Long, List<Gym>>,
+    workoutsByProgramId: Map<Long, List<GymDay>>,
     onProgramSelected: (FitnessProgram) -> Unit,
-    onGymSelected: (Gym) -> Unit,
+    onGymSelected: (GymDay) -> Unit,
     onDismiss: () -> Unit
 ) {
     var selectionState by remember { mutableStateOf(SelectionState.PROGRAMS) }
@@ -281,8 +281,8 @@ fun ProgramItem(
 
 @Composable
 fun WorkoutsList(
-    workouts: List<Gym>,
-    onWorkoutSelected: (Gym) -> Unit,
+    workouts: List<GymDay>,
+    onWorkoutSelected: (GymDay) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -299,7 +299,7 @@ fun WorkoutsList(
 
 @Composable
 fun WorkoutItem(
-    workout: Gym,
+    workout: GymDay,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -348,12 +348,12 @@ fun WorkoutSelectionDialogPreview_Programs() {
             ),
             workoutsByProgramId = mapOf(
                 1L to listOf(
-                    Gym(1, 1, "День 1", "Ноги й корпус", emptyList()),
-                    Gym(2, 1, "День 2", "Груди й спина", emptyList())
+                    GymDay(1, 1, "День 1", "Ноги й корпус", emptyList()),
+                    GymDay(2, 1, "День 2", "Груди й спина", emptyList())
                 ),
                 2L to listOf(
-                    Gym(3, 2, "День A", "Повне тіло", emptyList()),
-                    Gym(4, 2, "День B", "Кардіо", emptyList())
+                    GymDay(3, 2, "День A", "Повне тіло", emptyList()),
+                    GymDay(4, 2, "День B", "Кардіо", emptyList())
                 )
             ),
             onProgramSelected = {},

@@ -3,7 +3,7 @@ package com.example.gymlog.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.Gym
+import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
 import com.example.gymlog.domain.usecase.gym_day.GetGymSessionByProgramIdUseCase
 import com.example.gymlog.domain.usecase.gym_plan.GetFitnessProgramsUseCase
@@ -51,14 +51,14 @@ class WorkoutViewModel @Inject constructor(
             }
 
             // Завантажуємо тренування для кожної програми
-            val gymByProgram = mutableMapOf<Long, List<Gym>>()
+            val gymDayByProgram = mutableMapOf<Long, List<GymDay>>()
             programs.forEach { program ->
                 val gymSessions = getGymSessionByProgramIdUseCase(program.id)
-                gymByProgram[program.id] = gymSessions
+                gymDayByProgram[program.id] = gymSessions
             }
 
             _uiState.update { currentState ->
-                currentState.copy(availableGymSessions = gymByProgram.toPersistentMap() )
+                currentState.copy(availableGymDaySessions = gymDayByProgram.toPersistentMap() )
             }
         }
     }
@@ -79,16 +79,16 @@ class WorkoutViewModel @Inject constructor(
         _uiState.update { it.copy(
             selectedProgram = program,
             // початково не обрана жодна сесія
-            selectedGym = null
+            selectedGymDay = null
         )}
     }
 
 
 
     // Виклик, коли користувач обрав сесію
-    fun onSessionSelected(session: Gym) {
+    fun onSessionSelected(session: GymDay) {
         _uiState.update { it.copy(
-            selectedGym = session,
+            selectedGymDay = session,
             showSelectionDialog = false  // більше не потрібен діалог
         )}
         // відразу підвантажуємо блоки для цього дня

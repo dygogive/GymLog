@@ -2,7 +2,7 @@ package com.example.gymlog.domain.model.plan;
 
 import java.util.List;
 
-public class Gym implements BasePlanItem {
+public class GymDay implements BasePlanItem {
     private long id;
     private int planId;
 
@@ -35,13 +35,13 @@ public class Gym implements BasePlanItem {
     private String description;
 
 
-    public Gym(int id, int fitProgramId, List<TrainingBlock> trainingBlocks) {
+    public GymDay(int id, int fitProgramId, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = fitProgramId;
         this.trainingBlocks = trainingBlocks;
     }
 
-    public Gym(int id, int fitProgramId, String name, String description, List<TrainingBlock> trainingBlocks) {
+    public GymDay(int id, int fitProgramId, String name, String description, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = fitProgramId;
         this.name = name;
@@ -49,7 +49,7 @@ public class Gym implements BasePlanItem {
         this.trainingBlocks = trainingBlocks;
     }
 
-    public Gym(int id, int fitProgramId, String name, String description, int position, List<TrainingBlock> trainingBlocks) {
+    public GymDay(int id, int fitProgramId, String name, String description, int position, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = fitProgramId;
         this.name = name;
@@ -58,7 +58,7 @@ public class Gym implements BasePlanItem {
         this.trainingBlocks = trainingBlocks;
     }
 
-    public Gym(long id, long fitProgramId, String name, String description, int position, List<TrainingBlock> trainingBlocks) {
+    public GymDay(long id, long fitProgramId, String name, String description, int position, List<TrainingBlock> trainingBlocks) {
         this.id = id;
         this.planId = (int) fitProgramId;
         this.name = name;

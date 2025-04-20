@@ -42,7 +42,7 @@ fun WorkoutScreen(
         ) {
             WorkoutSelectionDialog(
                 programs = state.availablePrograms,
-                workoutsByProgramId = state.availableGymSessions,
+                workoutsByProgramId = state.availableGymDaySessions,
                 onProgramSelected = viewModel::onProgramSelected,
                 onGymSelected = viewModel::onSessionSelected,
                 onDismiss = {

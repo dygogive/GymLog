@@ -1,7 +1,7 @@
 package com.example.gymlog.presentation.state
 
 import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.Gym
+import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -19,8 +19,8 @@ data class WorkoutUiState(
     //для діалогу вибору
     val availablePrograms: PersistentList<FitnessProgram> = persistentListOf(),
     val selectedProgram: FitnessProgram? = null,
-    val availableGymSessions: PersistentMap<Long, List<Gym>> = persistentMapOf(),
-    val selectedGym: Gym? = null,
+    val availableGymDaySessions: PersistentMap<Long, List<GymDay>> = persistentMapOf(),
+    val selectedGymDay: GymDay? = null,
 
     // нове: чи показувати діалог
     val showSelectionDialog: Boolean = true
