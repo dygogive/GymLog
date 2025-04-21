@@ -19,7 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
+import com.example.gymlog.domain.model.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.attribute.motion.Motion
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.TrainingBlock
+import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.ui.theme.MyAppTheme
 
 
@@ -28,6 +32,8 @@ fun WorkoutScreenContent(
     totalTimeMs: Long,
     lastSetTimeMs: Long,
     blocks: List<TrainingBlock>,
+    lastWorkoutExercises: List<WorkoutExercise>,
+    currentWorkoutExercises: List<WorkoutExercise>,
     isRunning: Boolean,
     onStartStop: () -> Unit,
     onSetFinish: () -> Unit,
@@ -63,6 +69,8 @@ fun WorkoutScreenContent(
             items(blocks) { block ->
                 TrainingBlockWorkout(
                     trainBlock = block,
+                    lastWorkoutExercises,
+                    currentWorkoutExercises,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
@@ -85,6 +93,44 @@ private fun WorkoutScreenContentPreview() {
             totalTimeMs = 1234567L,
             lastSetTimeMs = 45000L,
             blocks = List(4) { createPreviewTrainingBlock() },
+            lastWorkoutExercises = emptyList(),
+            // Імітуємо два підходи, які вже було занотовано під час поточного тренування
+            currentWorkoutExercises = listOf(
+                WorkoutExercise(
+                    id = 11L,
+                    workoutGymDayId = 20L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 20,
+                    iteration = 10,
+                    worktime = 30,
+                    orderInWorkSet = 1,
+                    orderInWorkGymDay = 1,
+                    minutesSinceStartWorkout = 5,
+                    date = "20.12.2025"
+                ),
+                WorkoutExercise(
+                    id = 12L,
+                    workoutGymDayId = 20L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 18,
+                    iteration = 8,
+                    worktime = 28,
+                    orderInWorkSet = 2,
+                    orderInWorkGymDay = 2,
+                    minutesSinceStartWorkout = 8,
+                    date = "20.12.2025"
+                )
+            ),
             isRunning = false,
             onStartStop = {},
             onSetFinish = {},

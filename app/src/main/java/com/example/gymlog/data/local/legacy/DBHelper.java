@@ -132,6 +132,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    orderInWorkSet INTEGER NOT NULL,\n" +
                 "    orderInWorkGymDay INTEGER NOT NULL,\n" +
                 "    minutesSinceStartWorkout INTEGER NOT NULL,\n" +
+                "    date TEXT NOT NULL,\n" +
                 "    FOREIGN KEY (workout_gymday_ID) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE SET NULL\n" +
                 ");\n");

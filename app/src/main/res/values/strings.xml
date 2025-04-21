@@ -250,6 +250,13 @@
     <string name="select_training">Select training</string>
     <string name="collapse_attributes">Collapse attributes</string>
     <string name="show_attributes">Show attributes</string>
+    <string name="ones_weight">kg</string>
+    <string name="ones_seconds">s</string>
+    <string name="set_txt">Set</string>
+    <string name="no_results">No results</string>
+    <string name="write_results">Write results</string>
+    <string name="add_results">Add results</string>
+    <string name="ones_iterations">rep</string>
 
 
 </resources>

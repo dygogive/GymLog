@@ -72,6 +72,7 @@ fun WorkoutExerciseEntity.toDomain() = WorkoutExercise(
     orderInWorkSet = orderInWorkSet,
     orderInWorkGymDay = orderInWorkGymDay,
     minutesSinceStartWorkout = minutesSinceStartWorkout,
+    date = date
 )
 
 fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
@@ -89,4 +90,5 @@ fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
     orderInWorkSet = orderInWorkSet,
     orderInWorkGymDay = orderInWorkGymDay,
     minutesSinceStartWorkout = minutesSinceStartWorkout,
+    date = date
 )

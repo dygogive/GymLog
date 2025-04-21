@@ -31,10 +31,13 @@ import com.example.gymlog.ui.theme.MyAppTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.gymlog.R
+import com.example.gymlog.domain.model.workout.WorkoutExercise
 
 @Composable
 fun TrainingBlockWorkout(
     trainBlock: TrainingBlock,
+    lastWorkoutExercises: List<WorkoutExercise>,
+    currentWorkoutExercises: List<WorkoutExercise>,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,  // <- дефолт
     onClickFixResults: () -> Unit
@@ -58,18 +61,11 @@ fun TrainingBlockWorkout(
 
         Row(
             modifier = Modifier  // <-- Використовуємо переданий модифікатор
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.12f),
-                    shape = RoundedCornerShape(8.dp)
-                )
                 .padding(vertical = 0.dp, horizontal = 0.dp)
         ) {
             Column(
                 modifier = Modifier  // <-- Використовуємо переданий модифікатор
                     .fillMaxWidth()
-                    .background(backgroundColor)
             ) {
                 // Заголовок
                 Text(
@@ -124,11 +120,21 @@ fun TrainingBlockWorkout(
         trainBlock.exercises.forEach { ex ->
             ExerciseInWorkoutUI(
                 ex,
+                lastWorkoutExercises,
+                currentWorkoutExercises,
                 onClickFixResults = onClickFixResults)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
+
+
+
+
+
+
+
 
 
 // 1. Допоміжна функція для прев’ю
@@ -174,18 +180,137 @@ fun createPreviewTrainingBlock(): TrainingBlock {
     )
 }
 
-// 2. Preview-функція, що юзає допоміжну
+
+
+
+
+
+
+
+
+
+
 @Preview(
     showBackground = true,
-    name = "TrainingBlockParameters Preview"
+    name = "TrainingBlockWorkout — поточні результати"
 )
 @Composable
-fun TrainingBlockWorkoutPreview() {
+fun TrainingBlockWorkoutCurrentPreview() {
     MyAppTheme {
         TrainingBlockWorkout(
             trainBlock = createPreviewTrainingBlock(),
-            modifier = Modifier.padding(16.dp),
-            onClickFixResults = { }
+            lastWorkoutExercises = emptyList(),
+            // Імітуємо два підходи, які вже було занотовано під час поточного тренування
+            currentWorkoutExercises = listOf(
+                WorkoutExercise(
+                    id = 11L,
+                    workoutGymDayId = 20L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 20,
+                    iteration = 10,
+                    worktime = 30,
+                    orderInWorkSet = 1,
+                    orderInWorkGymDay = 1,
+                    minutesSinceStartWorkout = 5,
+                    date = "20.12.2025"
+                ),
+                WorkoutExercise(
+                    id = 12L,
+                    workoutGymDayId = 20L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 18,
+                    iteration = 8,
+                    worktime = 28,
+                    orderInWorkSet = 2,
+                    orderInWorkGymDay = 2,
+                    minutesSinceStartWorkout = 8,
+                    date = "20.12.2025"
+                )
+            ),
+            onClickFixResults = {}
         )
     }
 }
+
+
+
+@Preview(
+    showBackground = true,
+    name = "TrainingBlockWorkout — історія"
+)
+@Composable
+fun TrainingBlockWorkoutHistoryPreview() {
+    MyAppTheme {
+        TrainingBlockWorkout(
+            trainBlock = createPreviewTrainingBlock(),
+            // Імітуємо 3 останні «перші» підходи з трьох попередніх тренувань
+            lastWorkoutExercises = listOf(
+                WorkoutExercise(
+                    id = 1L,
+                    workoutGymDayId = 10L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES)
+                        .joinToString(",") { it.name },
+                    equipment = Equipment.BARBELL.name,
+                    weight = 20,
+                    iteration = 10,
+                    worktime = 30,
+                    orderInWorkSet = 1,
+                    orderInWorkGymDay = 1,
+                    minutesSinceStartWorkout = 5,
+                    date = "20.12.2025"
+                ),
+                WorkoutExercise(
+                    id = 2L,
+                    workoutGymDayId = 9L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 18,
+                    iteration = 8,
+                    worktime = 28,
+                    orderInWorkSet = 1,
+                    orderInWorkGymDay = 2,
+                    minutesSinceStartWorkout = 7,
+                    date = "20.12.2025"
+                ),
+                WorkoutExercise(
+                    id = 3L,
+                    workoutGymDayId = 8L,
+                    exerciseId = 101L,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = MuscleGroup.QUADRICEPS.name,
+                    equipment = Equipment.BARBELL.name,
+                    weight = 22,
+                    iteration = 6,
+                    worktime = 32,
+                    orderInWorkSet = 1,
+                    orderInWorkGymDay = 3,
+                    minutesSinceStartWorkout = 10,
+                    date = "20.12.2025"
+                )
+            ),
+            currentWorkoutExercises = emptyList(),
+            onClickFixResults = {}
+        )
+    }
+}
+

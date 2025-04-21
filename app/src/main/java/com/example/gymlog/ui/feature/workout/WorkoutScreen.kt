@@ -13,6 +13,7 @@ import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
 import androidx.navigation.NavController
+import com.example.gymlog.domain.model.workout.WorkoutExercise
 
 @Composable
 fun WorkoutScreen(
@@ -27,6 +28,8 @@ fun WorkoutScreen(
         totalTimeMs = state.totalTimeMs,
         lastSetTimeMs = state.lastSetTimeMs,
         blocks = state.blocks,
+        lastWorkoutExercises = state.lastWorkoutExercises(),
+        currentWorkoutExercises = state.currentWorkoutExercises(),
         isRunning = state.isGymRunning,
         onStartStop = viewModel::startStopGym,
         onSetFinish = viewModel::onSetFinish,

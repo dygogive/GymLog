@@ -15,5 +15,6 @@ data class WorkoutExercise(
     val worktime: Int?, //тривалість виконання в секундах
     val orderInWorkSet: Int, // яке по черзі у цьому ж блоці
     val orderInWorkGymDay: Int, // яке по черзі у всьому тренуванні
-    val minutesSinceStartWorkout: Int // минуло хвилин після старту тренування на момент запису цього результату
+    val minutesSinceStartWorkout: Int, // минуло хвилин після старту тренування на момент запису цього результату
+    val date: String //дата виконання
 )

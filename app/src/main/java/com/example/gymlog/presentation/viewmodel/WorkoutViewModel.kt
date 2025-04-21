@@ -2,8 +2,12 @@ package com.example.gymlog.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.domain.model.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.attribute.motion.Motion
+import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymDay
+import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
 import com.example.gymlog.domain.usecase.gym_day.GetGymSessionByProgramIdUseCase
 import com.example.gymlog.domain.usecase.gym_plan.GetFitnessProgramsUseCase
@@ -161,5 +165,9 @@ class WorkoutViewModel @Inject constructor(
     fun onSetWeightRepeats() {
 
     }
+
+
+
+
 
 }

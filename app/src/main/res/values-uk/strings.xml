@@ -186,6 +186,13 @@
     <string name="select_training">Вибрати тренування</string>
     <string name="collapse_attributes">Сховати атрибути</string>
     <string name="show_attributes">Показати атрибути</string>
+    <string name="ones_weight">кг</string>
+    <string name="ones_seconds">с</string>
+    <string name="set_txt">Підхід</string>
+    <string name="no_results">Немає результату</string>
+    <string name="write_results">Записати результат</string>
+    <string name="add_results">Додати результат</string>
+    <string name="ones_iterations">повт</string>
 
 
 </resources>
