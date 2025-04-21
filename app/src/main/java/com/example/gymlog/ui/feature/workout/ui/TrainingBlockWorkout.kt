@@ -38,12 +38,9 @@ fun TrainingBlockWorkout(
     trainBlock: TrainingBlock,
     lastWorkoutExercises: List<WorkoutExercise>,
     currentWorkoutExercises: List<WorkoutExercise>,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,  // <- дефолт
-    onClickFixResults: () -> Unit
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -119,10 +116,8 @@ fun TrainingBlockWorkout(
         // Вправи в блоці
         trainBlock.exercises.forEach { ex ->
             ExerciseInWorkoutUI(
-                ex,
-                lastWorkoutExercises,
-                currentWorkoutExercises,
-                onClickFixResults = onClickFixResults)
+                ex
+            )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
@@ -236,8 +231,7 @@ fun TrainingBlockWorkoutCurrentPreview() {
                     minutesSinceStartWorkout = 8,
                     date = "20.12.2025"
                 )
-            ),
-            onClickFixResults = {}
+            )
         )
     }
 }
@@ -308,8 +302,7 @@ fun TrainingBlockWorkoutHistoryPreview() {
                     date = "20.12.2025"
                 )
             ),
-            currentWorkoutExercises = emptyList(),
-            onClickFixResults = {}
+            currentWorkoutExercises = emptyList()
         )
     }
 }

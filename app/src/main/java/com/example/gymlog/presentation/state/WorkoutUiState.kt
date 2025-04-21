@@ -27,7 +27,11 @@ data class WorkoutUiState(
     val selectedGymDay: GymDay? = null,
 
     // нове: чи показувати діалог
-    val showSelectionDialog: Boolean = true
+    val showSelectionDialog: Boolean = true,
+
+    //результати для вправ
+    val currentResults: List<WorkoutExercise> = emptyList(),
+    val historyResults: List<WorkoutExercise> = emptyList(),
 ) {
 
     fun lastWorkoutExercises(): List<WorkoutExercise> {

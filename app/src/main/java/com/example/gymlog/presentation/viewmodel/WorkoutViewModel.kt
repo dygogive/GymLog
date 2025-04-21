@@ -1,13 +1,13 @@
 package com.example.gymlog.presentation.viewmodel
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.attribute.motion.Motion
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymDay
-import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
 import com.example.gymlog.domain.usecase.gym_day.GetGymSessionByProgramIdUseCase
 import com.example.gymlog.domain.usecase.gym_plan.GetFitnessProgramsUseCase
@@ -160,10 +160,8 @@ class WorkoutViewModel @Inject constructor(
 
 
 
-
-    //function for fixing results of set in gym
-    fun onSetWeightRepeats() {
-
+    fun saveResult(exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) {
+        Log.d("tag1",  "test1" )
     }
 
 
