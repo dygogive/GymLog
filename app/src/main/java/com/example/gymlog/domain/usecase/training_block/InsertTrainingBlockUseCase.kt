@@ -1,7 +1,8 @@
 // domain/usecase/InsertTrainingBlockUseCase.kt
 package com.example.gymlog.domain.usecase
 
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
+
+import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.domain.repository.TrainingBlockRepositoryInterface
 import javax.inject.Inject
 
@@ -11,6 +12,6 @@ import javax.inject.Inject
 class InsertTrainingBlockUseCase @Inject constructor(
     private val repository: TrainingBlockRepositoryInterface
 ) {
-    suspend operator fun invoke(block: TrainingBlockEntity): Long =
+    suspend operator fun invoke(block: TrainingBlock): Long =
         repository.insertTrainingBlock(block)
 }

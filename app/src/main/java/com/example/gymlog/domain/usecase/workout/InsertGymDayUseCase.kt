@@ -2,7 +2,7 @@
 package com.example.gymlog.domain.usecase.workout
 
 import com.example.gymlog.domain.repository.WorkoutRepositoryInterface
-import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.domain.model.workout.WorkoutGymDay
 import javax.inject.Inject
 
 /**
@@ -11,6 +11,6 @@ import javax.inject.Inject
 class InsertGymDayUseCase @Inject constructor(
     private val repository: WorkoutRepositoryInterface
 ) {
-    suspend operator fun invoke(day: WorkoutGymDayEntity): Long =
+    suspend operator fun invoke(day: WorkoutGymDay): Long =
         repository.insertWorkGymDay(day)
 }

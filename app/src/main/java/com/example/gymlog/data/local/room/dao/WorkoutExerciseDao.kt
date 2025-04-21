@@ -30,4 +30,28 @@ interface WorkoutExerciseDao {
     // Аналогічний запит, але з Flow для реактивного програмування
     @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
     fun getWorkExerciseByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutExerciseEntity>>
+
+
+    /**
+     * Повертає по три останніх «перших» виконання вправи (orderInWorkSet = найменше)
+     * з трьох останніх тренувань, де вона була.
+     */
+    @Query("SELECT * FROM WorkoutExercises " +
+            "WHERE exerciseId = :exerciseId" +
+            "  AND id NOT IN (" +
+            "    SELECT we.id" +
+            "    FROM WorkoutExercises we" +
+            "    JOIN WorkoutGymDay wg ON we.workout_gymday_ID = wg.id" +
+            "    WHERE we.exerciseId = :exerciseId" +
+            "    AND we.orderInWorkSet != (" +
+            "        SELECT MIN(orderInWorkSet)" +
+            "        FROM WorkoutExercises" +
+            "        WHERE workout_gymday_ID = we.workout_gymday_ID" +
+            "        AND exerciseId = :exerciseId" +
+            "    )" +
+            "  )" +
+            "ORDER BY workout_gymday_ID DESC " +
+            "LIMIT 3")
+    suspend fun getLastThreeFirstResults(exerciseId: Long): List<WorkoutExerciseEntity>
+
 }

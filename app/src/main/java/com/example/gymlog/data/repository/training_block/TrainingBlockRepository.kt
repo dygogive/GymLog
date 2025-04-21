@@ -6,9 +6,11 @@ import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
 import com.example.gymlog.data.local.room.mapper.toDomain
+import com.example.gymlog.data.local.room.mapper.toEntity
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.domain.repository.TrainingBlockRepositoryInterface
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,12 +21,14 @@ class TrainingBlockRepository @Inject constructor(
     private val filterDao: TrainingBlockFilterDao,
     ) : TrainingBlockRepositoryInterface {
 
-    override suspend fun insertTrainingBlock(trainingBlockEntity: TrainingBlockEntity): Long {
-        return trainingBlockDao.insert(trainingBlockEntity)
+    override suspend fun insertTrainingBlock(trainingBlock: TrainingBlock): Long {
+        return trainingBlockDao.insert(trainingBlock.toEntity())
     }
 
-    override fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlockEntity>> {
-        return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID)
+    override fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlock>> {
+        return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID).map { trainingBlock ->
+            trainingBlock.map { it.toDomain() }
+        }
     }
 
     override suspend fun getTrainingBlocksByDayId(gymDayId: Long): List<TrainingBlock> {
