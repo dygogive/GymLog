@@ -20,7 +20,9 @@ fun WorkoutScreen(
     viewModel: WorkoutViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-
+    val currentResults = state.currentWorkoutExercises()
+    val lastResults = state.lastWorkoutExercises()
+    val onSaveResult = viewModel::saveResult
 
 // 1) Контент тренування — завжди видно
     WorkoutScreenContent(
@@ -29,6 +31,7 @@ fun WorkoutScreen(
         blocks = state.blocks,
         lastWorkoutExercises = state.lastWorkoutExercises(),
         currentWorkoutExercises = state.currentWorkoutExercises(),
+        onSaveResult,
         isRunning = state.isGymRunning,
         onStartStop = viewModel::startStopGym,
         onSetFinish = viewModel::onSetFinish

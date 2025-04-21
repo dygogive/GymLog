@@ -34,6 +34,7 @@ fun WorkoutScreenContent(
     blocks: List<TrainingBlock>,
     lastWorkoutExercises: List<WorkoutExercise>,
     currentWorkoutExercises: List<WorkoutExercise>,
+    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
     isRunning: Boolean,
     onStartStop: () -> Unit,
     onSetFinish: () -> Unit,
@@ -70,6 +71,7 @@ fun WorkoutScreenContent(
                     trainBlock = block,
                     lastWorkoutExercises,
                     currentWorkoutExercises,
+                    onSaveResult,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
@@ -129,6 +131,7 @@ private fun WorkoutScreenContentPreview() {
                     date = "20.12.2025"
                 )
             ),
+            {_,_,_,_ ->},
             isRunning = false,
             onStartStop = {},
             onSetFinish = {}

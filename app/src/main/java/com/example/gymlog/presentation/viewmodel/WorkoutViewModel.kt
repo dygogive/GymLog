@@ -161,7 +161,7 @@ class WorkoutViewModel @Inject constructor(
 
 
     fun saveResult(exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) {
-        Log.d("tag1",  "test1" )
+        Log.d("tag1",  "saveResult in class WorkoutViewModel" )
     }
 
 

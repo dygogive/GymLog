@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.domain.model.attribute.equipment.Equipment
@@ -38,6 +37,7 @@ fun TrainingBlockWorkout(
     trainBlock: TrainingBlock,
     lastWorkoutExercises: List<WorkoutExercise>,
     currentWorkoutExercises: List<WorkoutExercise>,
+    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -114,9 +114,12 @@ fun TrainingBlockWorkout(
 
 
         // Вправи в блоці
-        trainBlock.exercises.forEach { ex ->
+        trainBlock.exercises.forEach { exerciseInBlock ->
             ExerciseInWorkoutUI(
-                ex
+                exerciseInBlock,
+                onSaveResult,
+                currentWorkoutExercises,
+                lastWorkoutExercises,
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -231,7 +234,8 @@ fun TrainingBlockWorkoutCurrentPreview() {
                     minutesSinceStartWorkout = 8,
                     date = "20.12.2025"
                 )
-            )
+            ),
+            {_,_,_,_ -> }
         )
     }
 }
@@ -302,7 +306,8 @@ fun TrainingBlockWorkoutHistoryPreview() {
                     date = "20.12.2025"
                 )
             ),
-            currentWorkoutExercises = emptyList()
+            currentWorkoutExercises = emptyList(),
+            {_,_,_,_ -> }
         )
     }
 }

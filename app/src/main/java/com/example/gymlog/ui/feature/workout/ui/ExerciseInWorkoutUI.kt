@@ -42,29 +42,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun ExerciseInWorkoutUI(
     exerciseInBlock: ExerciseInBlock,
-    workoutViewModel: WorkoutViewModel = hiltViewModel()
+    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
+    currentResults: List<WorkoutExercise>,
+    lastResults: List<WorkoutExercise>
 ) {
 
-    val state by workoutViewModel.uiState.collectAsState()
-    val currentResults = state.currentWorkoutExercises()
-    val lastResults = state.lastWorkoutExercises()
 
 
     ExerciseInWorkoutContent(
         exerciseInBlock,
-        onSaveResult = workoutViewModel::saveResult,
+        onSaveResult,
         currentResults,
-        lastResults
+        lastResults,
     )
 
 
 
 }
-
-
-
-
-
 
 
 
@@ -136,7 +130,6 @@ fun ExerciseInWorkoutContent(
                     weight,
                     seconds)
 
-                Log.d("tag1",  "test2" )
                 //
                 showDialog = false
                 //
