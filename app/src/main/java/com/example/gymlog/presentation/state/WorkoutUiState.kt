@@ -1,3 +1,4 @@
+// WorkoutUiState.kt
 package com.example.gymlog.presentation.state
 
 import com.example.gymlog.domain.model.attribute.equipment.Equipment
@@ -7,60 +8,72 @@ import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.domain.model.workout.WorkoutExercise
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 
-
+/**
+ * UI‑стан екрану Workout:
+ * — загальні таймери
+ * — список блоків
+ * — вибір програми/дня
+ * — накопичені результати підходів
+ */
 data class WorkoutUiState(
+    // таймери
     val totalTimeMs: Long = 0L,
-    var lastSetTimeMs: Long = 0L,
-    val blocks: PersistentList<TrainingBlock> = persistentListOf<TrainingBlock>(),
-    val isGymRunning: Boolean = false,      // Чи активне тренування
+    val lastSetTimeMs: Long = 0L,
+    val isGymRunning: Boolean = false,
 
+    // тренувальні блоки
+    val blocks: PersistentList<TrainingBlock> = persistentListOf(),
 
-    //для діалогу вибору
+    // діалог вибору програми → дня
     val availablePrograms: PersistentList<FitnessProgram> = persistentListOf(),
     val selectedProgram: FitnessProgram? = null,
-    val availableGymDaySessions: PersistentMap<Long, List<GymDay>> = persistentMapOf(),
+    val availableGymDaySessions: PersistentMap<Long, PersistentList<GymDay>> = persistentMapOf(),
     val selectedGymDay: GymDay? = null,
-
-    // нове: чи показувати діалог
     val showSelectionDialog: Boolean = true,
 
-    //результати для вправ
-    val currentResults: List<WorkoutExercise> = emptyList(),
-    val historyResults: List<WorkoutExercise> = emptyList(),
+    // вправи і їх результати
+    val exercises: PersistentList<WorkoutExercise> = persistentListOf(),
+    val results: PersistentMap<Long, PersistentList<WorkoutResult>> = persistentMapOf()
 ) {
-
-    fun lastWorkoutExercises(): List<WorkoutExercise> {
-        return listOf(WorkoutExercise(
-            id = 11L,
-            workoutGymDayId = 20L,
-            exerciseId = 101L,
-            name = "Присідання зі штангою",
-            description = null,
-            motion = Motion.PRESS_BY_LEGS.name,
-            muscleGroups = MuscleGroup.QUADRICEPS.name,
-            equipment = Equipment.BARBELL.name,
-            comments = "Very good!"
-        ))
+    companion object {
+        /** Дані для превʼю та прикладу */
+        fun previewState() = WorkoutUiState(
+            exercises = persistentListOf(
+                WorkoutExercise(
+                    id = 1,
+                    workoutGymDayId = 10,
+                    exerciseId = 101,
+                    name = "Присідання зі штангою",
+                    description = null,
+                    motion = Motion.PRESS_BY_LEGS.name,
+                    muscleGroups = listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES)
+                        .joinToString(",") { it.name },
+                    equipment = Equipment.BARBELL.name,
+                    comments = "Very good!"
+                )
+            ),
+            results = persistentMapOf(
+                1L to persistentListOf(
+                    WorkoutResult(
+                        id = 11,
+                        workoutExerciseId = 1,
+                        weight = 80,
+                        iteration = 8,
+                        workTime = 60,
+                        orderInWorkoutExercise = 1,
+                        orderInWorkSet = 1,
+                        orderInWorkGymDay = 1,
+                        minutesSinceStartWorkout = 2,
+                        date = "2025-04-23T12:15:00"
+                    )
+                )
+            )
+        )
     }
-
-    fun currentWorkoutExercises(): List<WorkoutExercise> {
-        return listOf(WorkoutExercise(
-            id = 1L,
-            workoutGymDayId = 10L,
-            exerciseId = 101L,
-            name = "Присідання зі штангою",
-            description = null,
-            motion = Motion.PRESS_BY_LEGS.name,
-            muscleGroups = listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES)
-                .joinToString(",") { it.name },
-            equipment = Equipment.BARBELL.name,
-            comments = "Very good!"
-        ))
-    }
-
 }

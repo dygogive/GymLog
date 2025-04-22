@@ -1,11 +1,10 @@
+// WorkoutViewModel.kt
 package com.example.gymlog.presentation.viewmodel
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.domain.model.workout.WorkoutExercise
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
@@ -15,6 +14,8 @@ import com.example.gymlog.presentation.state.WorkoutUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,9 +25,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel for Workout screen. Manages timers, training blocks and workout days.
- */
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val getTrainingBlocksByDayIdUseCase: GetTrainingBlocksByDayIdUseCase,
@@ -45,66 +43,45 @@ class WorkoutViewModel @Inject constructor(
         loadPrograms()
     }
 
-
-
     private fun loadPrograms() {
         viewModelScope.launch {
             val programs = getFitnessProgramsUseCase()
-            _uiState.update { currentState ->
-                currentState.copy(availablePrograms = programs.toPersistentList())
-            }
+            _uiState.update { it.copy(
+                availablePrograms = programs.toPersistentList()
+            ) }
 
-            // Завантажуємо тренування для кожної програми
-            val gymDayByProgram = mutableMapOf<Long, List<GymDay>>()
-            programs.forEach { program ->
-                val gymSessions = getGymSessionByProgramIdUseCase(program.id)
-                gymDayByProgram[program.id] = gymSessions
-            }
+            val sessionsByProgram = programs
+                .associate { prog ->
+                    prog.id to getGymSessionByProgramIdUseCase(prog.id).toPersistentList()
+                }
+                .toPersistentMap()
 
-            _uiState.update { currentState ->
-                currentState.copy(availableGymDaySessions = gymDayByProgram.toPersistentMap() )
-            }
+            _uiState.update { it.copy(
+                availableGymDaySessions = sessionsByProgram
+            ) }
         }
     }
 
-
-    // закрити діалог
     fun dismissSelectionDialog() {
         _uiState.update { it.copy(showSelectionDialog = false) }
     }
 
-
-
-
-
-
-    // Виклик, коли користувач обрав програму
     fun onProgramSelected(program: FitnessProgram) {
         _uiState.update { it.copy(
             selectedProgram = program,
-            // початково не обрана жодна сесія
             selectedGymDay = null
-        )}
+        ) }
     }
 
-
-
-    // Виклик, коли користувач обрав сесію
     fun onSessionSelected(session: GymDay) {
         _uiState.update { it.copy(
             selectedGymDay = session,
-            showSelectionDialog = false  // більше не потрібен діалог
-        )}
-        // відразу підвантажуємо блоки для цього дня
+            showSelectionDialog = false
+        ) }
         loadTrainingBlocksOnce(session.id)
     }
 
-
-
-    /**
-     * Loads training blocks once for given gymDayId.
-     */
-    fun loadTrainingBlocksOnce(gymDayId: Long) {
+    private fun loadTrainingBlocksOnce(gymDayId: Long) {
         viewModelScope.launch {
             val blocks = getTrainingBlocksByDayIdUseCase(gymDayId)
                 .toPersistentList()
@@ -112,32 +89,27 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-
-
-
-
-    /**
-     * Toggles workout timer: starts if stopped, stops if running.
-     */
     fun startStopGym() {
-        if (uiState.value.isGymRunning) stopGym()
-        else startGym()
+        if (uiState.value.isGymRunning) stopGym() else startGym()
     }
 
     private fun startGym() {
-        val now = System.currentTimeMillis()
-        startWorkoutTime = now
-        startSetTime = now
-        _uiState.update { it.copy(isGymRunning = true, totalTimeMs = 0L, lastSetTimeMs = 0L) }
+        startWorkoutTime = System.currentTimeMillis()
+        startSetTime = startWorkoutTime
+        _uiState.update { it.copy(
+            isGymRunning = true,
+            totalTimeMs = 0L,
+            lastSetTimeMs = 0L
+        ) }
 
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (uiState.value.isGymRunning) {
-                val current = System.currentTimeMillis()
-                _uiState.update { state ->
-                    state.copy(
-                        totalTimeMs = current - startWorkoutTime,
-                        lastSetTimeMs = current - startSetTime
+                val now = System.currentTimeMillis()
+                _uiState.update { st ->
+                    st.copy(
+                        totalTimeMs = now - startWorkoutTime,
+                        lastSetTimeMs = now - startSetTime
                     )
                 }
                 delay(1000L)
@@ -150,22 +122,24 @@ class WorkoutViewModel @Inject constructor(
         _uiState.update { it.copy(isGymRunning = false) }
     }
 
-    /**
-     * Call when a set (approach) is finished: resets rest timer.
-     */
     fun onSetFinish() {
         startSetTime = System.currentTimeMillis()
         _uiState.update { it.copy(lastSetTimeMs = 0L) }
     }
 
-
-
-    fun saveResult(exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) {
-        Log.d("tag1",  "saveResult in class WorkoutViewModel" )
+    /**
+     * Зберігаємо результат підходу: додаємо новий WorkoutResult
+     */
+    fun saveResult(exercise: WorkoutExercise, result: WorkoutResult) {
+        _uiState.update { st ->
+            // додаємо результат у мапу за exercise.id
+            val key = exercise.id ?: return@update st
+            val updatedList = st.results[key]
+                .orEmpty()
+                .toMutableList()
+                .apply { add(result) }
+                .toPersistentList()
+            st.copy(results = st.results.put(key, updatedList))
+        }
     }
-
-
-
-
-
 }
