@@ -2,6 +2,7 @@ package com.example.gymlog.data.repository.workout
 
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
@@ -30,6 +31,7 @@ class WorkoutRepository @Inject constructor(
     private val workGymDayDao: WorkoutGymDayDao,     // Для роботи з тренувальними днями
     private val workSetDao: WorkoutSetDao,           // Для роботи з підходами
     private val workExerciseDao: WorkoutExerciseDao,   // Для роботи з вправами
+    private val workResultDao: WorkoutResultDao,   // Для роботи з вправами
 ) : WorkoutRepositoryInterface {
 
     /* ----- Робота з тренувальними днями (WorkoutGymDay) ----- */

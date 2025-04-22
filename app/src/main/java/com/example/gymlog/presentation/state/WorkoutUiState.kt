@@ -44,13 +44,7 @@ data class WorkoutUiState(
             motion = Motion.PRESS_BY_LEGS.name,
             muscleGroups = MuscleGroup.QUADRICEPS.name,
             equipment = Equipment.BARBELL.name,
-            weight = 20,
-            iteration = 10,
-            worktime = 30,
-            orderInWorkSet = 1,
-            orderInWorkGymDay = 1,
-            minutesSinceStartWorkout = 5,
-            date = "20.12.2025"
+            comments = "Very good!"
         ))
     }
 
@@ -65,13 +59,7 @@ data class WorkoutUiState(
             muscleGroups = listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES)
                 .joinToString(",") { it.name },
             equipment = Equipment.BARBELL.name,
-            weight = 20,
-            iteration = 10,
-            worktime = 30,
-            orderInWorkSet = 1,
-            orderInWorkGymDay = 1,
-            minutesSinceStartWorkout = 5,
-            date = "20.12.2025"
+            comments = "Very good!"
         ))
     }
 

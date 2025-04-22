@@ -9,12 +9,6 @@ data class WorkoutExercise(
     val description: String?, //опис
     val motion: String, //тип руху
     val muscleGroups: String, //групи м'язів
-    val equipment: String, //обладнання
-    val weight: Int?, // вага
-    val iteration: Int, // к-сть повторень
-    val worktime: Int?, //тривалість виконання в секундах
-    val orderInWorkSet: Int, // яке по черзі у цьому ж блоці
-    val orderInWorkGymDay: Int, // яке по черзі у всьому тренуванні
-    val minutesSinceStartWorkout: Int, // минуло хвилин після старту тренування на момент запису цього результату
-    val date: String //дата виконання
+    val equipment: String,
+    val comments: String? //записані коментарі
 )

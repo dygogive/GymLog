@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    public static final int VERSION = 16;
+    public static final int VERSION = 19;
     private final Context context;
 
     // Конструктор
@@ -126,16 +126,25 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    motion TEXT NOT NULL,\n" +                   // додано NOT NULL
                 "    muscleGroups TEXT NOT NULL,\n" +             // додано NOT NULL
                 "    equipment TEXT NOT NULL,\n" +                // додано NOT NULL
-                "    weight INTEGER,\n" +
-                "    iteration INTEGER NOT NULL,\n" +
-                "    worktime INTEGER,\n" +
-                "    orderInWorkSet INTEGER NOT NULL,\n" +
-                "    orderInWorkGymDay INTEGER NOT NULL,\n" +
-                "    minutesSinceStartWorkout INTEGER NOT NULL,\n" +
-                "    date TEXT NOT NULL,\n" +
+                "    comments TEXT,\n" +                          // коментарі
                 "    FOREIGN KEY (workout_gymday_ID) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE,\n" +
                 "    FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE SET NULL\n" +
                 ");\n");
+
+        // WorkoutExercises - додаємо NOT NULL обмеження згідно Entity
+        db.execSQL("CREATE TABLE IF NOT EXISTS workout_result (\n" +
+                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "  workoutExerciseId INTEGER NOT NULL,\n" +      // зробили NOT NULL
+                "  weight INTEGER,\n" +
+                "  iteration INTEGER,\n" +
+                "  workTime INTEGER,\n" +                        // змінили назву колонки на CamelCase
+                "  orderInWorkoutExercise INTEGER NOT NULL,\n" +
+                "  orderInWorkSet INTEGER NOT NULL,\n" +
+                "  orderInWorkGymDay INTEGER NOT NULL,\n" +
+                "  minutesSinceStartWorkout INTEGER NOT NULL,\n" +
+                "  date TEXT NOT NULL,\n" +
+                "  FOREIGN KEY (workoutExerciseId) REFERENCES WorkoutExercises(id) ON DELETE CASCADE\n" +
+                ");");
 
 // WorkoutGymDay - додаємо NOT NULL обмеження згідно Entity
         db.execSQL("CREATE TABLE IF NOT EXISTS WorkoutGymDay (\n" +
@@ -194,7 +203,9 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         db.execSQL("CREATE INDEX IF NOT EXISTS index_WorkoutExercises_workout_gymday_ID ON WorkoutExercises(workout_gymday_ID)");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_WorkoutExercises_exerciseId        ON WorkoutExercises(exerciseId)");
 
-
+// workout_result
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_workoutExerciseId " +
+                "ON workout_result(workoutExerciseId);");
     }
 
 
@@ -213,6 +224,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         db.execSQL("DROP TABLE IF EXISTS WorkoutGymDay");
         db.execSQL("DROP TABLE IF EXISTS WorkoutSet");
         db.execSQL("DROP TABLE IF EXISTS WorkoutExercises");
+        db.execSQL("DROP TABLE IF EXISTS workout_result");
         onCreate(db);
     }
 }

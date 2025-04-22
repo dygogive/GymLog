@@ -11,6 +11,7 @@ import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import com.example.gymlog.data.local.room.entity.exercise.ExerciseEntity
 import com.example.gymlog.data.local.room.entity.plan.GymDayEntity
@@ -22,6 +23,7 @@ import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMotionEntity
 import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMuscleGroupEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutResultEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
 
 /**
@@ -37,6 +39,7 @@ import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
         WorkoutGymDayEntity::class,        // Таблиця тренувальних днів
         WorkoutSetEntity::class,           // Таблиця підходів у тренуванні
         WorkoutExerciseEntity::class,      // Таблиця вправ у тренуванні
+        WorkoutResultEntity::class,      // Таблиця результатів у тренуванні
         ExerciseEntity::class,             // Таблиця вправ (загальний каталог)
         PlanCycleEntity::class,            // Таблиця циклів тренувального плану
         GymDayEntity::class,               // Таблиця днів тренувань у спортзалі
@@ -53,6 +56,7 @@ abstract class WorkoutDatabase: RoomDatabase() {
     abstract fun workoutGymDayDao(): WorkoutGymDayDao    // DAO для тренувальних днів
     abstract fun workoutSetDao(): WorkoutSetDao          // DAO для підходів
     abstract fun workoutExerciseDao(): WorkoutExerciseDao // DAO для вправ
+    abstract fun workoutResultDao(): WorkoutResultDao // DAO для вправ
     abstract fun trainingBlockDao(): TrainingBlockDao // DAO для тренув блоків
     abstract fun exerciseInBlockDao(): ExerciseInBlockDao //
     abstract fun trainingBlockFilterDao(): TrainingBlockFilterDao //

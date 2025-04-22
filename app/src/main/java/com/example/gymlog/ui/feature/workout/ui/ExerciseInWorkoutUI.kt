@@ -212,14 +212,14 @@ private fun ResultList(
             val onesSeconds = stringResource(R.string.ones_seconds)
             val setTxt = stringResource(R.string.set_txt)
 
-            val repeatsText = "${exercise.iteration} $onesIterations"
-            val weightText = exercise.weight?.let { "$it $onesWeight" } ?: "–"
-            val timeText = exercise.worktime?.let { "$it $onesSeconds" } ?: "-"
+            val repeatsText = "${1000} $onesIterations"
+            val weightText = 1000?.let { "$it $onesWeight" } ?: "–"
+            val timeText = 1000?.let { "$it $onesSeconds" } ?: "-"
 
             val prefix = if (showDate) {
-                "$setTxt ${exercise.date}"
+                "$setTxt ${1000}"
             } else {
-                "$setTxt ${exercise.orderInWorkSet}"
+                "$setTxt ${1000}"
             }
 
             Text(
@@ -256,83 +256,3 @@ private fun ActionButton(
     )
 }
 
-@Preview(
-    showBackground = true,
-    name = "ExerciseInWorkoutUI — історія"
-)
-@Composable
-fun ExerciseInWorkoutUIPreview() {
-    MyAppTheme {
-        ExerciseInWorkoutContent(
-            exerciseInBlock = ExerciseInBlock(
-                101L,
-                1L,
-                "Присідання зі штангою",
-                "Класичні присідання",
-                Motion.PRESS_BY_LEGS,
-                listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES),
-                Equipment.BARBELL,
-                1
-            ),
-            onSaveResult = { _, _, _, _ -> },
-            currentResults = createSampleHistoricalWorkouts(),
-            lastResults = emptyList(),
-        )
-    }
-}
-
-private fun createSampleHistoricalWorkouts(): List<WorkoutExercise> {
-    return listOf(
-        WorkoutExercise(
-            id = 1L,
-            workoutGymDayId = 10L,
-            exerciseId = 101L,
-            name = "Присідання зі штангою",
-            description = null,
-            motion = Motion.PRESS_BY_LEGS.name,
-            muscleGroups = MuscleGroup.QUADRICEPS.name,
-            equipment = Equipment.BARBELL.name,
-            weight = 20,
-            iteration = 10,
-            worktime = 30,
-            orderInWorkSet = 1,
-            orderInWorkGymDay = 1,
-            minutesSinceStartWorkout = 5,
-            date = "20.04.2025"
-        ),
-        WorkoutExercise(
-            id = 2L,
-            workoutGymDayId = 9L,
-            exerciseId = 101L,
-            name = "Присідання зі штангою",
-            description = null,
-            motion = Motion.PRESS_BY_LEGS.name,
-            muscleGroups = MuscleGroup.QUADRICEPS.name,
-            equipment = Equipment.BARBELL.name,
-            weight = 18,
-            iteration = 8,
-            worktime = 28,
-            orderInWorkSet = 1,
-            orderInWorkGymDay = 2,
-            minutesSinceStartWorkout = 7,
-            date = "18.04.2025"
-        ),
-        WorkoutExercise(
-            id = 3L,
-            workoutGymDayId = 8L,
-            exerciseId = 101L,
-            name = "Присідання зі штангою",
-            description = null,
-            motion = Motion.PRESS_BY_LEGS.name,
-            muscleGroups = MuscleGroup.QUADRICEPS.name,
-            equipment = Equipment.BARBELL.name,
-            weight = 22,
-            iteration = 6,
-            worktime = 32,
-            orderInWorkSet = 1,
-            orderInWorkGymDay = 3,
-            minutesSinceStartWorkout = 10,
-            date = "16.04.2025"
-        )
-    )
-}

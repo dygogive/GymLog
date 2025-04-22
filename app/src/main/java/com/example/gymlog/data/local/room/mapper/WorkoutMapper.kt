@@ -2,9 +2,11 @@ package com.example.gymlog.data.local.room.mapper
 
 import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutResultEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
 import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.model.workout.WorkoutGymDay
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.model.workout.WorkoutSet
 
 fun WorkoutSetEntity.toDomain() = WorkoutSet(
@@ -66,13 +68,7 @@ fun WorkoutExerciseEntity.toDomain() = WorkoutExercise(
     motion = motion,
     muscleGroups = muscleGroups,
     equipment = equipment,
-    weight = weight,
-    iteration = iteration,
-    worktime = worktime,
-    orderInWorkSet = orderInWorkSet,
-    orderInWorkGymDay = orderInWorkGymDay,
-    minutesSinceStartWorkout = minutesSinceStartWorkout,
-    date = date
+    comments = comments
 )
 
 fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
@@ -84,9 +80,30 @@ fun WorkoutExercise.toEntity() = WorkoutExerciseEntity(
     motion = motion,
     muscleGroups = muscleGroups,
     equipment = equipment,
+    comments = comments
+)
+
+
+fun WorkoutResultEntity.toDomain() = WorkoutResult(
+    id = id,
+    workoutExerciseId = workoutExerciseId,
     weight = weight,
     iteration = iteration,
-    worktime = worktime,
+    workTime = workTime,
+    orderInWorkoutExercise = orderInWorkoutExercise,
+    orderInWorkSet = orderInWorkSet,
+    orderInWorkGymDay = orderInWorkGymDay,
+    minutesSinceStartWorkout = minutesSinceStartWorkout,
+    date = date
+)
+
+fun WorkoutResult.toEntity() = WorkoutResultEntity(
+    id = id,
+    workoutExerciseId = workoutExerciseId,
+    weight = weight,
+    iteration = iteration,
+    workTime = workTime,
+    orderInWorkoutExercise = orderInWorkoutExercise,
     orderInWorkSet = orderInWorkSet,
     orderInWorkGymDay = orderInWorkGymDay,
     minutesSinceStartWorkout = minutesSinceStartWorkout,

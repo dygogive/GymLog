@@ -10,6 +10,7 @@ import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
+import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import dagger.Module
 import dagger.Provides
@@ -77,6 +78,21 @@ object DatabaseModule {
     fun provideWorkoutExerciseDao(db: WorkoutDatabase): WorkoutExerciseDao {
         return db.workoutExerciseDao() // Отримуємо DAO з бази даних
     }
+
+
+    /**
+     * Провайдер для отримання DAO для роботи з результатами.
+     *
+     * @param db Екземпляр бази даних
+     * @return Екземпляр WorkoutResultDao
+     */
+    @Provides
+    fun provideWorkoutResultDao(db: WorkoutDatabase): WorkoutResultDao {
+        return db.workoutResultDao() // Отримуємо DAO з бази даних
+    }
+
+
+
 
     /**
      * Провайдер для отримання DAO для роботи з вправами у тренуваннях.
