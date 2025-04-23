@@ -1,8 +1,5 @@
 package com.example.gymlog.ui.feature.workout.ui
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,70 +12,30 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.attribute.motion.Motion
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
-import com.example.gymlog.domain.model.exercise.ExerciseInBlock
-import com.example.gymlog.domain.model.workout.WorkoutExercise
-import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
-import com.example.gymlog.ui.theme.MyAppTheme
-import androidx.hilt.navigation.compose.hiltViewModel
-
+import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.model.getCurrentDateTime
 
 
 @Composable
 fun ExerciseInWorkoutUI(
-    exerciseInBlock: ExerciseInBlock,
-    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
-    currentResults: List<WorkoutExercise>,
-    lastResults: List<WorkoutExercise>
-) {
-
-
-
-    ExerciseInWorkoutContent(
-        exerciseInBlock,
-        onSaveResult,
-        currentResults,
-        lastResults,
-    )
-
-
-
-}
-
-
-
-
-
-@Composable
-fun ExerciseInWorkoutContent(
-    exerciseInBlock: ExerciseInBlock,
-    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
-    currentResults: List<WorkoutExercise>,
-    lastResults: List<WorkoutExercise>,
+    results: List<ResultOfSet>,
+    onConfirmResult: (ResultOfSet) -> Unit,
+    exerciseInfo: ExerciseInfo,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
 ) {
-
     //first dialog don't show
     var showDialog by remember { mutableStateOf(false) }
-
-
-
 
     Column(
         modifier
@@ -91,24 +48,25 @@ fun ExerciseInWorkoutContent(
             )
             .padding(vertical = 16.dp)
     ) {
+
+
         // Exercise header and description
         ExerciseHeader(
-            exerciseInBlock = exerciseInBlock
+            exerciseInfo
         )
 
         Spacer(Modifier.height(8.dp))
 
         // Results section - either current or historical
         DisplayResults(
-            currentWorkoutExercises = currentResults,
-            lastWorkoutExercises = lastResults
+            results
         )
 
         Spacer(Modifier.height(12.dp))
 
         // Action button for adding results
         ActionButton(
-            hasCurrentResults = currentResults.isNotEmpty(),
+            results.isEmpty(),
             onClick = {
                 showDialog = true
             }
@@ -120,47 +78,36 @@ fun ExerciseInWorkoutContent(
 
     if(showDialog) {
         LogResultDialog(
-            onDismiss = {showDialog = false},
-            //
-            onConfirm = { iterations, weight, seconds ->
-                //
-                onSaveResult(
-                    exerciseInBlock.id,
-                    iterations,
-                    weight,
-                    seconds)
-
-                //
-                showDialog = false
-                //
-            }
+            onDismiss = { showDialog = false },
+            {}
         )
     }
 
 }
 
+
+//OK
 @Composable
 private fun ExerciseHeader(
-    exerciseInBlock: ExerciseInBlock,
+    exerciseInfo: ExerciseInfo,
     modifier: Modifier = Modifier,
 ) {
-    val context: Context = LocalContext.current
 
-    Column(modifier = modifier.clickable {
-        Toast.makeText(context, "ExerciseHeader: click", Toast.LENGTH_LONG).show()
-    }) {
+    Column(
+        modifier = modifier
+    ) {
         // Exercise name
         Text(
-            text = exerciseInBlock.getNameOnly(LocalContext.current),
+            text = exerciseInfo.name,
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
 
         // Exercise description (if available)
-        if (exerciseInBlock.description.isNotBlank()) {
+        if (exerciseInfo.description.isNotBlank()) {
             Text(
-                text = exerciseInBlock.description,
+                text = exerciseInfo.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 modifier = Modifier
@@ -171,25 +118,18 @@ private fun ExerciseHeader(
     }
 }
 
+
+//OK
 @Composable
 private fun DisplayResults(
-    currentWorkoutExercises: List<WorkoutExercise>,
-    lastWorkoutExercises: List<WorkoutExercise>
+    results: List<ResultOfSet>
 ) {
     when {
-        currentWorkoutExercises.isNotEmpty() -> {
-            ResultList(
-                workoutExercises = currentWorkoutExercises,
-                showDate = false
+        results.isNotEmpty() -> {
+            Results(
+                results,
             )
-        }
-        lastWorkoutExercises.isNotEmpty() -> {
-            ResultList(
-                workoutExercises = lastWorkoutExercises,
-                showDate = true
-            )
-        }
-        else -> {
+        } else -> {
             Text(
                 text = stringResource(R.string.no_results),
                 style = MaterialTheme.typography.bodyMedium,
@@ -200,26 +140,32 @@ private fun DisplayResults(
     }
 }
 
+
+//OK
 @Composable
-private fun ResultList(
-    workoutExercises: List<WorkoutExercise>,
-    showDate: Boolean
+private fun Results(
+    workoutResult: List<ResultOfSet>,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        workoutExercises.forEach { exercise ->
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        workoutResult.forEach { workoutResult ->
             val onesIterations = stringResource(R.string.ones_iterations)
             val onesWeight = stringResource(R.string.ones_weight)
             val onesSeconds = stringResource(R.string.ones_seconds)
             val setTxt = stringResource(R.string.set_txt)
 
-            val repeatsText = "${1000} $onesIterations"
-            val weightText = 1000?.let { "$it $onesWeight" } ?: "–"
-            val timeText = 1000?.let { "$it $onesSeconds" } ?: "-"
+            val repeatsText = workoutResult.iteration?.let { "$it $onesIterations" } ?: "-"
+            val weightText = workoutResult.weight?.let { "$it $onesWeight" } ?: "–"
+            val timeText = workoutResult.workTime?.let { "$it $onesSeconds" } ?: "-"
+
+            //чи дата сьогоднішня?
+            val showDate = workoutResult.currentDate == getCurrentDateTime().first
 
             val prefix = if (showDate) {
-                "$setTxt ${1000}"
+                "$setTxt ${workoutResult.currentDate}: "
             } else {
-                "$setTxt ${1000}"
+                "$setTxt: ${workoutResult.currentTime}: "
             }
 
             Text(
@@ -232,13 +178,16 @@ private fun ResultList(
     }
 }
 
+
+
+//Ok
 @Composable
 private fun ActionButton(
-    hasCurrentResults: Boolean,
+    resultsIsEmpty: Boolean,
     onClick: () -> Unit
 ) {
 
-    val buttonText = if (hasCurrentResults) {
+    val buttonText = if (resultsIsEmpty) {
         stringResource(R.string.add_results)
     } else {
         stringResource(R.string.write_results)
@@ -255,4 +204,7 @@ private fun ActionButton(
             .padding(vertical = 8.dp, horizontal = 8.dp)
     )
 }
+
+
+
 

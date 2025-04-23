@@ -130,16 +130,7 @@ class WorkoutViewModel @Inject constructor(
     /**
      * Зберігаємо результат підходу: додаємо новий WorkoutResult
      */
-    fun saveResult(exercise: WorkoutExercise, result: WorkoutResult) {
-        _uiState.update { st ->
-            // додаємо результат у мапу за exercise.id
-            val key = exercise.id ?: return@update st
-            val updatedList = st.results[key]
-                .orEmpty()
-                .toMutableList()
-                .apply { add(result) }
-                .toPersistentList()
-            st.copy(results = st.results.put(key, updatedList))
-        }
+    fun saveResult(weight: Int?, iteration: Int?, workTime: Int?) {
+
     }
 }

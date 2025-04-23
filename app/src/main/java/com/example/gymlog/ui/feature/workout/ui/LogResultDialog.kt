@@ -1,6 +1,6 @@
 package com.example.gymlog.ui.feature.workout.ui
 
-import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,17 +11,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.model.getCurrentDateTime
 
+//OK
 @Composable
 fun LogResultDialog(
     onDismiss: () -> Unit,
-    onConfirm: (iterations: Int, weight: Float?, seconds: Int?) -> Unit,
+    onConfirmResult: (ResultOfSet) -> Unit  // Змінено на функцію, яка приймає ResultOfSet
 ) {
     var reps by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
@@ -67,11 +74,16 @@ fun LogResultDialog(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            // при натисканні Done на клавіатурі також підтверджуємо
-                            val i = reps.toIntOrNull() ?: 0
-                            val w = weight.toFloatOrNull()
-                            val s = secs.toIntOrNull()
-                            onConfirm(i, w, s)
+                            // Створюємо об'єкт ResultOfSet при натисканні Done
+                            onConfirmResult(
+                                ResultOfSet(
+                                    weight = weight.toIntOrNull(),
+                                    iteration = reps.toIntOrNull(),
+                                    workTime = secs.toIntOrNull(),
+                                    getCurrentDateTime().first,
+                                    getCurrentDateTime().second,
+                                )
+                            )
                         }
                     )
                 )
@@ -79,13 +91,17 @@ fun LogResultDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                val i = reps.toIntOrNull() ?: 0
-                val w = weight.toFloatOrNull()
-                val s = secs.toIntOrNull()
-                onConfirm(i, w, s)
-            }) {
-                Text("ОК")
-            }
+                // Створюємо об'єкт ResultOfSet при натисканні ОК
+                onConfirmResult(
+                    ResultOfSet(
+                        weight = weight.toIntOrNull(),
+                        iteration = reps.toIntOrNull(),
+                        workTime = secs.toIntOrNull(),
+                        getCurrentDateTime().first,
+                        getCurrentDateTime().second,
+                    )
+                )
+            }) { Text("ОК") }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
@@ -94,3 +110,18 @@ fun LogResultDialog(
         }
     )
 }
+
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun LogResultDialogPreview() {
+    MaterialTheme {
+        LogResultDialog(
+            onDismiss = {},
+            {}
+        )
+    }
+}
+

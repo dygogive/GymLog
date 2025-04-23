@@ -257,6 +257,7 @@
     <string name="write_results">Write results</string>
     <string name="add_results">Add results</string>
     <string name="ones_iterations">rep</string>
+    <string name="datetime">Datetime</string>
 
 
 </resources>
