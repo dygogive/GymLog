@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
-import com.example.gymlog.ui.feature.workout.model.getCurrentDateTime
+import com.example.gymlog.core.utils.getCurrentDateTime
 
 
 @Composable
@@ -79,7 +79,7 @@ fun ExerciseInWorkoutUI(
     if(showDialog) {
         LogResultDialog(
             onDismiss = { showDialog = false },
-            {}
+            onConfirmResult
         )
     }
 

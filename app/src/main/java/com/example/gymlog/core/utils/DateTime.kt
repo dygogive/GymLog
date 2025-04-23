@@ -1,9 +1,10 @@
-package com.example.gymlog.ui.feature.workout.model
+package com.example.gymlog.core.utils
 
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 //дає пару з датою й часом
 fun getCurrentDateTime(): Pair<String, String> {
@@ -19,7 +20,6 @@ fun getCurrentDateTime(): Pair<String, String> {
 
     return Pair(formattedDate, formattedTime)
 }
-
 
 
 fun getCurrentDateTimeLegacy(): Pair<String, String> {

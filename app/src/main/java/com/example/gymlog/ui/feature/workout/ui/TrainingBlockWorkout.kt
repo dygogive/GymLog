@@ -31,12 +31,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.workout.WorkoutExercise
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 
 @Composable
 fun TrainingBlockWorkout(
-    trainBlock: TrainingBlock,
-    lastWorkoutExercises: List<WorkoutExercise>,
-    currentWorkoutExercises: List<WorkoutExercise>,
+    results: List<ResultOfSet>,
+    exerciseInfo
     onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -109,6 +109,7 @@ fun TrainingBlockWorkout(
         }
 
 
+
         Spacer(Modifier.height(8.dp))
 
 
@@ -116,10 +117,9 @@ fun TrainingBlockWorkout(
         // Вправи в блоці
         trainBlock.exercises.forEach { exerciseInBlock ->
             ExerciseInWorkoutUI(
-                exerciseInBlock,
-                onSaveResult,
-                currentWorkoutExercises,
-                lastWorkoutExercises,
+                results = results,
+                onConfirmResult = onConfirmResult,
+                exerciseInfo = exerciseInfo,
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -127,56 +127,6 @@ fun TrainingBlockWorkout(
 }
 
 
-
-
-
-
-
-
-
-
-// 1. Допоміжна функція для прев’ю
-fun createPreviewTrainingBlock(): TrainingBlock {
-    return TrainingBlock(
-        1L,                           // id
-        1L,                           // gymDayId
-        "Full Body Blast",            // name
-        "Комплекс на всі групи м'язів", // description
-        listOf(Motion.PRESS_UPWARDS, Motion.PULL_DOWNWARDS),          // motions
-        listOf(MuscleGroup.CHEST, MuscleGroup.LATS, MuscleGroup.QUADRICEPS), // muscleGroups
-        listOf(Equipment.BARBELL, Equipment.DUMBBELLS),               // equipmentList
-        0,                            // position
-        listOf(                        // exerciseInBlocks
-            ExerciseInBlock(
-                101L, 1L,
-                "Присідання зі штангою",
-                "Класичні присідання",
-                Motion.PRESS_BY_LEGS,
-                listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES),
-                Equipment.BARBELL,
-                1
-            ),
-            ExerciseInBlock(
-                102L, 2L,
-                "Тяга в блоковому тренажері",
-                "Для м’язів спини",
-                Motion.PULL_DOWNWARDS,
-                listOf(MuscleGroup.LATS, MuscleGroup.LONGISSIMUS),
-                Equipment.CABLE_MACHINE,
-                2
-            ),
-            ExerciseInBlock(
-                103L, 3L,
-                "Жим лежачи",
-                "Груди та трицепси",
-                Motion.PRESS_MIDDLE,
-                listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS),
-                Equipment.BARBELL,
-                3
-            )
-        )
-    )
-}
 
 
 
