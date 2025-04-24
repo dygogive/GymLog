@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.core.utils.getCurrentDateTime
+import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 import com.example.gymlog.ui.feature.workout.model.Equipment
@@ -101,7 +101,7 @@ private fun createTimerParams(
  * Перетворює доменні об'єкти TrainingBlock у UI представлення
  */
 private fun mapTrainingBlocksToUi(
-    blocks: List<com.example.gymlog.domain.model.plan.TrainingBlock>,
+    blocks: List<TrainingBlock>,
     context: android.content.Context
 ): List<TrainingBlockInfo> {
     return blocks.map { block ->
