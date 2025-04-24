@@ -40,40 +40,4 @@ data class WorkoutUiState(
     // вправи і їх результати
     val exercises: PersistentList<WorkoutExercise> = persistentListOf(),
     val results: PersistentMap<Long, PersistentList<WorkoutResult>> = persistentMapOf()
-) {
-    companion object {
-        /** Дані для превʼю та прикладу */
-        fun previewState() = WorkoutUiState(
-            exercises = persistentListOf(
-                WorkoutExercise(
-                    id = 1,
-                    workoutGymDayId = 10,
-                    exerciseId = 101,
-                    name = "Присідання зі штангою",
-                    description = null,
-                    motion = Motion.PRESS_BY_LEGS.name,
-                    muscleGroups = listOf(MuscleGroup.QUADRICEPS, MuscleGroup.GLUTES)
-                        .joinToString(",") { it.name },
-                    equipment = Equipment.BARBELL.name,
-                    comments = "Very good!"
-                )
-            ),
-            results = persistentMapOf(
-                1L to persistentListOf(
-                    WorkoutResult(
-                        id = 11,
-                        workoutExerciseId = 1,
-                        weight = 80,
-                        iteration = 8,
-                        workTime = 60,
-                        orderInWorkoutExercise = 1,
-                        orderInWorkSet = 1,
-                        orderInWorkGymDay = 1,
-                        minutesSinceStartWorkout = 2,
-                        date = "2025-04-23T12:15:00"
-                    )
-                )
-            )
-        )
-    }
-}
+)

@@ -21,15 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
+import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.theme.MyAppTheme
+import com.example.gymlog.core.utils.formatTime
+import kotlin.Long
 
 @Composable
 fun TimerSection(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    buttonText: String,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit,
+    timerParams: TimerParams,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,  // <- дефолт
     modifier: Modifier = Modifier,  // Цей параметр має використовуватись
 ) {
@@ -46,15 +45,15 @@ fun TimerSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         TimerColumn(
-            totalTimeMs = totalTimeMs,
-            lastSetTimeMs = lastSetTimeMs,
+            totalTimeMs = timerParams.totalTimeMs,
+            lastSetTimeMs = timerParams.lastSetTimeMs,
             modifier = Modifier.weight(1f)
         )
 
         ControlsColumn(
-            buttonText = buttonText,
-            onStartStop = onStartStop,
-            onSetFinish = onSetFinish,
+            buttonText = timerParams.buttonText,
+            onStartStop = timerParams.onStartStop,
+            onSetFinish = timerParams.onSetFinish,
             modifier = Modifier.weight(1f)
         )
     }
@@ -126,25 +125,6 @@ private fun TimerDisplay(
     }
 }
 
-private fun formatTime(ms: Long): String {
-    val totalSeconds = ms / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-    return "%02d:%02d:%02d".format(hours, minutes, seconds)
-}
 
 
-@Preview(showBackground = true, name = "TopSection Preview")
-@Composable
-private fun TopSectionPreview() {
-    MyAppTheme {
-        TimerSection(
-            totalTimeMs = 3600000,
-            lastSetTimeMs = 150000,
-            buttonText = stringResource(R.string.start_gym),
-            onStartStop = {},
-            onSetFinish = {}
-        )
-    }
-}
+

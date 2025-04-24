@@ -24,24 +24,19 @@ import com.example.gymlog.domain.model.attribute.motion.Motion
 import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.domain.model.workout.WorkoutExercise
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.model.TimerParams
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockInfo
 import com.example.gymlog.ui.theme.MyAppTheme
 
 
 @Composable
 fun WorkoutScreenContent(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    blocks: List<TrainingBlock>,
-    lastWorkoutExercises: List<WorkoutExercise>,
-    currentWorkoutExercises: List<WorkoutExercise>,
-    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
-    isRunning: Boolean,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit,
+    timerParams: TimerParams,
+    infoBlocks: List<TrainingBlockInfo>,
+    onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonText = stringResource(if (isRunning) R.string.stop_gym else R.string.start_gym)
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -49,11 +44,7 @@ fun WorkoutScreenContent(
             .padding(WindowInsets.systemBars.asPaddingValues())
     ) {
         TimerSection(
-            totalTimeMs = totalTimeMs,
-            lastSetTimeMs = lastSetTimeMs,
-            buttonText = buttonText,
-            onStartStop = onStartStop,
-            onSetFinish = onSetFinish,
+            timerParams = timerParams,
             modifier = Modifier
                 .fillMaxWidth()  // Змініть fillMaxSize на fillMaxWidth
                 .padding(16.dp)  // Тепер horizontal padding буде працювати як очікується
@@ -66,12 +57,10 @@ fun WorkoutScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            items(blocks) { block ->
+            items(infoBlocks) {infoBlock ->
                 TrainingBlockWorkout(
-                    trainBlock = block,
-                    lastWorkoutExercises,
-                    currentWorkoutExercises,
-                    onSaveResult,
+                    trainBlockInfo = infoBlock,
+                    onConfirmResult,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)

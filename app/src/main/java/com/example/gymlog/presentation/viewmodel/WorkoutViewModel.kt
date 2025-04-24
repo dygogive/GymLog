@@ -1,6 +1,7 @@
 // WorkoutViewModel.kt
 package com.example.gymlog.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.domain.model.workout.WorkoutExercise
@@ -130,7 +131,7 @@ class WorkoutViewModel @Inject constructor(
     /**
      * Зберігаємо результат підходу: додаємо новий WorkoutResult
      */
-    fun saveResult(weight: Int?, iteration: Int?, workTime: Int?) {
-
+    fun saveResult(weight: Int?, iteration: Int?, workTime: Int?,currentDate: String,currentTime: String) {
+        Log.d("log_view_model", "saveResult: $weight $iteration $workTime $currentDate $currentTime")
     }
 }

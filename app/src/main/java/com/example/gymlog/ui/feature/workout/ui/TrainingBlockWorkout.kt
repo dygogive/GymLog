@@ -37,7 +37,6 @@ import com.example.gymlog.ui.feature.workout.model.TrainingBlockInfo
 
 @Composable
 fun TrainingBlockWorkout(
-    results: List<ResultOfSet>,
     trainBlockInfo: TrainingBlockInfo,
     onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
@@ -123,7 +122,6 @@ fun TrainingBlockWorkout(
         // Вправи в блоці
         trainBlockInfo.infoExercises.forEach { exeInfo ->
             ExerciseInWorkoutUI(
-                results = results,
                 onConfirmResult = onConfirmResult,
                 exerciseInfo = exeInfo,
             )

@@ -84,6 +84,7 @@ fun LogResultDialog(
                                     getCurrentDateTime().second,
                                 )
                             )
+                            onDismiss()
                         }
                     )
                 )
@@ -101,6 +102,7 @@ fun LogResultDialog(
                         getCurrentDateTime().second,
                     )
                 )
+                onDismiss()
             }) { Text("ОК") }
         },
         dismissButton = {

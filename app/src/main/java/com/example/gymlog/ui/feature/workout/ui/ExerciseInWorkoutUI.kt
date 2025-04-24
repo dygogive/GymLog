@@ -28,7 +28,6 @@ import com.example.gymlog.core.utils.getCurrentDateTime
 
 @Composable
 fun ExerciseInWorkoutUI(
-    results: List<ResultOfSet>,
     onConfirmResult: (ResultOfSet) -> Unit,
     exerciseInfo: ExerciseInfo,
     modifier: Modifier = Modifier,
@@ -59,14 +58,14 @@ fun ExerciseInWorkoutUI(
 
         // Results section - either current or historical
         DisplayResults(
-            results
+            exerciseInfo.results
         )
 
         Spacer(Modifier.height(12.dp))
 
         // Action button for adding results
         ActionButton(
-            results.isEmpty(),
+            exerciseInfo.results.isEmpty(),
             onClick = {
                 showDialog = true
             }
