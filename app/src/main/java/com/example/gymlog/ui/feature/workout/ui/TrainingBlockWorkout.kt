@@ -109,7 +109,7 @@ fun TrainingBlockWorkout(
         // Анімований блок атрибутів
         AnimatedVisibility(visible = expanded) {
             Attributes(
-                trainingBlock = trainBlock,
+                attributesInfo = trainBlockInfo.attributesInfo,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -121,11 +121,11 @@ fun TrainingBlockWorkout(
 
 
         // Вправи в блоці
-        trainBlock.exercises.forEach { exerciseInBlock ->
+        trainBlockInfo.infoExercises.forEach { exeInfo ->
             ExerciseInWorkoutUI(
                 results = results,
                 onConfirmResult = onConfirmResult,
-                exerciseInfo = exerciseInfo,
+                exerciseInfo = exeInfo,
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
