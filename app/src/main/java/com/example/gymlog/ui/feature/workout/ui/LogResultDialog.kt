@@ -28,7 +28,7 @@ import com.example.gymlog.core.utils.getCurrentDateTime
 @Composable
 fun LogResultDialog(
     onDismiss: () -> Unit,
-    onConfirmResult: (ResultOfSet) -> Unit  // Змінено на функцію, яка приймає ResultOfSet
+    onConfirmResult: (ResultOfSet) -> Unit
 ) {
     var reps by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
@@ -74,7 +74,6 @@ fun LogResultDialog(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            // Створюємо об'єкт ResultOfSet при натисканні Done
                             onConfirmResult(
                                 ResultOfSet(
                                     weight = weight.toIntOrNull(),
@@ -84,7 +83,7 @@ fun LogResultDialog(
                                     getCurrentDateTime().second,
                                 )
                             )
-                            onDismiss()
+                            onDismiss() // 🔥 Викликаємо функцію, а не просто посилаємось
                         }
                     )
                 )
@@ -92,7 +91,6 @@ fun LogResultDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                // Створюємо об'єкт ResultOfSet при натисканні ОК
                 onConfirmResult(
                     ResultOfSet(
                         weight = weight.toIntOrNull(),
@@ -102,11 +100,11 @@ fun LogResultDialog(
                         getCurrentDateTime().second,
                     )
                 )
-                onDismiss()
+                onDismiss() // 🔥 Викликаємо функцію
             }) { Text("ОК") }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss) { // Тут уже правильно, бо onClick сам викликає функцію
                 Text("Скасувати")
             }
         }
@@ -116,7 +114,7 @@ fun LogResultDialog(
 
 
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun LogResultDialogPreview() {
     MaterialTheme {

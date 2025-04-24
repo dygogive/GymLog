@@ -1,13 +1,9 @@
 // WorkoutUiState.kt
 package com.example.gymlog.presentation.state
 
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.attribute.motion.Motion
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.plan.FitnessProgram
 import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.model.plan.TrainingBlock
-import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -15,29 +11,47 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 
 /**
- * UI‑стан екрану Workout:
- * — загальні таймери
- * — список блоків
- * — вибір програми/дня
- * — накопичені результати підходів
+ * UI-стан екрану тренування, розділений на логічні групи
  */
 data class WorkoutUiState(
-    // таймери
+    val timerState: TimerState = TimerState(),
+    val trainingState: TrainingState = TrainingState(),
+    val selectionState: SelectionState = SelectionState(),
+    val resultsState: ResultsState = ResultsState()
+)
+
+/**
+ * Стан таймерів для контролю тренування
+ */
+data class TimerState(
     val totalTimeMs: Long = 0L,
     val lastSetTimeMs: Long = 0L,
-    val isGymRunning: Boolean = false,
+    val isGymRunning: Boolean = false
+)
 
-    // тренувальні блоки
+/**
+ * Стан тренувальних блоків і вправ
+ */
+data class TrainingState(
     val blocks: PersistentList<TrainingBlock> = persistentListOf(),
+    val isWorkoutActive: Boolean = false
+)
 
-    // діалог вибору програми → дня
+/**
+ * Стан діалогу вибору програми та дня тренування
+ */
+data class SelectionState(
     val availablePrograms: PersistentList<FitnessProgram> = persistentListOf(),
     val selectedProgram: FitnessProgram? = null,
     val availableGymDaySessions: PersistentMap<Long, PersistentList<GymDay>> = persistentMapOf(),
     val selectedGymDay: GymDay? = null,
-    val showSelectionDialog: Boolean = true,
+    val showSelectionDialog: Boolean = true
+)
 
-    // вправи і їх результати
-    val exercises: PersistentList<WorkoutExercise> = persistentListOf(),
-    val results: PersistentMap<Long, PersistentList<WorkoutResult>> = persistentMapOf()
+/**
+ * Стан збережених результатів тренування
+ * Key: ID вправи, Value: список результатів для цієї вправи
+ */
+data class ResultsState(
+    val workoutResults: PersistentMap<Long, PersistentList<WorkoutResult>> = persistentMapOf()
 )

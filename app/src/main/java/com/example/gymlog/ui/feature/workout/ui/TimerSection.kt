@@ -18,11 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.TimerParams
-import com.example.gymlog.ui.theme.MyAppTheme
 import com.example.gymlog.core.utils.formatTime
 import kotlin.Long
 
@@ -52,8 +50,8 @@ fun TimerSection(
 
         ControlsColumn(
             buttonText = timerParams.buttonText,
-            onStartStop = timerParams.onStartStop,
-            onSetFinish = timerParams.onSetFinish,
+            onStartStop = timerParams.onStartStopClick,
+            onSetFinish = timerParams.onSetFinished,
             modifier = Modifier.weight(1f)
         )
     }

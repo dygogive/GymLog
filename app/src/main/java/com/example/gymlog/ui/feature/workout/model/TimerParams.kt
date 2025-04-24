@@ -4,7 +4,7 @@ data class TimerParams(
     var totalTimeMs: Long,
     var lastSetTimeMs: Long,
     var buttonText: String = "button",
-    val onStartStop: () -> Unit,
-    val onSetFinish: () -> Unit,
+    val onStartStopClick: () -> Unit,
+    val onSetFinished: () -> Unit,
     val isRunning: Boolean,
 )
