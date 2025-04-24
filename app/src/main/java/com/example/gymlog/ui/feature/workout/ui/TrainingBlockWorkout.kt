@@ -31,17 +31,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.workout.WorkoutExercise
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockInfo
 
 @Composable
 fun TrainingBlockWorkout(
     results: List<ResultOfSet>,
-    exerciseInfo
-    onSaveResult: (exerciseId: Long, iterations: Int, weight: Float?, seconds: Int?) -> Unit,
+    trainBlockInfo: TrainingBlockInfo,
+    onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+
     var expanded by remember { mutableStateOf(false) }
+
+
 
     Column(
         modifier
@@ -66,15 +70,15 @@ fun TrainingBlockWorkout(
             ) {
                 // Заголовок
                 Text(
-                    text = trainBlock.name,
+                    text = trainBlockInfo.name,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                 )
 
                 // Опис
-                if (trainBlock.description.isNotBlank()) {
+                if (trainBlockInfo.description.isNotBlank()) {
                     Text(
-                        text = trainBlock.description,
+                        text = trainBlockInfo.description,
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -90,9 +94,11 @@ fun TrainingBlockWorkout(
 
         // Кнопка чи текст
         Text(
+            //
             text = if (expanded)
                 stringResource(R.string.collapse_attributes)
             else stringResource(R.string.show_attributes),
+            //
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier

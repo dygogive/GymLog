@@ -18,44 +18,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.TrainingBlock
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 
 val TAG: String = "logtag"
 
 
 @Composable
 fun Attributes(
-    trainingBlock: TrainingBlock,
+    attributesInfo: AttributesInfo,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
+    val motions = attributesInfo.motion.motions
+    val muscles = attributesInfo.muscle.muscles
+    val equipments = attributesInfo.equipment.equipments
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        if (trainingBlock.motions.isNotEmpty()) {
+        if (motions.isNotEmpty()) {
             AttributeSection(
                 title = stringResource(R.string.motion),
-                items = trainingBlock.motions.map { it.getDescription(context) }
+                items = motions
             )
         }
 
-        if (trainingBlock.muscleGroupList.isNotEmpty()) {
+        if (muscles.isNotEmpty()) {
             AttributeSection(
                 title = stringResource(R.string.muscles),
-                items = trainingBlock.muscleGroupList.map { it.getDescription(context) }
+                items = muscles
             )
         }
 
-        if (trainingBlock.equipmentList.isNotEmpty()) {
+        if (equipments.isNotEmpty()) {
             AttributeSection(
                 title = stringResource(R.string.equipment),
-                items = trainingBlock.equipmentList.map { it.getDescription(context) }
+                items = equipments
             )
         }
     }
 }
+
+
+
+
+
+
+
 
 @Composable
 private fun AttributeSection(
