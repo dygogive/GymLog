@@ -190,7 +190,7 @@ public class DialogBlocCreator extends Dialog {
         // Отримання збережених фільтрів з БД
         List<String> savedMotionsInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "motionType");
         List<String> savedMusclesInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "muscleGroup");
-        List<String> savedEquipmentInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "equipment");
+        List<String> savedEquipmentInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "equipmentState");
 
         // Оновлення локальних виборів на основі збережених даних
         updateSelections(savedMotionsInDB, chosenTxtMotions, booleansMotions, Motion.values(), Motion::getDescription);
@@ -315,7 +315,7 @@ public class DialogBlocCreator extends Dialog {
     private void saveFilters(long blockId) {
         saveFilterItems(blockId, chosenTxtMotions, motionText -> Motion.getObjectByDescription(context, motionText), "motionType");
         saveFilterItems(blockId, chosenTxtMuscles, muscleText -> MuscleGroup.getObjectByDescription(context, muscleText), "muscleGroup");
-        saveFilterItems(blockId, chosenTxtEquipment, equipmentText -> Equipment.getEquipmentByDescription(context, equipmentText), "equipment");
+        saveFilterItems(blockId, chosenTxtEquipment, equipmentText -> Equipment.getEquipmentByDescription(context, equipmentText), "equipmentState");
     }
 
     /**
@@ -324,7 +324,7 @@ public class DialogBlocCreator extends Dialog {
      * @param blockId ID блоку тренування.
      * @param chosenItems Список вибраних елементів.
      * @param converter Функція конвертації тексту у відповідний enum.
-     * @param filterType Тип фільтра (motionType, muscleGroup, equipment).
+     * @param filterType Тип фільтра (motionType, muscleGroup, equipmentState).
      */
     private <E extends Enum<E>> void saveFilterItems(long blockId, List<String> chosenItems, Function<String, E> converter, String filterType) {
         for (String itemText : chosenItems) {

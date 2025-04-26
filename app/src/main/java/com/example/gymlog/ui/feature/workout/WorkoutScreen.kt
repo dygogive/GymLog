@@ -16,10 +16,10 @@ import com.example.gymlog.R
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
 import com.example.gymlog.ui.feature.workout.model.AttributesInfo
-import com.example.gymlog.ui.feature.workout.model.Equipment
+import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
 import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
-import com.example.gymlog.ui.feature.workout.model.Motion
-import com.example.gymlog.ui.feature.workout.model.Muscles
+import com.example.gymlog.ui.feature.workout.model.MotioStateList
+import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
@@ -109,9 +109,9 @@ private fun mapTrainingBlocksToUi(
             name = block.name,
             description = block.description,
             attributesInfo = AttributesInfo(
-                motion = Motion(motions = block.motions.map { it.getDescription(context) }),
-                muscle = Muscles(muscles = block.muscleGroupList.map { it.getDescription(context) }),
-                equipment = Equipment(equipments = block.equipmentList.map { it.getDescription(context) })
+                motionStateList = MotioStateList(motions = block.motions.map { it.getDescription(context) }),
+                muscleStateList = MusclesStateList(muscles = block.muscleGroupList.map { it.getDescription(context) }),
+                equipmentStateList = EquipmentStateList(equipments = block.equipmentList.map { it.getDescription(context) })
             ),
             infoExercises = block.exercises.map { exercise ->
                 ExerciseInfo(

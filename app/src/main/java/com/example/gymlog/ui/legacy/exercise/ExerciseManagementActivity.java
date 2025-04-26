@@ -66,7 +66,7 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                 // В залежності від типу фільтра передаємо відповідні параметри в діалог
                 if (AttributeFilter.MOTION.name().equals(attributeType)) {
                     Motion motion = Motion.valueOf(attributeValue);
-                    // Передаємо список з одним елементом для Motion, а для інших параметрів дефолтні значення
+                    // Передаємо список з одним елементом для MotioStateList, а для інших параметрів дефолтні значення
                     dialog.showWithPreselectedFilters(null, Collections.singletonList(motion), new ArrayList<>(), null);
                     return;
                 } else if (AttributeFilter.MUSCLE_GROUP.name().equals(attributeType)) {
@@ -77,7 +77,7 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                     return;
                 } else if (AttributeFilter.EQUIPMENT.name().equals(attributeType)) {
                     Equipment equipment = Equipment.valueOf(attributeValue);
-                    // Передаємо список з одним елементом для Equipment
+                    // Передаємо список з одним елементом для EquipmentStateList
                     dialog.showWithPreselectedFilters(null, null, new ArrayList<>(), Collections.singletonList(equipment));
                     return;
                 }

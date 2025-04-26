@@ -52,7 +52,7 @@ public enum Motion  implements TypeAttributeExercises {
         return context.getString(descriptionResId);
     }
 
-    //Щоб сформувати масив String[] з описів для кожного елемента перерахування Motion
+    //Щоб сформувати масив String[] з описів для кожного елемента перерахування MotioStateList
     public static String[] getAllDescriptions(Context context) {
         Motion[] motions = Motion.values();
         String[] descriptions = new String[motions.length];

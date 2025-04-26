@@ -16,7 +16,7 @@ interface ExerciseInBlockDao {
     @Query("SELECT " +
             "tbe.id AS linkId, " +
             "e.id AS exerciseId, " +
-            "e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom, tbe.position " +
+            "e.name, e.description, e.motioState, e.muscleGroups, e.equipmentState, e.isCustom, tbe.position " +
             "FROM TrainingBlockExercises tbe " +
             "JOIN Exercise e " +
             "ON e.id = tbe.exerciseId " +

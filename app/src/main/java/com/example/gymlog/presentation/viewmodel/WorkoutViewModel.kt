@@ -4,9 +4,6 @@ package com.example.gymlog.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.GymDay
-import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.usecase.GetTrainingBlocksByDayIdUseCase
 import com.example.gymlog.domain.usecase.gym_day.GetGymSessionByProgramIdUseCase
 import com.example.gymlog.domain.usecase.gym_plan.GetFitnessProgramsUseCase
@@ -16,7 +13,6 @@ import com.example.gymlog.presentation.state.TimerState
 import com.example.gymlog.presentation.state.TrainingState
 import com.example.gymlog.presentation.state.WorkoutUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.Job
@@ -75,10 +71,10 @@ class WorkoutViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("WorkoutViewModel", "Error loading programs", e)
-                // TODO: Додати обробку помилок і сповіщення користувача
             }
         }
     }
+
 
     /**
      * Приховання діалогу вибору тренування

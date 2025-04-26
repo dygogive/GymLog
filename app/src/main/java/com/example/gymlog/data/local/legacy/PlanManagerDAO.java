@@ -471,11 +471,11 @@ public class PlanManagerDAO {
     }
 
 // ------------------------------------------------------
-//     ФІЛЬТРИ ДЛЯ БЛОКІВ (motion, muscleGroup, equipment)
+//     ФІЛЬТРИ ДЛЯ БЛОКІВ (motioState, muscleGroup, equipmentState)
 // ------------------------------------------------------
 
     /**
-     * Додає значення фільтра (motionType / muscleGroup / equipment)
+     * Додає значення фільтра (motionType / muscleGroup / equipmentState)
      * у відповідну таблицю для заданого блока.
      */
     public void addTrainingBlockFilter(long trainingBlockId, String filterType, String value) {
@@ -489,7 +489,7 @@ public class PlanManagerDAO {
             case "muscleGroup":
                 tableName = "TrainingBlockMuscleGroup";
                 break;
-            case "equipment":
+            case "equipmentState":
                 tableName = "TrainingBlockEquipment";
                 break;
             default:
@@ -532,7 +532,7 @@ public class PlanManagerDAO {
             case "muscleGroup":
                 tableName = "TrainingBlockMuscleGroup";
                 break;
-            case "equipment":
+            case "equipmentState":
                 tableName = "TrainingBlockEquipment";
                 break;
             default:
@@ -556,14 +556,14 @@ public class PlanManagerDAO {
         return filters;
     }
     /**
-     * Завантажує всі фільтри (motion, muscleGroups, equipment)
+     * Завантажує всі фільтри (motioState, muscleGroups, equipmentState)
      * для блоку і присвоює їх у відповідні поля об'єкта `block`.
      */
     private void loadBlockFilters(TrainingBlock block) {
         long blockId = block.getId();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // 1. Motion (може бути кілька)
+        // 1. MotioStateList (може бути кілька)
         Cursor cMotion = db.rawQuery(
                 "SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = ?",
                 new String[]{String.valueOf(blockId)}
@@ -574,7 +574,7 @@ public class PlanManagerDAO {
                 try {
                     motions.add(Motion.valueOf(cMotion.getString(0)));
                 } catch (Exception e) {
-                    Log.e("DB_DEBUG", "Unknown motion: " + cMotion.getString(0), e);
+                    Log.e("DB_DEBUG", "Unknown motioState: " + cMotion.getString(0), e);
                 }
             } while (cMotion.moveToNext());
         }
@@ -599,7 +599,7 @@ public class PlanManagerDAO {
         cMuscle.close();
         block.setMuscleGroupList(muscleGroups);
 
-        // 3. Equipment (може бути кілька)
+        // 3. EquipmentStateList (може бути кілька)
         Cursor cEquip = db.rawQuery(
                 "SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = ?",
                 new String[]{String.valueOf(blockId)}
@@ -610,7 +610,7 @@ public class PlanManagerDAO {
                 try {
                     equipmentList.add(Equipment.valueOf(cEquip.getString(0)));
                 } catch (Exception e) {
-                    Log.e("DB_DEBUG", "Unknown equipment: " + cEquip.getString(0), e);
+                    Log.e("DB_DEBUG", "Unknown equipmentState: " + cEquip.getString(0), e);
                 }
             } while (cEquip.moveToNext());
         }
@@ -629,7 +629,7 @@ public class PlanManagerDAO {
      * Повертає список вправ, що відповідають фільтрам блоку.
      * Фільтри вибираються з таблиць:
      * - TrainingBlockMotion (motionType)
-     * - TrainingBlockEquipment (equipment)
+     * - TrainingBlockEquipment (equipmentState)
      * - TrainingBlockMuscleGroup (muscleGroup)
      *
      * Якщо хоча б один з цих фільтрів присутній, повертаються вправи,
@@ -654,7 +654,7 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
-        // Отримання equipment фільтрів
+        // Отримання equipmentState фільтрів
         List<String> equipmentFilters = new ArrayList<>();
         cursor = db.rawQuery(
                 "SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = ?",
@@ -687,11 +687,11 @@ public class PlanManagerDAO {
         List<String> args = new ArrayList<>();
 
         // Базовий запит – вибірка з таблиці Exercise
-        queryBuilder.append("SELECT DISTINCT e.id, e.name, e.description, e.motion, e.muscleGroups, e.equipment, e.isCustom FROM Exercise e WHERE 1=1 ");
+        queryBuilder.append("SELECT DISTINCT e.id, e.name, e.description, e.motioState, e.muscleGroups, e.equipmentState, e.isCustom FROM Exercise e WHERE 1=1 ");
 
-        // Якщо задані motion фільтри – додаємо умову
+        // Якщо задані motioState фільтри – додаємо умову
         if (!motionFilters.isEmpty()) {
-            queryBuilder.append(" AND e.motion IN (");
+            queryBuilder.append(" AND e.motioState IN (");
             for (int i = 0; i < motionFilters.size(); i++) {
                 queryBuilder.append("?");
                 if (i < motionFilters.size() - 1) {
@@ -702,9 +702,9 @@ public class PlanManagerDAO {
             queryBuilder.append(") ");
         }
 
-        // Якщо задані equipment фільтри – додаємо умову
+        // Якщо задані equipmentState фільтри – додаємо умову
         if (!equipmentFilters.isEmpty()) {
-            queryBuilder.append(" AND e.equipment IN (");
+            queryBuilder.append(" AND e.equipmentState IN (");
             for (int i = 0; i < equipmentFilters.size(); i++) {
                 queryBuilder.append("?");
                 if (i < equipmentFilters.size() - 1) {
@@ -738,9 +738,9 @@ public class PlanManagerDAO {
                 long id = result.getLong(0);
                 String name = result.getString(1);
                 String description = result.getString(2);
-                Motion motion = parseMotion(result.getString(3));             // Метод перетворення рядка у Motion
+                Motion motion = parseMotion(result.getString(3));             // Метод перетворення рядка у MotioStateList
                 List<MuscleGroup> muscleGroups = parseMuscleGroups(result.getString(4)); // Метод перетворення рядка у список MuscleGroup
-                Equipment equipment = parseEquipment(result.getString(5));      // Метод перетворення рядка у Equipment
+                Equipment equipment = parseEquipment(result.getString(5));      // Метод перетворення рядка у EquipmentStateList
 
                 exercises.add(new Exercise(id, name, description, motion, muscleGroups, equipment));
             } while (result.moveToNext());
@@ -860,7 +860,7 @@ public class PlanManagerDAO {
     }
 
 // ---------------------------------------------------------
-//         Парсери ENUM (Motion, MuscleGroup, Equipment)
+//         Парсери ENUM (MotioStateList, MuscleGroup, EquipmentStateList)
 // ---------------------------------------------------------
 
     private Motion parseMotion(String str) {
@@ -895,7 +895,7 @@ public class PlanManagerDAO {
 
     /**
      * Запускає процес клонування програми (FitnessProgram) з усіма вкладеннями:
-     * GymDay (дні), TrainingBlock (блоки), фільтри (motion/muscle/equipment), вправи (ExerciseInBlock).
+     * GymDay (дні), TrainingBlock (блоки), фільтри (motioState/muscle/equipmentState), вправи (ExerciseInBlock).
      */
     public FitnessProgram onStartCloneFitProgram(FitnessProgram programToClone) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -1083,8 +1083,8 @@ public class PlanManagerDAO {
         }
         clone.setId(newId);
 
-        // 4) Клонуємо фільтри (motion, muscleGroup, equipment)
-        // Motion
+        // 4) Клонуємо фільтри (motioState, muscleGroup, equipmentState)
+        // MotioStateList
         for (Motion motion : block.getMotions()) {
             ContentValues motionValues = new ContentValues();
             motionValues.put("trainingBlockId", newId);
@@ -1100,11 +1100,11 @@ public class PlanManagerDAO {
             db.insert("TrainingBlockMuscleGroup", null, muscleValues);
         }
 
-        // Equipment
+        // EquipmentStateList
         for (Equipment equipment : block.getEquipmentList()) {
             ContentValues equipmentValues = new ContentValues();
             equipmentValues.put("trainingBlockId", newId);
-            equipmentValues.put("equipment", equipment.name());
+            equipmentValues.put("equipmentState", equipment.name());
             db.insert("TrainingBlockEquipment", null, equipmentValues);
         }
 
@@ -1143,12 +1143,12 @@ public class PlanManagerDAO {
 //
 
     /**
-     * Копіює motion, muscleGroup, equipment з одного блока в інший.
+     * Копіює motioState, muscleGroup, equipmentState з одного блока в інший.
      */
     private void cloneBlockFilters(long sourceBlockId, long targetBlockId, SQLiteDatabase db) {
         cloneFilter("motionType",      "TrainingBlockMotion",      sourceBlockId, targetBlockId, db);
         cloneFilter("muscleGroup",     "TrainingBlockMuscleGroup", sourceBlockId, targetBlockId, db);
-        cloneFilter("equipment",       "TrainingBlockEquipment",   sourceBlockId, targetBlockId, db);
+        cloneFilter("equipmentState",       "TrainingBlockEquipment",   sourceBlockId, targetBlockId, db);
     }
 
     private void cloneFilter(String column, String table, long fromBlockId, long toBlockId, SQLiteDatabase db) {

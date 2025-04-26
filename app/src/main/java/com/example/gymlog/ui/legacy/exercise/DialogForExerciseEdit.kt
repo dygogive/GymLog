@@ -40,7 +40,7 @@ class DialogForExerciseEdit(
     private var createdListener: OnExerciseCreatedListener? = null
 
     // Selected attribute values
-    // For Exercise we store single values for motion and equipment,
+    // For Exercise we store single values for motioState and equipmentState,
     // and a list for muscleGroups
     private var preselectedMotion: Motion? = null
     private var preselectedMuscleGroups: MutableList<MuscleGroup> = ArrayList()
@@ -70,7 +70,7 @@ class DialogForExerciseEdit(
         val buttonSelectMuscleGroups = dialogView.findViewById<Button>(R.id.buttonSelectMuscleGroups)
         val buttonSelectEquipment = dialogView.findViewById<Button>(R.id.buttonSelectEquipment)
 
-        // Save base text for muscle groups button (e.g., "Muscles")
+        // Save base text for muscle groups button (e.g., "MusclesStateList")
         buttonSelectMuscleGroups.tag = buttonSelectMuscleGroups.text.toString()
 
         // Populate fields if editing an existing exercise
@@ -118,13 +118,13 @@ class DialogForExerciseEdit(
         buttonSelectMuscleGroups: Button,
         buttonSelectEquipment: Button
     ) {
-        // Update motion button text
+        // Update motioState button text
         preselectedMotion?.let {
             buttonSelectMotion.text = it.getDescription(context)
             DialogStyler.styleButtonsInDialog(context, buttonSelectMotion)
         }
 
-        // Update equipment button text
+        // Update equipmentState button text
         preselectedEquipment?.let {
             buttonSelectEquipment.text = it.getDescription(context)
             DialogStyler.styleButtonsInDialog(context, buttonSelectEquipment)
@@ -145,7 +145,7 @@ class DialogForExerciseEdit(
     }
 
     /**
-     * Sets up the motion selection button listener
+     * Sets up the motioState selection button listener
      */
     private fun setupMotionSelectionButton(buttonSelectMotion: Button) {
         buttonSelectMotion.setOnClickListener {
@@ -219,7 +219,7 @@ class DialogForExerciseEdit(
     }
 
     /**
-     * Sets up the equipment selection button listener
+     * Sets up the equipmentState selection button listener
      */
     private fun setupEquipmentSelectionButton(buttonSelectEquipment: Button) {
         buttonSelectEquipment.setOnClickListener {
@@ -389,13 +389,13 @@ class DialogForExerciseEdit(
     /**
      * Shows the dialog with preselected filters
      *
-     * Updated method for preselecting filters. Now accepts lists for Motion and Equipment,
+     * Updated method for preselecting filters. Now accepts lists for MotioStateList and EquipmentStateList,
      * but since Exercise uses single fields for these filters, we select the first element from the list.
      *
      * @param exercise Exercise to edit, or null for creating a new one
      * @param motions List of preselected motions (we'll use the first one)
      * @param muscleGroupList List of preselected muscle groups
-     * @param equipmentList List of preselected equipment (we'll use the first one)
+     * @param equipmentList List of preselected equipmentState (we'll use the first one)
      */
     fun showWithPreselectedFilters(
         exercise: Exercise?,

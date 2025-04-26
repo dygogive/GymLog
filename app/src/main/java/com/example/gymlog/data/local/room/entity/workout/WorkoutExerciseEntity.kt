@@ -50,9 +50,9 @@ data class WorkoutExercise(
     val exerciseId: Long?, // ід вправи в списку вправ Exercise
     val name: String, // назва вправи
     val description: String?, //опис
-    val motion: String, //тип руху
+    val motioState: String, //тип руху
     val muscleGroups: String, //групи м'язів
-    val equipment: String, //обладнання
+    val equipmentState: String, //обладнання
     val comments: String? //записані коментарі
 )
  */

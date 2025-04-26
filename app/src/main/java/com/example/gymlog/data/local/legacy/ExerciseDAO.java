@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 /**
  * DAO (Data Access Object) для роботи з таблицею "Exercise":
  * - Додавання/оновлення/видалення вправ
- * - Пошук за атрибутами (Motion, MuscleGroup, Equipment)
+ * - Пошук за атрибутами (MotioStateList, MuscleGroup, EquipmentStateList)
  * - Отримання всіх вправ
  */
 public class ExerciseDAO {
@@ -53,7 +53,7 @@ public class ExerciseDAO {
      *
      * @param exerciseName Назва вправи
      * @param description  Опис вправи
-     * @param motion       Рух (Motion)
+     * @param motion       Рух (MotioStateList)
      * @param muscleGroups Список м'язевих груп
      * @param equipment    Обладнання
      * @param isCustom     true, якщо вправа створена користувачем
@@ -71,7 +71,7 @@ public class ExerciseDAO {
             ContentValues values = new ContentValues();
             values.put("name", exerciseName);
             values.put("description", description);
-            values.put("motion", motion.name());
+            values.put("motioState", motion.name());
             values.put(
                     "muscleGroups",
                     TextUtils.join(
@@ -81,7 +81,7 @@ public class ExerciseDAO {
                                     .toArray(String[]::new)
                     )
             );
-            values.put("equipment", equipment.name());
+            values.put("equipmentState", equipment.name());
             values.put("isCustom", isCustom ? 1 : 0);
 
             // Вставляємо запис
@@ -117,7 +117,7 @@ public class ExerciseDAO {
             ContentValues values = new ContentValues();
             values.put("name", exercise.getName());
             values.put("description", exercise.getDescription());
-            values.put("motion", exercise.getMotion().name());
+            values.put("motioState", exercise.getMotion().name());
             values.put(
                     "muscleGroups",
                     TextUtils.join(
@@ -128,7 +128,7 @@ public class ExerciseDAO {
                                     .toArray(String[]::new)
                     )
             );
-            values.put("equipment", exercise.getEquipment().name());
+            values.put("equipmentState", exercise.getEquipment().name());
             values.put("isCustom", 1); // позначаємо як кастомну
 
             // Оновлюємо запис за ID вправи
@@ -156,7 +156,7 @@ public class ExerciseDAO {
     }
 
     /**
-     * Пошук вправ за певним атрибутом (Motion, MuscleGroup, Equipment).
+     * Пошук вправ за певним атрибутом (MotioStateList, MuscleGroup, EquipmentStateList).
      */
     public List<Exercise> getExercisesByAttribute(AttributeFilter attributeFilter, String attribute) {
         String query;
@@ -190,8 +190,8 @@ public class ExerciseDAO {
                     "ID: " + exercise.getId() + " --- " +
                             "Name: " + exercise.getName() + " --- " +
                             "Description: " + exercise.getDescription() + " --- " +
-                            "Motion: " + exercise.getMotion() + " --- " +
-                            "Equipment: " + exercise.getEquipment() + " --- " +
+                            "MotioStateList: " + exercise.getMotion() + " --- " +
+                            "EquipmentStateList: " + exercise.getEquipment() + " --- " +
                             "Muscle Groups: " + exercise.getMuscleGroupList() + " --- " +
                             "isCustom: " + exercise.getIsCustom()
             );
@@ -249,9 +249,9 @@ public class ExerciseDAO {
                 long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
-                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motion")));
+                Motion motion = Motion.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("motioState")));
                 String muscleGroupsString = cursor.getString(cursor.getColumnIndexOrThrow("muscleGroups"));
-                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipment")));
+                Equipment equipment = Equipment.valueOf(cursor.getString(cursor.getColumnIndexOrThrow("equipmentState")));
 
                 // Формуємо список MuscleGroup
                 List<MuscleGroup> muscleGroups;
@@ -312,9 +312,9 @@ public class ExerciseDAO {
                     int idIndex = cursor.getColumnIndex("id");
                     int nameIndex = cursor.getColumnIndex("name");
                     int descriptionIndex = cursor.getColumnIndex("description");
-                    int motionIndex = cursor.getColumnIndex("motion");
+                    int motionIndex = cursor.getColumnIndex("motioState");
                     int muscleGroupsIndex = cursor.getColumnIndex("muscleGroups");
-                    int equipmentIndex = cursor.getColumnIndex("equipment");
+                    int equipmentIndex = cursor.getColumnIndex("equipmentState");
                     int isCustomIndex = cursor.getColumnIndex("isCustom");
 
                     // Ітеруємо всі рядки
@@ -328,7 +328,7 @@ public class ExerciseDAO {
                         int isCustom = cursor.getInt(isCustomIndex);
 
                         @SuppressLint("DefaultLocale") String logMessage = String.format(
-                                "ID: %d | Name: %s | Description: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
+                                "ID: %d | Name: %s | Description: %s | MotioStateList: %s | Muscle Groups: %s | EquipmentStateList: %s | Custom: %d",
                                 id, name, description, motion, muscleGroups, equipment, isCustom
                         );
 

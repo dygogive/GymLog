@@ -1,10 +1,6 @@
 // WorkoutUiState.kt
 package com.example.gymlog.presentation.state
 
-import com.example.gymlog.domain.model.plan.FitnessProgram
-import com.example.gymlog.domain.model.plan.GymDay
-import com.example.gymlog.domain.model.plan.TrainingBlock
-import com.example.gymlog.domain.model.workout.WorkoutResult
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf

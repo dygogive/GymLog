@@ -74,7 +74,6 @@ public class Exercise {
         return isCustom;
     }
 
-
     public void setId(long id) {
         this.id = id;
     }
