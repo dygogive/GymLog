@@ -20,7 +20,7 @@ interface TrainingBlockFilterDao {
     suspend fun getMuscles(blockId: Long): List<String>
 
     //EquipmentStateList
-    @Query("SELECT equipmentState FROM TrainingBlockEquipment WHERE trainingBlockId = :blockId")
+    @Query("SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = :blockId")
     suspend fun getEquipments(blockId: Long): List<String>
 
     //MotioStateList + MuscleGroups + EquipmentStateList

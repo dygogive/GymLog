@@ -96,4 +96,12 @@ class WorkoutViewModel @Inject constructor(
     private fun updateResultsState(u: (ResultsState) -> ResultsState) = _uiState.update { it.copy(resultsState = u(it.resultsState)) }
 
     override fun onCleared() { super.onCleared(); timerJob?.cancel() }
+
+
+
+    // додай у WorkoutViewModel:
+
+    fun dismissSelectionDialog() {
+        updateSelectionState { it.copy(showSelectionDialog = false) }
+    }
 }

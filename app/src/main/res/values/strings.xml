@@ -258,6 +258,9 @@
     <string name="add_results">Add results</string>
     <string name="ones_iterations">rep</string>
     <string name="datetime">Datetime</string>
+    <string name="back_to_programs">Back to programs</string>
+    <string name="no_programs">No program</string>
+    <string name="no_workouts">No workouts</string>
 
 
 </resources>

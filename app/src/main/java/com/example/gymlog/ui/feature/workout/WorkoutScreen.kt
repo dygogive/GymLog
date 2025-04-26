@@ -13,25 +13,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.plan.TrainingBlock
+import com.example.gymlog.presentation.state.SelectionState
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
-import com.example.gymlog.ui.feature.workout.model.AttributesInfo
-import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
-import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
-import com.example.gymlog.ui.feature.workout.model.MotioStateList
-import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
+import com.example.gymlog.ui.feature.workout.model.ProgramInfo
+import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 
 /**
  * Головний екран тренування.
- * Відповідає за:
- * 1. Відображення таймера та блоків тренування
- * 2. Показ діалогу вибору програми/дня тренування
- * 3. Запис результатів підходів
  */
 @Composable
 fun WorkoutScreen(
@@ -41,24 +33,23 @@ fun WorkoutScreen(
     val context = LocalContext.current
     val state by viewModel.uiState.collectAsState()
 
-    // Створюємо об'єкт параметрів таймера для UI
-    val timerParams = createTimerParams(state.timerState.totalTimeMs,
-        state.timerState.lastSetTimeMs,
-        state.timerState.isGymRunning,
-        viewModel::startStopGym,
-        viewModel::onSetFinish)
+    val timerParams = createTimerParams(
+        totalTimeMs = state.timerState.totalTimeMs,
+        lastSetTimeMs = state.timerState.lastSetTimeMs,
+        isRunning = state.timerState.isGymRunning,
+        onStartStop = viewModel::startStopGym,
+        onSetFinish = viewModel::onSetFinish
+    )
 
-    // Перетворюємо доменні блоки тренування у формат UI
-    val trainingBlocksInfo = mapTrainingBlocksToUi(state.trainingState.blocks, context)
+    // Блоки тренування вже готові у стейті, не потрібно конвертувати!
+    val trainingBlocksInfo = state.trainingState.blocks
 
-    // 1) Контент тренування — завжди видно
     WorkoutScreenContent(
         timerParams = timerParams,
         infoBlocks = trainingBlocksInfo,
         onConfirmResult = { result -> handleResultConfirmation(result, viewModel) }
     )
 
-    // 2) Якщо потрібно вибір — накладаємо діалог зверху
     if (state.selectionState.showSelectionDialog) {
         ShowSelectionDialog(
             state = state.selectionState,
@@ -72,9 +63,6 @@ fun WorkoutScreen(
     }
 }
 
-/**
- * Створює параметри таймера для UI компонента
- */
 @Composable
 private fun createTimerParams(
     totalTimeMs: Long,
@@ -86,7 +74,6 @@ private fun createTimerParams(
     val buttonText = stringResource(
         if (isRunning) R.string.stop_gym else R.string.start_gym
     )
-
     return TimerParams(
         totalTimeMs = totalTimeMs,
         lastSetTimeMs = lastSetTimeMs,
@@ -97,36 +84,6 @@ private fun createTimerParams(
     )
 }
 
-/**
- * Перетворює доменні об'єкти TrainingBlock у UI представлення
- */
-private fun mapTrainingBlocksToUi(
-    blocks: List<TrainingBlock>,
-    context: android.content.Context
-): List<TrainingBlockUiModel> {
-    return blocks.map { block ->
-        TrainingBlockUiModel(
-            name = block.name,
-            description = block.description,
-            attributesInfo = AttributesInfo(
-                motionStateList = MotioStateList(motions = block.motions.map { it.getDescription(context) }),
-                muscleStateList = MusclesStateList(muscles = block.muscleGroupList.map { it.getDescription(context) }),
-                equipmentStateList = EquipmentStateList(equipments = block.equipmentList.map { it.getDescription(context) })
-            ),
-            infoExercises = block.exercises.map { exercise ->
-                ExerciseInfo(
-                    name = exercise.getNameOnly(context),
-                    description = exercise.description,
-                    results = emptyList() // TODO: завантажувати історичні результати
-                )
-            }
-        )
-    }
-}
-
-/**
- * Обробляє підтвердження результату підходу
- */
 private fun handleResultConfirmation(
     result: ResultOfSet,
     viewModel: WorkoutViewModel
@@ -135,19 +92,16 @@ private fun handleResultConfirmation(
         weight = result.weight,
         iteration = result.iteration,
         workTime = result.workTime,
-        currentDate = result.currentDate,
-        currentTime = result.currentTime
+        date = result.currentDate,
+        time = result.currentTime
     )
 }
 
-/**
- * Показує діалог вибору програми та дня тренування
- */
 @Composable
 private fun ShowSelectionDialog(
-    state: com.example.gymlog.presentation.state.SelectionState,
-    onProgramSelected: (com.example.gymlog.domain.model.plan.FitnessProgram) -> Unit,
-    onGymSelected: (com.example.gymlog.domain.model.plan.GymDay) -> Unit,
+    state: SelectionState,
+    onProgramSelected: (ProgramInfo) -> Unit,
+    onGymSelected: (GymDayUiModel) -> Unit,
     onDismiss: () -> Unit
 ) {
     Box(
@@ -157,10 +111,10 @@ private fun ShowSelectionDialog(
     ) {
         WorkoutSelectionDialog(
             programs = state.availablePrograms,
-            workoutsByProgramId = state.availableGymDaySessions,
             onProgramSelected = onProgramSelected,
             onGymSelected = onGymSelected,
             onDismiss = onDismiss
         )
     }
 }
+
