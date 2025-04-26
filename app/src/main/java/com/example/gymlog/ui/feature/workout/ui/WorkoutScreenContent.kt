@@ -18,13 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 
 
 @Composable
 fun WorkoutScreenContent(
     timerParams: TimerParams,
-    infoBlocks: List<TrainingBlockUI>,
+    infoBlocks: List<TrainingBlockUiModel>,
     onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {

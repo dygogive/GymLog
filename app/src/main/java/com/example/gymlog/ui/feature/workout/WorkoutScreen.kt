@@ -22,7 +22,7 @@ import com.example.gymlog.ui.feature.workout.model.MotioStateList
 import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
 
@@ -103,9 +103,9 @@ private fun createTimerParams(
 private fun mapTrainingBlocksToUi(
     blocks: List<TrainingBlock>,
     context: android.content.Context
-): List<TrainingBlockUI> {
+): List<TrainingBlockUiModel> {
     return blocks.map { block ->
-        TrainingBlockUI(
+        TrainingBlockUiModel(
             name = block.name,
             description = block.description,
             attributesInfo = AttributesInfo(

@@ -23,11 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 
 @Composable
 fun TrainingBlockWorkout(
-    trainBlockInfo: TrainingBlockUI,
+    trainBlockInfo: TrainingBlockUiModel,
     onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {

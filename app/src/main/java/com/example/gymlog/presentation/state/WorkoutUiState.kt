@@ -1,13 +1,14 @@
 // WorkoutUiState.kt
 package com.example.gymlog.presentation.state
 
+import com.example.gymlog.ui.feature.workout.model.*
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 
 /**
- * UI-стан екрану тренування, розділений на логічні групи
+ * UI-стан екрану тренування
  */
 data class WorkoutUiState(
     val timerState: TimerState = TimerState(),
@@ -16,38 +17,29 @@ data class WorkoutUiState(
     val resultsState: ResultsState = ResultsState()
 )
 
-/**
- * Стан таймерів для контролю тренування
- */
+/** Timer UI state */
 data class TimerState(
     val totalTimeMs: Long = 0L,
     val lastSetTimeMs: Long = 0L,
     val isGymRunning: Boolean = false
 )
 
-/**
- * Стан тренувальних блоків і вправ
- */
+/** Training blocks UI state */
 data class TrainingState(
-    val blocks: PersistentList<TrainingBlock> = persistentListOf(),
+    val blocks: PersistentList<TrainingBlockUiModel> = persistentListOf(),
     val isWorkoutActive: Boolean = false
 )
 
-/**
- * Стан діалогу вибору програми та дня тренування
- */
+/** Selection dialog UI state */
 data class SelectionState(
-    val availablePrograms: PersistentList<FitnessProgram> = persistentListOf(),
-    val selectedProgram: FitnessProgram? = null,
-    val availableGymDaySessions: PersistentMap<Long, PersistentList<GymDay>> = persistentMapOf(),
-    val selectedGymDay: GymDay? = null,
+    val availablePrograms: PersistentList<ProgramInfo> = persistentListOf(),
+    val selectedProgram: ProgramInfo? = null,
+    val availableGymDaySessions: PersistentMap<ProgramInfo, PersistentList<GymDayUiModel>> = persistentMapOf(),
+    val selectedGymDay: GymDayUiModel? = null,
     val showSelectionDialog: Boolean = true
 )
 
-/**
- * Стан збережених результатів тренування
- * Key: ID вправи, Value: список результатів для цієї вправи
- */
+/** Workout results UI state */
 data class ResultsState(
-    val workoutResults: PersistentMap<Long, PersistentList<WorkoutResult>> = persistentMapOf()
+    val workoutResults: PersistentMap<Long, PersistentList<ResultOfSet>> = persistentMapOf()
 )

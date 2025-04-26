@@ -10,7 +10,7 @@ import com.example.gymlog.ui.feature.workout.model.*
  * Extension function
  * Mapper for domain.model.plan.TrainingBlock -> UI TrainingBlockInfo
  */
-fun TrainingBlock.toUiModel(context: Context): TrainingBlockUI = TrainingBlockUI(
+fun TrainingBlock.toUiModel(context: Context): TrainingBlockUiModel = TrainingBlockUiModel(
     name = this.name,
     description = this.description,
     attributesInfo = AttributesInfo(
@@ -34,11 +34,13 @@ fun ExerciseInBlock.toUiModel(context: Context): ExerciseInfo = ExerciseInfo(
 
 
 /**
- * Mapper for domain.model.plan.GymDay -> UI GymDayInfo (for selection list)
+ * Mapper for domain.model.plan.GymDay -> UI GymDayUiModel (for selection list)
  */
-fun GymDay.toUiModel(): GymDayInfo = GymDayInfo(
+fun GymDay.toUiModel(context: Context): GymDayUiModel = GymDayUiModel(
     name = this.name,
-    description = this.description
+    description = this.description,
+    position = this.position,
+    trainingBlockUiModels = this.trainingBlocks.map{it.toUiModel(context)}
 )
 
 
@@ -46,12 +48,11 @@ fun GymDay.toUiModel(): GymDayInfo = GymDayInfo(
  * Mapper for domain.model.plan.FitnessProgram -> UI ProgramInfo (for selection list)
  */
 
-fun FitnessProgram.toUiModel(): ProgramInfo = ProgramInfo(
+fun FitnessProgram.toUiModel(context: Context): ProgramInfo = ProgramInfo(
     name = this.name,
-    description = this.description
+    description = this.description,
+    gymDayUiModels = this.gymSessions.map {it.toUiModel(context)}
 )
-
-
 
 
 

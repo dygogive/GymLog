@@ -1,6 +1,6 @@
 package com.example.gymlog.ui.feature.workout.model
 
-data class TrainingBlockUI (
+data class TrainingBlockUiModel (
     val name: String = "name training block",
     val description: String = "",
     val attributesInfo: AttributesInfo,
