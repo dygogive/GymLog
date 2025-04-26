@@ -61,7 +61,7 @@ public enum Equipment implements TypeAttributeExercises {
         return context.getString(descriptionResId);
     }
 
-    //Щоб сформувати масив String[] з описів для кожного елемента перерахування EquipmentStateList
+    //Щоб сформувати масив String[] з описів для кожного елемента перерахування Equipment
     public static String[] getEquipmentDescriptions(Context context) {
         Equipment[] equipments = Equipment.values();  // Отримуємо всі елементи перерахування
         String[] descriptions = new String[equipments.length];  // Створюємо масив для зберігання описів

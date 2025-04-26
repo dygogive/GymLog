@@ -11,7 +11,7 @@ import com.example.gymlog.core.utils.parseEnumOrNull
 @Dao
 interface TrainingBlockFilterDao {
 
-    //MotioStateList
+    //Motion
     @Query("SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = :blockId")
     suspend fun getMotions(blockId: Long): List<String>
 
@@ -19,11 +19,11 @@ interface TrainingBlockFilterDao {
     @Query("SELECT muscleGroup FROM TrainingBlockMuscleGroup WHERE trainingBlockId = :blockId")
     suspend fun getMuscles(blockId: Long): List<String>
 
-    //EquipmentStateList
+    //Equipment
     @Query("SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = :blockId")
     suspend fun getEquipments(blockId: Long): List<String>
 
-    //MotioStateList + MuscleGroups + EquipmentStateList
+    //Motion + MuscleGroups + Equipment
     suspend fun getAllFiltersForBlock(blockId: Long): BlockFilters {
         val motions = getMotions(blockId).mapNotNull { parseEnumOrNull<Motion>(it) }
         val muscles = getMuscles(blockId).mapNotNull { parseEnumOrNull<MuscleGroup>(it) }

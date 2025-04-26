@@ -88,7 +88,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    FOREIGN KEY (gym_day_id) REFERENCES GymDays(id) ON DELETE CASCADE\n" +
                 ");");
 
-        // Фільтри блоку (motioState / muscle / equipmentState)
+        // Фільтри блоку (motion / muscle / equipment)
         db.execSQL("CREATE TABLE IF NOT EXISTS TrainingBlockMotion (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "trainingBlockId INTEGER, " +
@@ -182,7 +182,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
 
 
 
-// TrainingBlockMotion / MuscleGroup / EquipmentStateList
+// TrainingBlockMotion / MuscleGroup / Equipment
         db.execSQL("CREATE INDEX IF NOT EXISTS index_TrainingBlockMotion_trainingBlockId       ON TrainingBlockMotion(trainingBlockId)");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_TrainingBlockMuscleGroup_trainingBlockId  ON TrainingBlockMuscleGroup(trainingBlockId)");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_TrainingBlockEquipment_trainingBlockId    ON TrainingBlockEquipment(trainingBlockId)");

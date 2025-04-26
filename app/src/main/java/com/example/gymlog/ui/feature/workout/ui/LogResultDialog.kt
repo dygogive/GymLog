@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
+import com.example.gymlog.ui.theme.MyAppTheme
 
 //OK
 @Composable
@@ -117,7 +118,7 @@ fun LogResultDialog(
 @Preview
 @Composable
 fun LogResultDialogPreview() {
-    MaterialTheme {
+    MyAppTheme(useDarkTheme = false) {
         LogResultDialog(
             onDismiss = {},
             {}
