@@ -36,8 +36,8 @@ fun LogResultDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        tonalElevation = 16.dp,
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
         title = { Text("Запис результату") },
         text = {
             Column {

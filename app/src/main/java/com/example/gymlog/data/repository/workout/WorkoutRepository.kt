@@ -11,6 +11,7 @@ import com.example.gymlog.data.local.room.mapper.toDomain
 import com.example.gymlog.data.local.room.mapper.toEntity
 import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.domain.model.workout.WorkoutGymDay
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.model.workout.WorkoutSet
 import com.example.gymlog.domain.repository.WorkoutRepositoryInterface
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,10 @@ class WorkoutRepository @Inject constructor(
 
     override suspend fun getLastThreeFirstResults(exerciseId: Long): List<WorkoutExercise> {
         return workExerciseDao.getLastThreeFirstResults(exerciseId).map { it.toDomain() }.toMutableList()
+    }
+
+    override suspend fun saveWorkoutResult(result: WorkoutResult) {
+        TODO("Not yet implemented")
     }
 
 

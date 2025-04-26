@@ -19,25 +19,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.exercise.ExerciseInBlock
-import com.example.gymlog.domain.model.attribute.motion.Motion
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
-import com.example.gymlog.domain.model.plan.TrainingBlock
-import com.example.gymlog.ui.theme.MyAppTheme
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.workout.WorkoutExercise
-import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockInfo
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
 
 @Composable
 fun TrainingBlockWorkout(
-    trainBlockInfo: TrainingBlockInfo,
+    trainBlockInfo: TrainingBlockUI,
     onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {

@@ -15,25 +15,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gymlog.R
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.attribute.motion.Motion
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
-import com.example.gymlog.domain.model.plan.TrainingBlock
-import com.example.gymlog.domain.model.workout.WorkoutExercise
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockInfo
-import com.example.gymlog.ui.theme.MyAppTheme
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUI
 
 
 @Composable
 fun WorkoutScreenContent(
     timerParams: TimerParams,
-    infoBlocks: List<TrainingBlockInfo>,
+    infoBlocks: List<TrainingBlockUI>,
     onConfirmResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier
 ) {
