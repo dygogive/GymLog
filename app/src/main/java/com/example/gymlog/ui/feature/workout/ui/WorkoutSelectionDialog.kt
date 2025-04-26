@@ -22,6 +22,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
+import com.example.gymlog.ui.theme.MyAppTheme
 
 enum class SelectionStep { PROGRAMS, GYM_SESSIONS }
 
@@ -49,7 +50,9 @@ fun WorkoutSelectionDialog(
                 contentColor = MaterialTheme.colorScheme.onSurface
             ),
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.7f)
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(0.7f)
         ) {
             WorkoutSelectionContent(
                 step = step,
@@ -61,10 +64,14 @@ fun WorkoutSelectionDialog(
                     onProgramSelected(it)
                 },
                 onWorkoutSelected = onGymSelected,
-                onBack = {
-                    step = SelectionStep.PROGRAMS
-                },
-                onDismiss = onDismiss
+                onBack = { step = SelectionStep.PROGRAMS },
+                onDismiss = onDismiss,
+                onStepClick = { newStep ->
+                    when (newStep) {
+                        SelectionStep.PROGRAMS -> step = SelectionStep.PROGRAMS
+                        SelectionStep.GYM_SESSIONS -> if (selectedProgram != null) step = SelectionStep.GYM_SESSIONS
+                    }
+                }
             )
         }
     }
@@ -78,14 +85,15 @@ private fun WorkoutSelectionContent(
     onProgramSelected: (ProgramInfo) -> Unit,
     onWorkoutSelected: (GymDayUiModel) -> Unit,
     onBack: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onStepClick: (SelectionStep) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Header(step)
         StepIndicator(
             currentStep = step,
             canGoToGymSessions = selectedProgram != null,
-            onStepClick = {}
+            onStepClick = onStepClick
         )
         when (step) {
             SelectionStep.PROGRAMS -> ProgramsList(
@@ -105,14 +113,13 @@ private fun WorkoutSelectionContent(
     }
 }
 
-
-
-
-
 @Composable
 private fun Header(step: SelectionStep) {
     Box(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.primary).padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(16.dp)
     ) {
         Text(
             text = if (step == SelectionStep.PROGRAMS)
@@ -129,7 +136,9 @@ private fun Header(step: SelectionStep) {
 @Composable
 private fun FooterNavigation(step: SelectionStep, onBack: () -> Unit, onDismiss: () -> Unit) {
     Box(
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
         IconButton(
             onClick = { if (step == SelectionStep.GYM_SESSIONS) onBack() else onDismiss() },
@@ -150,45 +159,69 @@ fun StepIndicator(
     onStepClick: (SelectionStep) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         StepDot(
             isActive = currentStep == SelectionStep.PROGRAMS,
-            text = stringResource(R.string.programs)
+            text = stringResource(R.string.programs),
+            modifier = Modifier.clickable { onStepClick(SelectionStep.PROGRAMS) }
         )
         Divider(
-            modifier = Modifier.width(24.dp).padding(horizontal = 4.dp),
+            modifier = Modifier
+                .width(24.dp)
+                .padding(horizontal = 4.dp),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
         )
         StepDot(
             isActive = currentStep == SelectionStep.GYM_SESSIONS,
-            text = stringResource(R.string.gym_sessions)
+            text = stringResource(R.string.gym_sessions),
+            modifier = Modifier.clickable(
+                enabled = canGoToGymSessions
+            ) { onStepClick(SelectionStep.GYM_SESSIONS) }
         )
     }
 }
 
 @Composable
-fun StepDot(isActive: Boolean, text: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(4.dp)) {
+fun StepDot(
+    isActive: Boolean,
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(4.dp)
+    ) {
         Box(
-            modifier = Modifier.size(12.dp).clip(RoundedCornerShape(6.dp)).background(
-                if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-            )
+            modifier = Modifier
+                .size(12.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(
+                    if (isActive) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                )
         )
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
-            color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            color = if (isActive) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             modifier = Modifier.padding(top = 4.dp)
         )
     }
 }
 
 @Composable
-fun ProgramsList(programs: List<ProgramInfo>, onProgramSelected: (ProgramInfo) -> Unit, modifier: Modifier = Modifier) {
+fun ProgramsList(
+    programs: List<ProgramInfo>,
+    onProgramSelected: (ProgramInfo) -> Unit,
+    modifier: Modifier = Modifier
+) {
     if (programs.isEmpty()) {
         EmptyListMessage(message = stringResource(R.string.no_programs))
     } else {
@@ -201,14 +234,20 @@ fun ProgramsList(programs: List<ProgramInfo>, onProgramSelected: (ProgramInfo) -
 }
 
 @Composable
-fun ProgramItem(program: ProgramInfo, onClick: (ProgramInfo) -> Unit) {
+fun ProgramItem(
+    program: ProgramInfo,
+    onClick: (ProgramInfo) -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface
         ),
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).clickable { onClick(program) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onClick(program) },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -226,7 +265,11 @@ fun ProgramItem(program: ProgramInfo, onClick: (ProgramInfo) -> Unit) {
 }
 
 @Composable
-fun WorkoutsList(workouts: List<GymDayUiModel>, onWorkoutSelected: (GymDayUiModel) -> Unit, modifier: Modifier = Modifier) {
+fun WorkoutsList(
+    workouts: List<GymDayUiModel>,
+    onWorkoutSelected: (GymDayUiModel) -> Unit,
+    modifier: Modifier = Modifier
+) {
     if (workouts.isEmpty()) {
         EmptyListMessage(message = stringResource(R.string.no_workouts))
     } else {
@@ -239,7 +282,10 @@ fun WorkoutsList(workouts: List<GymDayUiModel>, onWorkoutSelected: (GymDayUiMode
 }
 
 @Composable
-fun WorkoutItem(workout: GymDayUiModel, onClick: (GymDayUiModel) -> Unit) {
+fun WorkoutItem(
+    workout: GymDayUiModel,
+    onClick: (GymDayUiModel) -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -269,7 +315,6 @@ fun EmptyListMessage(message: String) {
         Text(text = message, style = MaterialTheme.typography.bodyMedium)
     }
 }
-
 
 
 
@@ -309,7 +354,7 @@ fun WorkoutSelectionDialogPreview() {
         )
     )
 
-    MaterialTheme {
+    MyAppTheme(useDarkTheme = false) {
         Box(Modifier.fillMaxSize()) {
             WorkoutSelectionDialog(
                 programs = dummyPrograms,
