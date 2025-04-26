@@ -10,17 +10,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
 import com.example.gymlog.presentation.state.SelectionState
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
+import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
+import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
+import com.example.gymlog.ui.feature.workout.model.MotioStateList
+import com.example.gymlog.ui.feature.workout.model.MusclesStateList
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
+import com.example.gymlog.ui.theme.MyAppTheme
 
 /**
  * Головний екран тренування.
@@ -118,3 +126,54 @@ private fun ShowSelectionDialog(
     }
 }
 
+
+
+
+
+// --- Previews ---
+
+@Preview(showBackground = true, name = "Workout Content Preview")
+@Composable
+fun Preview_WorkoutScreenContent() {
+    MyAppTheme {
+        // Provide sample blocks
+        val sampleBlock = TrainingBlockUiModel(
+            name = "Leg Day",
+            description = "Quads, Hamstrings",
+            attributesInfo = AttributesInfo(
+                motionStateList = MotioStateList(listOf("Push", "Pull")),
+                muscleStateList = MusclesStateList(listOf("Quads", "Hamstrings")),
+                equipmentStateList = EquipmentStateList(listOf("Barbell", "Rack"))
+            ),
+            infoExercises = listOf(
+                ExerciseInfo("Squat", "Back squat", emptyList()),
+                ExerciseInfo("Lunge", "Walking lunge", emptyList())
+            )
+        )
+        WorkoutScreenContent(
+            timerParams = TimerParams(0L, 0L, "Start", {}, {} , false),
+            infoBlocks = listOf(sampleBlock),
+            onConfirmResult = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Selection Dialog Preview")
+@Composable
+fun Preview_WorkoutSelectionDialog() {
+    MyAppTheme {
+        WorkoutSelectionDialog(
+            programs = listOf(
+                ProgramInfo("Beginner", "Intro program", listOf(
+                    GymDayUiModel("Day 1", "Full body", 0, emptyList())
+                )),
+                ProgramInfo("Advanced", "Intense program", listOf(
+                    GymDayUiModel("Day A", "Chest & Back", 0, emptyList())
+                ))
+            ),
+            onProgramSelected = {},
+            onGymSelected = {},
+            onDismiss = {}
+        )
+    }
+}
