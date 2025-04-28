@@ -1,13 +1,13 @@
-package com.example.gymlog.domain.model.exercise
+package com.example.gymlog.domain.model.exercisenew
 
 import com.example.gymlog.domain.model.attribute.equipment.EquipmentNew
 import com.example.gymlog.domain.model.attribute.motion.MotionNew
 import com.example.gymlog.domain.model.attribute.muscle.MuscleGroupNew
 
-data class ExerciseInBlockNew (
+open class ExerciseNew (
+    val name:           String,
     val description:    String,
-    val motion:         MotionNew,
+    val motion: MotionNew,
     val muscleGroups:   List<MuscleGroupNew>,
-    val equipment:      EquipmentNew,
-    val position:       Int
+    val equipment: EquipmentNew,
 )
