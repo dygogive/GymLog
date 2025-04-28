@@ -13,18 +13,18 @@ interface TrainingBlockFilterDao {
 
     //Motion
     @Query("SELECT motionType FROM TrainingBlockMotion WHERE trainingBlockId = :blockId")
-    suspend fun getMotions(blockId: Long): List<String>
+    suspend fun getMotions(blockId: Long?): List<String>
 
     //MuscleGroups
     @Query("SELECT muscleGroup FROM TrainingBlockMuscleGroup WHERE trainingBlockId = :blockId")
-    suspend fun getMuscles(blockId: Long): List<String>
+    suspend fun getMuscles(blockId: Long?): List<String>
 
     //Equipment
     @Query("SELECT equipment FROM TrainingBlockEquipment WHERE trainingBlockId = :blockId")
-    suspend fun getEquipments(blockId: Long): List<String>
+    suspend fun getEquipments(blockId: Long?): List<String>
 
     //Motion + MuscleGroups + Equipment
-    suspend fun getAllFiltersForBlock(blockId: Long): BlockFilters {
+    suspend fun getAllFiltersForBlock(blockId: Long?): BlockFilters {
         val motions = getMotions(blockId).mapNotNull { parseEnumOrNull<Motion>(it) }
         val muscles = getMuscles(blockId).mapNotNull { parseEnumOrNull<MuscleGroup>(it) }
         val equipment = getEquipments(blockId).mapNotNull { parseEnumOrNull<Equipment>(it) }

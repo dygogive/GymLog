@@ -7,6 +7,12 @@ import com.example.gymlog.domain.model.attribute.motion.Motion
 import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
 import com.example.gymlog.core.utils.parseEnumList
 import com.example.gymlog.core.utils.parseEnumOrNull
+import com.example.gymlog.domain.model.exercisenew.ExerciseInBlockNew
+import com.example.gymlog.domain.model.attributenew.EquipmentNew
+import com.example.gymlog.domain.model.attributenew.MotionNew
+import com.example.gymlog.domain.model.attributenew.MuscleGroupNew
+
+
 
 fun ExerciseInBlockDto.toDomain(): ExerciseInBlock {
     return ExerciseInBlock(
@@ -18,6 +24,23 @@ fun ExerciseInBlockDto.toDomain(): ExerciseInBlock {
         parseEnumList<MuscleGroup>(muscleGroups),
         parseEnumOrNull<Equipment>(equipment),
         position
+    )
+}
+
+
+
+fun ExerciseInBlockDto.toDomainNew(): ExerciseInBlockNew {
+    return ExerciseInBlockNew(
+        name = name,
+        description = description ?: "",
+        motion = motion.let { MotionNew.valueOf(it) },
+        muscleGroups = muscleGroups
+            .split(",")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .map { MuscleGroupNew.valueOf(it) },
+        equipment = equipment.let { EquipmentNew.valueOf(it) },
+        position = position
     )
 }
 

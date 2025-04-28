@@ -1,10 +1,8 @@
 package com.example.gymlog.data.repository.training_block
 
-import android.util.Log
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
 import com.example.gymlog.data.local.room.mapper.toDomain
 import com.example.gymlog.data.local.room.mapper.toEntity
 import com.example.gymlog.domain.model.plan.TrainingBlock

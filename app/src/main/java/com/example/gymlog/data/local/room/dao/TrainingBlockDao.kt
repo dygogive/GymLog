@@ -32,6 +32,6 @@ interface TrainingBlockDao {
     @Query("SELECT * FROM TrainingBlock " +
             "WHERE gym_day_id = :gymDayId " +
             "ORDER BY position ASC")
-    suspend fun getBlocksByGymDayId(gymDayId: Long): List<TrainingBlockEntity>
+    suspend fun getBlocksByGymDayId(gymDayId: Long?): List<TrainingBlockEntity>
 
 }

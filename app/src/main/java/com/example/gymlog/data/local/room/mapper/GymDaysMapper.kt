@@ -3,6 +3,8 @@ package com.example.gymlog.data.local.room.mapper
 import com.example.gymlog.data.local.room.entity.plan.GymDayEntity
 import com.example.gymlog.domain.model.plan.GymDay
 import com.example.gymlog.domain.model.plan.TrainingBlock
+import com.example.gymlog.domain.model.plannew.GymDayNew
+import com.example.gymlog.domain.model.plannew.TrainingBlockNew
 
 /**
  * Перетворює GymDayEntity у GymDay.
@@ -32,4 +34,16 @@ fun GymDay.toEntity(): GymDayEntity = GymDayEntity(
     day_name    = name,
     description = description.takeIf { it.isNotBlank() },
     position    = position.takeIf { it >= 0 }
+)
+
+
+
+
+fun GymDayEntity.toDomainNew(
+    blocks: List<TrainingBlockNew> = emptyList()
+): GymDayNew = GymDayNew(
+    name = this.day_name,
+    description = this.description ?: "",
+    position = this.position ?: -1,
+    trainingBlocks = blocks
 )

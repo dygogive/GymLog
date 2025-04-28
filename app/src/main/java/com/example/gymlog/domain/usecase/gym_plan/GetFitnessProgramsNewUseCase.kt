@@ -7,5 +7,5 @@ import javax.inject.Inject
 class GetFitnessProgramsNewUseCase @Inject constructor(
     private val repository: FitnessProgramsInterface
 ) {
-    suspend operator fun invoke(): List<FitnessProgramNew> = repository.getFitnessProgramsNew()
+    //suspend operator fun invoke(): List<FitnessProgramNew> = repository.getFitnessProgramsNew()
 }

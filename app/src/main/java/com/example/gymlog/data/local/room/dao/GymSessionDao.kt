@@ -22,7 +22,7 @@ interface GymSessionDao {
     @Query("SELECT * FROM GymDays " +
             "WHERE plan_id = :planId " +
             "ORDER BY position ASC")
-    suspend fun getGymDaysEntities(planId: Long): List<GymDayEntity>
+    suspend fun getGymDaysEntities(planId: Long?): List<GymDayEntity>
 
 
 }

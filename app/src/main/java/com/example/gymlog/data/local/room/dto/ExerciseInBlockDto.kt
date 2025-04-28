@@ -7,9 +7,9 @@ data class ExerciseInBlockDto(
     @ColumnInfo(name = "exerciseId") val exerciseId: Long,
     val name: String,
     val description: String?,
-    val motion: String?,
-    val muscleGroups: String?,
-    val equipment: String?,
+    val motion: String,
+    val muscleGroups: String,
+    val equipment: String,
     val isCustom: Boolean,
     val position: Int
 )

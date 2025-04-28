@@ -1,8 +1,9 @@
 package com.example.gymlog.domain.model.exercisenew
 
-import com.example.gymlog.domain.model.attribute.equipment.EquipmentNew
-import com.example.gymlog.domain.model.attribute.motion.MotionNew
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroupNew
+import com.example.gymlog.domain.model.attributenew.EquipmentNew
+import com.example.gymlog.domain.model.attributenew.MotionNew
+import com.example.gymlog.domain.model.attributenew.MuscleGroupNew
+
 
 open class ExerciseNew (
     val name:           String,
