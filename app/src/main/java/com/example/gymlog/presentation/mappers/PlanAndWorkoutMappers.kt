@@ -1,3 +1,4 @@
+// PresentationMappers.kt
 package com.example.gymlog.presentation.mappers
 
 import android.content.Context
@@ -7,8 +8,11 @@ import com.example.gymlog.domain.model.workout.*
 import com.example.gymlog.ui.feature.workout.model.*
 
 /**
- * Extension function
- * Mapper for domain.model.plan.TrainingBlock -> UI TrainingBlockInfo
+ * Маппери для конвертації доменних моделей у UI моделі
+ */
+
+/**
+ * Конвертація блоку тренування з доменної моделі в UI модель
  */
 fun TrainingBlock.toUiModel(context: Context): TrainingBlockUiModel = TrainingBlockUiModel(
     name = this.name,
@@ -21,73 +25,59 @@ fun TrainingBlock.toUiModel(context: Context): TrainingBlockUiModel = TrainingBl
     infoExercises = this.exercises.map { it.toUiModel(context) }
 )
 
-
 /**
- * Mapper for ExerciseInBlock -> UI ExerciseInfo
+ * Конвертація вправи з доменної моделі в UI модель
  */
 fun ExerciseInBlock.toUiModel(context: Context): ExerciseInfo = ExerciseInfo(
     name = this.getNameOnly(context),
     description = this.description,
-    results = emptyList()
+    results = emptyList()  // Початково результати відсутні 
 )
 
-
-
 /**
- * Mapper for domain.model.plan.GymDay -> UI GymDayUiModel (for selection list)
+ * Конвертація дня тренування з доменної моделі в UI модель
  */
 fun GymDay.toUiModel(context: Context): GymDayUiModel = GymDayUiModel(
     name = this.name,
     description = this.description,
     position = this.position,
-    trainingBlockUiModels = this.trainingBlocks.map{it.toUiModel(context)}
+    trainingBlockUiModels = this.trainingBlocks.map { it.toUiModel(context) }
 )
 
-
 /**
- * Mapper for domain.model.plan.FitnessProgram -> UI ProgramInfo (for selection list)
+ * Конвертація програми тренувань з доменної моделі в UI модель
  */
-
 fun FitnessProgram.toUiModel(context: Context): ProgramInfo = ProgramInfo(
     name = this.name,
     description = this.description,
-    gymDayUiModels = this.gymSessions.map {it.toUiModel(context)}
+    gymDayUiModels = this.gymSessions.map { it.toUiModel(context) }
 )
 
-
-
 /**
- * Mapper for domain.model.plan.BlockFilters -> UI FiltersInfo
+ * Конвертація фільтрів блоків з доменної моделі в UI модель атрибутів
  */
 fun BlockFilters.toUiModel(context: Context): AttributesInfo = AttributesInfo(
-    motionStateList = MotioStateList (this.motions.map{ it.getDescription(context) } ),
-    muscleStateList = MusclesStateList (this.muscleGroups.map { it.getDescription(context) }),
+    motionStateList = MotioStateList(this.motions.map { it.getDescription(context) }),
+    muscleStateList = MusclesStateList(this.muscleGroups.map { it.getDescription(context) }),
     equipmentStateList = EquipmentStateList(this.equipment.map { it.getDescription(context) })
 )
 
-
-
 /**
- * Mapper for domain.model.workout.WorkoutExercise -> UI ExerciseInfo with results
+ * Конвертація вправи тренування з доменної моделі в UI модель з результатами
  */
 fun WorkoutExercise.toUiModel(results: List<WorkoutResult>): ExerciseInfo = ExerciseInfo(
     name = this.name,
-    description = this.description?: "",
+    description = this.description ?: "",
     results = results.map { it.toUiModel() }
 )
 
-
-
 /**
- * Mapper for domain.model.workout.WorkoutResult -> UI ResultOfSet
+ * Конвертація результату тренування з доменної моделі в UI модель
  */
 fun WorkoutResult.toUiModel(): ResultOfSet = ResultOfSet(
     weight = this.weight,
     iteration = this.iteration,
     workTime = this.workTime,
     currentDate = this.date,
-    currentTime = this.date // or separate time field if exists
+    currentTime = this.date  // або окреме поле часу, якщо існує
 )
-
-
-

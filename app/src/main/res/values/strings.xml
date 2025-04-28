@@ -261,6 +261,8 @@
     <string name="back_to_programs">Back to programs</string>
     <string name="no_programs">No program</string>
     <string name="no_workouts">No workouts</string>
+    <string name="retry">Retry</string>
+    <string name="error_title">Error title</string>
 
 
 </resources>

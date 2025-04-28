@@ -1,174 +1,248 @@
+// WorkoutScreen.kt
 package com.example.gymlog.ui.feature.workout
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
 import com.example.gymlog.presentation.state.SelectionState
 import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
-import com.example.gymlog.ui.feature.workout.model.AttributesInfo
-import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
-import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
-import com.example.gymlog.ui.feature.workout.model.ResultOfSet
-import com.example.gymlog.ui.feature.workout.model.TimerParams
+import com.example.gymlog.ui.feature.workout.model.*
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
-import com.example.gymlog.ui.feature.workout.model.ProgramInfo
-import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
-import com.example.gymlog.ui.feature.workout.model.MotioStateList
-import com.example.gymlog.ui.feature.workout.model.MusclesStateList
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.theme.MyAppTheme
 
 /**
- * Головний екран тренування.
+ * Головний екран тренування
+ *
+ * Відповідає за організацію UI елементів та делегування взаємодії до ViewModel.
+ * Підтримує стани завантаження, помилок та основного вмісту.
+ *
+ * @param navController Контролер навігації для управління переходами між екранами
+ * @param viewModel ViewModel для керування логікою та даними екрану
  */
 @Composable
 fun WorkoutScreen(
     navController: NavController,
     viewModel: WorkoutViewModel = hiltViewModel()
 ) {
+    // Отримання контексту та спостереження за станом ViewModel
     val context = LocalContext.current
     val state by viewModel.uiState.collectAsState()
 
-    val timerParams = createTimerParams(
-        totalTimeMs = state.timerState.totalTimeMs,
-        lastSetTimeMs = state.timerState.lastSetTimeMs,
-        isRunning = state.timerState.isGymRunning,
-        onStartStop = viewModel::startStopGym,
-        onSetFinish = viewModel::onSetFinish
-    )
+    // Відображення основного вмісту екрану або стани завантаження/помилок
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Основний контент екрану тренування
+        if (state.trainingBlocksState.isWorkoutActive) {
+            // Створення параметрів таймера для відображення
+            val timerParams = TimerParams(
+                totalTimeMs = state.timerState.totalTimeMs,
+                lastSetTimeMs = state.timerState.lastSetTimeMs,
+                buttonText = stringResource(
+                    if (state.timerState.isGymRunning) R.string.stop_gym else R.string.start_gym
+                ),
+                onStartStopClick = viewModel::startStopGym,
+                onSetFinished = viewModel::onSetFinish,
+                isRunning = state.timerState.isGymRunning
+            )
 
-    // Блоки тренування вже готові у стейті, не потрібно конвертувати!
-    val trainingBlocksInfo = state.trainingState.blocks
+            // Відображення основного контенту тренування
+            WorkoutScreenContent(
+                timerParams = timerParams,
+                infoBlocks = state.trainingBlocksState.blocks,
+                onConfirmResult = { result ->
+                    viewModel.saveResult(
+                        weight = result.weight,
+                        iteration = result.iteration,
+                        workTime = result.workTime,
+                        date = result.currentDate,
+                        time = result.currentTime
+                    )
+                }
+            )
+        }
 
-    WorkoutScreenContent(
-        timerParams = timerParams,
-        infoBlocks = trainingBlocksInfo,
-        onConfirmResult = { result -> handleResultConfirmation(result, viewModel) }
-    )
-
-    if (state.selectionState.showSelectionDialog) {
-        ShowSelectionDialog(
-            state = state.selectionState,
-            onProgramSelected = viewModel::onProgramSelected,
-            onGymSelected = viewModel::onSessionSelected,
-            onDismiss = {
-                viewModel.dismissSelectionDialog()
-                navController.navigateUp()
-            }
-        )
+        // Відображення діалогу вибору програми тренування
+        if (state.selectionState.showSelectionDialog) {
+            DialogOverlay(
+                selectionState = state.selectionState,
+                onProgramSelected = viewModel::onProgramSelected,
+                onGymSelected = viewModel::onSessionSelected,
+                onDismiss = {
+                    viewModel.dismissSelectionDialog()
+                    // Повертаємось назад тільки якщо тренування ще не розпочато
+                    if (!state.trainingBlocksState.isWorkoutActive) {
+                        navController.navigateUp()
+                    }
+                },
+                onRetry = viewModel::retryLoadPrograms
+            )
+        }
     }
 }
 
+/**
+ * Відображення діалогу вибору програми тренування з різними станами
+ */
 @Composable
-private fun createTimerParams(
-    totalTimeMs: Long,
-    lastSetTimeMs: Long,
-    isRunning: Boolean,
-    onStartStop: () -> Unit,
-    onSetFinish: () -> Unit
-): TimerParams {
-    val buttonText = stringResource(
-        if (isRunning) R.string.stop_gym else R.string.start_gym
-    )
-    return TimerParams(
-        totalTimeMs = totalTimeMs,
-        lastSetTimeMs = lastSetTimeMs,
-        buttonText = buttonText,
-        onStartStopClick = onStartStop,
-        onSetFinished = onSetFinish,
-        isRunning = isRunning
-    )
-}
-
-private fun handleResultConfirmation(
-    result: ResultOfSet,
-    viewModel: WorkoutViewModel
-) {
-    viewModel.saveResult(
-        weight = result.weight,
-        iteration = result.iteration,
-        workTime = result.workTime,
-        date = result.currentDate,
-        time = result.currentTime
-    )
-}
-
-@Composable
-private fun ShowSelectionDialog(
-    state: SelectionState,
+private fun DialogOverlay(
+    selectionState: SelectionState,
     onProgramSelected: (ProgramInfo) -> Unit,
     onGymSelected: (GymDayUiModel) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onRetry: () -> Unit
 ) {
     Box(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.6f))
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
+        contentAlignment = Alignment.Center
     ) {
-        WorkoutSelectionDialog(
-            programs = state.availablePrograms,
-            onProgramSelected = onProgramSelected,
-            onGymSelected = onGymSelected,
-            onDismiss = onDismiss
-        )
+        when {
+            // Відображення індикатора завантаження
+            selectionState.isLoading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+
+            // Відображення повідомлення про помилку
+            selectionState.errorMessage != null -> {
+                ErrorContent(
+                    errorMessage = selectionState.errorMessage,
+                    onRetry = onRetry,
+                    onDismiss = onDismiss
+                )
+            }
+
+            // Відображення діалогу вибору програми
+            else -> {
+                WorkoutSelectionDialog(
+                    programs = selectionState.availablePrograms,
+                    onProgramSelected = onProgramSelected,
+                    onGymSelected = onGymSelected,
+                    onDismiss = onDismiss
+                )
+            }
+        }
     }
 }
 
+/**
+ * Відображення повідомлення про помилку з можливістю повтору
+ */
+@Composable
+private fun ErrorContent(
+    errorMessage: String,
+    onRetry: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .padding(16.dp),
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 8.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.error_title),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.error
+            )
 
+            Spacer(modifier = Modifier.height(8.dp))
 
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.bodyMedium
+            )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-// --- Previews ---
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(R.string.cancel))
+                }
 
-@Preview(showBackground = true, name = "Workout Content Preview")
+                Button(
+                    onClick = onRetry,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(stringResource(R.string.retry))
+                }
+            }
+        }
+    }
+}
+
+// region Превью-функції для розробки
+
+/**
+ * Превью основного контенту екрану тренування
+ */
+@Preview(showBackground = true, name = "Превью екрану тренування")
 @Composable
 fun Preview_WorkoutScreenContent() {
     MyAppTheme {
-        // Provide sample blocks
+        // Приклад блоку тренування для превью
         val sampleBlock = TrainingBlockUiModel(
-            name = "Leg Day",
-            description = "Quads, Hamstrings",
+            name = "День ніг",
+            description = "Квадрицепси, Біцепси стегна",
             attributesInfo = AttributesInfo(
-                motionStateList = MotioStateList(listOf("Push", "Pull")),
-                muscleStateList = MusclesStateList(listOf("Quads", "Hamstrings")),
-                equipmentStateList = EquipmentStateList(listOf("Barbell", "Rack"))
+                motionStateList = MotioStateList(listOf("Жим", "Тяга")),
+                muscleStateList = MusclesStateList(listOf("Квадрицепси", "Біцепс стегна")),
+                equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseInfo("Squat", "Back squat", emptyList()),
-                ExerciseInfo("Lunge", "Walking lunge", emptyList())
+                ExerciseInfo("Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseInfo("Випади", "Випади з кроком", emptyList())
             )
         )
+
         WorkoutScreenContent(
-            timerParams = TimerParams(0L, 0L, "Start", {}, {} , false),
+            timerParams = TimerParams(0L, 0L, "Почати", {}, {}, false),
             infoBlocks = listOf(sampleBlock),
             onConfirmResult = {}
         )
     }
 }
 
-@Preview(showBackground = true, name = "Selection Dialog Preview")
+/**
+ * Превью діалогу вибору програми тренування
+ */
+@Preview(showBackground = true, name = "Превью діалогу вибору")
 @Composable
 fun Preview_WorkoutSelectionDialog() {
     MyAppTheme {
         WorkoutSelectionDialog(
             programs = listOf(
-                ProgramInfo("Beginner", "Intro program", listOf(
-                    GymDayUiModel("Day 1", "Full body", 0, emptyList())
+                ProgramInfo("Початківець", "Вступна програма", listOf(
+                    GymDayUiModel("День 1", "Усе тіло", 0, emptyList())
                 )),
-                ProgramInfo("Advanced", "Intense program", listOf(
-                    GymDayUiModel("Day A", "Chest & Back", 0, emptyList())
+                ProgramInfo("Продвинута", "Інтенсивна програма", listOf(
+                    GymDayUiModel("День A", "Груди і спина", 0, emptyList())
                 ))
             ),
             onProgramSelected = {},
@@ -177,3 +251,20 @@ fun Preview_WorkoutSelectionDialog() {
         )
     }
 }
+
+/**
+ * Превью екрану помилки
+ */
+@Preview(showBackground = true, name = "Превью екрану помилки")
+@Composable
+fun Preview_ErrorContent() {
+    MyAppTheme {
+        ErrorContent(
+            errorMessage = "Не вдалося завантажити програми тренування. Перевірте підключення до мережі.",
+            onRetry = {},
+            onDismiss = {}
+        )
+    }
+}
+
+// endregion
