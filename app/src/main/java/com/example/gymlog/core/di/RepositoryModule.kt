@@ -1,9 +1,11 @@
 package com.example.gymlog.core.di
 
 import com.example.gymlog.data.repository.gym_day.GymSessionRepository
+import com.example.gymlog.data.repository.gym_plan.FitnessProgramNewRepository
 import com.example.gymlog.data.repository.gym_plan.FitnessProgramsRepository
 import com.example.gymlog.data.repository.training_block.TrainingBlockRepository
 import com.example.gymlog.data.repository.workout.WorkoutRepository
+import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import com.example.gymlog.domain.repository.FitnessProgramsInterface
 import com.example.gymlog.domain.repository.GymSessionRepositoryInterface
 import com.example.gymlog.domain.repository.TrainingBlockRepositoryInterface
@@ -47,6 +49,14 @@ abstract class RepositoryModule {
     abstract fun bindGymSessionRepository(
         impl: GymSessionRepository
     ): GymSessionRepositoryInterface
+
+
+
+    @Binds
+    @Singleton
+    abstract fun bindFitnessProgramNewRepository(
+        impl: FitnessProgramNewRepository
+    ): FitnessProgramNewRepositoryInterface
 
     // якщо згодом з'являться інші domain-інтерфейси, додайте сюди такі ж @Binds методи
 }

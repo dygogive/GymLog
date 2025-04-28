@@ -10,7 +10,7 @@ import androidx.room.*
         childColumns = ["gym_day_id"],
         onDelete = ForeignKey.CASCADE
     )],
-
+    indices = [Index(value = ["gym_day_id"])]  // І ТУТ ДОДАТИ
 )
 data class TrainingBlockEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,

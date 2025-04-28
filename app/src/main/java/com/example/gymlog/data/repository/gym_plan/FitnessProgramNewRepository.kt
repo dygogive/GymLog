@@ -10,6 +10,7 @@ import com.example.gymlog.data.local.room.mapper.toDomainNew
 import com.example.gymlog.domain.model.plannew.FitnessProgramNew
 import com.example.gymlog.domain.model.plannew.GymDayNew
 import com.example.gymlog.domain.model.plannew.TrainingBlockNew
+import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,9 +21,9 @@ class FitnessProgramNewRepository @Inject constructor(
     private val trainingBlockDao: TrainingBlockDao,
     private val filterDao: TrainingBlockFilterDao,
     private val exerciseInBlockDao: ExerciseInBlockDao
-) {
+): FitnessProgramNewRepositoryInterface {
 
-    suspend fun getAllFitnessProgramsNew(): List<FitnessProgramNew> {
+    override suspend fun getAllFitnessProgramsNew(): List<FitnessProgramNew> {
         val plans = gymPlansDao.getPlanCycles()
 
         return plans.map { planEntity ->

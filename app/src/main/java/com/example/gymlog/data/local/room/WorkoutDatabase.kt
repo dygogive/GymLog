@@ -50,6 +50,7 @@ import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
         TrainingBlockExerciseEntity::class     // Таблиця вправ у тренувальних блоках
     ],
     version = DBHelper.VERSION,
+    exportSchema = false // ДОДАЙ ОЦЕ
 )
 abstract class WorkoutDatabase: RoomDatabase() {
     // Оголошуємо методи для отримання DAO (Data Access Object) для кожної таблиці

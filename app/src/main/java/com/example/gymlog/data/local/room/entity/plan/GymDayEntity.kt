@@ -2,6 +2,7 @@ package com.example.gymlog.data.local.room.entity.plan
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
@@ -13,7 +14,7 @@ import androidx.room.PrimaryKey
         childColumns = ["plan_id"],
         onDelete = ForeignKey.CASCADE
     )],
-
+    indices = [Index(value = ["plan_id"])]  // ДОДАТИ ОЦЕ
 )
 data class GymDayEntity(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
