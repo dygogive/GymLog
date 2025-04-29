@@ -39,10 +39,15 @@ fun getCurrentDateTimeLegacy(): Pair<String, String> {
 
 
 
-fun formatTime(ms: Long): String {
+fun formatTime(ms: Long, includeHours: Boolean = true): String {
     val totalSeconds = ms / 1000
     val hours = totalSeconds / 3600
     val minutes = (totalSeconds % 3600) / 60
     val seconds = totalSeconds % 60
-    return "%02d:%02d:%02d".format(hours, minutes, seconds)
+
+    return if (includeHours && hours > 0) {
+        "%d:%02d:%02d".format(hours, minutes, seconds)
+    } else {
+        "%02d:%02d".format(minutes, seconds)
+    }
 }

@@ -1,4 +1,3 @@
-// WorkoutViewModel.kt
 package com.example.gymlog.presentation.viewmodel
 
 import android.app.Application
@@ -6,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.presentation.state.*
-import com.example.gymlog.presentation.usecase.FetchProgramsUiUseCase
+import com.example.gymlog.presentation.usecase.FetchProgramsNewUiUseCase
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
@@ -24,11 +23,11 @@ import javax.inject.Inject
  * ViewModel для екрану тренувань
  *
  * Відповідає за логіку роботи з UI, керування таймером та стану тренувань.
- * Використовує FetchProgramsUiUseCase для отримання даних про програми тренувань.
+ * Використовує FetchProgramsNewUiUseCase для отримання даних про нові програми тренувань.
  */
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
-    private val fetchProgramsUiUseCase: FetchProgramsUiUseCase,
+    private val fetchProgramsNewUiUseCase: FetchProgramsNewUiUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -65,7 +64,7 @@ class WorkoutViewModel @Inject constructor(
             // Встановлюємо стан завантаження
             updateSelectionState { it.copy(isLoading = true) }
 
-            runCatching { fetchProgramsUiUseCase(context) }
+            runCatching { fetchProgramsNewUiUseCase(context) }
                 .onSuccess { programsUi ->
                     // Оновлюємо список доступних програм
                     updateSelectionState {

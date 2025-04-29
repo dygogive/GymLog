@@ -1,6 +1,7 @@
 // WorkoutUiState.kt
 package com.example.gymlog.presentation.state
 
+import com.example.gymlog.core.utils.formatTime
 import com.example.gymlog.ui.feature.workout.model.*
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -48,17 +49,7 @@ data class TimerState(
     /**
      * Допоміжна функція для форматування часу
      */
-    private fun formatTime(timeMs: Long, includeHours: Boolean = true): String {
-        val seconds = (timeMs / 1000) % 60
-        val minutes = (timeMs / (1000 * 60)) % 60
-        val hours = (timeMs / (1000 * 60 * 60))
 
-        return if (includeHours && hours > 0) {
-            String.format("%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            String.format("%02d:%02d", minutes, seconds)
-        }
-    }
 }
 
 /**

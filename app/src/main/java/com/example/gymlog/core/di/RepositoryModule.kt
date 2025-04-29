@@ -58,5 +58,9 @@ abstract class RepositoryModule {
         impl: FitnessProgramNewRepository
     ): FitnessProgramNewRepositoryInterface
 
+
+
+
+
     // якщо згодом з'являться інші domain-інтерфейси, додайте сюди такі ж @Binds методи
 }
