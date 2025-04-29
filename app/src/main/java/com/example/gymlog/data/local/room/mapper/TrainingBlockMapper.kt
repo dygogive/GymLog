@@ -5,6 +5,9 @@ import com.example.gymlog.domain.model.attribute.equipment.Equipment
 import com.example.gymlog.domain.model.exercise.ExerciseInBlock
 import com.example.gymlog.domain.model.attribute.motion.Motion
 import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
+import com.example.gymlog.domain.model.attributenew.EquipmentNew
+import com.example.gymlog.domain.model.attributenew.MotionNew
+import com.example.gymlog.domain.model.attributenew.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.TrainingBlock
 import com.example.gymlog.domain.model.plannew.TrainingBlockNew
 import com.example.gymlog.domain.model.exercisenew.ExerciseInBlockNew
@@ -34,15 +37,18 @@ fun TrainingBlock.toEntity(): TrainingBlockEntity {
 }
 
 fun TrainingBlockEntity.toDomainNew(
-    exercises: List<ExerciseInBlockNew> = emptyList()
+    exercises: List<ExerciseInBlockNew> = emptyList(),
+    motions: List<MotionNew> = emptyList(),
+    equipment: List<EquipmentNew> = emptyList(),
+    muscleGroup: List<MuscleGroupNew> = emptyList(),
 ): TrainingBlockNew {
     return TrainingBlockNew(
         name = name,
-        description = description.toString(),
-        position = position ?: 0,
+        description = description?: "",
+        position = position?: 0,
         exercises = exercises,
-        motions = emptyList(),         // потрібно заповнювати окремо, якщо потрібно
-        muscleGroups = emptyList(),     // потрібно заповнювати окремо, якщо потрібно
-        equipment = emptyList()         // потрібно заповнювати окремо, якщо потрібно
+        motions = motions,         // потрібно заповнювати окремо, якщо потрібно
+        muscleGroups = muscleGroup,     // потрібно заповнювати окремо, якщо потрібно
+        equipment = equipment         // потрібно заповнювати окремо, якщо потрібно
     )
 }

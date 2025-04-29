@@ -1,15 +1,10 @@
 package com.example.gymlog.data.repository.gym_plan
 
-
-import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
-import com.example.gymlog.data.local.room.dao.GymPlansDao
-import com.example.gymlog.data.local.room.dao.GymSessionDao
-import com.example.gymlog.data.local.room.dao.TrainingBlockDao
-import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
+import com.example.gymlog.core.utils.EnumMapper
+import com.example.gymlog.data.local.room.dao.*
+import com.example.gymlog.data.local.room.mapper.toDomainNew
 import com.example.gymlog.data.local.room.mapper.toDomainNew
 import com.example.gymlog.domain.model.plannew.FitnessProgramNew
-import com.example.gymlog.domain.model.plannew.GymDayNew
-import com.example.gymlog.domain.model.plannew.TrainingBlockNew
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,52 +19,31 @@ class FitnessProgramNewRepository @Inject constructor(
 ): FitnessProgramNewRepositoryInterface {
 
     override suspend fun getAllFitnessProgramsNew(): List<FitnessProgramNew> {
-        val plans = gymPlansDao.getPlanCycles()
-
-        return plans.map { planEntity ->
+        return gymPlansDao.getPlanCycles().map { planEntity ->
             val gymDays = gymSessionDao.getGymDaysEntities(planEntity.id).map { gymDayEntity ->
                 val trainingBlocks = trainingBlockDao.getBlocksByGymDayId(gymDayEntity.id).map { blockEntity ->
                     val filters = filterDao.getAllFiltersForBlock(blockEntity.id)
                     val exercises = exerciseInBlockDao.getExercisesForBlock(blockEntity.id)
+                        .map { it.toDomainNew() }
 
-                    TrainingBlockNew(
-                        name = blockEntity.name,
-                        description = blockEntity.description ?: "",
-                        position = blockEntity.position,
-                        exercises = exercises.map { it.toDomainNew() },
+                    blockEntity.toDomainNew(
+                        exercises = exercises,
                         motions = filters.motions.map { motionEntity ->
-                            motionEntity.name.let { motionName ->
-                                com.example.gymlog.domain.model.attributenew.MotionNew.valueOf(motionName)
-                            }
+                            EnumMapper.fromString(motionEntity.name, com.example.gymlog.domain.model.attributenew.MotionNew.PRESS_BY_LEGS)
                         },
-                        muscleGroups = filters.muscleGroups.map { muscleGroupEntity ->
-                            muscleGroupEntity.name.let { muscleGroupName ->
-                                com.example.gymlog.domain.model.attributenew.MuscleGroupNew.valueOf(muscleGroupName)
-                            }
+                        muscleGroup = filters.muscleGroups.map { muscleGroupEntity ->
+                            EnumMapper.fromString(muscleGroupEntity.name, com.example.gymlog.domain.model.attributenew.MuscleGroupNew.CHEST)
                         },
                         equipment = filters.equipment.map { equipmentEntity ->
-                            equipmentEntity.name.let { equipmentName ->
-                                com.example.gymlog.domain.model.attributenew.EquipmentNew.valueOf(equipmentName)
-                            }
+                            EnumMapper.fromString(equipmentEntity.name, com.example.gymlog.domain.model.attributenew.EquipmentNew.BARBELL)
                         }
                     )
                 }
 
-                GymDayNew(
-                    name = gymDayEntity.day_name,
-                    description = gymDayEntity.description ?: "",
-                    position = gymDayEntity.position,
-                    trainingBlocks = trainingBlocks
-                )
+                gymDayEntity.toDomainNew(blocks = trainingBlocks)
             }
 
-            FitnessProgramNew(
-                name = planEntity.name,
-                description = planEntity.description,
-                position = planEntity.position,
-                creationDate = planEntity.creation_date,
-                gymDays = gymDays
-            )
+            planEntity.toDomainNew(gymDays = gymDays)
         }
     }
 }
