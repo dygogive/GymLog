@@ -43,7 +43,7 @@ class WorkoutRepository @Inject constructor(
      * @param day Об'єкт WorkoutGymDay для збереження
      * @return ID нового запису (Long)
      */
-    override suspend fun insertWorkGymDay(day: WorkoutGymDay): Long {
+    override suspend fun updateWorkoutGymDay(day: WorkoutGymDay): Long {
         return workGymDayDao.insert(day.toEntity())
     }
 
