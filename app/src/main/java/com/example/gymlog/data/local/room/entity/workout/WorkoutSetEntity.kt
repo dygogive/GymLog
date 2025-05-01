@@ -23,7 +23,7 @@ import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [                     // ← ДОДАЙ
+    indices = [
         Index(value = ["workout_id"]),
         Index(value = ["tr_block_id"])
     ]
@@ -34,18 +34,7 @@ data class WorkoutSetEntity(
     val tr_block_id: Long?,
     val name: String,
     val description: String?,
-    val position: Int,
-    val physicalСondition: Int?, //суб'єктивна оцінка фізичних кондицій при виконанні блоку 1...5
-    val comments: String? //записані коментарі
+    val muscleGroups: String,
+    val equipment: String,
+    val position: Int
 )
-
-/**
-val id: Long?, // ід в базі
-val workoutId: Long?, //ід виконаного тренування
-val trainingBlockId: Long?, //ід тренувального блоку, що є шаблоном цього
-val name: String, //назва - збігається з назвоб шаблону трен блоку
-val description: String?,//опис - збігається з назвоб шаблону трен блоку
-val position: Int, //позиція в тренуванні - збігається з позицією в шаблоні трен блоку
-val physicalСondition: Int?, //суб'єктивна оцінка фізичних кондицій при виконанні блоку 1...5
-val comments: String? //записані коментарі
- */

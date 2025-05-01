@@ -23,7 +23,7 @@ import com.example.gymlog.data.local.room.entity.plan.PlanCycleEntity
             onDelete = ForeignKey.SET_NULL
         )
     ],
-    indices = [                      // ← ДОДАЙ ОЦЕ
+    indices = [
         Index(value = ["plansID"]),
         Index(value = ["gymDaysID"])
     ]
@@ -33,25 +33,7 @@ data class WorkoutGymDayEntity(
     val datetime: Long,
     val plansID: Long?,
     val gymDaysID: Long?,
-    val sets: Int,
-    val blocks: Int,
     val minutes: Int?,
     val name: String,
-    val description: String?,
-    val physicalСondition: Int?,
-    val comments: String?
+    val description: String?
 )
-/**
- *
- *     val id: Long?, //ід
- *     val datetime: Long, //дата й час
- *     val plansId: Long?, // ід плану (програми) тренувань
- *     val gymDaysId: Long?, // ід заготовки тренування, що  у програмі
- *     val sets: Int, // кількість підходів за це тренування
- *     val blocks: Int, // к-сть виконаних тренувальних блоків (WorkoutGym)
- *     val minutes: Int?, //тривалість тренування у хв
- *     val name: String, // назва тренування (збігається з шаблоном тренування (GymSession)
- *     val description: String?, //опис тренування (збігається з шаблоном тренування (GymSession)
- *     val physicalСondition: Int?, //суб'єктивна оцінка фізичних кондицій при виконанні тренування 1...5
- *     val comments: String? //записані коментарі
- */
