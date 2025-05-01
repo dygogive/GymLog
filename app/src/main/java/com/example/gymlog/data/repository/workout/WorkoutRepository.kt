@@ -6,6 +6,7 @@ import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entity.workout.WorkoutResultEntity
 import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
 import com.example.gymlog.data.local.room.mapper.toDomain
 import com.example.gymlog.data.local.room.mapper.toEntity
@@ -28,108 +29,65 @@ import javax.inject.Singleton
  */
 @Singleton
 class WorkoutRepository @Inject constructor(
-    // Отримуємо DAO через dependency injection
-    private val workGymDayDao: WorkoutGymDayDao,     // Для роботи з тренувальними днями
-    private val workSetDao: WorkoutSetDao,           // Для роботи з підходами
-    private val workExerciseDao: WorkoutExerciseDao,   // Для роботи з вправами
-    private val workResultDao: WorkoutResultDao,   // Для роботи з вправами
+    private val workoutGymDayDao: WorkoutGymDayDao,
+    private val workoutSetDao: WorkoutSetDao,
+    private val workoutExerciseDao: WorkoutExerciseDao,
+    private val workoutResultDao: WorkoutResultDao,
 ) : WorkoutRepositoryInterface {
 
-    /* ----- Робота з тренувальними днями (WorkoutGymDay) ----- */
+    override suspend fun insertWorkoutGymDay(workoutGymDay: WorkoutGymDay): Long {
+        // Insert the main workout day
+        val workoutId = workoutGymDayDao.insert(workoutGymDay.toEntity())
 
-    /**
-     * Додає новий тренувальний день до бази даних
-     *
-     * @param day Об'єкт WorkoutGymDay для збереження
-     * @return ID нового запису (Long)
-     */
-    override suspend fun updateWorkoutGymDay(day: WorkoutGymDay): Long {
-        return workGymDayDao.insert(day.toEntity())
+        // Insert all sets, exercises and results
+        workoutGymDay.workoutSets.forEach { set ->
+            val setId = workoutSetDao.insert(set.toEntity(workoutId))
+
+            set.workoutExercises.forEach { exercise ->
+                val exerciseId = workoutExerciseDao.insert(exercise.toEntity(setId))
+
+                exercise.results.forEach { result ->
+                    workoutResultDao.insert(result.toEntity(exerciseId))
+                }
+            }
+        }
+
+        return workoutId
     }
 
-    /**
-     * Отримує всі тренувальні дні у вигляді Flow
-     * (для реактивного оновлення UI при змінах даних)
-     *
-     * @return Flow<List<WorkoutGymDay>> - стрім даних
-     */
-    override fun getAllWorkGymDays(): Flow<List<WorkoutGymDay>> {
-        return workGymDayDao.getAllFlow().map { entityList ->
-            entityList.map { it.toDomain() }
+
+
+    override suspend fun getWorkoutGymDays(): List<WorkoutGymDay> {
+        return workoutGymDayDao.getAll().map { workoutEntity ->
+            val sets = workoutSetDao.getByWorkoutId(workoutEntity.id!!).map { setEntity ->
+                val exercises = workoutExerciseDao.getBySetId(setEntity.id!!).map { exerciseEntity ->
+                    val results = workoutResultDao.getByExerciseId(exerciseEntity.id!!).map { it.toDomain() }
+                    exerciseEntity.toDomain(results)
+                }
+                setEntity.toDomain(exercises)
+            }
+            workoutEntity.toDomain(sets)
         }
     }
 
-    override suspend fun getLastThreeFirstResults(exerciseId: Long): List<WorkoutExercise> {
-        return workExerciseDao.getLastThreeFirstResults(exerciseId).map { it.toDomain() }.toMutableList()
+    // Add these methods to the DAOs if they don't exist
+    private suspend fun WorkoutSetDao.delete(entity: WorkoutSetEntity) {
+        // Implementation depends on your DAO
     }
 
-    override suspend fun saveWorkoutResult(result: WorkoutResult) {
-        TODO("Not yet implemented")
+    private suspend fun WorkoutExerciseDao.update(entity: WorkoutExerciseEntity) {
+        // Implementation depends on your DAO
     }
 
-
-    /* ----- Робота з підходами (WorkoutSet) ----- */
-
-    /**
-     * Додає новий підхід до бази даних
-     *
-     * @param set Об'єкт WorkoutSet для збереження
-     * @return ID нового запису (Long)
-     */
-    suspend fun insertSet(set: WorkoutSet): Long {
-        return workSetDao.insert(set.toEntity())
+    private suspend fun WorkoutExerciseDao.delete(entity: WorkoutExerciseEntity) {
+        // Implementation depends on your DAO
     }
 
-    /**
-     * Отримує всі підходи для конкретного тренувального дня
-     *
-     * @param dayId ID тренувального дня
-     * @return Flow<List<WorkoutSet>> - стрім підходів
-     */
-    fun getSetsForDay(dayId: Long): Flow<List<WorkoutSet>> {
-        return workSetDao.getWorkSetByWorkDayIDFlow(dayId).map { workSet ->
-            workSet.map { it.toDomain() }
-        }
+    private suspend fun WorkoutResultDao.update(entity: WorkoutResultEntity) {
+        // Implementation depends on your DAO
     }
 
-
-
-
-
-
-
-
-
-    /* ----- Робота з вправами (WorkoutExercise) ----- */
-
-    /**
-     * Додає нову вправу до бази даних
-     *
-     * @param ex Об'єкт WorkoutExercise для збереження
-     * @return ID нового запису (Long)
-     */
-    suspend fun insertExercise(ex: WorkoutExercise): Long {
-        return workExerciseDao.insert(ex.toEntity())
+    private suspend fun WorkoutResultDao.delete(entity: WorkoutResultEntity) {
+        // Implementation depends on your DAO
     }
-
-    /**
-     * Отримує всі вправи для конкретного тренувального дня
-     *
-     * @param dayId ID тренувального дня
-     * @return Flow<List<WorkoutExercise>> - стрім вправ
-     */
-
-    fun getExercisesForDay(dayId: Long): Flow<List<WorkoutExercise>> {
-        return workExerciseDao.getWorkExerciseByWorkDayIDFlow(dayId).map { workExercise ->
-            workExercise.map { it.toDomain() }
-        }
-    }
-
-
-
-
-
-
-
-
 }

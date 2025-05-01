@@ -14,16 +14,8 @@ import com.example.gymlog.data.local.room.entity.workout.WorkoutResultEntity
 @Dao
 interface WorkoutResultDao {
     @Insert
-    suspend fun insert(workoutResultEntity: WorkoutResultEntity): Long
+    suspend fun insert(result: WorkoutResultEntity): Long
 
-    @Update
-    suspend fun update(workoutResultEntity: WorkoutResultEntity): Int
-
-    @Delete
-    suspend fun delete(workoutResultEntity: WorkoutResultEntity): Int
-
-    // Отримання вправ для конкретного тренування за ID тренування
-    @Query("SELECT * FROM workout_result WHERE workoutExerciseId = :workoutExerciseId")
-    suspend fun getWorkoutResultEntityByWorkExerciseId(workoutExerciseId: Long): List<WorkoutResultEntity>
-
+    @Query("SELECT * FROM workout_result WHERE workoutExerciseId = :exerciseId ORDER BY position")
+    suspend fun getByExerciseId(exerciseId: Long): List<WorkoutResultEntity>
 }

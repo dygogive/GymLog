@@ -15,31 +15,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkoutExerciseDao {
     @Insert
-    suspend fun insert(workoutExerciseEntity: WorkoutExerciseEntity): Long
+    suspend fun insert(exercise: WorkoutExerciseEntity): Long
 
-    @Update
-    suspend fun update(workoutExerciseEntity: WorkoutExerciseEntity): Int
-
-    @Delete
-    suspend fun delete(workoutExerciseEntity: WorkoutExerciseEntity): Int
-
-    // Отримання вправ для конкретного тренування за ID тренування
-    @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
-    suspend fun getWorkoutExerciseByWorkDayID(workGymDayID: Long): List<WorkoutExerciseEntity>
-
-    // Аналогічний запит, але з Flow для реактивного програмування
-    @Query("SELECT * FROM WorkoutExercises WHERE workout_gymday_ID = :workGymDayID")
-    fun getWorkExerciseByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutExerciseEntity>>
-
-
-    /**
-     * Повертає по три останніх «перших» виконання вправи (orderInWorkSet = найменше)
-     * з трьох останніх тренувань, де вона була.
-     *
-     */
-    @Query("SELECT * FROM WorkoutExercises " +  //Need to change
-            "WHERE exerciseId = :exerciseId " +
-            "LIMIT 3")
-    suspend fun getLastThreeFirstResults(exerciseId: Long): List<WorkoutExerciseEntity>
-
+    @Query("SELECT * FROM WorkoutExercises WHERE workout_set_id = :setId ORDER BY position")
+    suspend fun getBySetId(setId: Long): List<WorkoutExerciseEntity>
 }

@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    public static final int VERSION = 19;
+    public static final int VERSION = 20;
     private final Context context;
 
     // Конструктор
@@ -134,7 +134,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    name TEXT NOT NULL," +
                 "    description TEXT," +
                 "    muscleGroups TEXT NOT NULL," +
-                "    equipment TEXT NOT NULL," +
+                "    equipments TEXT NOT NULL," +
+                "    motions TEXT NOT NULL," +
                 "    position INTEGER NOT NULL," +
                 "    FOREIGN KEY (workout_id) REFERENCES WorkoutGymDay(id) ON DELETE CASCADE," +
                 "    FOREIGN KEY (tr_block_id) REFERENCES TrainingBlock(id) ON DELETE SET NULL" +

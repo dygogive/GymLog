@@ -14,20 +14,15 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface WorkoutGymDayDao {
-    @Insert  // Анотація для вставки нового запису
-    suspend fun insert(workoutGymDayEntity: WorkoutGymDayEntity): Long  // Повертає ID нового запису
+    @Insert
+    suspend fun insert(workout: WorkoutGymDayEntity): Long
 
-    @Update  // Анотація для оновлення запису
-    suspend fun update(workoutGymDayEntity: WorkoutGymDayEntity): Int   // Повертає кількість оновлених рядків
+    @Update
+    suspend fun update(workout: WorkoutGymDayEntity)
 
-    @Delete  // Анотація для видалення запису
-    suspend fun delete(workoutGymDayEntity: WorkoutGymDayEntity): Int   // Повертає кількість видалених рядків
-
-    // Отримання всіх записів, відсортованих за датою (новий до старого)
     @Query("SELECT * FROM WorkoutGymDay ORDER BY datetime DESC")
-    suspend fun getAll(): List<WorkoutGymDayEntity>  // Звичайний список (для синхронних операцій)
+    suspend fun getAll(): List<WorkoutGymDayEntity>
 
-    // Аналогічний запит, але повертає Flow для спостереження за змінами в реальному часі
-    @Query("SELECT * FROM WorkoutGymDay ORDER BY datetime DESC")
-    fun getAllFlow(): Flow<List<WorkoutGymDayEntity>>  // Flow для реактивного програмування
+    @Query("SELECT * FROM WorkoutGymDay WHERE id = :id")
+    suspend fun getById(id: Long): WorkoutGymDayEntity?
 }

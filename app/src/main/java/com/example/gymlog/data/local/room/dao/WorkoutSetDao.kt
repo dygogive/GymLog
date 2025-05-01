@@ -14,20 +14,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkoutSetDao {
     @Insert
-    suspend fun insert(workoutSetEntity: WorkoutSetEntity): Long
+    suspend fun insert(set: WorkoutSetEntity): Long
 
-    @Update
-    suspend fun update(workoutSetEntity: WorkoutSetEntity): Int
-
-    @Delete
-    suspend fun delete(workoutSetEntity: WorkoutSetEntity): Int
-
-    // Отримання підходів для конкретного тренування за ID тренування
-    // Відсортовані за позицією (зростання)
-    @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workGymDayID ORDER BY position ASC")
-    suspend fun getWorkSetByWorkDayID(workGymDayID: Long): List<WorkoutSetEntity>
-
-    // Аналогічний запит, але з Flow для спостереження за змінами
-    @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workGymDayID ORDER BY position ASC")
-    fun getWorkSetByWorkDayIDFlow(workGymDayID: Long): Flow<List<WorkoutSetEntity>>
+    @Query("SELECT * FROM WorkoutSet WHERE workout_id = :workoutId ORDER BY position")
+    suspend fun getByWorkoutId(workoutId: Long): List<WorkoutSetEntity>
 }

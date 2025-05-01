@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
+import com.example.gymlog.domain.model.attribute.motion.Motion
 
 // WorkoutSet.kt
 @Entity(
@@ -35,6 +36,7 @@ data class WorkoutSetEntity(
     val name: String,
     val description: String?,
     val muscleGroups: String,
-    val equipment: String,
+    val motions: String,
+    val equipments: String,
     val position: Int
 )
