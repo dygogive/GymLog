@@ -44,9 +44,6 @@ class WorkoutViewModel @Inject constructor(
 
 
 
-
-
-
     // ----- ЗАВАНТАЖЕННЯ ДАНИХ - УСІХ ПРОГРАМ ТРЕНУВАНЬ -----
 
     private fun loadPrograms() {
@@ -81,8 +78,6 @@ class WorkoutViewModel @Inject constructor(
                 }
         }
     }
-
-
 
 
 
@@ -137,10 +132,6 @@ class WorkoutViewModel @Inject constructor(
     fun retryLoadPrograms() {
         loadPrograms()
     }
-
-
-
-
 
 
 
