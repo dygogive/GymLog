@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.attribute.TypeAttributeExercises;
+import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
+import com.example.gymlog.domain.model.legacy.attribute.TypeAttributeExercises;
 import com.example.gymlog.ui.legacy.exercise.adapters.AttributeAdapter;
 
 import java.util.List;

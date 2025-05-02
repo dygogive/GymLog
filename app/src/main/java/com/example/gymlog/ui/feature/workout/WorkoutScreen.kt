@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.presentation.state.SelectionState
-import com.example.gymlog.presentation.viewmodel.WorkoutViewModel
+import com.example.gymlog.presentation.SelectionState
+import com.example.gymlog.presentation.WorkoutViewModel
 import com.example.gymlog.ui.feature.workout.model.*
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
@@ -211,7 +211,7 @@ fun Preview_WorkoutScreenContent() {
             name = "День ніг",
             description = "Квадрицепси, Біцепси стегна",
             attributesInfo = AttributesInfo(
-                motionStateList = MotioStateList(listOf("Жим", "Тяга")),
+                motionStateList = MotionStateList(listOf("Жим", "Тяга")),
                 muscleStateList = MusclesStateList(listOf("Квадрицепси", "Біцепс стегна")),
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),

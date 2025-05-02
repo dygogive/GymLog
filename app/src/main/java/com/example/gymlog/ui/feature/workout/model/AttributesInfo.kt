@@ -1,13 +1,13 @@
 package com.example.gymlog.ui.feature.workout.model
 
 data class AttributesInfo(
-    val motionStateList: MotioStateList,
+    val motionStateList: MotionStateList,
     val muscleStateList: MusclesStateList,
     val equipmentStateList: EquipmentStateList,
 )
 
 
-data class MotioStateList(
+data class MotionStateList(
     val motions: List<String>,
 )
 

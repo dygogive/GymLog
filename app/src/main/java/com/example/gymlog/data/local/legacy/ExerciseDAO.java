@@ -9,11 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.attribute.AttributeFilter;
-import com.example.gymlog.domain.model.attribute.equipment.Equipment;
-import com.example.gymlog.domain.model.exercise.Exercise;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
+import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.legacy.exercise.Exercise;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;

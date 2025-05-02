@@ -18,15 +18,15 @@ import android.widget.Toast;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
-import com.example.gymlog.domain.model.attribute.AttributeFilter;
-import com.example.gymlog.domain.model.attribute.BundleKeys;
-import com.example.gymlog.domain.model.attribute.equipment.Equipment;
-import com.example.gymlog.domain.model.exercise.Exercise;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
+import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.BundleKeys;
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.legacy.exercise.Exercise;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
 import com.example.gymlog.ui.legacy.exercise.adapters.ExerciseAdapter;
 import com.example.gymlog.ui.legacy.exercise.DialogForExerciseEdit;
-import com.example.gymlog.data.model.DefaultExercisesFactory;
+import com.example.gymlog.data.local.DefaultExercisesFactory;
 
 import java.util.List;
 

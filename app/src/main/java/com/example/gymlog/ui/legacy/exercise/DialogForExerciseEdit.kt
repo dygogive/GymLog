@@ -7,13 +7,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.Nullable
 
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.attribute.equipment.Equipment
-import com.example.gymlog.domain.model.exercise.Exercise
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup
-import com.example.gymlog.domain.model.attribute.motion.Motion
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.legacy.exercise.Exercise
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion
 import com.example.gymlog.data.local.legacy.ExerciseDAO
 import com.example.gymlog.ui.legacy.dialogs.DialogStyler
 
@@ -389,7 +388,7 @@ class DialogForExerciseEdit(
     /**
      * Shows the dialog with preselected filters
      *
-     * Updated method for preselecting filters. Now accepts lists for MotioStateList and EquipmentStateList,
+     * Updated method for preselecting filters. Now accepts lists for MotionStateList and EquipmentStateList,
      * but since Exercise uses single fields for these filters, we select the first element from the list.
      *
      * @param exercise Exercise to edit, or null for creating a new one

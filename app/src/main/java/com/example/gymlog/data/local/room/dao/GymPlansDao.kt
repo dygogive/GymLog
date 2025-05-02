@@ -5,9 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.gymlog.data.local.room.entity.plan.PlanCycleEntity
-import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
-import kotlinx.coroutines.flow.Flow
+import com.example.gymlog.data.local.room.entities.plan.PlanCycleEntity
 
 /**
  * Інтерфейс DAO для роботи з таблицею WorkoutSet (підходи у тренуванні).

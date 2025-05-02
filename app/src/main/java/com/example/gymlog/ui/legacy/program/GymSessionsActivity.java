@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.PlanManagerDAO;
-import com.example.gymlog.domain.model.plan.GymDay;
+import com.example.gymlog.domain.model.legacy.plan.GymDay;
 import com.example.gymlog.ui.legacy.dialogs.ConfirmDeleteDialog;
 import com.example.gymlog.ui.legacy.dialogs.DialogCreateEditNameDesc;
 import com.example.gymlog.ui.legacy.program.adapters.BasePlanAdapter;

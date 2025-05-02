@@ -1,9 +1,9 @@
 package com.example.gymlog.domain.model.workout
 
 
-import com.example.gymlog.domain.model.attributenew.EquipmentNew
-import com.example.gymlog.domain.model.attributenew.MotionNew
-import com.example.gymlog.domain.model.attributenew.MuscleGroupNew
+import com.example.gymlog.domain.model.attribute.EquipmentNew
+import com.example.gymlog.domain.model.attribute.MotionNew
+import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 
 // WorkoutExercise - вправа що виконана
 data class WorkoutExercise(

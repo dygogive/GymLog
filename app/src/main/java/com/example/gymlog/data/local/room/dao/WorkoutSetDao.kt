@@ -1,12 +1,9 @@
 package com.example.gymlog.data.local.room.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
-import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
-import kotlinx.coroutines.flow.Flow
+import com.example.gymlog.data.local.room.entities.workout.WorkoutSetEntity
 
 /**
  * Інтерфейс DAO для роботи з таблицею WorkoutSet (підходи у тренуванні).

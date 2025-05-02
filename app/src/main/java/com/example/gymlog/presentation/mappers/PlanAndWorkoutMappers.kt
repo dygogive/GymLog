@@ -1,9 +1,9 @@
 package com.example.gymlog.presentation.mappers
 
 import android.content.Context
-import com.example.gymlog.domain.model.plannew.*
-import com.example.gymlog.domain.model.exercisenew.*
-import com.example.gymlog.domain.model.attributenew.*
+import com.example.gymlog.domain.model.attribute.*
+import com.example.gymlog.domain.model.exercise.*
+import com.example.gymlog.domain.model.plan.*
 import com.example.gymlog.ui.feature.workout.model.*
 
 /**
@@ -17,7 +17,7 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
     name = this.name,
     description = this.description,
     attributesInfo = AttributesInfo(
-        motionStateList = MotioStateList(this.motions.map { it.getDescription(context) }),
+        motionStateList = MotionStateList(this.motions.map { it.getDescription(context) }),
         muscleStateList = MusclesStateList(this.muscleGroups.map { it.getDescription(context) }),
         equipmentStateList = EquipmentStateList(this.equipment.map { it.getDescription(context) }),
     ),
@@ -34,10 +34,36 @@ fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseInfo = ExerciseInfo(
 )
 
 /**
- * Допоміжна функція для отримання імені вправи
+ * Допоміжна функція для отримання імені вправи, якщо name - це ідентифікатор ресурсу
+ * (наприклад, "equipment_barbell" для <string name="equipment_barbell">Barbell</string>)
  */
 fun ExerciseInBlockNew.getNameOnly(context: Context): String {
-    return this.name
+    val value: String = name
+
+    if (!isCustom) {
+        try {
+            // Шукаємо ресурс за його ідентифікатором (ключем)
+            val resId = context.resources.getIdentifier(
+                value,         // Ідентифікатор ресурсу, наприклад "equipment_barbell"
+                "string",      // Тип ресурсу
+                context.packageName  // Пакет
+            )
+
+            // Якщо ресурс знайдено, повертаємо його значення
+            if (resId != 0) {
+                return context.getString(resId)
+            }
+
+            // Якщо ресурс не знайдено, повертаємо оригінальне значення
+            return value
+        } catch (e: Exception) {
+            // У випадку будь-якої помилки повертаємо оригінальне значення
+            return name
+        }
+    } else {
+        // Якщо не кастомна вправа, просто повертаємо назву
+        return name
+    }
 }
 
 /**

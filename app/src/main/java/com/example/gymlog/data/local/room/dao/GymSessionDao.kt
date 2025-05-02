@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.gymlog.data.local.room.entity.plan.GymDayEntity
+import com.example.gymlog.data.local.room.entities.plan.GymDayEntity
 
 @Dao
 interface GymSessionDao {

@@ -2,7 +2,7 @@ package com.example.gymlog.presentation.mappers
 
 
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.attributenew.EquipmentNew
+import com.example.gymlog.domain.model.attribute.EquipmentNew
 
 /**
  * Mapper для перетворення EquipmentNew enum у відповідний ресурс рядка

@@ -1,7 +1,7 @@
 package com.example.gymlog.presentation.mappers
 
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.attributenew.MotionNew
+import com.example.gymlog.domain.model.attribute.MotionNew
 
 /**
  * Mapper для перетворення MotionNew enum у відповідний ресурс рядка

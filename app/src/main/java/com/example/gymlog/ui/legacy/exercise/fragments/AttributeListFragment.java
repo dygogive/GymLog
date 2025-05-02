@@ -1,8 +1,8 @@
 package com.example.gymlog.ui.legacy.exercise.fragments;
 
-import static com.example.gymlog.domain.model.attribute.AttributeFilter.EQUIPMENT;
-import static com.example.gymlog.domain.model.attribute.AttributeFilter.MOTION;
-import static com.example.gymlog.domain.model.attribute.AttributeFilter.MUSCLE_GROUP;
+import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.EQUIPMENT;
+import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.MOTION;
+import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.MUSCLE_GROUP;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.attribute.AttributeFilter;
-import com.example.gymlog.domain.model.attribute.ListHeaderAndAttribute;
+import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
 
 import java.util.List;
 

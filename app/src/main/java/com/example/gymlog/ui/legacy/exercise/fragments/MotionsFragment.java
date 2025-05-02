@@ -9,9 +9,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.attribute.AttributeFilter;
-import com.example.gymlog.domain.model.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
 
 import java.util.List;
 

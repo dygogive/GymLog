@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.PlanManagerDAO;
-import com.example.gymlog.domain.model.attribute.equipment.Equipment;
-import com.example.gymlog.domain.model.exercise.Exercise;
-import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
-import com.example.gymlog.domain.model.plan.TrainingBlock;
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.legacy.exercise.Exercise;
+import com.example.gymlog.domain.model.legacy.exercise.ExerciseInBlock;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
+import com.example.gymlog.domain.model.legacy.plan.TrainingBlock;
 import com.example.gymlog.ui.legacy.dialogs.DialogStyler;
 
 import java.util.ArrayList;

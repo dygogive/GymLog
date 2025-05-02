@@ -7,13 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.attribute.AttributeFilter;
-import com.example.gymlog.domain.model.attribute.BundleKeys;
-import com.example.gymlog.domain.model.attribute.equipment.Equipment;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
+import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.BundleKeys;
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
-import com.example.gymlog.data.model.DefaultExercisesFactory;
+import com.example.gymlog.data.local.DefaultExercisesFactory;
 import com.example.gymlog.ui.legacy.exercise.fragments.AttributeListFragment;
 import com.example.gymlog.ui.legacy.exercise.fragments.ExercisesFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,7 +66,7 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                 // В залежності від типу фільтра передаємо відповідні параметри в діалог
                 if (AttributeFilter.MOTION.name().equals(attributeType)) {
                     Motion motion = Motion.valueOf(attributeValue);
-                    // Передаємо список з одним елементом для MotioStateList, а для інших параметрів дефолтні значення
+                    // Передаємо список з одним елементом для MotionStateList, а для інших параметрів дефолтні значення
                     dialog.showWithPreselectedFilters(null, Collections.singletonList(motion), new ArrayList<>(), null);
                     return;
                 } else if (AttributeFilter.MUSCLE_GROUP.name().equals(attributeType)) {

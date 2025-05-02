@@ -13,18 +13,18 @@ import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
 import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.dao.WorkoutSetDao
-import com.example.gymlog.data.local.room.entity.exercise.ExerciseEntity
-import com.example.gymlog.data.local.room.entity.plan.GymDayEntity
-import com.example.gymlog.data.local.room.entity.plan.PlanCycleEntity
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEntity
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockEquipmentEntity
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockExerciseEntity
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMotionEntity
-import com.example.gymlog.data.local.room.entity.plan.TrainingBlockMuscleGroupEntity
-import com.example.gymlog.data.local.room.entity.workout.WorkoutExerciseEntity
-import com.example.gymlog.data.local.room.entity.workout.WorkoutGymDayEntity
-import com.example.gymlog.data.local.room.entity.workout.WorkoutResultEntity
-import com.example.gymlog.data.local.room.entity.workout.WorkoutSetEntity
+import com.example.gymlog.data.local.room.entities.exercise.ExerciseEntity
+import com.example.gymlog.data.local.room.entities.plan.GymDayEntity
+import com.example.gymlog.data.local.room.entities.plan.PlanCycleEntity
+import com.example.gymlog.data.local.room.entities.plan.TrainingBlockEntity
+import com.example.gymlog.data.local.room.entities.plan.TrainingBlockEquipmentEntity
+import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEntity
+import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMotionEntity
+import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMuscleGroupEntity
+import com.example.gymlog.data.local.room.entities.workout.WorkoutExerciseEntity
+import com.example.gymlog.data.local.room.entities.workout.WorkoutGymDayEntity
+import com.example.gymlog.data.local.room.entities.workout.WorkoutResultEntity
+import com.example.gymlog.data.local.room.entities.workout.WorkoutSetEntity
 
 /**
  * Абстрактний клас бази даних Room, який визначає структуру бази даних додатка.

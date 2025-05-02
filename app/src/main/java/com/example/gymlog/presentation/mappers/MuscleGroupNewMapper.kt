@@ -1,7 +1,7 @@
 package com.example.gymlog.presentation.mappers
 
 import com.example.gymlog.R
-import com.example.gymlog.domain.model.attributenew.MuscleGroupNew
+import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 
 /**
  * Mapper для перетворення MuscleGroupNew enum у відповідний ресурс рядка

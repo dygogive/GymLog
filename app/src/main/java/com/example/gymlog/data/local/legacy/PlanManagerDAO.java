@@ -9,14 +9,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.util.Log;
 
-import com.example.gymlog.domain.model.attribute.equipment.Equipment;
-import com.example.gymlog.domain.model.exercise.Exercise;
-import com.example.gymlog.domain.model.exercise.ExerciseInBlock;
-import com.example.gymlog.domain.model.attribute.motion.Motion;
-import com.example.gymlog.domain.model.attribute.muscle.MuscleGroup;
-import com.example.gymlog.domain.model.plan.FitnessProgram;
-import com.example.gymlog.domain.model.plan.GymDay;
-import com.example.gymlog.domain.model.plan.TrainingBlock;
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
+import com.example.gymlog.domain.model.legacy.exercise.Exercise;
+import com.example.gymlog.domain.model.legacy.exercise.ExerciseInBlock;
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
+import com.example.gymlog.domain.model.legacy.plan.FitnessProgram;
+import com.example.gymlog.domain.model.legacy.plan.GymDay;
+import com.example.gymlog.domain.model.legacy.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
