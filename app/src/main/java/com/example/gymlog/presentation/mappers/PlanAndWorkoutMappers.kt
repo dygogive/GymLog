@@ -97,7 +97,7 @@ fun GymDayNew.toUiModel(context: Context): GymDayUiModel = GymDayUiModel(
     name = this.name,
     description = this.description,
     position = this.position?: 0,
-    trainingBlockUiModels = this.trainingBlocks.map { it.toUiModel(context) }
+    trainingBlocksUiModel = this.trainingBlocks.map { it.toUiModel(context) }
 )
 
 /**

@@ -4,5 +4,5 @@ data class GymDayUiModel (
     val name: String,
     val description: String?,
     val position: Int,
-    val trainingBlockUiModels: List<TrainingBlockUiModel>
+    val trainingBlocksUiModel: List<TrainingBlockUiModel>
 )

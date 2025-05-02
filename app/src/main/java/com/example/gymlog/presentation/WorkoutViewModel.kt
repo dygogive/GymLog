@@ -47,12 +47,14 @@ class WorkoutViewModel @Inject constructor(
 
 
 
-    // ----- ЗАВАНТАЖЕННЯ ДАНИХ -----
+    // ----- ЗАВАНТАЖЕННЯ ДАНИХ - УСІХ ПРОГРАМ ТРЕНУВАНЬ -----
 
     private fun loadPrograms() {
+        //використання корутини
         viewModelScope.launch {
             // Показуємо лоадер
             updateSelectionState { it.copy(isLoading = true) }
+
 
             runCatching { fetchProgramsUseCase(getApplication()) }
                 .onSuccess { programs ->
@@ -87,12 +89,11 @@ class WorkoutViewModel @Inject constructor(
 
     // ----- ОБРОБНИКИ ПОДІЙ UI -----
 
-    // Вибір програми
+    // Вибір програми в діалозі
     fun onProgramSelected(program: ProgramInfo) = updateSelectionState {
         it.copy(selectedProgram = program, selectedGymDay = null)
     }
-
-    // Вибір дня тренування
+    // Вибір дня тренування і закриття діалогу
     fun onSessionSelected(session: GymDayUiModel) {
         // Запам'ятовуємо вибір
         updateSelectionState {
@@ -102,14 +103,15 @@ class WorkoutViewModel @Inject constructor(
             )
         }
 
-        // Активуємо тренування
+        // Показуємо список тренувальних блоків і робимо тренування активним статусом
         updateTrainingState {
             it.copy(
-                blocks = session.trainingBlockUiModels.toPersistentList(),
+                blocks = session.trainingBlocksUiModel.toPersistentList(),
                 isWorkoutActive = true
             )
         }
     }
+
 
     // Старт/стоп тренування
     fun startStopGym() {
@@ -228,6 +230,12 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
+
+
+
+
+
+
     // ----- ДОПОМІЖНІ ФУНКЦІЇ ОНОВЛЕННЯ СТАНУ -----
 
     private fun updateTimerState(update: (TimerState) -> TimerState) {
@@ -238,8 +246,8 @@ class WorkoutViewModel @Inject constructor(
         _uiState.update { it.copy(trainingBlocksState = update(it.trainingBlocksState)) }
     }
 
-    private fun updateSelectionState(update: (SelectionState) -> SelectionState) {
-        _uiState.update { it.copy(selectionState = update(it.selectionState)) }
+    private fun updateSelectionState(update: (ProgramSelectionState) -> ProgramSelectionState) {
+        _uiState.update { it.copy(programSelectionState = update(it.programSelectionState)) }
     }
 
     private fun updateResultsState(update: (ResultsState) -> ResultsState) {

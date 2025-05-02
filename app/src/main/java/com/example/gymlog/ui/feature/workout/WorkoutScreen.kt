@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.presentation.SelectionState
+import com.example.gymlog.presentation.ProgramSelectionState
 import com.example.gymlog.presentation.WorkoutViewModel
 import com.example.gymlog.ui.feature.workout.model.*
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
@@ -74,9 +74,9 @@ fun WorkoutScreen(
         }
 
         // Відображення діалогу вибору програми тренування
-        if (state.selectionState.showSelectionDialog) {
+        if (state.programSelectionState.showSelectionDialog) {
             DialogOverlay(
-                selectionState = state.selectionState,
+                programSelectionState = state.programSelectionState,
                 onProgramSelected = viewModel::onProgramSelected,
                 onGymSelected = viewModel::onSessionSelected,
                 onDismiss = {
@@ -97,7 +97,7 @@ fun WorkoutScreen(
  */
 @Composable
 private fun DialogOverlay(
-    selectionState: SelectionState,
+    programSelectionState: ProgramSelectionState,
     onProgramSelected: (ProgramInfo) -> Unit,
     onGymSelected: (GymDayUiModel) -> Unit,
     onDismiss: () -> Unit,
@@ -111,16 +111,16 @@ private fun DialogOverlay(
     ) {
         when {
             // Відображення індикатора завантаження
-            selectionState.isLoading -> {
+            programSelectionState.isLoading -> {
                 CircularProgressIndicator(
                     modifier = Modifier.size(48.dp)
                 )
             }
 
             // Відображення повідомлення про помилку
-            selectionState.errorMessage != null -> {
+            programSelectionState.errorMessage != null -> {
                 ErrorContent(
-                    errorMessage = selectionState.errorMessage,
+                    errorMessage = programSelectionState.errorMessage,
                     onRetry = onRetry,
                     onDismiss = onDismiss
                 )
@@ -129,7 +129,7 @@ private fun DialogOverlay(
             // Відображення діалогу вибору програми
             else -> {
                 WorkoutSelectionDialog(
-                    programs = selectionState.availablePrograms,
+                    programs = programSelectionState.availablePrograms,
                     onProgramSelected = onProgramSelected,
                     onGymSelected = onGymSelected,
                     onDismiss = onDismiss

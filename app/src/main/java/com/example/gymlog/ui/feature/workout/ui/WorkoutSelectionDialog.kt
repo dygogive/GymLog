@@ -330,13 +330,13 @@ fun WorkoutSelectionDialogPreview() {
                     name = "Workout 1",
                     description = "Chest Day",
                     position = 1,
-                    trainingBlockUiModels = emptyList()
+                    trainingBlocksUiModel = emptyList()
                 ),
                 GymDayUiModel(
                     name = "Workout 2",
                     description = "Leg Day",
                     position = 2,
-                    trainingBlockUiModels = emptyList()
+                    trainingBlocksUiModel = emptyList()
                 )
             )
         ),
@@ -348,7 +348,7 @@ fun WorkoutSelectionDialogPreview() {
                     name = "Workout 3",
                     description = "Back Day",
                     position = 1,
-                    trainingBlockUiModels = emptyList()
+                    trainingBlocksUiModel = emptyList()
                 )
             )
         )
