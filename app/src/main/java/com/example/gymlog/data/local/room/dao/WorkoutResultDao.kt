@@ -12,8 +12,23 @@ import com.example.gymlog.data.local.room.entities.workout.WorkoutResultEntity
 @Dao
 interface WorkoutResultDao {
     @Insert
-    suspend fun insert(result: WorkoutResultEntity): Long
+    suspend fun insert(result: WorkoutResultEntity)
 
-    @Query("SELECT * FROM workout_result WHERE workoutExerciseId = :exerciseId ORDER BY position")
-    suspend fun getByExerciseId(exerciseId: Long): List<WorkoutResultEntity>
+    @Query("""
+        SELECT * FROM workout_result 
+        WHERE exerciseInBlockId = :exerciseInBlockId 
+        ORDER BY weight DESC 
+        LIMIT :limit
+    """)
+    suspend fun getLatestResults(exerciseInBlockId: Long, limit: Int): List<WorkoutResultEntity>
+
+    @Query("""
+        SELECT * FROM workout_result 
+        WHERE exerciseInBlockId = :exerciseInBlockId 
+        AND workoutDateTime = :workoutDateTime
+    """)
+    suspend fun getResultsForDateTime(
+        exerciseInBlockId: Long,
+        workoutDateTime: String
+    ): List<WorkoutResultEntity>
 }

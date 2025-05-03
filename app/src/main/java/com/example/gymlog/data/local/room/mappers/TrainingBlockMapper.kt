@@ -40,15 +40,16 @@ fun TrainingBlockEntity.toDomainNew(
     exercises: List<ExerciseInBlockNew> = emptyList(),
     motions: List<MotionNew> = emptyList(),
     equipment: List<EquipmentNew> = emptyList(),
-    muscleGroup: List<MuscleGroupNew> = emptyList(),
+    muscleGroup: List<MuscleGroupNew> = emptyList()
 ): TrainingBlockNew {
     return TrainingBlockNew(
+        id = id ?: 0,
         name = name,
-        description = description?: "",
-        position = position?: 0,
+        description = description ?: "",
+        position = position,
         exercises = exercises,
-        motions = motions,         // потрібно заповнювати окремо, якщо потрібно
-        muscleGroups = muscleGroup,     // потрібно заповнювати окремо, якщо потрібно
-        equipment = equipment         // потрібно заповнювати окремо, якщо потрібно
+        motions = motions,
+        muscleGroups = muscleGroup,
+        equipment = equipment
     )
 }

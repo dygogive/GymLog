@@ -6,6 +6,7 @@ import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 
 
 open class ExerciseNew (
+    val exeId: Long = 0,
     val name:           String,
     val description:    String,
     val motion: MotionNew,

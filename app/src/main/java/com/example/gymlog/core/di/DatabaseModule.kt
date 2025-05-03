@@ -8,10 +8,7 @@ import com.example.gymlog.data.local.room.dao.GymPlansDao
 import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
-import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
-import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
-import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +25,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+
+
+
 
     /**
      * Провайдер для створення екземпляра бази даних Room.
@@ -46,38 +46,6 @@ object DatabaseModule {
         ).build()                      // Створення екземпляру бази даних
     }
 
-    /**
-     * Провайдер для отримання DAO для роботи з тренувальними днями.
-     *
-     * @param db Екземпляр бази даних (автоматично інжектується)
-     * @return Екземпляр WorkoutGymDayDao
-     */
-    @Provides
-    fun provideWorkoutGymDayDao(db: WorkoutDatabase): WorkoutGymDayDao {
-        return db.workoutGymDayDao()  // Отримуємо DAO з бази даних
-    }
-
-    /**
-     * Провайдер для отримання DAO для роботи з підходами у тренуваннях.
-     *
-     * @param db Екземпляр бази даних
-     * @return Екземпляр WorkoutSetDao
-     */
-    @Provides
-    fun provideWorkoutSetDao(db: WorkoutDatabase): WorkoutSetDao {
-        return db.workoutSetDao()     // Отримуємо DAO з бази даних
-    }
-
-    /**
-     * Провайдер для отримання DAO для роботи з вправами у тренуваннях.
-     *
-     * @param db Екземпляр бази даних
-     * @return Екземпляр WorkoutExerciseDao
-     */
-    @Provides
-    fun provideWorkoutExerciseDao(db: WorkoutDatabase): WorkoutExerciseDao {
-        return db.workoutExerciseDao() // Отримуємо DAO з бази даних
-    }
 
 
     /**
@@ -93,7 +61,6 @@ object DatabaseModule {
 
 
 
-
     /**
      * Провайдер для отримання DAO для роботи з вправами у тренуваннях.
      *
@@ -105,10 +72,14 @@ object DatabaseModule {
         return db.trainingBlockDao() // Отримуємо DAO з бази даних
     }
 
+
+
     @Provides
     fun provideExerciseInBlockDao(db: WorkoutDatabase): ExerciseInBlockDao {
         return db.exerciseInBlockDao() // Отримуємо DAO з бази даних
     }
+
+
 
     @Provides
     fun provideTrainingBlockFilterDao(db: WorkoutDatabase): TrainingBlockFilterDao {
@@ -116,15 +87,19 @@ object DatabaseModule {
     }
 
 
+
     @Provides
     fun provideGymPlansDao(db: WorkoutDatabase): GymPlansDao {
         return db.gymPlansDao() // Отримуємо DAO з бази даних
     }
 
+
+
     @Provides
     fun provideGymSessionDao(db: WorkoutDatabase): GymSessionDao {
         return db.gymSessionDao() // Отримуємо DAO з бази даних
     }
+
 
 
 }

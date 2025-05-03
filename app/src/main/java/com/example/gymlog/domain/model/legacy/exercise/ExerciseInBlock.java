@@ -11,7 +11,16 @@ public class ExerciseInBlock extends Exercise {
     private final long linkId; // id з таблиці TrainingBlockExercises
     private int position;
 
-    public ExerciseInBlock(long linkId, long exerciseId, String name, String description, Motion motion, List<MuscleGroup> muscleGroups, Equipment equipment, int position) {
+    public ExerciseInBlock(
+            long linkId,
+            long exerciseId,
+            String name,
+            String description,
+            Motion motion,
+            List<MuscleGroup> muscleGroups,
+            Equipment equipment,
+            int position
+    ) {
         super(exerciseId, name, description, motion, muscleGroups, equipment);
         this.linkId = linkId;
         this.position = position;

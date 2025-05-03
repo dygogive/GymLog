@@ -42,8 +42,9 @@ fun GymDay.toEntity(): GymDayEntity = GymDayEntity(
 fun GymDayEntity.toDomainNew(
     blocks: List<TrainingBlockNew> = emptyList()
 ): GymDayNew = GymDayNew(
-    name = this.day_name,
-    description = this.description ?: "",
-    position = this.position ?: -1,
+    id = id ?: 0,
+    name = day_name,
+    description = description ?: "",
+    position = position,
     trainingBlocks = blocks
 )

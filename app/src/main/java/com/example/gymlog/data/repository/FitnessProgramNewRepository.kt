@@ -6,11 +6,14 @@ import com.example.gymlog.data.local.room.dao.GymPlansDao
 import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
+import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.mappers.toDomainNew
+import com.example.gymlog.data.local.room.mappers.toEntity
 import com.example.gymlog.domain.model.attribute.EquipmentNew
 import com.example.gymlog.domain.model.attribute.MotionNew
 import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.FitnessProgramNew
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +24,8 @@ class FitnessProgramNewRepository @Inject constructor(
     private val gymSessionDao: GymSessionDao,
     private val trainingBlockDao: TrainingBlockDao,
     private val filterDao: TrainingBlockFilterDao,
-    private val exerciseInBlockDao: ExerciseInBlockDao
+    private val exerciseInBlockDao: ExerciseInBlockDao,
+    private val workoutResultDao: WorkoutResultDao,
 ): FitnessProgramNewRepositoryInterface {
 
     override suspend fun getAllFitnessProgramsNew(): List<FitnessProgramNew> {
@@ -51,5 +55,25 @@ class FitnessProgramNewRepository @Inject constructor(
 
             planEntity.toDomainNew(gymDays = gymDays)
         }
+    }
+
+    override suspend fun saveWorkoutResult(result: WorkoutResult) {
+        workoutResultDao.insert(result.toEntity())
+    }
+
+    override suspend fun getLatestResultsForExercise(
+        exerciseInBlockId: Long,
+        limit: Int
+    ): List<WorkoutResult> {
+        return workoutResultDao.getLatestResults(exerciseInBlockId, limit)
+            .map { it.toDomain() }
+    }
+
+    override suspend fun getCurrentWorkoutResults(
+        exerciseInBlockId: Long,
+        workoutDateTime: String
+    ): List<WorkoutResult> {
+        return workoutResultDao.getResultsForDateTime(exerciseInBlockId, workoutDateTime)
+            .map { it.toDomain() }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.gymlog.domain.model.attribute.*
 import com.example.gymlog.domain.model.exercise.*
 import com.example.gymlog.domain.model.plan.*
+import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.ui.feature.workout.model.*
 
 /**
@@ -107,4 +108,15 @@ fun FitnessProgramNew.toUiModel(context: Context): ProgramInfo = ProgramInfo(
     name = this.name,
     description = this.description,
     gymDayUiModels = this.gymDays.map { it.toUiModel(context) }
+)
+
+
+
+// Domain to UI
+fun WorkoutResult.toUiModel(): ResultOfSet = ResultOfSet(
+    weight = this.weight,
+    iteration = this.iteration,
+    workTime = this.workTime,
+    currentDate = this.workoutDateTime.substringBefore(" "),
+    currentTime = this.workoutDateTime.substringAfter(" ")
 )

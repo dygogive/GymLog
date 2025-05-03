@@ -12,7 +12,7 @@ import com.example.gymlog.domain.model.exercise.ExerciseInBlockNew
 import com.example.gymlog.domain.model.attribute.EquipmentNew
 import com.example.gymlog.domain.model.attribute.MotionNew
 import com.example.gymlog.domain.model.attribute.MuscleGroupNew
-
+import com.example.gymlog.domain.model.workout.WorkoutResult
 
 
 fun ExerciseInBlockDto.toDomain(): ExerciseInBlock {
@@ -31,8 +31,12 @@ fun ExerciseInBlockDto.toDomain(): ExerciseInBlock {
 
 
 
-fun ExerciseInBlockDto.toDomainNew(): ExerciseInBlockNew {
+fun ExerciseInBlockDto.toDomainNew(
+    workoutResults: List<WorkoutResult> = emptyList()
+): ExerciseInBlockNew {
     return ExerciseInBlockNew(
+        linkId = linkId,
+        exerciseId = exerciseId,
         name = name,
         description = description ?: "",
         motion = EnumMapper.fromString(motion, MotionNew.PRESS_BY_LEGS),
@@ -40,6 +44,6 @@ fun ExerciseInBlockDto.toDomainNew(): ExerciseInBlockNew {
         equipment = EnumMapper.fromString(equipment, EquipmentNew.BARBELL),
         isCustom = isCustom,
         position = position,
+        workoutResults = workoutResults
     )
 }
-

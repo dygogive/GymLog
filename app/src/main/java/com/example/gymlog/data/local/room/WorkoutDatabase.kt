@@ -9,10 +9,7 @@ import com.example.gymlog.data.local.room.dao.GymPlansDao
 import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
-import com.example.gymlog.data.local.room.dao.WorkoutExerciseDao
-import com.example.gymlog.data.local.room.dao.WorkoutGymDayDao
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
-import com.example.gymlog.data.local.room.dao.WorkoutSetDao
 import com.example.gymlog.data.local.room.entities.exercise.ExerciseEntity
 import com.example.gymlog.data.local.room.entities.plan.GymDayEntity
 import com.example.gymlog.data.local.room.entities.plan.PlanCycleEntity
@@ -21,10 +18,7 @@ import com.example.gymlog.data.local.room.entities.plan.TrainingBlockEquipmentEn
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEntity
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMotionEntity
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMuscleGroupEntity
-import com.example.gymlog.data.local.room.entities.workout.WorkoutExerciseEntity
-import com.example.gymlog.data.local.room.entities.workout.WorkoutGymDayEntity
 import com.example.gymlog.data.local.room.entities.workout.WorkoutResultEntity
-import com.example.gymlog.data.local.room.entities.workout.WorkoutSetEntity
 
 /**
  * Абстрактний клас бази даних Room, який визначає структуру бази даних додатка.
@@ -36,9 +30,6 @@ import com.example.gymlog.data.local.room.entities.workout.WorkoutSetEntity
  */
 @Database(
     entities = [
-        WorkoutGymDayEntity::class,        // Таблиця тренувальних днів
-        WorkoutSetEntity::class,           // Таблиця підходів у тренуванні
-        WorkoutExerciseEntity::class,      // Таблиця вправ у тренуванні
         WorkoutResultEntity::class,      // Таблиця результатів у тренуванні
         ExerciseEntity::class,             // Таблиця вправ (загальний каталог)
         PlanCycleEntity::class,            // Таблиця циклів тренувального плану
@@ -54,9 +45,6 @@ import com.example.gymlog.data.local.room.entities.workout.WorkoutSetEntity
 )
 abstract class WorkoutDatabase: RoomDatabase() {
     // Оголошуємо методи для отримання DAO (Data Access Object) для кожної таблиці
-    abstract fun workoutGymDayDao(): WorkoutGymDayDao    // DAO для тренувальних днів
-    abstract fun workoutSetDao(): WorkoutSetDao          // DAO для підходів
-    abstract fun workoutExerciseDao(): WorkoutExerciseDao // DAO для вправ
     abstract fun workoutResultDao(): WorkoutResultDao // DAO для вправ
     abstract fun trainingBlockDao(): TrainingBlockDao // DAO для тренув блоків
     abstract fun exerciseInBlockDao(): ExerciseInBlockDao //

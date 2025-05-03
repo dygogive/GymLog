@@ -4,6 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.domain.model.workout.WorkoutResult
+import com.example.gymlog.domain.usecase.GetWorkoutResultsUseCase
+import com.example.gymlog.domain.usecase.SaveWorkoutResultUseCase
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
@@ -17,6 +20,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -25,6 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val fetchProgramsUseCase: FetchProgramsNewUiUseCase,
+    private val saveResultUseCase: SaveWorkoutResultUseCase,
+    private val getResultsUseCase: GetWorkoutResultsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -220,6 +228,60 @@ class WorkoutViewModel @Inject constructor(
             }
         }
     }
+
+
+
+
+    // ------- РЕЗУЛЬТАТИ ВИКОНАННЯ ВПРАВ ------
+
+    private var currentWorkoutDateTime: String? = null
+
+    // Додаємо метод для збереження результату
+    fun saveWorkoutResult(
+        exerciseInBlockId: Long,
+        weight: Int?,
+        iteration: Int?,
+        workTime: Int?,
+        position: Int,
+        sequenceInGymDay: Int,
+        timeFromStart: Int
+    ) {
+        viewModelScope.launch {
+            val result = WorkoutResult(
+                exerciseInBlockId = exerciseInBlockId,
+                weight = weight,
+                iteration = iteration,
+                workTime = workTime,
+                position = position,
+                sequenceInGymDay = sequenceInGymDay,
+                timeFromStart = timeFromStart,
+                workoutDateTime = currentWorkoutDateTime ?: getCurrentDateTime()
+            )
+            saveResultUseCase(result)
+        }
+    }
+
+    // Метод для отримання результатів
+    suspend fun getWorkoutResults(exerciseInBlockId: Long): Pair<List<WorkoutResult>, List<WorkoutResult>> {
+        return getResultsUseCase(exerciseInBlockId, currentWorkoutDateTime)
+    }
+
+    private fun getCurrentDateTime(): String {
+        return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

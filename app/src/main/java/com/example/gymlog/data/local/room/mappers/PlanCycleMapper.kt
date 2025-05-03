@@ -29,9 +29,10 @@ fun FitnessProgram.toEntity() = PlanCycleEntity(
 fun PlanCycleEntity.toDomainNew(
     gymDays: List<GymDayNew> = emptyList()
 ): FitnessProgramNew = FitnessProgramNew(
+    id = id ?: 0,
     name = name,
     description = description,
+    position = position,
     creationDate = creation_date,
-    position = position ?: -1,
     gymDays = gymDays
 )
