@@ -19,12 +19,13 @@ fun WorkoutResultEntity.toDomain(): WorkoutResult = WorkoutResult(
 )
 
 fun WorkoutResult.toEntity(): WorkoutResultEntity = WorkoutResultEntity(
+    exerciseInBlockId = this.exerciseInBlockId,
     weight = this.weight,
     iteration = this.iteration,
     workTime = this.workTime,
     sequenceInGymDay = this.sequenceInGymDay,
     position = this.position,
     timeFromStart = this.timeFromStart,
-    workoutDateTime = this.workoutDateTime
+    workoutDateTime = this.workoutDateTime,
 )
 

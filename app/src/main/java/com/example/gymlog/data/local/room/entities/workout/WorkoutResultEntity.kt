@@ -21,13 +21,13 @@ import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEnt
 )
 data class WorkoutResultEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val exerciseInBlockId: Long = 0,  // Посилання на TrainingBlockExerciseEntity
+    val id: Long? = null,  // Changed to nullable to match the existing schema
+    val exerciseInBlockId: Long,  // Посилання на TrainingBlockExerciseEntity
     val weight: Int?,
     val iteration: Int?,
     val workTime: Int?,
-    val position: Int,
-    val workoutDateTime: String,  // Додано нове поле
     val sequenceInGymDay: Int,
-    val timeFromStart: Int
+    val position: Int,
+    val timeFromStart: Int,
+    val workoutDateTime: String  // Обов'язкове поле
 )

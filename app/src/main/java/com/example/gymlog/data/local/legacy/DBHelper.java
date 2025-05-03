@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    public static final int VERSION = 20;
+    public static final int VERSION = 21;
     private final Context context;
 
     // Конструктор
@@ -115,16 +115,17 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
 
 
         // Updated workout_result table
-        db.execSQL("CREATE TABLE IF NOT EXISTS workout_result (\n" +
-                "  id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                "  exerciseInBlockId INTEGER NOT NULL,  -- ID з TrainingBlockExercises (замість workoutExerciseId)\n" +
-                "  weight INTEGER,\n" +
-                "  iteration INTEGER,\n" +
-                "  workTime INTEGER,\n" +
-                "  sequenceInGymDay INTEGER NOT NULL,\n" +
-                "  position INTEGER NOT NULL,\n" +
-                "  timeFromStart INTEGER NOT NULL,\n" +
-                "  FOREIGN KEY (exerciseInBlockId) REFERENCES TrainingBlockExercises(id) ON DELETE CASCADE\n" +
+        db.execSQL("CREATE TABLE IF NOT EXISTS workout_result (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "exerciseInBlockId INTEGER NOT NULL, " +
+                "weight INTEGER, " +
+                "iteration INTEGER, " +
+                "workTime INTEGER, " +
+                "sequenceInGymDay INTEGER NOT NULL, " +
+                "position INTEGER NOT NULL, " +
+                "timeFromStart INTEGER NOT NULL, " +
+                "workoutDateTime TEXT NOT NULL, " +  // Додано нову колонку
+                "FOREIGN KEY (exerciseInBlockId) REFERENCES TrainingBlockExercises(id) ON DELETE CASCADE" +
                 ");");
 
         // Create indexes
