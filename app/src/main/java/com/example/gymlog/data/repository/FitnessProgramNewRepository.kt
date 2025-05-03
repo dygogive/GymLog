@@ -7,6 +7,7 @@ import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
+import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomainNew
 import com.example.gymlog.data.local.room.mappers.toEntity
 import com.example.gymlog.domain.model.attribute.EquipmentNew
