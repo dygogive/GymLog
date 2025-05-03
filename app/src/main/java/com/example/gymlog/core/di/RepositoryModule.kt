@@ -1,9 +1,7 @@
 package com.example.gymlog.core.di
 
 import com.example.gymlog.data.repository.FitnessProgramNewRepository
-import com.example.gymlog.data.repository.WorkoutRepository
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
-import com.example.gymlog.domain.repository.WorkoutRepositoryInterface
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,11 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-    @Binds
-    @Singleton
-    abstract fun bindWorkoutRepository(
-        impl: WorkoutRepository
-    ): WorkoutRepositoryInterface
 
 
 
@@ -32,5 +25,4 @@ abstract class RepositoryModule {
     ): FitnessProgramNewRepositoryInterface
 
 
-    // якщо згодом з'являться інші domain-інтерфейси, додайте сюди такі ж @Binds методи
 }
