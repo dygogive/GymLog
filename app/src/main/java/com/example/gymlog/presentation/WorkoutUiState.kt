@@ -14,7 +14,6 @@ data class WorkoutUiState(
     val timerState: TimerState = TimerState(),                       // Стан таймера
     val trainingBlocksState: TrainingBlocksState = TrainingBlocksState(),  // Стан блоків вправ
     val programSelectionState: ProgramSelectionState = ProgramSelectionState(),           // Стан вибору програми
-    val resultsState: ResultsState = ResultsState()                  // Стан результатів
 )
 
 
@@ -68,11 +67,3 @@ data class TimerState(
 
 
 
-/**
- * Стан результатів тренування
- */
-data class ResultsState(
-    // Результати, згруповані за часом
-    val workoutResults: PersistentMap<Long, PersistentList<ResultOfSet>> = persistentMapOf(),
-    val lastSavedTimestamp: Long? = null  // Час останнього збереження
-)

@@ -19,11 +19,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
+import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
+import com.example.gymlog.ui.feature.workout.model.MotionStateList
+import com.example.gymlog.ui.feature.workout.model.MusclesStateList
+import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
+import com.example.gymlog.ui.theme.MyAppTheme
 
 
 @Composable
@@ -204,6 +211,28 @@ private fun ActionButton(
     )
 }
 
+
+
+
+
+
+
+/**
+ * Превью основного контенту екрану тренування
+ */
+@Preview(showBackground = true, name = "Превью екрану тренування")
+@Composable
+fun Preview_ExerciseInWorkoutUI() {
+    MyAppTheme {
+
+
+        // Приклад блоку тренування для превью
+        ExerciseInWorkoutUI(
+            onConfirmResult = {},
+            ExerciseInfo("Присідання", "Присідання зі штангою", emptyList())
+        )
+    }
+}
 
 
 

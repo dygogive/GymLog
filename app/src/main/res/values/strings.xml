@@ -263,6 +263,10 @@
     <string name="no_workouts">No workouts</string>
     <string name="retry">Retry</string>
     <string name="error_title">Error title</string>
+    <string name="seconds">Seconds</string>
+    <string name="work_time">Working time</string>
+    <string name="work_weight">Working weight</string>
+    <string name="work_reps">Repeats</string>
 
 
 </resources>

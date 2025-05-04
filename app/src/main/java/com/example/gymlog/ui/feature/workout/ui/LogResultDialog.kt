@@ -17,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.theme.MyAppTheme
@@ -43,9 +45,9 @@ fun LogResultDialog(
         text = {
             Column {
                 OutlinedTextField(
-                    value = reps,
-                    onValueChange = { reps = it },
-                    label = { Text("Повторення") },
+                    value = secs,
+                    onValueChange = { secs = it },
+                    label = { Text(stringResource(R.string.work_time)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -56,7 +58,7 @@ fun LogResultDialog(
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
-                    label = { Text("Вага (кг)") },
+                    label = { Text(stringResource(R.string.work_weight)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -65,9 +67,9 @@ fun LogResultDialog(
                 )
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
-                    value = secs,
-                    onValueChange = { secs = it },
-                    label = { Text("Секунди") },
+                    value = reps,
+                    onValueChange = { reps = it },
+                    label = { Text(stringResource(R.string.work_reps)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -84,7 +86,7 @@ fun LogResultDialog(
                                     getCurrentDateTime().second,
                                 )
                             )
-                            onDismiss() // 🔥 Викликаємо функцію, а не просто посилаємось
+                            onDismiss() // Викликаємо функцію, а не просто посилаємось
                         }
                     )
                 )
