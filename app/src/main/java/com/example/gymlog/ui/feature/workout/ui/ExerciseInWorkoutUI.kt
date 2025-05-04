@@ -229,7 +229,7 @@ fun Preview_ExerciseInWorkoutUI() {
         // Приклад блоку тренування для превью
         ExerciseInWorkoutUI(
             onConfirmResult = {},
-            ExerciseInfo("Присідання", "Присідання зі штангою", emptyList())
+            ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList())
         )
     }
 }

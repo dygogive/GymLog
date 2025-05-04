@@ -31,6 +31,7 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
  * Конвертація нової вправи з доменної моделі в UI модель
  */
 fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseInfo = ExerciseInfo(
+    linkId = linkId,
     name = this.getNameOnly(context),
     description = this.description,
     results = emptyList()  // Початково результати відсутні
@@ -97,6 +98,7 @@ fun EquipmentNew.getDescription(context: Context): String {
  * Конвертація нового дня тренування з доменної моделі в UI модель
  */
 fun GymDayNew.toUiModel(context: Context): GymDayUiModel = GymDayUiModel(
+    id = id,
     name = this.name,
     description = this.description,
     position = this.position?: 0,
@@ -107,6 +109,7 @@ fun GymDayNew.toUiModel(context: Context): GymDayUiModel = GymDayUiModel(
  * Конвертація нової програми тренувань з доменної моделі в UI модель
  */
 fun FitnessProgramNew.toUiModel(context: Context): ProgramInfo = ProgramInfo(
+    id = id,
     name = this.name,
     description = this.description,
     gymDayUiModels = this.gymDays.map { it.toUiModel(context) }

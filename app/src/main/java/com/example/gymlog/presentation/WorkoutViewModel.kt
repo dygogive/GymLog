@@ -30,6 +30,7 @@ import javax.inject.Inject
  * Відповідає за логіку екрану тренувань, керування програмами, днями тренувань,
  * таймером та збереження результатів.
  */
+
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val fetchProgramsUseCase: FetchProgramsNewUiUseCase,

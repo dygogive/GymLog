@@ -1,6 +1,5 @@
 package com.example.gymlog.presentation
 
-import com.example.gymlog.core.utils.formatTime
 import com.example.gymlog.ui.feature.workout.model.*
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -54,15 +53,7 @@ data class TimerState(
     val totalTimeMs: Long = 0L,        // Загальний час
     val lastSetTimeMs: Long = 0L,      // Час підходу
     val isGymRunning: Boolean = false  // Чи активне тренування
-) {
-    // Форматований загальний час "гг:хх:сс"
-    val formattedTotalTime: String
-        get() = formatTime(totalTimeMs)
-
-    // Форматований час підходу "хх:сс"
-    val formattedSetTime: String
-        get() = formatTime(lastSetTimeMs, includeHours = false)
-}
+)
 
 
 

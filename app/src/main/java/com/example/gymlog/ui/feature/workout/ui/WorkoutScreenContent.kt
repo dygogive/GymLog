@@ -90,8 +90,8 @@ fun Preview_WorkoutScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseInfo("Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseInfo("Випади", "Випади з кроком", emptyList())
+                ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseInfo(0,"Випади", "Випади з кроком", emptyList())
             )
         )
 

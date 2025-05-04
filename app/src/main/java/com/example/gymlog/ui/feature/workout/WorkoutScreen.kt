@@ -210,8 +210,8 @@ fun Preview_WorkoutScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseInfo("Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseInfo("Випади", "Випади з кроком", emptyList())
+                ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseInfo(0,"Випади", "Випади з кроком", emptyList())
             )
         )
 
@@ -232,11 +232,11 @@ fun Preview_WorkoutSelectionDialog() {
     MyAppTheme {
         WorkoutSelectionDialog(
             programs = listOf(
-                ProgramInfo("Початківець", "Вступна програма", listOf(
-                    GymDayUiModel("День 1", "Усе тіло", 0, emptyList())
+                ProgramInfo(0,"Початківець", "Вступна програма", listOf(
+                    GymDayUiModel(0,"День 1", "Усе тіло", 0, emptyList())
                 )),
-                ProgramInfo("Продвинута", "Інтенсивна програма", listOf(
-                    GymDayUiModel("День A", "Груди і спина", 0, emptyList())
+                ProgramInfo(0,"Продвинута", "Інтенсивна програма", listOf(
+                    GymDayUiModel(0,"День A", "Груди і спина", 0, emptyList())
                 ))
             ),
             onProgramSelected = {},
