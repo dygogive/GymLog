@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.domain.usecase.GetGymDayWithResultsUseCase
+import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
@@ -27,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val fetchProgramsUseCase: FetchProgramsNewUiUseCase,
+    private val getGymDayWithResultsUseCase: GetGymDayWithResultsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -120,20 +123,36 @@ class WorkoutViewModel @Inject constructor(
      * @param session Вибраний день тренування
      */
     fun onSessionSelected(session: GymDayUiModel) {
-        // Запам'ятовуємо вибір користувача
-        updateSelectionState { selectionState ->
-            selectionState.copy(
+        viewModelScope.launch {
+            updateSelectionState { it.copy(
                 selectedGymDay = session,
-                showSelectionDialog = false
-            )
-        }
+                showSelectionDialog = false,
+                isLoading = true
+            )}
 
-        // Показуємо список тренувальних блоків і активуємо статус тренування
-        updateTrainingState { trainingState ->
-            trainingState.copy(
-                blocks = session.trainingBlocksUiModel.toPersistentList(),
-                isTrainingBlockChosen = true
-            )
+            try {
+                val gymDayWithResults = getGymDayWithResultsUseCase(
+                    gymDayId = session.id,
+                    maxResultsPerExercise = 3
+                )
+
+                val uiModel = gymDayWithResults.toUiModel(getApplication())
+
+                updateSelectionState { it.copy(
+                    isLoading = false,
+                    selectedGymDay = uiModel
+                )}
+
+                updateTrainingState { it.copy(
+                    blocks = uiModel.trainingBlocksUiModel.toPersistentList(),
+                    isTrainingBlockChosen = true
+                )}
+            } catch (e: Exception) {
+                updateSelectionState { it.copy(
+                    isLoading = false,
+                    errorMessage = "Failed to load workout results"
+                )}
+            }
         }
     }
 

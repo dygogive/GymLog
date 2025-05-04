@@ -34,7 +34,13 @@ fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseInfo = ExerciseInfo(
     linkId = linkId,
     name = this.getNameOnly(context),
     description = this.description,
-    results = emptyList()  // Початково результати відсутні
+    results = this.workoutResults
+        .sortedWith(
+            compareByDescending<WorkoutResult> { it.weight ?: 0 }
+                .thenByDescending { it.iteration ?: 0 }
+        )
+        .take(3)
+        .map { it.toUiModel() }
 )
 
 /**

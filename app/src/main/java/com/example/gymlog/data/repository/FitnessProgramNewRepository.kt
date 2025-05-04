@@ -11,6 +11,7 @@ import com.example.gymlog.data.local.room.mappers.BlockFiltersMapper.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomainNew
 import com.example.gymlog.data.local.room.mappers.toEntity
+import com.example.gymlog.domain.exceptions.DataLoadingException
 import com.example.gymlog.domain.exceptions.GymDayNotFoundException
 import com.example.gymlog.domain.model.attribute.EquipmentNew
 import com.example.gymlog.domain.model.attribute.MotionNew
@@ -44,24 +45,27 @@ class FitnessProgramNewRepository @Inject constructor(
 
 
     override suspend fun getSelectedGymDayNew(idGymDay: Long): GymDayNew {
-        val gymDayEntity = gymSessionDao.getGymDayById(idGymDay) ?: throw GymDayNotFoundException()
+        val gymDayEntity = gymSessionDao.getGymDayById(idGymDay)
+            ?: throw GymDayNotFoundException() // або NoSuchElementException
 
-        val trainingBlocks = trainingBlockDao.getBlocksByGymDayId(idGymDay).map { blockEntity ->
-            val filters = filterDao.getAllFiltersForBlock(blockEntity.id).toDomain()
-            val exercises = exerciseInBlockDao.getExercisesForBlock(blockEntity.id)
-                .map { it.toDomainNew() }
+        return try {
+            val trainingBlocks = trainingBlockDao.getBlocksByGymDayId(idGymDay).map { blockEntity ->
+                val filters = filterDao.getAllFiltersForBlock(blockEntity.id).toDomain()
+                val exercises = exerciseInBlockDao.getExercisesForBlock(blockEntity.id)
+                    .map { it.toDomainNew() }
 
-            blockEntity.toDomainNew(
-                exercises = exercises,
-                motions = filters.motions,
-                muscleGroup = filters.muscleGroups,
-                equipment = filters.equipment
-            )
+                blockEntity.toDomainNew(
+                    exercises = exercises,
+                    motions = filters.motions,
+                    muscleGroup = filters.muscleGroups,
+                    equipment = filters.equipment
+                )
+            }
+            gymDayEntity.toDomainNew(blocks = trainingBlocks)
+        } catch (e: Exception) {
+            throw DataLoadingException("Failed to load gym day data", e)
         }
-
-        return gymDayEntity.toDomainNew(blocks = trainingBlocks)
     }
-
 
     override suspend fun getWorkoutResultsForExercise(exerciseInBlockId: Long): List<WorkoutResult> {
         return workoutResultDao.getResultsForExercise(exerciseInBlockId)
