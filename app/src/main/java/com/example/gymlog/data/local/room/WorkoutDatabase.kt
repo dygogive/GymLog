@@ -10,7 +10,7 @@ import com.example.gymlog.data.local.room.dao.GymSessionDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
-import com.example.gymlog.data.local.room.entities.exercise.ExerciseEntity
+import com.example.gymlog.data.local.room.entities.ExerciseEntity
 import com.example.gymlog.data.local.room.entities.plan.GymDayEntity
 import com.example.gymlog.data.local.room.entities.plan.PlanCycleEntity
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockEntity
@@ -18,7 +18,7 @@ import com.example.gymlog.data.local.room.entities.plan.TrainingBlockEquipmentEn
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEntity
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMotionEntity
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockMuscleGroupEntity
-import com.example.gymlog.data.local.room.entities.workout.WorkoutResultEntity
+import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
 
 /**
  * Абстрактний клас бази даних Room, який визначає структуру бази даних додатка.

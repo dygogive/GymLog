@@ -1,4 +1,4 @@
-package com.example.gymlog.data.local.room.entities.exercise
+package com.example.gymlog.data.local.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

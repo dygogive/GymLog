@@ -1,7 +1,7 @@
 package com.example.gymlog.data.local.room.mappers
 
-import com.example.gymlog.data.local.room.entities.workout.*
-import com.example.gymlog.domain.model.workout.*
+import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
+import com.example.gymlog.domain.model.workout.WorkoutResult
 
 
 

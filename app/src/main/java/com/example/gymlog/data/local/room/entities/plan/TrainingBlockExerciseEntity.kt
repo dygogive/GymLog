@@ -1,7 +1,7 @@
 package com.example.gymlog.data.local.room.entities.plan
 
 import androidx.room.*
-import com.example.gymlog.data.local.room.entities.exercise.ExerciseEntity
+import com.example.gymlog.data.local.room.entities.ExerciseEntity
 
 @Entity(
     tableName = "TrainingBlockExercises",

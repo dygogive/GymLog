@@ -1,8 +1,10 @@
 package com.example.gymlog.presentation.mappers
 
 import android.content.Context
-import com.example.gymlog.domain.model.attribute.*
-import com.example.gymlog.domain.model.exercise.*
+import com.example.gymlog.domain.model.attribute.EquipmentNew
+import com.example.gymlog.domain.model.exercise.ExerciseInBlockNew
+import com.example.gymlog.domain.model.attribute.MotionNew
+import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.*
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.ui.feature.workout.model.*

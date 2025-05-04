@@ -1,9 +1,8 @@
-package com.example.gymlog.data.local;
+package com.example.gymlog.data.local.legacy;
 
 
 import android.util.Log;
 
-import com.example.gymlog.data.local.legacy.ExerciseDAO;
 import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.exercise.Exercise;

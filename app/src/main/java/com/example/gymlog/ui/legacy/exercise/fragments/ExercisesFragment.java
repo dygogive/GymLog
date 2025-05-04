@@ -26,7 +26,7 @@ import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
 import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
 import com.example.gymlog.ui.legacy.exercise.adapters.ExerciseAdapter;
 import com.example.gymlog.ui.legacy.exercise.DialogForExerciseEdit;
-import com.example.gymlog.data.local.DefaultExercisesFactory;
+import com.example.gymlog.data.local.legacy.DefaultExercisesFactory;
 
 import java.util.List;
 

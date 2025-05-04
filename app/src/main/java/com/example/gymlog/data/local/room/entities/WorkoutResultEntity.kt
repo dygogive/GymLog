@@ -1,11 +1,10 @@
-package com.example.gymlog.data.local.room.entities.workout
+package com.example.gymlog.data.local.room.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEntity
-
 
 @Entity(
     tableName = "workout_result",
@@ -14,7 +13,7 @@ import com.example.gymlog.data.local.room.entities.plan.TrainingBlockExerciseEnt
             entity = TrainingBlockExerciseEntity::class,
             parentColumns = ["id"],
             childColumns = ["exerciseInBlockId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.Companion.CASCADE
         )
     ],
     indices = [Index(value = ["exerciseInBlockId"])]
