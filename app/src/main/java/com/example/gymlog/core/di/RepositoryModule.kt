@@ -1,7 +1,9 @@
 package com.example.gymlog.core.di
 
 import com.example.gymlog.data.repository.FitnessProgramNewRepository
+import com.example.gymlog.data.repository.WorkoutResultRepository
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
+import com.example.gymlog.domain.repository.WorkoutResultRepositoryInterface
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -24,5 +26,12 @@ abstract class RepositoryModule {
         impl: FitnessProgramNewRepository
     ): FitnessProgramNewRepositoryInterface
 
+
+
+    @Binds
+    @Singleton
+    abstract fun bindWorkoutResultRepository(
+        impl: WorkoutResultRepository
+    ): WorkoutResultRepositoryInterface
 
 }

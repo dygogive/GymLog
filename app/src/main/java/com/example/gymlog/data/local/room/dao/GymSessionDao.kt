@@ -13,4 +13,9 @@ interface GymSessionDao {
             "WHERE plan_id = :planId " +
             "ORDER BY position ASC")
     suspend fun getGymDaysEntities(planId: Long?): List<GymDayEntity>
+
+
+
+    @Query("SELECT * FROM GymDays WHERE id = :id LIMIT 1")
+    suspend fun getGymDayById(id: Long): GymDayEntity?
 }
