@@ -41,10 +41,12 @@ fun WorkoutScreen(
     val context = LocalContext.current
     val state by viewModel.uiState.collectAsState()
 
+
+
     // Відображення основного вмісту екрану або стани завантаження/помилок
     Box(modifier = Modifier.fillMaxSize()) {
         // Основний контент екрану тренування
-        if (state.trainingBlocksState.isWorkoutActive) {
+        if (state.trainingBlocksState.isTrainingBlockChosen) {
             // Створення параметрів таймера для відображення
             val timerParams = TimerParams(
                 totalTimeMs = state.timerState.totalTimeMs,
@@ -82,7 +84,7 @@ fun WorkoutScreen(
                 onDismiss = {
                     viewModel.dismissSelectionDialog()
                     // Повертаємось назад тільки якщо тренування ще не розпочато
-                    if (!state.trainingBlocksState.isWorkoutActive) {
+                    if (!state.trainingBlocksState.isTrainingBlockChosen) {
                         navController.navigateUp()
                     }
                 },
@@ -109,32 +111,24 @@ private fun DialogOverlay(
             .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
         contentAlignment = Alignment.Center
     ) {
-        when {
-            // Відображення індикатора завантаження
-            programSelectionState.isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp)
-                )
-            }
 
-            // Відображення повідомлення про помилку
-            programSelectionState.errorMessage != null -> {
-                ErrorContent(
-                    errorMessage = programSelectionState.errorMessage,
-                    onRetry = onRetry,
-                    onDismiss = onDismiss
-                )
-            }
-
-            // Відображення діалогу вибору програми
-            else -> {
-                WorkoutSelectionDialog(
-                    programs = programSelectionState.availablePrograms,
-                    onProgramSelected = onProgramSelected,
-                    onGymSelected = onGymSelected,
-                    onDismiss = onDismiss
-                )
-            }
+        if (programSelectionState.isLoading) {
+            CircularProgressIndicator(// Відображення індикатора завантаження
+                modifier = Modifier.size(48.dp)
+            )
+        } else if (programSelectionState.errorMessage != null) {
+            ErrorContent(// Відображення повідомлення про помилку
+                errorMessage = programSelectionState.errorMessage,
+                onRetry = onRetry,
+                onDismiss = onDismiss
+            )
+        } else {
+            WorkoutSelectionDialog(// Відображення діалогу вибору програми
+                programs = programSelectionState.availablePrograms,
+                onProgramSelected = onProgramSelected,
+                onGymSelected = onGymSelected,
+                onDismiss = onDismiss
+            )
         }
     }
 }

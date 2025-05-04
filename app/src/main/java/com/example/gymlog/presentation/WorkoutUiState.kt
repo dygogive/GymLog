@@ -42,7 +42,7 @@ data class ProgramSelectionState(
  */
 data class TrainingBlocksState(
     val blocks: PersistentList<TrainingBlockUiModel> = persistentListOf(),  // Блоки вправ
-    val isWorkoutActive: Boolean = false,  // Чи активне тренування
+    val isTrainingBlockChosen: Boolean = false,  // Чи вибрано тренувальний блок щоб закрити діалог і відкрити вікно тренування?
 )
 
 

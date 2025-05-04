@@ -15,10 +15,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
+import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
+import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
+import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
+import com.example.gymlog.ui.feature.workout.model.MotionStateList
+import com.example.gymlog.ui.feature.workout.model.MusclesStateList
+import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
+import com.example.gymlog.ui.theme.MyAppTheme
 
 
 @Composable
@@ -64,3 +73,32 @@ fun WorkoutScreenContent(
 }
 
 
+/**
+ * Превью основного контенту екрану тренування
+ */
+@Preview(showBackground = true, name = "Превью екрану тренування")
+@Composable
+fun Preview_WorkoutScreenContent() {
+    MyAppTheme {
+        // Приклад блоку тренування для превью
+        val sampleBlock = TrainingBlockUiModel(
+            name = "День ніг",
+            description = "Квадрицепси, Біцепси стегна",
+            attributesInfo = AttributesInfo(
+                motionStateList = MotionStateList(listOf("Жим", "Тяга")),
+                muscleStateList = MusclesStateList(listOf("Квадрицепси", "Біцепс стегна")),
+                equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
+            ),
+            infoExercises = listOf(
+                ExerciseInfo("Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseInfo("Випади", "Випади з кроком", emptyList())
+            )
+        )
+
+        WorkoutScreenContent(
+            timerParams = TimerParams(0L, 0L, "Почати", {}, {}, false),
+            infoBlocks = listOf(sampleBlock),
+            onConfirmResult = {}
+        )
+    }
+}

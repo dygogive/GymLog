@@ -58,7 +58,9 @@ fun WorkoutSelectionDialog(
                 step = step,
                 selectedProgram = selectedProgram,
                 programs = programs,
-                onProgramSelected = {
+                //функція-обгортка, щоб step та selectedProgram ініціалізувати
+                onProgramSelected = fun(it: ProgramInfo) {
+                    //функція-обгортка, щоб step та selectedProgram ініціалізувати
                     selectedProgram = it
                     step = SelectionStep.GYM_SESSIONS
                     onProgramSelected(it)
@@ -170,7 +172,7 @@ fun StepIndicator(
             text = stringResource(R.string.programs),
             modifier = Modifier.clickable { onStepClick(SelectionStep.PROGRAMS) }
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(24.dp)
                 .padding(horizontal = 4.dp),
@@ -205,14 +207,14 @@ fun StepDot(
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                 )
         )
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center,
-            color = if (isActive) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-            modifier = Modifier.padding(top = 4.dp)
-        )
+//        Text(
+//            text = text,
+//            style = MaterialTheme.typography.bodySmall,
+//            textAlign = TextAlign.Center,
+//            color = if (isActive) MaterialTheme.colorScheme.primary
+//            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+//            modifier = Modifier.padding(top = 4.dp)
+//        )
     }
 }
 

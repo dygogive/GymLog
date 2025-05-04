@@ -110,7 +110,7 @@ class WorkoutViewModel @Inject constructor(
         updateTrainingState {
             it.copy(
                 blocks = session.trainingBlocksUiModel.toPersistentList(),
-                isWorkoutActive = true
+                isTrainingBlockChosen = true
             )
         }
     }

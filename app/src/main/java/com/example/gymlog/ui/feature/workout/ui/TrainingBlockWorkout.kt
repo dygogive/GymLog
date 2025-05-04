@@ -21,9 +21,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.gymlog.R
+import com.example.gymlog.ui.feature.workout.model.AttributesInfo
+import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
+import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
+import com.example.gymlog.ui.feature.workout.model.MotionStateList
+import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
+import com.example.gymlog.ui.theme.MyAppTheme
 
 @Composable
 fun TrainingBlockWorkout(
@@ -126,7 +134,35 @@ fun TrainingBlockWorkout(
 
 
 
+/**
+ * Превью основного контенту екрану тренування
+ */
+@Preview(showBackground = true, name = "Превью екрану тренування")
+@Composable
+fun Preview_ScreenContent() {
+    MyAppTheme {
 
+        // Приклад блоку тренування для превью
+        val sampleBlock = TrainingBlockUiModel(
+            name = "День ніг",
+            description = "Квадрицепси, Біцепси стегна",
+            attributesInfo = AttributesInfo(
+                motionStateList = MotionStateList(listOf("Жим", "Тяга")),
+                muscleStateList = MusclesStateList(listOf("Квадрицепси", "Біцепс стегна")),
+                equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
+            ),
+            infoExercises = listOf(
+                ExerciseInfo("Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseInfo("Випади", "Випади з кроком", emptyList())
+            )
+        )
+        // Приклад блоку тренування для превью
+        TrainingBlockWorkout(
+            sampleBlock,
+            onConfirmResult = {}
+        )
+    }
+}
 
 
 
