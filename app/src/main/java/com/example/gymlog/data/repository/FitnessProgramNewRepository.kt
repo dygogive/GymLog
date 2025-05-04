@@ -11,6 +11,7 @@ import com.example.gymlog.data.local.room.mappers.BlockFiltersMapper.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomainNew
 import com.example.gymlog.data.local.room.mappers.toEntity
+import com.example.gymlog.domain.exceptions.GymDayNotFoundException
 import com.example.gymlog.domain.model.attribute.EquipmentNew
 import com.example.gymlog.domain.model.attribute.MotionNew
 import com.example.gymlog.domain.model.attribute.MuscleGroupNew
