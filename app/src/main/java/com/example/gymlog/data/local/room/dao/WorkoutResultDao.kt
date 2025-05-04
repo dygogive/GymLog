@@ -11,24 +11,12 @@ import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
  */
 @Dao
 interface WorkoutResultDao {
-    @Insert
-    suspend fun insert(result: WorkoutResultEntity)
-
     @Query("""
-        SELECT * FROM workout_result 
-        WHERE exerciseInBlockId = :exerciseInBlockId 
-        ORDER BY weight DESC 
-        LIMIT :limit
+        SELECT * FROM workout_result
+        WHERE exerciseInBlockId = :exerciseInBlockId
+        ORDER BY workoutDateTime DESC, weight DESC, iteration DESC
     """)
-    suspend fun getLatestResults(exerciseInBlockId: Long, limit: Int): List<WorkoutResultEntity>
-
-    @Query("""
-        SELECT * FROM workout_result 
-        WHERE exerciseInBlockId = :exerciseInBlockId 
-        AND workoutDateTime = :workoutDateTime
-    """)
-    suspend fun getResultsForDateTime(
-        exerciseInBlockId: Long,
-        workoutDateTime: String
+    suspend fun getResultsForExercise(
+        exerciseInBlockId: Long
     ): List<WorkoutResultEntity>
 }

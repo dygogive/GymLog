@@ -1,10 +1,15 @@
 package com.example.gymlog.data.repository.training_block_repository
 
+import com.example.gymlog.core.utils.parseEnumList
+import com.example.gymlog.core.utils.parseEnumOrNull
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockDao
 import com.example.gymlog.data.local.room.dao.TrainingBlockFilterDao
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toEntity
+import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment
+import com.example.gymlog.domain.model.legacy.attribute.motion.Motion
+import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.legacy.plan.TrainingBlock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,11 +27,6 @@ class TrainingBlockRepository @Inject constructor(
         return trainingBlockDao.insert(trainingBlock.toEntity())
     }
 
-    fun getTrainingBlockByGymDay(gymDayID: Long): Flow<List<TrainingBlock>> {
-        return trainingBlockDao.getTrainingBlockByGymDayIDFlow(gymDayID).map { trainingBlock ->
-            trainingBlock.map { it.toDomain() }
-        }
-    }
 
     suspend fun getTrainingBlocksByDayId(gymDayId: Long): List<TrainingBlock> {
         val blocks = trainingBlockDao.getBlocksByGymDayId(gymDayId).map { it.toDomain() }.toMutableList()
@@ -36,9 +36,10 @@ class TrainingBlockRepository @Inject constructor(
             val filters = filterDao.getAllFiltersForBlock(block.id)
             val exercises = exeInBlockDao.getExercisesForBlock(block.id).map { it.toDomain() }.toMutableList()
             //
-            block.motions           = filters.motions
-            block.equipmentList     = filters.equipment
-            block.muscleGroupList   = filters.muscleGroups
+            block.motions = filters.motions.mapNotNull { parseEnumOrNull<Motion>(it) }
+            block.equipmentList = filters.equipment.mapNotNull { parseEnumOrNull<Equipment>(it) }
+            block.muscleGroupList = filters.muscleGroups.mapNotNull { parseEnumOrNull<MuscleGroup>(it) }
+
             //
             //
             block.exercises         = exercises

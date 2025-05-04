@@ -14,18 +14,10 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface TrainingBlockDao {
+
     @Insert
     suspend fun insert(trainingBlockEntity: TrainingBlockEntity): Long
 
-    @Update
-    suspend fun update(trainingBlockEntity: TrainingBlockEntity): Int
-
-    @Delete
-    suspend fun delete(trainingBlockEntity: TrainingBlockEntity): Int
-
-    // запит з Flow для реактивного програмування
-    @Query("SELECT * FROM TrainingBlock WHERE gym_day_id = :gym_day_id")
-    fun getTrainingBlockByGymDayIDFlow(gym_day_id: Long): Flow<List<TrainingBlockEntity>>
 
 
     //Отримати TrainingBlockEntity по колонці gym_day_id в порядку зростання позиції
@@ -33,5 +25,4 @@ interface TrainingBlockDao {
             "WHERE gym_day_id = :gymDayId " +
             "ORDER BY position ASC")
     suspend fun getBlocksByGymDayId(gymDayId: Long?): List<TrainingBlockEntity>
-
 }

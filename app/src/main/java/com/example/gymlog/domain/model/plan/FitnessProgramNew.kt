@@ -8,7 +8,7 @@ data class FitnessProgramNew(
     val description: String?,
     val position: Int?,
     val creationDate: String?,
-    val gymDays: List<GymDayNew>
+    var gymDays: List<GymDayNew>
 )
 
 

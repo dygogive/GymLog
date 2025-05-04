@@ -14,6 +14,7 @@ import com.example.gymlog.domain.model.attribute.EquipmentNew
 import com.example.gymlog.domain.model.attribute.MotionNew
 import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.FitnessProgramNew
+import com.example.gymlog.domain.model.plan.GymDayNew
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import javax.inject.Inject
@@ -29,52 +30,14 @@ class FitnessProgramNewRepository @Inject constructor(
     private val workoutResultDao: WorkoutResultDao,
 ): FitnessProgramNewRepositoryInterface {
 
-    override suspend fun getAllFitnessProgramsNew(): List<FitnessProgramNew> {
-        return gymPlansDao.getPlanCycles().map { planEntity ->
-            val gymDays = gymSessionDao.getGymDaysEntities(planEntity.id).map { gymDayEntity ->
-                val trainingBlocks = trainingBlockDao.getBlocksByGymDayId(gymDayEntity.id).map { blockEntity ->
-                    val filters = filterDao.getAllFiltersForBlock(blockEntity.id)
-                    val exercises = exerciseInBlockDao.getExercisesForBlock(blockEntity.id)
-                        .map { it.toDomainNew() }
-
-                    blockEntity.toDomainNew(
-                        exercises = exercises,
-                        motions = filters.motions.map { motionEntity ->
-                            EnumMapper.fromString(motionEntity.name, MotionNew.PRESS_BY_LEGS)
-                        },
-                        muscleGroup = filters.muscleGroups.map { muscleGroupEntity ->
-                            EnumMapper.fromString(muscleGroupEntity.name, MuscleGroupNew.CHEST)
-                        },
-                        equipment = filters.equipment.map { equipmentEntity ->
-                            EnumMapper.fromString(equipmentEntity.name, EquipmentNew.BARBELL)
-                        }
-                    )
-                }
-
-                gymDayEntity.toDomainNew(blocks = trainingBlocks)
-            }
-
-            planEntity.toDomainNew(gymDays = gymDays)
-        }
+    //get all fitness programs
+    override suspend fun getAllFitnessPrograms(): List<FitnessProgramNew> {
+        return gymPlansDao.getPlanCycles().map {it.toDomainNew()}.toMutableList()
     }
 
-    override suspend fun saveWorkoutResult(result: WorkoutResult) {
-        workoutResultDao.insert(result.toEntity())
+    //get all GymDats by program ID
+    override suspend fun getAllGymDays(idProgram: Long): List<GymDayNew> {
+        return gymSessionDao.getGymDaysEntities(planId = idProgram).map {it.toDomainNew()}.toMutableList()
     }
 
-    override suspend fun getLatestResultsForExercise(
-        exerciseInBlockId: Long,
-        limit: Int
-    ): List<WorkoutResult> {
-        return workoutResultDao.getLatestResults(exerciseInBlockId, limit)
-            .map { it.toDomain() }
-    }
-
-    override suspend fun getCurrentWorkoutResults(
-        exerciseInBlockId: Long,
-        workoutDateTime: String
-    ): List<WorkoutResult> {
-        return workoutResultDao.getResultsForDateTime(exerciseInBlockId, workoutDateTime)
-            .map { it.toDomain() }
-    }
 }

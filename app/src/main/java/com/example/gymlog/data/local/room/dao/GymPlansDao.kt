@@ -12,17 +12,7 @@ import com.example.gymlog.data.local.room.entities.plan.PlanCycleEntity
  */
 @Dao
 interface GymPlansDao {
-    @Insert
-    suspend fun insert(planCycleEntity: PlanCycleEntity): Long
-
-    @Update
-    suspend fun update(planCycleEntity: PlanCycleEntity): Int
-
-    @Delete
-    suspend fun delete(planCycleEntity: PlanCycleEntity): Int
-
     @Query("SELECT * FROM PlanCycles " +
             "ORDER BY position ASC")
     suspend fun getPlanCycles(): List<PlanCycleEntity>
-
 }

@@ -7,6 +7,7 @@ import com.example.gymlog.domain.model.legacy.attribute.motion.Motion
 import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup
 import com.example.gymlog.domain.model.legacy.plan.BlockFilters
 import com.example.gymlog.core.utils.parseEnumOrNull
+import com.example.gymlog.data.local.room.dto.BlockFiltersDto
 
 @Dao
 interface TrainingBlockFilterDao {
@@ -24,12 +25,12 @@ interface TrainingBlockFilterDao {
     suspend fun getEquipments(blockId: Long?): List<String>
 
     //Motion + MuscleGroups + Equipment
-    suspend fun getAllFiltersForBlock(blockId: Long?): BlockFilters {
-        val motions = getMotions(blockId).mapNotNull { parseEnumOrNull<Motion>(it) }
-        val muscles = getMuscles(blockId).mapNotNull { parseEnumOrNull<MuscleGroup>(it) }
-        val equipment = getEquipments(blockId).mapNotNull { parseEnumOrNull<Equipment>(it) }
+    suspend fun getAllFiltersForBlock(blockId: Long?): BlockFiltersDto {
+        val motions = getMotions(blockId)
+        val muscles = getMuscles(blockId)
+        val equipment = getEquipments(blockId)
 
-        return BlockFilters(
+        return BlockFiltersDto(
             motions,
             muscles,
             equipment

@@ -4,9 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymlog.domain.model.workout.WorkoutResult
-import com.example.gymlog.domain.usecase.GetWorkoutResultsUseCase
-import com.example.gymlog.domain.usecase.SaveWorkoutResultUseCase
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
@@ -19,11 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
-
 
 /**
  * ViewModel для екрану тренувань.
@@ -34,8 +27,6 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
     private val fetchProgramsUseCase: FetchProgramsNewUiUseCase,
-    private val saveResultUseCase: SaveWorkoutResultUseCase,
-    private val getResultsUseCase: GetWorkoutResultsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -145,6 +136,12 @@ class WorkoutViewModel @Inject constructor(
             )
         }
     }
+
+
+
+
+
+
 
     /**
      * Запускає або зупиняє тренування в залежності від поточного стану.
@@ -299,68 +296,6 @@ class WorkoutViewModel @Inject constructor(
     // ========================================================================================
     // ==== РЕЗУЛЬТАТИ ВИКОНАННЯ ВПРАВ =======================================================
     // ========================================================================================
-
-    /**
-     * Зберігає дату та час поточного тренування для відстеження історії.
-     */
-    private var currentWorkoutDateTime: String? = null
-
-    /**
-     * Зберігає результат виконання вправи в базу даних.
-     * @param exerciseInBlockId ID вправи у блоці тренування
-     * @param weight Вага снаряду (може бути null)
-     * @param iteration Кількість повторень (може бути null)
-     * @param workTime Час виконання в секундах (може бути null)
-     * @param position Позиція підходу в серії
-     * @param sequenceInGymDay Послідовність у дні тренування
-     * @param timeFromStart Час від початку тренування в секундах
-     */
-    fun saveWorkoutResult(
-        exerciseInBlockId: Long,
-        weight: Int?,
-        iteration: Int?,
-        workTime: Int?,
-        position: Int,
-        sequenceInGymDay: Int,
-        timeFromStart: Int
-    ) {
-        viewModelScope.launch {
-            // Створюємо об'єкт з результатом вправи
-            val result = WorkoutResult(
-                exerciseInBlockId = exerciseInBlockId,
-                weight = weight,
-                iteration = iteration,
-                workTime = workTime,
-                position = position,
-                sequenceInGymDay = sequenceInGymDay,
-                timeFromStart = timeFromStart,
-                // Використовуємо поточну дату/час тренування або створюємо нову
-                workoutDateTime = currentWorkoutDateTime ?: getCurrentDateTime()
-            )
-
-            // Зберігаємо результат через use case
-            saveResultUseCase(result)
-        }
-    }
-
-    /**
-     * Отримує історію результатів вправи.
-     * Повертає два списки: поточні результати і історичні.
-     *
-     * @param exerciseInBlockId ID вправи у блоці тренування
-     * @return Пара списків результатів: поточне тренування та історичні результати
-     */
-    suspend fun getWorkoutResults(exerciseInBlockId: Long): Pair<List<WorkoutResult>, List<WorkoutResult>> {
-        return getResultsUseCase(exerciseInBlockId, currentWorkoutDateTime)
-    }
-
-    /**
-     * Генерує поточну дату і час у форматі для збереження.
-     * @return Строка дати та часу у форматі "yyyy-MM-dd HH:mm"
-     */
-    private fun getCurrentDateTime(): String {
-        return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
-    }
 
 
     // ========================================================================================
