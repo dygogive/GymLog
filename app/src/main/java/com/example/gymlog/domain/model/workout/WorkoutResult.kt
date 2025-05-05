@@ -6,8 +6,8 @@ data class WorkoutResult(
     val weight: Int?,
     val iteration: Int?,
     val workTime: Int?,
-    val position: Int,
+    val position: Int = 0,
     val sequenceInGymDay: Int,
     val timeFromStart: Int,
-    val workoutDateTime: String // Формат "yyyy-MM-dd HH:mm"
+    val workoutDateTime: String // Формат "yyyy.MM.dd HH:mm"
 )

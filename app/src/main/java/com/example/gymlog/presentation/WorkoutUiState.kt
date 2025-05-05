@@ -13,6 +13,7 @@ data class WorkoutUiState(
     val timerState: TimerState = TimerState(),                       // Стан таймера
     val trainingBlocksState: TrainingBlocksState = TrainingBlocksState(),  // Стан блоків вправ
     val programSelectionState: ProgramSelectionState = ProgramSelectionState(),           // Стан вибору програми
+    val gymDayState: GymDayState = GymDayState(),           // Стан вибору програми
 )
 
 
@@ -43,9 +44,6 @@ data class TrainingBlocksState(
     val isGymDayChosen: Boolean = false,  // Чи вибрано тренувальний блок щоб закрити діалог і відкрити вікно тренування?
 )
 
-
-
-
 /**
  * Стан таймера
  */
@@ -56,5 +54,9 @@ data class TimerState(
 )
 
 
+data class GymDayState(
+    val resultsAdded: Int = 0,
+    val errorSaveResult: String = "error"
 
+)
 

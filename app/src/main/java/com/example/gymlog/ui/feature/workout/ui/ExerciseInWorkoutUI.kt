@@ -80,8 +80,10 @@ fun ExerciseInWorkoutUI(
     if(showDialog) {
         LogResultDialog(
             onDismiss = { showDialog = false },
-            onConfirmResult = {it ->
-                it.exeInBlockId = exerciseBlockUI.linkId}
+            onConfirmResult = { result ->
+                result.exeInBlockId = exerciseBlockUI.linkId
+                onConfirmResult(result)
+            }
         )
     }
 

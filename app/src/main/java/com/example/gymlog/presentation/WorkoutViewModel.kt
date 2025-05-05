@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.domain.usecase.GetGymDayWithResultsUseCase
+import com.example.gymlog.domain.usecase.SaveResultUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
@@ -19,7 +20,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
+import kotlin.Int
+import kotlin.String
 
 /**
  * ViewModel для екрану тренувань.
@@ -31,6 +37,7 @@ import javax.inject.Inject
 class WorkoutViewModel @Inject constructor(
     private val fetchProgramsUseCase: FetchProgramsNewUiUseCase,
     private val getGymDayWithResultsUseCase: GetGymDayWithResultsUseCase,
+    private val saveResultUseCase: SaveResultUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -273,11 +280,6 @@ class WorkoutViewModel @Inject constructor(
 
     /**
      * Зберігає результат підходу в локальний стан.
-     * @param weight Вага снаряду (не може бути null)
-     * @param iteration Кількість повторень (може бути null)
-     * @param workTime Час виконання в секундах (може бути null)
-     * @param date Дата тренування
-     * @param time Час тренування
      */
     fun saveResult(
         exerciseInBlockId: Long,
@@ -293,40 +295,60 @@ class WorkoutViewModel @Inject constructor(
                 // Оновлюємо стан завантаження
                 updateSelectionState { it.copy(isLoading = true) }
 
-                // Зберігаємо результат
-//                val updatedResults = saveResultUseCase(
-//                    exerciseInBlockId = exerciseInBlockId,
-//                    weight = weight,
-//                    iterations = iterations,
-//                    workTime = workTime
-//                )
+                //отримати поточну дату й час
+                val currentDateTime = Calendar.getInstance()
+                val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
-                // Оновлюємо UI модель
-//                val updatedGymDay = selectedGymDay.copy(
-//                    trainingBlocksUiModel = selectedGymDay.trainingBlocksUiModel.map { block ->
-//                        block.copy(
-//                            infoExercises = block.infoExercises.map { exercise ->
-//                                if (exercise.linkId == exerciseInBlockId) {
-//                                    exercise.copy(
-//                                        results = updatedResults.map { it.toUiModel() }
-//                                    )
-//                                } else {
-//                                    exercise
-//                                }
-//                            }
-//                        )
-//                    }
-//                )
+                val currentDate = dateFormat.format(currentDateTime.time)
+                val currentTime = timeFormat.format(currentDateTime.time)
+
+                val timeFromStart = System.currentTimeMillis() - currentState.timerState.totalTimeMs
+
+                //вказати, що результатів додано на 1 більше
+                updateGymDayState {it.copy(resultsAdded = it.resultsAdded + 1)}
+                val sequenceInGymDay = currentState.gymDayState.resultsAdded
+
+
+                //Зберігаємо результат
+                val updatedResults = saveResultUseCase(
+                    exerciseInBlockId = exerciseInBlockId,
+                    weight = weight,
+                    iterations = iterations,
+                    workTime = workTime,
+                    sequenceInGymDay = sequenceInGymDay,
+                    timeFromStart = timeFromStart,
+                    workoutDateTime = "$currentDate $currentTime",
+                )
+
+
+
+                //Оновлюємо UI модель
+                val updatedGymDay = selectedGymDay.copy(
+                    trainingBlocksUiModel = selectedGymDay.trainingBlocksUiModel.map { block ->
+                        block.copy(
+                            infoExercises = block.infoExercises.map { exercise ->
+                                if (exercise.linkId == exerciseInBlockId) {
+                                    exercise.copy(
+                                        results = updatedResults.map { it.toUiModel() }
+                                    )
+                                } else {
+                                    exercise
+                                }
+                            }
+                        )
+                    }
+                )
 
                 // Оновлюємо стан
-//                updateSelectionState { it.copy(
-//                    selectedGymDay = updatedGymDay,
-//                    isLoading = false
-//                )}
-//
-//                updateTrainingState { it.copy(
-//                    blocks = updatedGymDay.trainingBlocksUiModel.toPersistentList()
-//                )}
+                updateSelectionState { it.copy(
+                    selectedGymDay = updatedGymDay,
+                    isLoading = false
+                )}
+
+                updateTrainingState { it.copy(
+                    blocks = updatedGymDay.trainingBlocksUiModel.toPersistentList()
+                )}
             } catch (e: Exception) {
                 updateSelectionState { it.copy(
                     isLoading = false,
@@ -376,7 +398,12 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Оновлює стан вибору програми тренування.
+     * @param update функція, що отримує поточний стан і повертає оновлений
+     */
+    private fun updateGymDayState(update: (GymDayState) -> GymDayState) =
+        _uiState.update { currentState -> currentState.copy(gymDayState = update(currentState.gymDayState)) }
 
     /**
      * Викликається при знищенні ViewModel.

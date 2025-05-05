@@ -45,8 +45,22 @@ fun WorkoutScreen(
 
     // Відображення основного вмісту екрану або стани завантаження/помилок
     Box(modifier = Modifier.fillMaxSize()) {
-        // Основний контент екрану тренування
-        if (state.trainingBlocksState.isGymDayChosen) {
+
+       if (state.programSelectionState.showSelectionDialog) {// Відображення діалогу вибору програми тренування
+            DialogOverlay(
+                programSelectionState = state.programSelectionState,
+                onProgramSelected = viewModel::onProgramSelected,
+                onGymSelected = viewModel::onSessionSelected,
+                onDismiss = {
+                    viewModel.dismissSelectionDialog()
+                    // Повертаємось назад тільки якщо тренування ще не розпочато
+                    if (!state.trainingBlocksState.isGymDayChosen) {
+                        navController.navigateUp()
+                    }
+                },
+                onRetry = viewModel::retryLoadPrograms
+            )
+        } else if (state.trainingBlocksState.isGymDayChosen) { // Основний контент екрану тренування
             // Створення параметрів таймера для відображення
             val timerParams = TimerParams(
                 totalTimeMs = state.timerState.totalTimeMs,
@@ -58,6 +72,8 @@ fun WorkoutScreen(
                 onSetFinished = viewModel::onSetFinish,
                 isRunning = state.timerState.isGymRunning
             )
+
+
 
             // Відображення основного контенту тренування
             WorkoutScreenContent(
@@ -74,22 +90,7 @@ fun WorkoutScreen(
             )
         }
 
-        // Відображення діалогу вибору програми тренування
-        if (state.programSelectionState.showSelectionDialog) {
-            DialogOverlay(
-                programSelectionState = state.programSelectionState,
-                onProgramSelected = viewModel::onProgramSelected,
-                onGymSelected = viewModel::onSessionSelected,
-                onDismiss = {
-                    viewModel.dismissSelectionDialog()
-                    // Повертаємось назад тільки якщо тренування ще не розпочато
-                    if (!state.trainingBlocksState.isGymDayChosen) {
-                        navController.navigateUp()
-                    }
-                },
-                onRetry = viewModel::retryLoadPrograms
-            )
-        }
+
     }
 }
 
