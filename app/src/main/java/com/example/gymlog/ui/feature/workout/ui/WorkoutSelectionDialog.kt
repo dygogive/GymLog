@@ -59,8 +59,8 @@ fun WorkoutSelectionDialog(
                 selectedProgram = selectedProgram,
                 programs = programs,
                 //функція-обгортка, щоб step та selectedProgram ініціалізувати
-                onProgramSelected = fun(it: ProgramInfo) {
-                    //функція-обгортка, щоб step та selectedProgram ініціалізувати
+                //функція-обгортка, щоб step та selectedProgram ініціалізувати
+                onProgramSelected = { it -> //функція-обгортка, щоб step та selectedProgram ініціалізувати
                     selectedProgram = it
                     step = SelectionStep.GYM_SESSIONS
                     onProgramSelected(it)

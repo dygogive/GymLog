@@ -27,7 +27,7 @@ data class ProgramSelectionState(
     // Дні тренувань по програмах
     val availableGymDaySessions: PersistentMap<ProgramInfo, PersistentList<GymDayUiModel>> = persistentMapOf(),
 
-    val selectedGymDay: GymDayUiModel? = null,  // Вибраний день
+    val selectedGymDay: GymDayUiModel? = null,  // Вибраний день з блоками, вправами і результатами всередині
     val showSelectionDialog: Boolean = true,    // Чи показувати діалог вибору
     val isLoading: Boolean = false,             // Іде завантаження
     val errorMessage: String? = null            // Помилка
@@ -40,7 +40,7 @@ data class ProgramSelectionState(
  */
 data class TrainingBlocksState(
     val blocks: PersistentList<TrainingBlockUiModel> = persistentListOf(),  // Блоки вправ
-    val isTrainingBlockChosen: Boolean = false,  // Чи вибрано тренувальний блок щоб закрити діалог і відкрити вікно тренування?
+    val isGymDayChosen: Boolean = false,  // Чи вибрано тренувальний блок щоб закрити діалог і відкрити вікно тренування?
 )
 
 

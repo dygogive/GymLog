@@ -2,6 +2,8 @@ package com.example.gymlog.ui.feature.workout.model
 
 //Один результат виконання сету
 data class ResultOfSet(
+    val id: Long? = 0,
+    var exeInBlockId: Long = 0,
     val weight:      Int?   = null,
     val iteration:   Int?   = null,
     val workTime:    Int?   = null,

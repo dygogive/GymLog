@@ -22,21 +22,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
-import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
+import com.example.gymlog.ui.feature.workout.model.ExerciseBlockUI
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
-import com.example.gymlog.ui.feature.workout.model.AttributesInfo
-import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
-import com.example.gymlog.ui.feature.workout.model.MotionStateList
-import com.example.gymlog.ui.feature.workout.model.MusclesStateList
-import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.theme.MyAppTheme
 
 
 @Composable
 fun ExerciseInWorkoutUI(
     onConfirmResult: (ResultOfSet) -> Unit,
-    exerciseInfo: ExerciseInfo,
+    exerciseBlockUI: ExerciseBlockUI,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
 ) {
@@ -58,21 +53,21 @@ fun ExerciseInWorkoutUI(
 
         // Exercise header and description
         ExerciseHeader(
-            exerciseInfo
+            exerciseBlockUI
         )
 
         Spacer(Modifier.height(8.dp))
 
         // Results section - either current or historical
         DisplayResults(
-            exerciseInfo.results
+            exerciseBlockUI.results
         )
 
         Spacer(Modifier.height(12.dp))
 
         // Action button for adding results
         ActionButton(
-            exerciseInfo.results.isEmpty(),
+            exerciseBlockUI.results.isEmpty(),
             onClick = {
                 showDialog = true
             }
@@ -85,7 +80,8 @@ fun ExerciseInWorkoutUI(
     if(showDialog) {
         LogResultDialog(
             onDismiss = { showDialog = false },
-            onConfirmResult
+            onConfirmResult = {it ->
+                it.exeInBlockId = exerciseBlockUI.linkId}
         )
     }
 
@@ -95,7 +91,7 @@ fun ExerciseInWorkoutUI(
 //OK
 @Composable
 private fun ExerciseHeader(
-    exerciseInfo: ExerciseInfo,
+    exerciseBlockUI: ExerciseBlockUI,
     modifier: Modifier = Modifier,
 ) {
 
@@ -104,16 +100,16 @@ private fun ExerciseHeader(
     ) {
         // Exercise name
         Text(
-            text = exerciseInfo.name,
+            text = exerciseBlockUI.name,
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(horizontal = 8.dp)
         )
 
         // Exercise description (if available)
-        if (exerciseInfo.description.isNotBlank()) {
+        if (exerciseBlockUI.description.isNotBlank()) {
             Text(
-                text = exerciseInfo.description,
+                text = exerciseBlockUI.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 modifier = Modifier
@@ -229,7 +225,7 @@ fun Preview_ExerciseInWorkoutUI() {
         // Приклад блоку тренування для превью
         ExerciseInWorkoutUI(
             onConfirmResult = {},
-            ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList())
+            ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList())
         )
     }
 }

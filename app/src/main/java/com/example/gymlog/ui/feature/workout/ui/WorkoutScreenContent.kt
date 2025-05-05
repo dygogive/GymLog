@@ -19,11 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
-import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
-import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
+import com.example.gymlog.ui.feature.workout.model.ExerciseBlockUI
 import com.example.gymlog.ui.feature.workout.model.MotionStateList
 import com.example.gymlog.ui.feature.workout.model.MusclesStateList
-import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
@@ -90,8 +88,8 @@ fun Preview_WorkoutScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseInfo(0,"Випади", "Випади з кроком", emptyList())
+                ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseBlockUI(0,"Випади", "Випади з кроком", emptyList())
             )
         )
 

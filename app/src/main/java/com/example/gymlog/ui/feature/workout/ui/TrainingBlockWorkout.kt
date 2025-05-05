@@ -25,11 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.AttributesInfo
 import com.example.gymlog.ui.feature.workout.model.EquipmentStateList
-import com.example.gymlog.ui.feature.workout.model.ExerciseInfo
+import com.example.gymlog.ui.feature.workout.model.ExerciseBlockUI
 import com.example.gymlog.ui.feature.workout.model.MotionStateList
 import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
-import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.theme.MyAppTheme
 
@@ -121,7 +120,7 @@ fun TrainingBlockWorkout(
         trainBlockInfo.infoExercises.forEach { exeInfo ->
             ExerciseInWorkoutUI(
                 onConfirmResult = onConfirmResult,
-                exerciseInfo = exeInfo,
+                exerciseBlockUI = exeInfo,
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -152,8 +151,8 @@ fun Preview_ScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseInfo(0,"Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseInfo(0,"Випади", "Випади з кроком", emptyList())
+                ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseBlockUI(0,"Випади", "Випади з кроком", emptyList())
             )
         )
         // Приклад блоку тренування для превью

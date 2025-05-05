@@ -82,8 +82,6 @@ fun LogResultDialog(
                                     weight = weight.toIntOrNull(),
                                     iteration = reps.toIntOrNull(),
                                     workTime = secs.toIntOrNull(),
-                                    getCurrentDateTime().first,
-                                    getCurrentDateTime().second,
                                 )
                             )
                             onDismiss() // Викликаємо функцію, а не просто посилаємось
@@ -99,8 +97,6 @@ fun LogResultDialog(
                         weight = weight.toIntOrNull(),
                         iteration = reps.toIntOrNull(),
                         workTime = secs.toIntOrNull(),
-                        getCurrentDateTime().first,
-                        getCurrentDateTime().second,
                     )
                 )
                 onDismiss() // 🔥 Викликаємо функцію

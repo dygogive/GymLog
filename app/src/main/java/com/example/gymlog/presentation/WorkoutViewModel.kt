@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.domain.usecase.GetGymDayWithResultsUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
@@ -136,16 +137,16 @@ class WorkoutViewModel @Inject constructor(
                     maxResultsPerExercise = 3
                 )
 
-                val uiModel = gymDayWithResults.toUiModel(getApplication())
+                val uiModelGymDay = gymDayWithResults.toUiModel(getApplication())
 
                 updateSelectionState { it.copy(
                     isLoading = false,
-                    selectedGymDay = uiModel
+                    selectedGymDay = uiModelGymDay
                 )}
 
                 updateTrainingState { it.copy(
-                    blocks = uiModel.trainingBlocksUiModel.toPersistentList(),
-                    isTrainingBlockChosen = true
+                    blocks = uiModelGymDay.trainingBlocksUiModel.toPersistentList(),
+                    isGymDayChosen = true
                 )}
             } catch (e: Exception) {
                 updateSelectionState { it.copy(
@@ -278,35 +279,59 @@ class WorkoutViewModel @Inject constructor(
      * @param date Дата тренування
      * @param time Час тренування
      */
-    fun saveResult(weight: Int?, iteration: Int?, workTime: Int?, date: String, time: String) {
-        // Перевірка наявності хоча б одного значення
-        if (weight == null && iteration == null && workTime == null) {
-            Log.w("WorkoutVM", "Порожній результат")
-            return
-        }
-
+    fun saveResult(
+        exerciseInBlockId: Long,
+        weight: Int?,
+        iterations: Int?,
+        workTime: Int?
+    ) {
         viewModelScope.launch {
+            val currentState = _uiState.value
+            val selectedGymDay = currentState.programSelectionState.selectedGymDay ?: return@launch
+
             try {
-                // Створюємо об'єкт результату підходу
-                val result = ResultOfSet(
-                    weight = weight,
-                    iteration = iteration,
-                    workTime = workTime,
-                    currentDate = date,
-                    currentTime = time
-                )
+                // Оновлюємо стан завантаження
+                updateSelectionState { it.copy(isLoading = true) }
 
+                // Зберігаємо результат
+//                val updatedResults = saveResultUseCase(
+//                    exerciseInBlockId = exerciseInBlockId,
+//                    weight = weight,
+//                    iterations = iterations,
+//                    workTime = workTime
+//                )
 
+                // Оновлюємо UI модель
+//                val updatedGymDay = selectedGymDay.copy(
+//                    trainingBlocksUiModel = selectedGymDay.trainingBlocksUiModel.map { block ->
+//                        block.copy(
+//                            infoExercises = block.infoExercises.map { exercise ->
+//                                if (exercise.linkId == exerciseInBlockId) {
+//                                    exercise.copy(
+//                                        results = updatedResults.map { it.toUiModel() }
+//                                    )
+//                                } else {
+//                                    exercise
+//                                }
+//                            }
+//                        )
+//                    }
+//                )
 
-
-
-
-
-
-
-                Log.d("WorkoutVM", "Результат збережено: $result")
-            } catch (exception: Exception) {
-                Log.e("WorkoutVM", "Помилка збереження", exception)
+                // Оновлюємо стан
+//                updateSelectionState { it.copy(
+//                    selectedGymDay = updatedGymDay,
+//                    isLoading = false
+//                )}
+//
+//                updateTrainingState { it.copy(
+//                    blocks = updatedGymDay.trainingBlocksUiModel.toPersistentList()
+//                )}
+            } catch (e: Exception) {
+                updateSelectionState { it.copy(
+                    isLoading = false,
+                    errorMessage = "Failed to save result"
+                )}
             }
         }
     }
