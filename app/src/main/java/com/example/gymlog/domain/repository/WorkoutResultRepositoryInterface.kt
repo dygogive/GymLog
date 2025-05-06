@@ -7,4 +7,5 @@ interface WorkoutResultRepositoryInterface {
         exerciseInBlockId: Long,
         resultsNumber: Int = 3
     ): List<WorkoutResult>
+    suspend fun saveWorkoutResult(workoutResult: WorkoutResult)
 }

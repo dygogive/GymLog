@@ -19,4 +19,8 @@ interface WorkoutResultDao {
     suspend fun getResultsForExercise(
         exerciseInBlockId: Long
     ): List<WorkoutResultEntity>
+
+
+    @Insert
+    suspend fun insert(result: WorkoutResultEntity)
 }

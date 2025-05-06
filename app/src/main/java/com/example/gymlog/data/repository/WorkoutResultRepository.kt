@@ -3,6 +3,7 @@ package com.example.gymlog.data.repository
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
 import com.example.gymlog.data.local.room.mappers.toDomain
+import com.example.gymlog.data.local.room.mappers.toEntity
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.repository.WorkoutResultRepositoryInterface
 import javax.inject.Inject
@@ -39,5 +40,11 @@ class WorkoutResultRepository @Inject constructor(
             .take(resultsNumber)
             // Конвертуємо в domain-модель
             .map { it.toDomain() }
+    }
+
+
+
+    override suspend fun saveWorkoutResult(result: WorkoutResult) {
+        workoutResultDao.insert(result.toEntity())
     }
 }

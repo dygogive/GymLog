@@ -141,7 +141,7 @@ class WorkoutViewModel @Inject constructor(
             try {
                 val gymDayWithResults = getGymDayWithResultsUseCase(
                     gymDayId = session.id,
-                    maxResultsPerExercise = 3
+                    maxResultsPerExercise = uiState.value.gymDayState.maxResultsPerExercise,
                 )
 
                 val uiModelGymDay = gymDayWithResults.toUiModel(getApplication())
@@ -311,7 +311,9 @@ class WorkoutViewModel @Inject constructor(
 
 
                 //Зберігаємо результат
-                val updatedResults = saveResultUseCase(
+                val updatedGymDay = saveResultUseCase(
+                    gymDayId = selectedGymDay.id,
+                    maxResultsPerExercise = currentState.gymDayState.maxResultsPerExercise,
                     exerciseInBlockId = exerciseInBlockId,
                     weight = weight,
                     iterations = iterations,
@@ -323,32 +325,20 @@ class WorkoutViewModel @Inject constructor(
 
 
 
-                //Оновлюємо UI модель
-                val updatedGymDay = selectedGymDay.copy(
-                    trainingBlocksUiModel = selectedGymDay.trainingBlocksUiModel.map { block ->
-                        block.copy(
-                            infoExercises = block.infoExercises.map { exercise ->
-                                if (exercise.linkId == exerciseInBlockId) {
-                                    exercise.copy(
-                                        results = updatedResults.map { it.toUiModel() }
-                                    )
-                                } else {
-                                    exercise
-                                }
-                            }
-                        )
-                    }
-                )
+
+                // Оновлюємо лічильник результатів
+                updateGymDayState { it.copy(resultsAdded = it.resultsAdded + 1) }
 
                 // Оновлюємо стан
                 updateSelectionState { it.copy(
-                    selectedGymDay = updatedGymDay,
+                    selectedGymDay = updatedGymDay.toUiModel(getApplication()),
                     isLoading = false
                 )}
-
                 updateTrainingState { it.copy(
-                    blocks = updatedGymDay.trainingBlocksUiModel.toPersistentList()
+                    blocks = updatedGymDay.trainingBlocks.map { it.toUiModel(getApplication()) }.toPersistentList()
                 )}
+
+
             } catch (e: Exception) {
                 updateSelectionState { it.copy(
                     isLoading = false,
