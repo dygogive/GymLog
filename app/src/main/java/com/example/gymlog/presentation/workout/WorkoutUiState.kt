@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import com.example.gymlog.ui.feature.workout.model.*
 import kotlinx.collections.immutable.PersistentList

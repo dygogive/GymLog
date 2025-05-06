@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
-import com.example.gymlog.presentation.ProgramSelectionState
-import com.example.gymlog.presentation.WorkoutCoordinatorViewModel
+import com.example.gymlog.presentation.workout.ProgramSelectionState
+import com.example.gymlog.presentation.workout.WorkoutCoordinatorViewModel
 import com.example.gymlog.ui.feature.workout.model.*
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog

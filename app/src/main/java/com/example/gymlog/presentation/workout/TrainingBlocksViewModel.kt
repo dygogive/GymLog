@@ -1,9 +1,10 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,7 +56,7 @@ class TrainingBlocksViewModel @Inject constructor(
     fun clearTrainingBlocks() {
         _trainingBlocksState.update { currentState ->
             currentState.copy(
-                blocks = kotlinx.collections.immutable.persistentListOf(),
+                blocks = persistentListOf(),
                 isGymDayChosen = false
             )
         }

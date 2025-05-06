@@ -1,10 +1,11 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.domain.usecase.GetGymDayWithResultsUseCase
+import com.example.gymlog.presentation.FetchProgramsNewUiUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo

@@ -1,4 +1,4 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

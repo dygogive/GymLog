@@ -1,16 +1,16 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
+import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -80,7 +80,7 @@ class WorkoutCoordinatorViewModel @Inject constructor(
     /**
      * Обробляє вибір програми тренувань
      */
-    fun onProgramSelected(program: com.example.gymlog.ui.feature.workout.model.ProgramInfo) =
+    fun onProgramSelected(program: ProgramInfo) =
         programSelectionViewModel.onProgramSelected(program)
 
     /**

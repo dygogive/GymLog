@@ -1,15 +1,13 @@
-package com.example.gymlog.presentation
+package com.example.gymlog.presentation.workout
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.domain.usecase.SaveResultUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
+import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -45,7 +43,7 @@ class ResultsViewModel @Inject constructor(
         iterations: Int?,
         workTime: Int?,
         timeFromStart: Long
-    ): Result<com.example.gymlog.ui.feature.workout.model.GymDayUiModel> {
+    ): Result<GymDayUiModel> {
         return try {
             // Отримуємо поточну дату й час
             val currentDateTime = Calendar.getInstance()
