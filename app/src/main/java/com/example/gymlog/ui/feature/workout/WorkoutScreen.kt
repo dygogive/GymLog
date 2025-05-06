@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gymlog.R
 import com.example.gymlog.presentation.ProgramSelectionState
-import com.example.gymlog.presentation.WorkoutViewModel
+import com.example.gymlog.presentation.WorkoutCoordinatorViewModel
 import com.example.gymlog.ui.feature.workout.model.*
 import com.example.gymlog.ui.feature.workout.ui.WorkoutScreenContent
 import com.example.gymlog.ui.feature.workout.ui.WorkoutSelectionDialog
@@ -35,7 +35,7 @@ import com.example.gymlog.ui.theme.MyAppTheme
 @Composable
 fun WorkoutScreen(
     navController: NavController,
-    viewModel: WorkoutViewModel = hiltViewModel()
+    viewModel: WorkoutCoordinatorViewModel = hiltViewModel()
 ) {
     // Отримання контексту та спостереження за станом ViewModel
     val context = LocalContext.current
