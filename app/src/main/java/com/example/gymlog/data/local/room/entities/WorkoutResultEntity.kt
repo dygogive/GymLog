@@ -27,6 +27,6 @@ data class WorkoutResultEntity(
     val workTime: Int?,
     val sequenceInGymDay: Int,
     val position: Int,
-    val timeFromStart: Int,
+    val timeFromStart: Long,
     val workoutDateTime: String  // Обов'язкове поле
 )
