@@ -48,7 +48,7 @@ class ResultsViewModel @Inject constructor(
             // Отримуємо поточну дату й час
             val currentDateTime = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
             val currentDate = dateFormat.format(currentDateTime.time)
             val currentTime = timeFormat.format(currentDateTime.time)
@@ -73,7 +73,7 @@ class ResultsViewModel @Inject constructor(
             incrementResultsAdded()
 
             // Повертаємо успішний результат з оновленим днем тренування
-            Result.success(updatedGymDay.toUiModel(getApplication()))
+            return Result.success(updatedGymDay.toUiModel(getApplication()))
         } catch (e: Exception) {
             // Повертаємо помилку
             Result.failure(e)

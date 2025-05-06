@@ -37,8 +37,7 @@ fun WorkoutScreen(
     navController: NavController,
     viewModel: WorkoutCoordinatorViewModel = hiltViewModel()
 ) {
-    // Отримання контексту та спостереження за станом ViewModel
-    val context = LocalContext.current
+
     val state by viewModel.uiState.collectAsState()
 
 
