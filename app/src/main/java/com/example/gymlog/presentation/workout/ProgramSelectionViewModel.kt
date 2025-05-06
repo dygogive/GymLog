@@ -9,6 +9,7 @@ import com.example.gymlog.presentation.FetchProgramsNewUiUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentMap
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,22 +55,22 @@ class ProgramSelectionViewModel @Inject constructor(
             // Використовуємо runCatching для коректної обробки помилок
             runCatching {
                 fetchProgramsUseCase(getApplication())
-            }.onSuccess { programs ->
+            }.onSuccess(fun(programs: List<ProgramInfo>) {
                 // Зберігаємо програми і дні тренувань у стані
                 _programSelectionState.update { selectionState ->
                     selectionState.copy(
                         availablePrograms = programs.toPersistentList(),
                         // Створюємо мапу програм до днів тренувань
                         availableGymDaySessions = programs
-                            .associateWith {
-                                it.gymDayUiModels.toPersistentList()
-                            }
+                            .associateWith(fun(it: ProgramInfo): PersistentList<GymDayUiModel> {
+                                return it.gymDayUiModels.toPersistentList()
+                            })
                             .toPersistentMap(),
                         isLoading = false,
                         errorMessage = null
                     )
                 }
-            }.onFailure { error ->
+            }).onFailure { error ->
                 // Обробка помилок завантаження
                 Log.e("ProgramSelectionVM", "Помилка завантаження програм", error)
                 _programSelectionState.update { selectionState ->
@@ -97,20 +98,20 @@ class ProgramSelectionViewModel @Inject constructor(
 
     /**
      * Обробляє вибір дня тренування і закриває діалог вибору.
-     * @param session Вибраний день тренування
+     * @param gymDay Вибраний день тренування
      * @param maxResultsPerExercise Максимальна кількість результатів для вправи
      */
-    fun onSessionSelected(session: GymDayUiModel, maxResultsPerExercise: Int) {
+    fun onSessionSelected(gymDay: GymDayUiModel, maxResultsPerExercise: Int) {
         viewModelScope.launch {
             _programSelectionState.update { it.copy(
-                selectedGymDay = session,
+                selectedGymDay = gymDay,
                 showSelectionDialog = false,
                 isLoading = true
             )}
 
             try {
                 val gymDayWithResults = getGymDayWithResultsUseCase(
-                    gymDayId = session.id,
+                    gymDayId = gymDay.id,
                     maxResultsPerExercise = maxResultsPerExercise,
                 )
 
