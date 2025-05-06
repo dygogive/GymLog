@@ -15,7 +15,7 @@
         android:id="@+id/textViewLOGO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/my_gym_log"
+        android:text="@string/app_name"
         android:textColor="@color/text_primary"
         android:textSize="24sp"
         android:textStyle="bold"

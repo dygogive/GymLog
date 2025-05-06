@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GymLog</string>
+    <string name="app_name" translatable="false">GymLogX</string>
     <string name="start_gym">Start</string>
     <string name="stop_gym">Stop</string>
     <string name="history">History</string>
@@ -116,7 +116,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="expand_details">Show details</string>
-    <string name="exe_editor">Exercises Editor</string>
+    <string name="exe_editor">Exercises</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -181,8 +181,7 @@
     <string name="context_menu">Context menu</string>
     <string name="clone_exercise">Clone exercise</string>
     <string name="clone">Clone</string>
-    <string name="edit_programs">Programs Editor</string>
-    <string name="my_gym_log">My Gym`s Logs</string>
+    <string name="edit_programs">Programs</string>
     <string name="select_motion">Select motion</string>
     <string name="select_muscle_groups">Select muscle groups</string>
     <string name="select_equipment">Select equipment</string>
@@ -242,7 +241,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="workout">Workout</string>
+    <string name="workout">Gym</string>
     <string name="new_count">New count</string>
     <string name="since_last_note">Since last note:</string>
     <string name="set_finished">Noted</string>

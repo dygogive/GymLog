@@ -50,7 +50,7 @@ fun MainScreen(navController: NavController) {
     {
         // Заголовок
         Text(
-            text = stringResource(id = R.string.my_gym_log),
+            text = stringResource(id = R.string.app_name),
             //fontSize = 24.sp,
             color = MaterialTheme.colorScheme.onBackground,
             //style = MaterialTheme.typography.labelLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
