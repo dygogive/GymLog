@@ -5,7 +5,7 @@ import com.example.gymlog.domain.model.workout.WorkoutResult
 interface WorkoutResultRepositoryInterface {
     suspend fun getBestUniqueResults(
         exerciseInBlockId: Long,
-        resultsNumber: Int = 3
+        resultsNumber: Int
     ): List<WorkoutResult>
     suspend fun saveWorkoutResult(workoutResult: WorkoutResult)
 }
