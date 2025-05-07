@@ -3,16 +3,18 @@ package com.example.gymlog.domain.usecase
 import com.example.gymlog.data.repository.WorkoutResultRepository
 import com.example.gymlog.domain.model.plan.GymDayNew
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
+import com.example.gymlog.domain.repository.WorkoutResultRepositoryInterface
 import javax.inject.Inject
 
 class GetGymDayWithResultsUseCase  @Inject constructor(
     private val repository: FitnessProgramNewRepositoryInterface,
-    private val workoutResultRepository: WorkoutResultRepository
+    private val workoutResultRepository: WorkoutResultRepositoryInterface
 ) {
     suspend operator fun invoke(
         gymDayId: Long,
         maxResultsPerExercise: Int = 3
     ): GymDayNew {
+        //
         val gymDay = repository.getSelectedGymDayNew(gymDayId)
 
         return gymDay.copy(

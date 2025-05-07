@@ -102,8 +102,8 @@ public class DialogBlocCreator extends Dialog {
      * Метод створення діалогу. Ініціалізує UI, DAO та завантажує дані блоку, якщо він існує.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
         // Встановлюємо layout діалогу
         setContentView(R.layout.dialog_training_block);
 
@@ -119,12 +119,15 @@ public class DialogBlocCreator extends Dialog {
 
         // Ініціалізація UI компонентів та фільтрів
         initUI();
+        Log.d("openBlockDialog", "initUI: 10");
         initFilters();
+        Log.d("openBlockDialog", "initUI: 11" + (trainingBlock != null));
 
         // Якщо редагується існуючий блок, завантажити його дані
         if (trainingBlock != null) {
             loadBlockData();
         }
+
     }
 
     /**
@@ -134,40 +137,43 @@ public class DialogBlocCreator extends Dialog {
         // Знаходимо поля введення за ID
         editTextBlockName = findViewById(R.id.editTextBlockName);
         editTextBlockDescription = findViewById(R.id.editTextBlockDescription);
-
+        Log.d("openBlockDialog", "initUI: 1");
         // Встановлюємо обмеження на кількість символів
         editTextBlockName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
         editTextBlockDescription.setFilters(new InputFilter[]{new InputFilter.LengthFilter(300)});
-
+        Log.d("openBlockDialog", "initUI: 2");
         // Знаходимо кнопки для вибору фільтрів та дії
         buttonSelectMotion = findViewById(R.id.buttonSelectMotion);
         buttonSelectMuscle = findViewById(R.id.buttonSelectMuscle);
         buttonSelectEquipment = findViewById(R.id.buttonSelectEquipment);
         Button buttonCancel = findViewById(R.id.buttonCancel);
         Button buttonSaveBlock = findViewById(R.id.buttonSaveBlock);
-
+        Log.d("openBlockDialog", "initUI: 3");
         // Зберігаємо базовий текст кнопок (для подальшого оновлення тексту)
         buttonSelectMotion.setTag(buttonSelectMotion.getText().toString());
         buttonSelectMuscle.setTag(buttonSelectMuscle.getText().toString());
         buttonSelectEquipment.setTag(buttonSelectEquipment.getText().toString());
-
+        Log.d("openBlockDialog", "initUI: 4");
         // Призначення обробників кліків для відкриття діалогів мультивибору
         buttonSelectMotion.setOnClickListener(v ->
                 showMultiSelectDialog("Оберіть рухи", Motion.getAllDescriptions(getContext()), booleansMotions, chosenTxtMotions, buttonSelectMotion)
         );
+        Log.d("openBlockDialog", "initUI: 5");
         buttonSelectMuscle.setOnClickListener(v ->
                 showMultiSelectDialog("Оберіть м’язи", MuscleGroup.getAllDescriptions(getContext()), booleansMuscles, chosenTxtMuscles, buttonSelectMuscle)
         );
+        Log.d("openBlockDialog", "initUI: 6");
         buttonSelectEquipment.setOnClickListener(v ->
                 showMultiSelectDialog("Оберіть обладнання", Equipment.getEquipmentDescriptions(getContext()), booleansEquipment, chosenTxtEquipment, buttonSelectEquipment)
         );
-
+        Log.d("openBlockDialog", "initUI: 7");
         // Обробники для кнопок "Скасувати" та "Зберегти"
         buttonCancel.setOnClickListener(v -> dismiss());
         buttonSaveBlock.setOnClickListener(v -> saveTrainingBlock());
-
+        Log.d("openBlockDialog", "initUI: 8");
         // Стилізація кнопок діалогу
         DialogStyler.styleButtonsInDialog(context, buttonCancel, buttonSaveBlock);
+        Log.d("openBlockDialog", "initUI: 9");
     }
 
     /**
@@ -186,21 +192,25 @@ public class DialogBlocCreator extends Dialog {
         // Встановлення тексту з існуючого блоку
         editTextBlockName.setText(trainingBlock.getName());
         editTextBlockDescription.setText(trainingBlock.getDescription());
-
+        Log.d("openBlockDialog", "initUI: 12");
         // Отримання збережених фільтрів з БД
         List<String> savedMotionsInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "motionType");
+        Log.d("openBlockDialog", "initUI: 13");
         List<String> savedMusclesInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "muscleGroup");
-        List<String> savedEquipmentInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "equipmentState");
+        Log.d("openBlockDialog", "initUI: 14");
+        List<String> savedEquipmentInDB = planManagerDAO.getTrainingBlockFilters(trainingBlock.getId(), "equipment");
+        Log.d("openBlockDialog", "initUI: 15");
 
         // Оновлення локальних виборів на основі збережених даних
         updateSelections(savedMotionsInDB, chosenTxtMotions, booleansMotions, Motion.values(), Motion::getDescription);
         updateSelections(savedMusclesInDB, chosenTxtMuscles, booleansMuscles, MuscleGroup.values(), MuscleGroup::getDescription);
         updateSelections(savedEquipmentInDB, chosenTxtEquipment, booleansEquipment, Equipment.values(), Equipment::getDescription);
-
+        Log.d("openBlockDialog", "initUI: 14");
         // Оновлення тексту кнопок із зазначенням кількості вибраних фільтрів
         updateButtonText(buttonSelectMotion, chosenTxtMotions);
         updateButtonText(buttonSelectMuscle, chosenTxtMuscles);
         updateButtonText(buttonSelectEquipment, chosenTxtEquipment);
+        Log.d("openBlockDialog", "initUI: 15");
     }
 
     /**
@@ -315,7 +325,7 @@ public class DialogBlocCreator extends Dialog {
     private void saveFilters(long blockId) {
         saveFilterItems(blockId, chosenTxtMotions, motionText -> Motion.getObjectByDescription(context, motionText), "motionType");
         saveFilterItems(blockId, chosenTxtMuscles, muscleText -> MuscleGroup.getObjectByDescription(context, muscleText), "muscleGroup");
-        saveFilterItems(blockId, chosenTxtEquipment, equipmentText -> Equipment.getEquipmentByDescription(context, equipmentText), "equipmentState");
+        saveFilterItems(blockId, chosenTxtEquipment, equipmentText -> Equipment.getEquipmentByDescription(context, equipmentText), "equipment");
     }
 
     /**
@@ -324,7 +334,7 @@ public class DialogBlocCreator extends Dialog {
      * @param blockId ID блоку тренування.
      * @param chosenItems Список вибраних елементів.
      * @param converter Функція конвертації тексту у відповідний enum.
-     * @param filterType Тип фільтра (motionType, muscleGroup, equipmentState).
+     * @param filterType Тип фільтра (motionType, muscleGroup, equipment).
      */
     private <E extends Enum<E>> void saveFilterItems(long blockId, List<String> chosenItems, Function<String, E> converter, String filterType) {
         for (String itemText : chosenItems) {
