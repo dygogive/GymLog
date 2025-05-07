@@ -22,7 +22,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="3"
             android:text="@string/training_block_name"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
@@ -39,13 +39,61 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:maxLines="7"
+            android:maxLines="3"
             android:text="@string/descr_block"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBlockName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewBlockName" />
+
+        <!-- М'язи -->
+        <TextView
+            android:id="@+id/textViewMuscleGroups"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/muscles"
             android:textColor="@color/text_primary"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="@+id/textViewBlockName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewBlockName" />
+            app:layout_constraintTop_toBottomOf="@id/textViewBlockDescription" />
+
+        <!-- Тип руху -->
+        <TextView
+            android:id="@+id/textViewMotions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/motion"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBlockName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewMuscleGroups" />
+
+        <!-- Обладнання -->
+        <TextView
+            android:id="@+id/textViewEquipment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/equipment"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewBlockName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewMotions" />
 
         <!-- Кнопка контекстного меню -->
         <ImageButton
@@ -76,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewBlockDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewEquipment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

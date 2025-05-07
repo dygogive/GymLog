@@ -100,7 +100,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
     // ViewHolder для блока тренування
     class TrainingBlockViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView name, description;
+        final TextView name, description, muscleGroups, motions, equipment;
         final ImageButton menu;
         final RecyclerView exercisesRecycler;
         ItemTouchHelper exercisesItemTouchHelper;
@@ -109,6 +109,9 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
             super(itemView);
             name = itemView.findViewById(R.id.textViewBlockName);
             description = itemView.findViewById(R.id.textViewBlockDescription);
+            muscleGroups = itemView.findViewById(R.id.textViewMuscleGroups);
+            motions = itemView.findViewById(R.id.textViewMotions);
+            equipment = itemView.findViewById(R.id.textViewEquipment);
             menu = itemView.findViewById(R.id.buttonMenu);
             exercisesRecycler = itemView.findViewById(R.id.recyclerViewExercises);
             exercisesRecycler.setLayoutManager(new LinearLayoutManager(context));
@@ -116,77 +119,183 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
 
         void bind(TrainingBlock block) {
             name.setText(block.getName());
-            setupDescription(block);
+            setupDescriptionAndAttributes(block);
             setupMenu(block);
             setupExercises(block);
         }
 
-        // Налаштовує текст опису блоку з урахуванням фільтрів
-
-        void setupDescription(TrainingBlock block) {
-            StringBuilder sb = new StringBuilder();
-            String description = block.getDescription().trim();
-
+        // Налаштовує текст опису та атрибутів блоку
+        void setupDescriptionAndAttributes(TrainingBlock block) {
             // Основний опис
-            if (!description.isEmpty()) {
-                sb.append(description).append("\n");
+            String desc = block.getDescription().trim();
+            if (desc.isEmpty()) {
+                description.setVisibility(View.GONE);
+            } else {
+                description.setVisibility(View.VISIBLE);
+                description.setText(desc);
+
+                // Обмеження основного опису до 3 рядків
+                if (desc.length() > 150) { // приблизно 150 символів на 3 рядки
+                    String shortenedDesc = desc.substring(0, Math.min(desc.length(), 147)) + "...";
+                    description.setText(shortenedDesc);
+                }
             }
 
-            // Формування опису з обмеженням на 2 елементи в кожній категорії
-            appendAttributeList(sb, R.string.muscles, block.getMuscleGroupList(), 2);
-            appendAttributeList(sb, R.string.motion, block.getMotions(), 2);
-            appendAttributeList(sb, R.string.equipment, block.getEquipmentList(), 2);
+            // Встановлення атрибутів у окремі TextView
+            setupMuscleGroups(block);
+            setupMotions(block);
+            setupEquipment(block);
 
-            String finalDescription = sb.toString().trim();
-
-            this.description.setText(finalDescription);
-
-            // Обробник кліку для показу повного опису
-            this.description.setOnClickListener(v -> showFullDescription(block));
+            // Налаштування обробників натискання для всіх TextView
+            View.OnClickListener descriptionClickListener = v -> showFullDescription(block);
+            description.setOnClickListener(descriptionClickListener);
+            muscleGroups.setOnClickListener(descriptionClickListener);
+            motions.setOnClickListener(descriptionClickListener);
+            equipment.setOnClickListener(descriptionClickListener);
         }
 
-        /**
-         * Додає до опису перелік атрибутів (м'язів, рухів, обладнання) з обмеженням кількості
-         * @param sb StringBuilder для додавання тексту
-         * @param stringResId ID ресурсу з назвою категорії
-         * @param items список атрибутів
-         * @param maxItems максимальна кількість елементів для відображення
-         */
-        private <T> void appendAttributeList(StringBuilder sb, int stringResId, List<T> items, int maxItems) {
-            if (items == null || items.isEmpty()) return;
+        // Налаштування групи м'язів
+        private void setupMuscleGroups(TrainingBlock block) {
+            List<MuscleGroup> muscleGroupList = block.getMuscleGroupList();
 
-            sb.append(context.getString(stringResId)).append(": ");
+            if (muscleGroupList == null || muscleGroupList.isEmpty()) {
+                muscleGroups.setVisibility(View.GONE);
+                return;
+            }
 
-            int count = 0;
-            for (T item : items) {
-                if (count > 0) sb.append(", ");
+            muscleGroups.setVisibility(View.VISIBLE);
+            StringBuilder sb = new StringBuilder();
+            sb.append(context.getString(R.string.muscles)).append(": ");
 
-                String description = "";
-                if (item instanceof MuscleGroup) {
-                    description = ((MuscleGroup) item).getDescription(context);
-                } else if (item instanceof Motion) {
-                    description = ((Motion) item).getDescription(context);
-                } else if (item instanceof Equipment) {
-                    description = ((Equipment) item).getDescription(context);
-                }
+            // Розрахунок максимальної довжини тексту
+            int maxLength = 100; // Приблизна кількість символів, що поміщається в TextView з maxLines=3
+            int currentLength = sb.length();
+            boolean addedEllipsis = false;
 
-                // Перетворення першої літери на малу
+            for (int i = 0; i < muscleGroupList.size(); i++) {
+                MuscleGroup item = muscleGroupList.get(i);
+
+                // Підготовка тексту опису
+                String description = item.getDescription(context);
                 if (!description.isEmpty()) {
                     description = description.substring(0, 1).toLowerCase() + description.substring(1);
                 }
 
-                sb.append(description);
-                count++;
+                // Текст для додавання (з комою, якщо не перший елемент)
+                String textToAdd = (i > 0 ? ", " : "") + description;
 
-                if (count >= maxItems) {
-                    if (items.size() > maxItems) {
+                // Перевірка, чи поміститься новий текст + "..." якщо потрібно
+                if (currentLength + textToAdd.length() > maxLength - 4) { // 4 символи для ", ..."
+                    if (!addedEllipsis && i < muscleGroupList.size() - 1) {
                         sb.append(", ...");
+                        addedEllipsis = true;
                     }
                     break;
                 }
+
+                // Додавання тексту
+                if (i > 0) sb.append(", ");
+                sb.append(description);
+                currentLength += textToAdd.length();
             }
 
-            sb.append("\n");
+            muscleGroups.setText(sb.toString());
+        }
+
+        // Налаштування типів рухів
+        private void setupMotions(TrainingBlock block) {
+            List<Motion> motionsList = block.getMotions();
+
+            if (motionsList == null || motionsList.isEmpty()) {
+                motions.setVisibility(View.GONE);
+                return;
+            }
+
+            motions.setVisibility(View.VISIBLE);
+            StringBuilder sb = new StringBuilder();
+            sb.append(context.getString(R.string.motion)).append(": ");
+
+            // Розрахунок максимальної довжини тексту
+            int maxLength = 100; // Приблизна кількість символів, що поміщається в TextView з maxLines=3
+            int currentLength = sb.length();
+            boolean addedEllipsis = false;
+
+            for (int i = 0; i < motionsList.size(); i++) {
+                Motion item = motionsList.get(i);
+
+                // Підготовка тексту опису
+                String description = item.getDescription(context);
+                if (!description.isEmpty()) {
+                    description = description.substring(0, 1).toLowerCase() + description.substring(1);
+                }
+
+                // Текст для додавання (з комою, якщо не перший елемент)
+                String textToAdd = (i > 0 ? ", " : "") + description;
+
+                // Перевірка, чи поміститься новий текст + "..." якщо потрібно
+                if (currentLength + textToAdd.length() > maxLength - 4) { // 4 символи для ", ..."
+                    if (!addedEllipsis && i < motionsList.size() - 1) {
+                        sb.append(", ...");
+                        addedEllipsis = true;
+                    }
+                    break;
+                }
+
+                // Додавання тексту
+                if (i > 0) sb.append(", ");
+                sb.append(description);
+                currentLength += textToAdd.length();
+            }
+
+            motions.setText(sb.toString());
+        }
+
+        // Налаштування обладнання
+        private void setupEquipment(TrainingBlock block) {
+            List<Equipment> equipmentList = block.getEquipmentList();
+
+            if (equipmentList == null || equipmentList.isEmpty()) {
+                equipment.setVisibility(View.GONE);
+                return;
+            }
+
+            equipment.setVisibility(View.VISIBLE);
+            StringBuilder sb = new StringBuilder();
+            sb.append(context.getString(R.string.equipment)).append(": ");
+
+            // Розрахунок максимальної довжини тексту
+            int maxLength = 100; // Приблизна кількість символів, що поміщається в TextView з maxLines=3
+            int currentLength = sb.length();
+            boolean addedEllipsis = false;
+
+            for (int i = 0; i < equipmentList.size(); i++) {
+                Equipment item = equipmentList.get(i);
+
+                // Підготовка тексту опису
+                String description = item.getDescription(context);
+                if (!description.isEmpty()) {
+                    description = description.substring(0, 1).toLowerCase() + description.substring(1);
+                }
+
+                // Текст для додавання (з комою, якщо не перший елемент)
+                String textToAdd = (i > 0 ? ", " : "") + description;
+
+                // Перевірка, чи поміститься новий текст + "..." якщо потрібно
+                if (currentLength + textToAdd.length() > maxLength - 4) { // 4 символи для ", ..."
+                    if (!addedEllipsis && i < equipmentList.size() - 1) {
+                        sb.append(", ...");
+                        addedEllipsis = true;
+                    }
+                    break;
+                }
+
+                // Додавання тексту
+                if (i > 0) sb.append(", ");
+                sb.append(description);
+                currentLength += textToAdd.length();
+            }
+
+            equipment.setText(sb.toString());
         }
 
         /**
@@ -234,7 +343,6 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
             }
             sb.append("\n");
         }
-
 
         // Налаштовує меню блоку (три крапки)
         void setupMenu(TrainingBlock block) {
@@ -379,5 +487,4 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         // Підтримка HTML-тексту для AlertDialog
         return Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY);
     }
-
 }
