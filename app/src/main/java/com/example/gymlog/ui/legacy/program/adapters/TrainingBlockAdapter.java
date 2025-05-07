@@ -91,6 +91,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
      * Переміщує блок (drag & drop) в списку блоків.
      */
     public void moveItem(int fromPosition, int toPosition) {
+        //changing position of a block
         TrainingBlock block = blocks.remove(fromPosition);
         blocks.add(toPosition, block);
         notifyItemMoved(fromPosition, toPosition);
@@ -121,61 +122,117 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         }
 
         // Налаштовує текст опису блоку з урахуванням фільтрів
+
         void setupDescription(TrainingBlock block) {
             StringBuilder sb = new StringBuilder();
-            String string = block.getDescription();
+            String description = block.getDescription().trim();
 
             // Основний опис
-            if (!string.isEmpty()) {
-                sb.append(string).append(" • ");
+            if (!description.isEmpty()) {
+                sb.append(description).append("\n");
             }
+
+            // Формування опису з обмеженням на 2 елементи в кожній категорії
+            appendAttributeList(sb, R.string.muscles, block.getMuscleGroupList(), 2);
+            appendAttributeList(sb, R.string.motion, block.getMotions(), 2);
+            appendAttributeList(sb, R.string.equipment, block.getEquipmentList(), 2);
+
+            String finalDescription = sb.toString().trim();
+
+            this.description.setText(finalDescription);
+
+            // Обробник кліку для показу повного опису
+            this.description.setOnClickListener(v -> showFullDescription(block));
+        }
+
+        /**
+         * Додає до опису перелік атрибутів (м'язів, рухів, обладнання) з обмеженням кількості
+         * @param sb StringBuilder для додавання тексту
+         * @param stringResId ID ресурсу з назвою категорії
+         * @param items список атрибутів
+         * @param maxItems максимальна кількість елементів для відображення
+         */
+        private <T> void appendAttributeList(StringBuilder sb, int stringResId, List<T> items, int maxItems) {
+            if (items == null || items.isEmpty()) return;
+
+            sb.append(context.getString(stringResId)).append(": ");
 
             int count = 0;
+            for (T item : items) {
+                if (count > 0) sb.append(", ");
 
-            // М'язи
-            if (!block.getMuscleGroupList().isEmpty()) {
-                sb.append(context.getString(R.string.muscles)).append(": ");
-                for (MuscleGroup muscle : block.getMuscleGroupList()) {
-                    sb.append(muscle.getDescription(context)).append("; ");
-                    if(count++ >= 1) break;
+                String description = "";
+                if (item instanceof MuscleGroup) {
+                    description = ((MuscleGroup) item).getDescription(context);
+                } else if (item instanceof Motion) {
+                    description = ((Motion) item).getDescription(context);
+                } else if (item instanceof Equipment) {
+                    description = ((Equipment) item).getDescription(context);
                 }
-                sb.append(" • ");
-                count = 0;
+
+                // Перетворення першої літери на малу
+                if (!description.isEmpty()) {
+                    description = description.substring(0, 1).toLowerCase() + description.substring(1);
+                }
+
+                sb.append(description);
+                count++;
+
+                if (count >= maxItems) {
+                    if (items.size() > maxItems) {
+                        sb.append(", ...");
+                    }
+                    break;
+                }
             }
 
-            // Тип руху
-            if (!block.getMotions().isEmpty()) {
-                sb.append(context.getString(R.string.motion)).append(": ");
-                for (Motion motion : block.getMotions()) {
-                    sb.append(motion.getDescription(context)).append("; ");
-                    if(count++ >= 1) break;
-                }
-                sb.append(" • ");
-                count = 0;
+            sb.append("\n");
+        }
+
+        /**
+         * Показує повний опис блоку в діалоговому вікні
+         */
+        private void showFullDescription(TrainingBlock block) {
+            StringBuilder fullDescription = new StringBuilder();
+
+            // Основний опис
+            String description = block.getDescription().trim();
+            if (!description.isEmpty()) {
+                fullDescription.append(description).append("\n\n");
             }
 
-            // Обладнання
-            if (!block.getEquipmentList().isEmpty()) {
-                sb.append(context.getString(R.string.equipment)).append(": ");
-                for (Equipment eq : block.getEquipmentList()) {
-                    sb.append(eq.getDescription(context)).append("; ");
-                    if(count++ >= 1) break;
+            // Детальний опис кожної категорії
+            appendFullCategoryDescription(fullDescription, R.string.muscles, block.getMuscleGroupList());
+            appendFullCategoryDescription(fullDescription, R.string.motion, block.getMotions());
+            appendFullCategoryDescription(fullDescription, R.string.equipment, block.getEquipmentList());
+
+            new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
+                    .setTitle(block.getName())
+                    .setMessage(fullDescription.toString().trim())
+                    .setPositiveButton("OK", null)
+                    .show();
+        }
+
+        /**
+         * Додає до повного опису всі елементи категорії
+         */
+        private <T> void appendFullCategoryDescription(StringBuilder sb, int stringResId, List<T> items) {
+            if (items == null || items.isEmpty()) return;
+
+            sb.append(context.getString(stringResId)).append(":\n");
+
+            for (T item : items) {
+                sb.append("• ");
+                if (item instanceof MuscleGroup) {
+                    sb.append(((MuscleGroup) item).getDescription(context));
+                } else if (item instanceof Motion) {
+                    sb.append(((Motion) item).getDescription(context));
+                } else if (item instanceof Equipment) {
+                    sb.append(((Equipment) item).getDescription(context));
                 }
-                sb.append(" • ");
-                count = 0;
+                sb.append("\n");
             }
-
-            description.setText(sb.toString().trim());
-
-            // При натисканні на обрізаний опис показуємо AlertDialog з повним текстом
-            description.setOnClickListener(v -> {
-                new AlertDialog.Builder(context, R.style.RoundedDialogTheme)
-                        .setTitle(context.getString(R.string.description))
-                        .setMessage(sb.toString().trim())
-                        .setPositiveButton("OK", null)
-                        .show();
-            });
-
+            sb.append("\n");
         }
 
 
@@ -267,7 +324,7 @@ public class TrainingBlockAdapter extends RecyclerView.Adapter<TrainingBlockAdap
         }
     }
 
-
+    //
     private void onClickExerciseInBlock(ExerciseInBlock exerciseInBlock) {
 //        Toast.makeText(context, exerciseInBlock.getNameOnly(context), Toast.LENGTH_SHORT).show();
 
