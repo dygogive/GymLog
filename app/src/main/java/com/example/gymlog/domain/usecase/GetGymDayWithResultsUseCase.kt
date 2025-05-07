@@ -12,7 +12,7 @@ class GetGymDayWithResultsUseCase  @Inject constructor(
 ) {
     suspend operator fun invoke(
         gymDayId: Long,
-        maxResultsPerExercise: Int = 3
+        maxResultsPerExercise: Int
     ): GymDayNew {
         //
         val gymDay = repository.getSelectedGymDayNew(gymDayId)

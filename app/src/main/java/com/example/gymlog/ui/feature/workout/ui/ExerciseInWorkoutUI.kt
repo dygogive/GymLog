@@ -1,24 +1,32 @@
 package com.example.gymlog.ui.feature.workout.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
@@ -27,56 +35,54 @@ import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.theme.MyAppTheme
 
-
 @Composable
 fun ExerciseInWorkoutUI(
     onConfirmResult: (ResultOfSet) -> Unit,
     exerciseBlockUI: ExerciseBlockUI,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
 ) {
-    //first dialog don't show
     var showDialog by remember { mutableStateOf(false) }
 
-    Column(
-        modifier
-            .fillMaxWidth()
-            .background(backgroundColor)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(vertical = 16.dp)
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = backgroundColor,
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = 1.dp
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            // Exercise header and description
+            ExerciseHeader(exerciseBlockUI)
 
+            Spacer(Modifier.height(12.dp))
 
-        // Exercise header and description
-        ExerciseHeader(
-            exerciseBlockUI
-        )
+            // Subtle divider
+            Divider(
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                thickness = 0.5.dp,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
 
-        Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(12.dp))
 
-        // Results section - either current or historical
-        DisplayResults(
-            exerciseBlockUI.results
-        )
+            // Results section - either current or historical
+            DisplayResults(exerciseBlockUI.results)
 
-        Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
 
-        // Action button for adding results
-        ActionButton(
-            exerciseBlockUI.results.isEmpty(),
-            onClick = {
-                showDialog = true
-            }
-        )
+            // Action button for adding results
+            ActionButton(
+                resultsIsEmpty = exerciseBlockUI.results.isEmpty(),
+                onClick = { showDialog = true }
+            )
+        }
     }
 
-
-    //показати діалог введення результатів
-
+    // Dialog for entering results
     if(showDialog) {
         LogResultDialog(
             onDismiss = { showDialog = false },
@@ -86,17 +92,13 @@ fun ExerciseInWorkoutUI(
             }
         )
     }
-
 }
 
-
-//OK
 @Composable
 private fun ExerciseHeader(
     exerciseBlockUI: ExerciseBlockUI,
     modifier: Modifier = Modifier,
 ) {
-
     Column(
         modifier = modifier
     ) {
@@ -104,8 +106,10 @@ private fun ExerciseHeader(
         Text(
             text = exerciseBlockUI.name,
             color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(horizontal = 8.dp)
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Normal
+            ),
+            modifier = Modifier.padding(bottom = 4.dp)
         )
 
         // Exercise description (if available)
@@ -113,39 +117,40 @@ private fun ExerciseHeader(
             Text(
                 text = exerciseBlockUI.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .padding(horizontal = 8.dp)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
     }
 }
 
-
-//OK
 @Composable
 private fun DisplayResults(
     results: List<ResultOfSet>
 ) {
-    when {
-        results.isNotEmpty() -> {
-            Results(
-                results,
-            )
-        } else -> {
-            Text(
-                text = stringResource(R.string.no_results),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
+    if (results.isNotEmpty()) {
+        Results(results)
+    } else {
+        EmptyResultsMessage()
     }
 }
 
+@Composable
+private fun EmptyResultsMessage() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.no_results),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            textAlign = TextAlign.Center
+        )
+    }
+}
 
-//OK
 @Composable
 private fun Results(
     workoutResult: List<ResultOfSet>,
@@ -153,67 +158,127 @@ private fun Results(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        workoutResult.forEach { workoutResult ->
-            val onesIterations = stringResource(R.string.ones_iterations)
-            val onesWeight = stringResource(R.string.ones_weight)
-            val onesSeconds = stringResource(R.string.ones_seconds)
-            val setTxt = stringResource(R.string.set_txt)
-
-            val repeatsText = workoutResult.iteration?.let { "$it $onesIterations" } ?: "-"
-            val weightText = workoutResult.weight?.let { "$it $onesWeight" } ?: "–"
-            val timeText = workoutResult.workTime?.let { "$it $onesSeconds" } ?: "-"
-
-            //чи дата сьогоднішня?
-            val showDate = workoutResult.currentDate == getCurrentDateTime().first
-
-            val prefix = if (showDate) {
-                "$setTxt ${workoutResult.currentDate}: "
-            } else {
-                "$setTxt: ${workoutResult.currentTime}: "
+        workoutResult.forEachIndexed { index, result ->
+            if (index > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
-            Text(
-                text = "$prefix: $repeatsText $weightText $timeText",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+            ResultItem(result)
         }
     }
 }
 
+@Composable
+private fun ResultItem(result: ResultOfSet) {
+    val onesIterations = stringResource(R.string.ones_iterations)
+    val onesWeight = stringResource(R.string.ones_weight)
+    val onesSeconds = stringResource(R.string.ones_seconds)
+    val setTxt = stringResource(R.string.set_txt)
 
+    val repeatsText = result.iteration?.let { "$it $onesIterations" } ?: "-"
+    val weightText = result.weight?.let { "$it $onesWeight" } ?: "–"
+    val timeText = result.workTime?.let { "$it $onesSeconds" } ?: "-"
 
-//Ok
+    // Check if date is today
+    val showDate = result.currentDate == getCurrentDateTime().first
+
+    val prefix = if (showDate) {
+        "$setTxt ${result.currentDate}: "
+    } else {
+        "$setTxt: ${result.currentTime}: "
+    }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(6.dp)),
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+        tonalElevation = 0.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 12.dp)
+        ) {
+            // Time prefix in lighter color
+            Text(
+                text = prefix,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Result details in a row
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                ResultDetail(
+                    value = repeatsText,
+                    modifier = Modifier.weight(1f)
+                )
+
+                ResultDetail(
+                    value = weightText,
+                    modifier = Modifier.weight(1f)
+                )
+
+                ResultDetail(
+                    value = timeText,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ResultDetail(
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = value,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = modifier
+    )
+}
+
 @Composable
 private fun ActionButton(
     resultsIsEmpty: Boolean,
     onClick: () -> Unit
 ) {
-
     val buttonText = if (resultsIsEmpty) {
         stringResource(R.string.add_results)
     } else {
         stringResource(R.string.write_results)
     }
 
-    Text(
-        text = buttonText,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.primary,
+    Surface(
         modifier = Modifier
-            .clickable(onClick = {
-                onClick()
-            })
-            .padding(vertical = 8.dp, horizontal = 8.dp)
-    )
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick),
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+        tonalElevation = 0.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = buttonText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
 }
-
-
-
-
-
-
 
 /**
  * Превью основного контенту екрану тренування
@@ -222,8 +287,6 @@ private fun ActionButton(
 @Composable
 fun Preview_ExerciseInWorkoutUI() {
     MyAppTheme {
-
-
         // Приклад блоку тренування для превью
         ExerciseInWorkoutUI(
             onConfirmResult = {},
@@ -231,6 +294,3 @@ fun Preview_ExerciseInWorkoutUI() {
         )
     }
 }
-
-
-

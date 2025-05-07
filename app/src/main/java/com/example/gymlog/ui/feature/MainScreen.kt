@@ -52,9 +52,9 @@ fun MainScreen(navController: NavController) {
         Text(
             text = stringResource(id = R.string.app_name),
             //fontSize = 24.sp,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.primary,
             //style = MaterialTheme.typography.labelLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
-            style = MaterialTheme.typography.headlineMedium,  // Використовуємо стиль displayLarge з кастомною типографікою
+            style = MaterialTheme.typography.headlineLarge,  // Використовуємо стиль displayLarge з кастомною типографікою
             //modifier = Modifier.padding(top = 16.dp)
         )
 

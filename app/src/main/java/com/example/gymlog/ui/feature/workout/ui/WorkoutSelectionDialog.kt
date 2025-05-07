@@ -1,5 +1,6 @@
 package com.example.gymlog.ui.feature.workout.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,23 +46,19 @@ fun WorkoutSelectionDialog(
             usePlatformDefaultWidth = false
         )
     ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            shape = RoundedCornerShape(16.dp),
+        Surface(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.7f)
+                .fillMaxHeight(0.7f),
+            color = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(16.dp),
+            tonalElevation = 4.dp
         ) {
             WorkoutSelectionContent(
                 step = step,
                 selectedProgram = selectedProgram,
                 programs = programs,
-                //функція-обгортка, щоб step та selectedProgram ініціалізувати
-                //функція-обгортка, щоб step та selectedProgram ініціалізувати
-                onProgramSelected = { it -> //функція-обгортка, щоб step та selectedProgram ініціалізувати
+                onProgramSelected = { it ->
                     selectedProgram = it
                     step = SelectionStep.GYM_SESSIONS
                     onProgramSelected(it)
@@ -91,7 +89,7 @@ private fun WorkoutSelectionContent(
     onStepClick: (SelectionStep) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Header(step)
+        Header(step, onBack, onDismiss)
         StepIndicator(
             currentStep = step,
             canGoToGymSessions = selectedProgram != null,
@@ -111,44 +109,47 @@ private fun WorkoutSelectionContent(
                 )
             }
         }
-        FooterNavigation(step, onBack, onDismiss)
     }
 }
 
 @Composable
-private fun Header(step: SelectionStep) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(16.dp)
+private fun Header(
+    step: SelectionStep,
+    onBack: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        tonalElevation = 1.dp
     ) {
-        Text(
-            text = if (step == SelectionStep.PROGRAMS)
-                stringResource(R.string.select_program)
-            else
-                stringResource(R.string.select_training),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-private fun FooterNavigation(step: SelectionStep, onBack: () -> Unit, onDismiss: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        IconButton(
-            onClick = { if (step == SelectionStep.GYM_SESSIONS) onBack() else onDismiss() },
-            modifier = Modifier.align(Alignment.CenterStart)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null
+            IconButton(
+                onClick = { if (step == SelectionStep.GYM_SESSIONS) onBack() else onDismiss() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = if (step == SelectionStep.PROGRAMS)
+                    stringResource(R.string.select_program)
+                else
+                    stringResource(R.string.select_training),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -160,31 +161,36 @@ fun StepIndicator(
     canGoToGymSessions: Boolean,
     onStepClick: (SelectionStep) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp
     ) {
-        StepDot(
-            isActive = currentStep == SelectionStep.PROGRAMS,
-            text = stringResource(R.string.programs),
-            modifier = Modifier.clickable { onStepClick(SelectionStep.PROGRAMS) }
-        )
-        HorizontalDivider(
+        Row(
             modifier = Modifier
-                .width(24.dp)
-                .padding(horizontal = 4.dp),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-        )
-        StepDot(
-            isActive = currentStep == SelectionStep.GYM_SESSIONS,
-            text = stringResource(R.string.gym_sessions),
-            modifier = Modifier.clickable(
-                enabled = canGoToGymSessions
-            ) { onStepClick(SelectionStep.GYM_SESSIONS) }
-        )
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StepDot(
+                isActive = currentStep == SelectionStep.PROGRAMS,
+                text = stringResource(R.string.programs),
+                modifier = Modifier.clickable { onStepClick(SelectionStep.PROGRAMS) }
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .width(24.dp)
+                    .padding(horizontal = 4.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
+            StepDot(
+                isActive = currentStep == SelectionStep.GYM_SESSIONS,
+                text = stringResource(R.string.gym_sessions),
+                modifier = Modifier.clickable(
+                    enabled = canGoToGymSessions
+                ) { onStepClick(SelectionStep.GYM_SESSIONS) }
+            )
+        }
     }
 }
 
@@ -207,14 +213,14 @@ fun StepDot(
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
                 )
         )
-//        Text(
-//            text = text,
-//            style = MaterialTheme.typography.bodySmall,
-//            textAlign = TextAlign.Center,
-//            color = if (isActive) MaterialTheme.colorScheme.primary
-//            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-//            modifier = Modifier.padding(top = 4.dp)
-//        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            textAlign = TextAlign.Center,
+            color = if (isActive) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(top = 4.dp)
+        )
     }
 }
 
@@ -227,7 +233,10 @@ fun ProgramsList(
     if (programs.isEmpty()) {
         EmptyListMessage(message = stringResource(R.string.no_programs))
     } else {
-        LazyColumn(modifier = modifier.padding(horizontal = 16.dp)) {
+        LazyColumn(
+            modifier = modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             items(programs) { program ->
                 ProgramItem(program, onProgramSelected)
             }
@@ -240,20 +249,24 @@ fun ProgramItem(
     program: ProgramInfo,
     onClick: (ProgramInfo) -> Unit
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        shape = RoundedCornerShape(16.dp),
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .clickable { onClick(program) },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+        border = BorderStroke(
+            0.5.dp,
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(program.name, style = MaterialTheme.typography.titleMedium)
+            Text(
+                program.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
             program.description?.let {
                 Text(
                     text = it,
@@ -275,7 +288,10 @@ fun WorkoutsList(
     if (workouts.isEmpty()) {
         EmptyListMessage(message = stringResource(R.string.no_workouts))
     } else {
-        LazyColumn(modifier = modifier.padding(horizontal = 16.dp)) {
+        LazyColumn(
+            modifier = modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             items(workouts) { workout ->
                 WorkoutItem(workout, onWorkoutSelected)
             }
@@ -288,17 +304,24 @@ fun WorkoutItem(
     workout: GymDayUiModel,
     onClick: (GymDayUiModel) -> Unit
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).clickable { onClick(workout) },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(workout) },
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 1.dp,
+        border = BorderStroke(
+            0.5.dp,
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(workout.name, style = MaterialTheme.typography.titleMedium)
+            Text(
+                workout.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
             workout.description?.let {
                 Text(
                     text = it,
@@ -313,8 +336,15 @@ fun WorkoutItem(
 
 @Composable
 fun EmptyListMessage(message: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = message, style = MaterialTheme.typography.bodyMedium)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+        )
     }
 }
 

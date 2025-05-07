@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 🌚 Темна тема -->
+    <!-- 🌚 Dark Theme - Modern Professional (Primary) -->
+    <color name="background_activity">#121418</color>  <!-- Darker base -->
+    <color name="background_card">#1E2025</color>
+    <color name="background_card2">#2B2D33</color>
 
-    <!-- Фон всієї активності -->
-    <color name="background_activity">#121212</color>
+    <color name="text_primary">#E9ECEF</color>
+    <color name="text_secondary">#ADB5BD</color>
+    <color name="text_hint">#6C757D</color>
 
-    <!-- Фон карток, item'ів RecyclerView -->
-    <color name="background_card">#1E1E1E</color>
+    <color name="button_primary">#4CC9F0</color>  <!-- Bright teal -->
+    <color name="button_secondary">#2B2D33</color>
+    <color name="button_text_primary">#121418</color>
+    <color name="button_text_secondary">#E9ECEF</color>
 
-    <!-- Фон карток, item'ів RecyclerView -->
-    <color name="background_card2">#4D4B4B</color>
+    <color name="accent_color">#F72585</color>  <!-- Pink accent -->
+    <color name="drag_handle">#495057</color>
 
-    <!-- Основний текст -->
-    <color name="text_primary">#FAFAFA</color>
+    <color name="snackbar_background">#E9ECEF</color>
+    <color name="snackbar_text">#121418</color>
 
-    <!-- Другорядний текст -->
-    <color name="text_secondary">#CECDCD</color>
-
-    <!-- Підказки, текст-заповнювач (hint) -->
-    <color name="text_hint">#8E8D8D</color>
-
-    <!-- Головні кнопки: фон -->
-    <color name="button_primary">#EF6C00</color>
-
-    <!-- Другорядні кнопки: фон -->
-    <color name="button_secondary">#37474F</color>
-
-    <!-- Текст на основних кнопках -->
-    <color name="button_text_primary">#FFFFFF</color>
-
-    <!-- Текст на другорядних кнопках -->
-    <color name="button_text_secondary">#CFD8DC</color>
-
-    <!-- Акцент: виділення, поточний вибір -->
-    <color name="accent_color">#039BE5</color>
-
-    <!-- Іконка drag handle (ручка для перетягування) -->
-    <color name="drag_handle">#546E7A</color>
-
-    <!-- Фон Snackbar -->
-    <color name="snackbar_background">#FFFFFF</color>
-
-    <!-- Текст у Snackbar -->
-    <color name="snackbar_text">#212121</color>
-
+    <!-- Additional professional colors -->
+    <color name="success_color">#4AD66D</color>
+    <color name="error_color">#FF6D6D</color>
+    <color name="warning_color">#FFD166</color>
 </resources>
