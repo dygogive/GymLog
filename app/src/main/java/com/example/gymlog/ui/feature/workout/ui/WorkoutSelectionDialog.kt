@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,11 +47,11 @@ fun WorkoutSelectionDialog(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .fillMaxHeight(0.7f),
+                .fillMaxWidth(0.92f)
+                .fillMaxHeight(0.75f),
             color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(16.dp),
-            tonalElevation = 4.dp
+            shadowElevation = 4.dp
         ) {
             WorkoutSelectionContent(
                 step = step,
@@ -119,35 +118,36 @@ private fun Header(
     onDismiss: () -> Unit
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        tonalElevation = 1.dp
+        color = MaterialTheme.colorScheme.primary,
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
-                onClick = { if (step == SelectionStep.GYM_SESSIONS) onBack() else onDismiss() }
+                onClick = { if (step == SelectionStep.GYM_SESSIONS) onBack() else onDismiss() },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    contentDescription = null
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 text = if (step == SelectionStep.PROGRAMS)
                     stringResource(R.string.select_program)
                 else
                     stringResource(R.string.select_training),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
@@ -168,7 +168,7 @@ fun StepIndicator(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(vertical = 12.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -188,7 +188,8 @@ fun StepIndicator(
                 text = stringResource(R.string.gym_sessions),
                 modifier = Modifier.clickable(
                     enabled = canGoToGymSessions
-                ) { onStepClick(SelectionStep.GYM_SESSIONS) }
+                ) { onStepClick(SelectionStep.GYM_SESSIONS) },
+                enabled = canGoToGymSessions
             )
         }
     }
@@ -198,7 +199,8 @@ fun StepIndicator(
 fun StepDot(
     isActive: Boolean,
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -209,16 +211,22 @@ fun StepDot(
                 .size(12.dp)
                 .clip(RoundedCornerShape(6.dp))
                 .background(
-                    if (isActive) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    when {
+                        isActive -> MaterialTheme.colorScheme.primary
+                        !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                    }
                 )
         )
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
-            color = if (isActive) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            color = when {
+                isActive -> MaterialTheme.colorScheme.primary
+                !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            },
             modifier = Modifier.padding(top = 4.dp)
         )
     }
@@ -234,8 +242,10 @@ fun ProgramsList(
         EmptyListMessage(message = stringResource(R.string.no_programs))
     } else {
         LazyColumn(
-            modifier = modifier.padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = modifier
+                .padding(horizontal = 12.dp)
+                .padding(top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(programs) { program ->
                 ProgramItem(program, onProgramSelected)
@@ -253,15 +263,14 @@ fun ProgramItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(program) },
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 1.dp,
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         border = BorderStroke(
-            0.5.dp,
+            1.dp,
             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 program.name,
                 style = MaterialTheme.typography.titleMedium,
@@ -271,8 +280,8 @@ fun ProgramItem(
                 Text(
                     text = it,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 4.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp)
                 )
             }
         }
@@ -289,8 +298,10 @@ fun WorkoutsList(
         EmptyListMessage(message = stringResource(R.string.no_workouts))
     } else {
         LazyColumn(
-            modifier = modifier.padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = modifier
+                .padding(horizontal = 12.dp)
+                .padding(top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(workouts) { workout ->
                 WorkoutItem(workout, onWorkoutSelected)
@@ -308,15 +319,14 @@ fun WorkoutItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(workout) },
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 1.dp,
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         border = BorderStroke(
-            0.5.dp,
+            1.dp,
             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
         )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 workout.name,
                 style = MaterialTheme.typography.titleMedium,
@@ -326,8 +336,8 @@ fun WorkoutItem(
                 Text(
                     text = it,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 4.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 2.dp)
                 )
             }
         }
@@ -342,13 +352,11 @@ fun EmptyListMessage(message: String) {
     ) {
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

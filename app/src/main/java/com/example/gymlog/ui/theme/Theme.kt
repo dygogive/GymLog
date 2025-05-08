@@ -15,6 +15,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.gymlog.R
 
+// Кольори для світлої теми (60-30-10 принцип)
+// 60% - нейтральні кольори (фон, картки)
+// 30% - основні кольори взаємодії (кнопки, заголовки)
+// 10% - акцентні кольори (виділення, фокус)
+
+// Колір для світлої теми
+private val Light60 = Color(0xFFF8F9FA) // Основний фон
+private val Light30 = Color(0xFF4361EE) // Основний колір кнопок
+private val Light10 = Color(0xFF7209B7) // Акцентний колір
+
+// Колір для темної теми
+private val Dark60 = Color(0xFF121418) // Основний фон
+private val Dark30 = Color(0xFF4CC9F0) // Основний колір кнопок
+private val Dark10 = Color(0xFFF72585) // Акцентний колір
+
 // Custom font family
 private val CustomFontFamily = FontFamily(
     Font(R.font.roboto_regular, FontWeight.Normal),
@@ -48,8 +63,8 @@ private val AppTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = CustomFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
-        lineHeight = 28.sp,
+        fontSize = 18.sp,       // Зменшено для компактності
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
@@ -62,15 +77,22 @@ private val AppTypography = Typography(
     bodySmall = TextStyle(
         fontFamily = CustomFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 10.sp,
+        fontSize = 12.sp,      // Збільшено для кращої читабельності
         lineHeight = 16.sp,
-        letterSpacing = 0.25.sp
+        letterSpacing = 0.2.sp
     ),
     labelLarge = TextStyle(
         fontFamily = CustomFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
-        lineHeight = 24.sp,
+        fontSize = 16.sp,      // Зменшено для компактності
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = CustomFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.1.sp
     )
 )
@@ -82,42 +104,50 @@ fun MyAppTheme(
 ) {
     val colorScheme = if (useDarkTheme) {
         darkColorScheme(
-            primary = colorResource(id = R.color.button_primary),
-            onPrimary = colorResource(id = R.color.button_text_primary),
-            primaryContainer = colorResource(id = R.color.background_card),
-            onPrimaryContainer = colorResource(id = R.color.text_primary),
-            secondary = colorResource(id = R.color.button_secondary),
-            onSecondary = colorResource(id = R.color.button_text_secondary),
-            secondaryContainer = colorResource(id = R.color.background_card),
-            onSecondaryContainer = colorResource(id = R.color.text_secondary),
-            tertiary = colorResource(id = R.color.accent_color),
-            onTertiary = colorResource(id = R.color.button_text_primary),
+            // 60% - основні кольори
             background = colorResource(id = R.color.background_activity),
             onBackground = colorResource(id = R.color.text_primary),
             surface = colorResource(id = R.color.background_card),
             onSurface = colorResource(id = R.color.text_primary),
-            surfaceVariant = colorResource(id = R.color.text_hint),
-            error = Color(0xFFCF6679),
-            onError = Color.Black
+            surfaceVariant = colorResource(id = R.color.background_card2),
+            onSurfaceVariant = colorResource(id = R.color.text_secondary),
+
+            // 30% - кольори взаємодії
+            primary = colorResource(id = R.color.button_primary),
+            onPrimary = colorResource(id = R.color.button_text_primary),
+            primaryContainer = colorResource(id = R.color.button_secondary),
+            onPrimaryContainer = colorResource(id = R.color.button_text_secondary),
+            secondary = colorResource(id = R.color.button_secondary),
+            onSecondary = colorResource(id = R.color.button_text_secondary),
+
+            // 10% - акцентні кольори
+            tertiary = colorResource(id = R.color.accent_color),
+            onTertiary = colorResource(id = R.color.button_text_primary),
+            error = colorResource(id = R.color.error_color),
+            onError = Color.White
         )
     } else {
         lightColorScheme(
-            primary = colorResource(id = R.color.button_primary),
-            onPrimary = colorResource(id = R.color.button_text_primary),
-            primaryContainer = colorResource(id = R.color.background_card),
-            onPrimaryContainer = colorResource(id = R.color.text_primary),
-            secondary = colorResource(id = R.color.button_secondary),
-            onSecondary = colorResource(id = R.color.button_text_secondary),
-            secondaryContainer = colorResource(id = R.color.background_card),
-            onSecondaryContainer = colorResource(id = R.color.text_secondary),
-            tertiary = colorResource(id = R.color.accent_color),
-            onTertiary = colorResource(id = R.color.button_text_primary),
+            // 60% - основні кольори
             background = colorResource(id = R.color.background_activity),
             onBackground = colorResource(id = R.color.text_primary),
             surface = colorResource(id = R.color.background_card),
             onSurface = colorResource(id = R.color.text_primary),
-            surfaceVariant = colorResource(id = R.color.text_hint),
-            error = Color(0xFFB00020),
+            surfaceVariant = colorResource(id = R.color.background_card2),
+            onSurfaceVariant = colorResource(id = R.color.text_secondary),
+
+            // 30% - кольори взаємодії
+            primary = colorResource(id = R.color.button_primary),
+            onPrimary = colorResource(id = R.color.button_text_primary),
+            primaryContainer = colorResource(id = R.color.button_secondary),
+            onPrimaryContainer = colorResource(id = R.color.button_text_secondary),
+            secondary = colorResource(id = R.color.button_secondary),
+            onSecondary = colorResource(id = R.color.button_text_secondary),
+
+            // 10% - акцентні кольори
+            tertiary = colorResource(id = R.color.accent_color),
+            onTertiary = colorResource(id = R.color.button_text_primary),
+            error = colorResource(id = R.color.error_color),
             onError = Color.White
         )
     }

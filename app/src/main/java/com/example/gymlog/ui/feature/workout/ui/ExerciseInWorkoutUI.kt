@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.ExerciseBlockUI
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
@@ -47,34 +48,33 @@ fun ExerciseInWorkoutUI(
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = backgroundColor,
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp
+        shape = RoundedCornerShape(10.dp),
+        shadowElevation = 2.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             // Exercise header and description
             ExerciseHeader(exerciseBlockUI)
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
 
             // Subtle divider
             Divider(
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
-                thickness = 0.5.dp,
-                modifier = Modifier.padding(vertical = 4.dp)
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                thickness = 1.dp
             )
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))
 
             // Results section - either current or historical
             DisplayResults(exerciseBlockUI.results)
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Action button for adding results
+            // Action button for adding results - now more subtle
             ActionButton(
                 resultsIsEmpty = exerciseBlockUI.results.isEmpty(),
                 onClick = { showDialog = true }
@@ -102,22 +102,23 @@ private fun ExerciseHeader(
     Column(
         modifier = modifier
     ) {
-        // Exercise name
+        // Exercise name - now more prominent
         Text(
             text = exerciseBlockUI.name,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Normal
-            ),
-            modifier = Modifier.padding(bottom = 4.dp)
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
         )
 
         // Exercise description (if available)
         if (exerciseBlockUI.description.isNotBlank()) {
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = exerciseBlockUI.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -139,13 +140,13 @@ private fun EmptyResultsMessage() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = stringResource(R.string.no_results),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }
@@ -160,7 +161,7 @@ private fun Results(
     ) {
         workoutResult.forEachIndexed { index, result ->
             if (index > 0) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
             }
 
             ResultItem(result)
@@ -192,22 +193,22 @@ private fun ResultItem(result: ResultOfSet) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(6.dp)),
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
         tonalElevation = 0.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .padding(vertical = 6.dp, horizontal = 10.dp)
         ) {
             // Time prefix in lighter color
             Text(
                 text = prefix,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             // Result details in a row
             Row(
@@ -256,24 +257,25 @@ private fun ActionButton(
         stringResource(R.string.write_results)
     }
 
+    // More subtle button that is still clearly visible
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
         tonalElevation = 0.dp
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp),
+                .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = buttonText,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Medium
             )
         }

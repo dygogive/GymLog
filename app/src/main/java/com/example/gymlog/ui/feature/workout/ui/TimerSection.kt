@@ -36,78 +36,81 @@ fun TimerSection(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = backgroundColor,
         shape = RoundedCornerShape(12.dp),
         tonalElevation = 1.dp
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Timer displays in a row
+            // Timer displays and controls in one compact row
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TimerDisplay(
-                    label = stringResource(R.string.total_time),
-                    timeMs = timerParams.totalTimeMs,
-                    modifier = Modifier.weight(1f)
-                )
+                // Timer display section
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CompactTimerDisplay(
+                        label = stringResource(R.string.total_time),
+                        timeMs = timerParams.totalTimeMs,
+                        modifier = Modifier.weight(1f)
+                    )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                // Vertical divider
-                Box(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(1.dp)
-                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-                )
+                    // Vertical divider
+                    Box(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .width(1.dp)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+                    )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                TimerDisplay(
-                    label = stringResource(R.string.since_last_note),
-                    timeMs = timerParams.lastSetTimeMs,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            // Controls in a row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SubtleButton(
-                    text = timerParams.buttonText,
-                    onClick = timerParams.onStartStopClick,
-                    modifier = Modifier.weight(1f)
-                )
+                    CompactTimerDisplay(
+                        label = stringResource(R.string.since_last_note),
+                        timeMs = timerParams.lastSetTimeMs,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                SubtleButton(
-                    text = stringResource(R.string.set_finished),
-                    onClick = timerParams.onSetFinished,
-                    modifier = Modifier.weight(1f),
-                    isSecondary = true
-                )
+                // Controls section
+                Row(
+                    modifier = Modifier.weight(0.8f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CompactButton(
+                        text = timerParams.buttonText,
+                        onClick = timerParams.onStartStopClick,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    CompactButton(
+                        text = stringResource(R.string.set_finished),
+                        onClick = timerParams.onSetFinished,
+                        modifier = Modifier.weight(1f),
+                        isSecondary = true
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun TimerDisplay(
+private fun CompactTimerDisplay(
     label: String,
     timeMs: Long,
     modifier: Modifier = Modifier
@@ -118,16 +121,16 @@ private fun TimerDisplay(
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
 
         Text(
             text = formatTime(timeMs),
-            style = MaterialTheme.typography.displaySmall.copy(
+            style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Light
             ),
             color = MaterialTheme.colorScheme.onBackground,
@@ -137,7 +140,7 @@ private fun TimerDisplay(
 }
 
 @Composable
-private fun SubtleButton(
+private fun CompactButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -163,10 +166,10 @@ private fun SubtleButton(
 
     Surface(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(6.dp))
             .clickable { onClick() },
         color = backgroundColor,
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(6.dp),
         tonalElevation = 0.dp,
     ) {
         Row(
@@ -174,15 +177,15 @@ private fun SubtleButton(
                 .border(
                     width = 0.5.dp,
                     color = borderColor,
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(6.dp)
                 )
-                .padding(vertical = 12.dp, horizontal = 16.dp)
+                .padding(vertical = 8.dp, horizontal = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = textColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()

@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,29 +45,33 @@ fun TrainingBlockWorkout(
     var expanded by remember { mutableStateOf(false) }
 
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .border(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                shape = RoundedCornerShape(10.dp)
+            ),
         color = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(16.dp),
-        tonalElevation = 2.dp
+        shape = RoundedCornerShape(10.dp),   // Match ExerciseInWorkoutUI corner radius
+        shadowElevation = 2.dp               // Match ExerciseInWorkoutUI elevation
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)              // Match ExerciseInWorkoutUI padding
         ) {
             // Block header and description
             BlockHeader(trainBlockInfo)
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(8.dp))    // Match ExerciseInWorkoutUI spacing
 
             // Subtle divider
             Divider(
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
-                thickness = 0.5.dp,
-                modifier = Modifier.padding(vertical = 4.dp)
+                color = MaterialTheme.colorScheme.surfaceVariant,  // Match ExerciseInWorkoutUI divider
+                thickness = 1.dp                                   // Match ExerciseInWorkoutUI thickness
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))    // Match ExerciseInWorkoutUI spacing
 
             // Attributes toggle button
             AttributesToggle(
@@ -79,24 +83,26 @@ fun TrainingBlockWorkout(
             AnimatedVisibility(visible = expanded) {
                 Attributes(
                     attributesInfo = trainBlockInfo.attributesInfo,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))   // Match ExerciseInWorkoutUI spacing
 
             // Exercises in block
             trainBlockInfo.infoExercises.forEach { exeInfo ->
                 ExerciseInWorkoutUI(
                     onConfirmResult = onConfirmResult,
-                    exerciseBlockUI = exeInfo,
-                    backgroundColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                    exerciseBlockUI = exeInfo
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }
 }
+
 
 @Composable
 private fun BlockHeader(
@@ -107,19 +113,18 @@ private fun BlockHeader(
         // Title
         Text(
             text = trainBlockInfo.name,
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.SemiBold
+            color = MaterialTheme.colorScheme.onSurface,       // Match ExerciseInWorkoutUI text color
+            style = MaterialTheme.typography.titleLarge.copy( // Match ExerciseInWorkoutUI text style
+                fontWeight = FontWeight.Medium                 // Match ExerciseInWorkoutUI weight
             )
         )
 
         // Description (if available)
         if (trainBlockInfo.description.isNotBlank()) {
-            Spacer(Modifier.height(4.dp))
             Text(
                 text = trainBlockInfo.description,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,       // Match ExerciseInWorkoutUI text style
+                color = MaterialTheme.colorScheme.onSurfaceVariant // Match ExerciseInWorkoutUI text color
             )
         }
     }
@@ -132,17 +137,17 @@ private fun AttributesToggle(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
         tonalElevation = 0.dp
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 12.dp),
+                .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -150,8 +155,8 @@ private fun AttributesToggle(
                     stringResource(R.string.collapse_attributes)
                 else
                     stringResource(R.string.show_attributes),
-                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Medium
             )
         }

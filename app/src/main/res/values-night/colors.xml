@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 🌚 Dark Theme - Modern Professional (Primary) -->
-    <color name="background_activity">#121418</color>  <!-- Darker base -->
+    <!-- 🌚 Темна тема - 60-30-10 принцип -->
+
+    <!-- 60% - Основні/нейтральні кольори -->
+    <color name="background_activity">#121418</color>  <!-- Темний фон -->
     <color name="background_card">#1E2025</color>
     <color name="background_card2">#2B2D33</color>
-
     <color name="text_primary">#E9ECEF</color>
     <color name="text_secondary">#ADB5BD</color>
     <color name="text_hint">#6C757D</color>
+    <color name="drag_handle">#495057</color>
 
-    <color name="button_primary">#4CC9F0</color>  <!-- Bright teal -->
+    <!-- 30% - Кольори взаємодії -->
+    <color name="button_primary">#4CC9F0</color>  <!-- Яскравий блакитний -->
     <color name="button_secondary">#2B2D33</color>
     <color name="button_text_primary">#121418</color>
     <color name="button_text_secondary">#E9ECEF</color>
 
-    <color name="accent_color">#F72585</color>  <!-- Pink accent -->
-    <color name="drag_handle">#495057</color>
-
-    <color name="snackbar_background">#E9ECEF</color>
-    <color name="snackbar_text">#121418</color>
-
-    <!-- Additional professional colors -->
+    <!-- 10% - Акцентні кольори -->
+    <color name="accent_color">#F72585</color>  <!-- Рожевий акцент -->
     <color name="success_color">#4AD66D</color>
     <color name="error_color">#FF6D6D</color>
     <color name="warning_color">#FFD166</color>
+
+    <!-- Інтерфейсні елементи -->
+    <color name="snackbar_background">#E9ECEF</color>
+    <color name="snackbar_text">#121418</color>
+    <color name="divider_color">#343A40</color>
+    <color name="icon_tint">#ADB5BD</color>
 </resources>
