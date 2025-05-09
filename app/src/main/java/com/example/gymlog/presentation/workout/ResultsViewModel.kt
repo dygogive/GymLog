@@ -1,7 +1,9 @@
 package com.example.gymlog.presentation.workout
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.domain.usecase.SaveResultUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
@@ -26,6 +28,10 @@ class ResultsViewModel @Inject constructor(
     private val _gymDayState = MutableStateFlow(GymDayState())
     val gymDayState = _gymDayState.asStateFlow()
 
+    // Стан дня тренування для UI
+    private val _timerState = MutableStateFlow(TimerState())
+    val timerState = _timerState.asStateFlow()
+
     /**
      * Зберігає результат підходу.
      * @param gymDayId ID дня тренування
@@ -45,16 +51,11 @@ class ResultsViewModel @Inject constructor(
         timeFromStart: Long
     ): Result<GymDayUiModel> {
         return try {
-            // Отримуємо поточну дату й час
-            val currentDateTime = Calendar.getInstance()
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-
-            val currentDate = dateFormat.format(currentDateTime.time)
-            val currentTime = timeFormat.format(currentDateTime.time)
 
             // Визначаємо порядковий номер результату в дні тренування
             val sequenceInGymDay = _gymDayState.value.resultsAdded
+
+            Log.d("datetime", "updateTrainingBlocks:3 ${timerState.value.dateTimeThisTraining}")
 
             // Зберігаємо результат
             val updatedGymDay = saveResultUseCase(
@@ -66,7 +67,7 @@ class ResultsViewModel @Inject constructor(
                 workTime = workTime,
                 sequenceInGymDay = sequenceInGymDay,
                 timeFromStart = timeFromStart,
-                workoutDateTime = "$currentDate $currentTime",
+                workoutDateTime = timerState.value.dateTimeThisTraining?: "09.05.2025 03:03:03",
             )
 
             // Оновлюємо лічильник доданих результатів
@@ -108,4 +109,6 @@ class ResultsViewModel @Inject constructor(
             currentState.copy(resultsAdded = 0)
         }
     }
+
+
 }

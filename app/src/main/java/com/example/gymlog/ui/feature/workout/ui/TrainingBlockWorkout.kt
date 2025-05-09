@@ -1,16 +1,22 @@
 package com.example.gymlog.ui.feature.workout.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,11 +40,12 @@ import com.example.gymlog.ui.feature.workout.model.MusclesStateList
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import com.example.gymlog.ui.theme.MyAppTheme
-
 @Composable
 fun TrainingBlockWorkout(
     trainBlockInfo: TrainingBlockUiModel,
     onConfirmResult: (ResultOfSet) -> Unit,
+    expandedExeId: Long,
+    onClickExpandExercise: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -60,8 +66,24 @@ fun TrainingBlockWorkout(
                 .fillMaxWidth()
                 .padding(12.dp)              // Match ExerciseInWorkoutUI padding
         ) {
-            // Block header and description
-            BlockHeader(trainBlockInfo)
+            // Block header with attribute toggle button to the right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                // Block header and description
+                BlockHeader(
+                    trainBlockInfo = trainBlockInfo,
+                    modifier = Modifier.weight(1f)
+                )
+
+                // Small attribute toggle button with icon
+                AttributesToggle(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded }
+                )
+            }
 
             Spacer(Modifier.height(8.dp))    // Match ExerciseInWorkoutUI spacing
 
@@ -72,12 +94,6 @@ fun TrainingBlockWorkout(
             )
 
             Spacer(Modifier.height(8.dp))    // Match ExerciseInWorkoutUI spacing
-
-            // Attributes toggle button
-            AttributesToggle(
-                expanded = expanded,
-                onClick = { expanded = !expanded }
-            )
 
             // Animated attributes section
             AnimatedVisibility(visible = expanded) {
@@ -92,10 +108,12 @@ fun TrainingBlockWorkout(
             Spacer(Modifier.height(12.dp))   // Match ExerciseInWorkoutUI spacing
 
             // Exercises in block
-            trainBlockInfo.infoExercises.forEach { exeInfo ->
+            trainBlockInfo.infoExercises.forEach { exerciseUImodel ->
                 ExerciseInWorkoutUI(
                     onConfirmResult = onConfirmResult,
-                    exerciseBlockUI = exeInfo
+                    exerciseInBlockUI = exerciseUImodel,
+                    expandedExeId = expandedExeId,
+                    onClickExpandExercise = onClickExpandExercise,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -114,7 +132,7 @@ private fun BlockHeader(
         Text(
             text = trainBlockInfo.name,
             color = MaterialTheme.colorScheme.onSurface,       // Match ExerciseInWorkoutUI text color
-            style = MaterialTheme.typography.titleLarge.copy( // Match ExerciseInWorkoutUI text style
+            style = MaterialTheme.typography.bodyLarge.copy( // Match ExerciseInWorkoutUI text style
                 fontWeight = FontWeight.Medium                 // Match ExerciseInWorkoutUI weight
             )
         )
@@ -136,30 +154,21 @@ private fun AttributesToggle(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-        tonalElevation = 0.dp
+    IconButton(
+        onClick = onClick,
+        modifier = modifier.size(36.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = if (expanded)
-                    stringResource(R.string.collapse_attributes)
-                else
-                    stringResource(R.string.show_attributes),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontWeight = FontWeight.Medium
-            )
-        }
+        Icon(
+            imageVector = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.Info,
+            contentDescription = if (expanded)
+                stringResource(R.string.collapse_attributes)
+            else
+                stringResource(R.string.show_attributes),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -188,7 +197,9 @@ fun Preview_ScreenContent() {
         // Приклад блоку тренування для превью
         TrainingBlockWorkout(
             sampleBlock,
-            onConfirmResult = {}
+            onConfirmResult = {},
+            0,
+            {}
         )
     }
 }

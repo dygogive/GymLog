@@ -15,7 +15,7 @@ fun getCurrentDateTime(): Pair<String, String> {
     val formattedDate = currentDateTime.format(dateFormatter)
 
     // Форматуємо час у вигляді "години:хвилини" (00:00)
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     val formattedTime = currentDateTime.format(timeFormatter)
 
     return Pair(formattedDate, formattedTime)

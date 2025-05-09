@@ -33,6 +33,8 @@ fun WorkoutScreenContent(
     timerParams: TimerParams,
     infoBlocks: List<TrainingBlockUiModel>,
     onConfirmResult: (ResultOfSet) -> Unit,
+    expandedExeId: Long,
+    onClickExpandExercise: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -59,9 +61,11 @@ fun WorkoutScreenContent(
                 TrainingBlockWorkout(
                     trainBlockInfo = infoBlock,
                     onConfirmResult,
+                    expandedExeId = expandedExeId,
+                    onClickExpandExercise = onClickExpandExercise,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
                 )
             }
         }
@@ -96,7 +100,9 @@ fun Preview_WorkoutScreenContent() {
         WorkoutScreenContent(
             timerParams = TimerParams(0L, 0L, "Почати", {}, {}, false),
             infoBlocks = listOf(sampleBlock),
-            onConfirmResult = {}
+            onConfirmResult = {},
+            0,
+            {}
         )
     }
 }

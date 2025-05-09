@@ -1,5 +1,6 @@
 package com.example.gymlog.presentation.workout
 
+import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.*
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
@@ -14,6 +15,7 @@ data class WorkoutUiState(
     val trainingBlocksState: TrainingBlocksState = TrainingBlocksState(),  // Стан блоків вправ
     val programSelectionState: ProgramSelectionState = ProgramSelectionState(),           // Стан вибору програми
     val gymDayState: GymDayState = GymDayState(),           // Стан вибору програми
+
 )
 
 
@@ -50,7 +52,9 @@ data class TrainingBlocksState(
 data class TimerState(
     val totalTimeMs: Long = 0L,        // Загальний час
     val lastSetTimeMs: Long = 0L,      // Час підходу
-    val isGymRunning: Boolean = false  // Чи активне тренування
+    val isGymRunning: Boolean = false,  // Чи активне тренування
+    val expandedExerciseId: Long = -1,
+    val dateTimeThisTraining: String? = null,    //Унікальний ідентифікатор тренування
 )
 
 
@@ -58,5 +62,6 @@ data class GymDayState(
     val resultsAdded: Int = 0,
     val errorSaveResult: String = "error",
     val maxResultsPerExercise: Int = 10,
+
 )
 

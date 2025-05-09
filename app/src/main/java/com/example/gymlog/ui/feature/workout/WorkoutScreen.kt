@@ -85,7 +85,9 @@ fun WorkoutScreen(
                         iterations = result.iteration,
                         workTime = result.workTime,
                     )
-                }
+                },
+                expandedExeId = state.timerState.expandedExerciseId,
+                onClickExpandExercise = viewModel::onClickExpandExercise
             )
         }
 
@@ -217,7 +219,9 @@ fun Preview_WorkoutScreenContent() {
         WorkoutScreenContent(
             timerParams = TimerParams(0L, 0L, "Почати", {}, {}, false),
             infoBlocks = listOf(sampleBlock),
-            onConfirmResult = {}
+            onConfirmResult = {},
+            0,
+            {}
         )
     }
 }

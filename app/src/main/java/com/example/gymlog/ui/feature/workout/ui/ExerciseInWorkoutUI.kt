@@ -1,17 +1,28 @@
 package com.example.gymlog.ui.feature.workout.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,14 +47,19 @@ import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.theme.MyAppTheme
 
+
+
 @Composable
 fun ExerciseInWorkoutUI(
     onConfirmResult: (ResultOfSet) -> Unit,
-    exerciseBlockUI: ExerciseBlockUI,
+    exerciseInBlockUI: ExerciseBlockUI,
+    expandedExeId: Long,
+    onClickExpandExercise: (Long)->Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -56,29 +72,59 @@ fun ExerciseInWorkoutUI(
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            // Exercise header and description
-            ExerciseHeader(exerciseBlockUI)
+            // Exercise header with toggle button to the right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                // Exercise name only (no description yet)
+                ExerciseNameOnly(
+                    exerciseBlockUI = exerciseInBlockUI,
+                    modifier = Modifier.weight(1f)
+                )
 
-            Spacer(Modifier.height(8.dp))
+                Log.d("ExpandToggleButton", "ExpandToggleButton: 0 - $expandedExeId")
 
-            // Subtle divider
-            Divider(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                thickness = 1.dp
-            )
+                // Toggle button for expanding/collapsing details
+                ExpandToggleButton(
+                    expanded = (exerciseInBlockUI.linkId == expandedExeId),
+                    onClick = {onClickExpandExercise(exerciseInBlockUI.linkId)}
+                )
+            }
 
-            Spacer(Modifier.height(8.dp))
+            // Animated visibility for description and results
+            AnimatedVisibility(visible = (exerciseInBlockUI.linkId == expandedExeId)) {
+                Column {
+                    // Show description if available
+                    if (exerciseInBlockUI.description.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        ExerciseDescription(exerciseInBlockUI.description)
+                    }
 
-            // Results section - either current or historical
-            DisplayResults(exerciseBlockUI.results)
+                    Spacer(Modifier.height(8.dp))
 
-            Spacer(Modifier.height(12.dp))
+                    // Subtle divider
+                    Divider(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        thickness = 1.dp
+                    )
 
-            // Action button for adding results - now more subtle
-            ActionButton(
-                resultsIsEmpty = exerciseBlockUI.results.isEmpty(),
-                onClick = { showDialog = true }
-            )
+                    Spacer(Modifier.height(8.dp))
+
+                    // Results section - either current or historical
+                    DisplayResults(exerciseInBlockUI.results)
+
+                    // Position the add button after results when expanded
+                    Spacer(Modifier.height(12.dp))
+
+                    // Add result button appears below results
+                    AddResultButton(
+                        resultsIsEmpty = exerciseInBlockUI.results.isEmpty(),
+                        onClick = { showDialog = true }
+                    )
+                }
+            }
         }
     }
 
@@ -87,7 +133,7 @@ fun ExerciseInWorkoutUI(
         LogResultDialog(
             onDismiss = { showDialog = false },
             onConfirmResult = { result ->
-                result.exeInBlockId = exerciseBlockUI.linkId
+                result.exeInBlockId = exerciseInBlockUI.linkId
                 onConfirmResult(result)
             }
         )
@@ -95,30 +141,95 @@ fun ExerciseInWorkoutUI(
 }
 
 @Composable
-private fun ExerciseHeader(
+private fun ExerciseNameOnly(
     exerciseBlockUI: ExerciseBlockUI,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Text(
+        text = exerciseBlockUI.name,
+        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        ),
         modifier = modifier
-    ) {
-        // Exercise name - now more prominent
-        Text(
-            text = exerciseBlockUI.name,
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        )
+    )
+}
 
-        // Exercise description (if available)
-        if (exerciseBlockUI.description.isNotBlank()) {
-            Spacer(modifier = Modifier.height(2.dp))
+@Composable
+private fun ExerciseDescription(
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = description,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ExpandToggleButton(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Log.d("ExpandToggleButton", "ExpandToggleButton: 1 - $expanded")
+    IconButton(
+        onClick = onClick,
+        modifier = modifier.size(36.dp)
+    ) {
+        Icon(
+            imageVector = if (expanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown,
+            contentDescription = if (expanded)
+                stringResource(R.string.collapse_details)
+            else
+                stringResource(R.string.expand_details),
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun AddResultButton(
+    resultsIsEmpty: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val buttonText = if (resultsIsEmpty) {
+        stringResource(R.string.add_results)
+    } else {
+        stringResource(R.string.write_results)
+    }
+
+    // Use Row to position the button at the end (right)
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        // Floating action button style for adding results
+        Button(
+            onClick = onClick,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(Modifier.width(8.dp))
             Text(
-                text = exerciseBlockUI.description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = buttonText,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
             )
         }
     }
@@ -183,10 +294,10 @@ private fun ResultItem(result: ResultOfSet) {
     // Check if date is today
     val showDate = result.currentDate == getCurrentDateTime().first
 
-    val prefix = if (showDate) {
+    val prefix = if (!showDate) {
         "$setTxt ${result.currentDate}: "
     } else {
-        "$setTxt: ${result.currentTime}: "
+        "$setTxt ${result.currentTime}: "
     }
 
     Surface(
@@ -246,41 +357,6 @@ private fun ResultDetail(
     )
 }
 
-@Composable
-private fun ActionButton(
-    resultsIsEmpty: Boolean,
-    onClick: () -> Unit
-) {
-    val buttonText = if (resultsIsEmpty) {
-        stringResource(R.string.add_results)
-    } else {
-        stringResource(R.string.write_results)
-    }
-
-    // More subtle button that is still clearly visible
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-        tonalElevation = 0.dp
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = buttonText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
 
 /**
  * Превью основного контенту екрану тренування
@@ -292,7 +368,9 @@ fun Preview_ExerciseInWorkoutUI() {
         // Приклад блоку тренування для превью
         ExerciseInWorkoutUI(
             onConfirmResult = {},
-            ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList())
+            ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
+            expandedExeId = 0,
+            { }
         )
     }
 }

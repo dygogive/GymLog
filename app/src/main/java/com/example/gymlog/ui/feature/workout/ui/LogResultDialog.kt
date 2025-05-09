@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,7 +49,7 @@ fun LogResultDialog(
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
-                text = "Запис результату",
+                text = stringResource(R.string.write_results),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Normal
                 ),
@@ -108,7 +109,7 @@ fun LogResultDialog(
         },
         confirmButton = {
             SubtleTextButton(
-                text = "ОК",
+                text = stringResource(R.string.ok),
                 onClick = {
                     onConfirmResult(
                         ResultOfSet(
@@ -124,7 +125,7 @@ fun LogResultDialog(
         },
         dismissButton = {
             SubtleTextButton(
-                text = "Скасувати",
+                text = stringResource(R.string.cancel),
                 onClick = onDismiss,
                 isPrimary = false
             )

@@ -1,8 +1,10 @@
 package com.example.gymlog.presentation.workout
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -33,7 +35,7 @@ class TrainingBlocksViewModel @Inject constructor(
             _trainingBlocksState.update { currentState ->
                 currentState.copy(
                     blocks = blocks.toPersistentList(),
-                    isGymDayChosen = true
+                    isGymDayChosen = true,
                 )
             }
         }

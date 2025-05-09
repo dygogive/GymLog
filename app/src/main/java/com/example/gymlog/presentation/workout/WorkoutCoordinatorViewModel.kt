@@ -1,8 +1,10 @@
 package com.example.gymlog.presentation.workout
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,6 +34,7 @@ class WorkoutCoordinatorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WorkoutUiState())
     val uiState = _uiState.asStateFlow()
 
+
     // Відстеження окремих станів для зручності
     val timerState: StateFlow<TimerState> = timerViewModel.timerState
     val programSelectionState: StateFlow<ProgramSelectionState> = programSelectionViewModel.programSelectionState
@@ -44,7 +48,7 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 timerState,
                 programSelectionState,
                 trainingBlocksState,
-                gymDayState
+                gymDayState,
             ) { timer, selection, blocks, gymDay ->
                 WorkoutUiState(
                     timerState = timer,
@@ -56,6 +60,14 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 _uiState.value = combinedState
             }
         }
+
+
+        viewModelScope.launch {
+            val datetime: String = getCurrentDateTime().first + " " + getCurrentDateTime().second
+            timerState.value.copy(dateTimeThisTraining = datetime)
+        }
+
+
 
         // Реагуємо на вибір нового дня тренування
         viewModelScope.launch {
@@ -159,4 +171,12 @@ class WorkoutCoordinatorViewModel @Inject constructor(
             }
         }
     }
+
+
+
+    fun onClickExpandExercise(exerciseId: Long) {
+        timerViewModel.onClickExpandExercise(exerciseId)
+    }
+
+
 }

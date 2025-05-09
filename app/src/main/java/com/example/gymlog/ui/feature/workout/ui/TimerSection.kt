@@ -23,10 +23,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gymlog.R
 import com.example.gymlog.ui.feature.workout.model.TimerParams
 import com.example.gymlog.core.utils.formatTime
+import com.example.gymlog.ui.theme.MyAppTheme
 import kotlin.Long
 
 @Composable
@@ -38,8 +40,8 @@ fun TimerSection(
     Surface(
         modifier = modifier.fillMaxWidth(),
         color = backgroundColor,
-        shape = RoundedCornerShape(12.dp),
-        tonalElevation = 1.dp
+        shape = RoundedCornerShape(10.dp),   // Match ExerciseInWorkoutUI corner radius
+        shadowElevation = 2.dp               // Match ExerciseInWorkoutUI elevation
     ) {
         Column(
             modifier = Modifier
@@ -191,5 +193,24 @@ private fun CompactButton(
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun TimerSectionPreview() {
+    val mockParams = TimerParams(
+        totalTimeMs = 5 * 60 * 1000L, // 5 хвилин
+        lastSetTimeMs = 45 * 1000L,   // 45 секунд
+        buttonText = "Старт",
+        onStartStopClick = {},
+        onSetFinished = {},
+        isRunning = true
+    )
+
+    MyAppTheme {
+        TimerSection(timerParams = mockParams)
     }
 }

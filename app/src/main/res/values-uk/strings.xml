@@ -201,6 +201,8 @@
     <string name="work_time">Час підходу</string>
     <string name="work_weight">Вага</string>
     <string name="work_reps">Повторення</string>
+    <string name="collapse_details">Згорнути</string>
+    <string name="current_gym">Теперішнє тренування</string>
 
 
 </resources>

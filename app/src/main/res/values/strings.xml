@@ -266,6 +266,8 @@
     <string name="work_time">Working time</string>
     <string name="work_weight">Working weight</string>
     <string name="work_reps">Repeats</string>
+    <string name="collapse_details">Collapse</string>
+    <string name="current_gym">Current gym</string>
 
 
 </resources>

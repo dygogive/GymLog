@@ -1,6 +1,7 @@
 package com.example.gymlog.presentation.workout
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -124,4 +125,26 @@ class TimerViewModel @Inject constructor(
         // Скасування таймера при знищенні ViewModel
         timerJob?.cancel()
     }
+
+
+
+    //оновити ід розгорнутої вправи
+    fun onClickExpandExercise(exerciseId: Long) {
+        Log.d("ExpandToggleButton", "ExpandToggleButton: 1 - $exerciseId")
+
+        val newExpandedExeId = if (timerState.value.expandedExerciseId == exerciseId) {
+            Log.d("ExpandToggleButton", "ExpandToggleButton: 2")
+            -1L
+        } else {
+            Log.d("ExpandToggleButton", "ExpandToggleButton: 3")
+            exerciseId
+        }
+
+        _timerState.update { timerState ->
+            timerState.copy(expandedExerciseId = newExpandedExeId)
+        }
+    }
+
+
+
 }
