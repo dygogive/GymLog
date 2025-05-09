@@ -24,10 +24,15 @@ class TimerViewModel @Inject constructor(
     private val _timerState = MutableStateFlow(TimerState())
     val timerState = _timerState.asStateFlow()
 
+
+
     // Змінні для відстеження часу
     private var timerJob: Job? = null        // Job корутини для таймера
     private var startWorkoutTime = 0L        // час початку тренування в мілісекундах
     private var startSetTime = 0L            // час початку підходу в мілісекундах
+
+
+
 
     /**
      * Запускає або зупиняє тренування в залежності від поточного стану.
@@ -40,6 +45,9 @@ class TimerViewModel @Inject constructor(
             startGym()
         }
     }
+
+
+
 
     /**
      * Запускає таймер тренування та підходу.
@@ -82,6 +90,8 @@ class TimerViewModel @Inject constructor(
         }
     }
 
+
+
     /**
      * Фіксує закінчення підходу і скидає таймер для поточного підходу.
      * Викликається коли користувач закінчив один підхід вправи.
@@ -94,6 +104,8 @@ class TimerViewModel @Inject constructor(
             timerState.copy(lastSetTimeMs = 0L)
         }
     }
+
+
 
     /**
      * Зупиняє таймер тренування.
@@ -126,20 +138,17 @@ class TimerViewModel @Inject constructor(
         timerJob?.cancel()
     }
 
-    /** Оновити таймер */
+    /** Оновити унікальне ім'я таймера */
     fun setWorkoutDateTime(datetime: String) {
         _timerState.update { it.copy(dateTimeThisTraining = datetime) }
     }
 
     //оновити ід розгорнутої вправи
     fun onClickExpandExercise(exerciseId: Long) {
-        Log.d("ExpandToggleButton", "ExpandToggleButton: 1 - $exerciseId")
 
         val newExpandedExeId = if (timerState.value.expandedExerciseId == exerciseId) {
-            Log.d("ExpandToggleButton", "ExpandToggleButton: 2")
             -1L
         } else {
-            Log.d("ExpandToggleButton", "ExpandToggleButton: 3")
             exerciseId
         }
 

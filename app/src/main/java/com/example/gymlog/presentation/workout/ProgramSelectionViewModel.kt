@@ -83,6 +83,11 @@ class ProgramSelectionViewModel @Inject constructor(
         }
     }
 
+
+
+
+    /**  оброблення тренування  **/
+
     /**
      * Обробляє вибір програми тренувань користувачем в UI.
      * @param program Вибрана програма тренувань
@@ -100,6 +105,7 @@ class ProgramSelectionViewModel @Inject constructor(
      * Обробляє вибір дня тренування і закриває діалог вибору.
      * @param gymDay Вибраний день тренування
      * @param maxResultsPerExercise Максимальна кількість результатів для вправи
+     * Завантажує тренування з результатами
      */
     fun onSessionSelected(gymDay: GymDayUiModel, maxResultsPerExercise: Int) {
         viewModelScope.launch {
@@ -140,6 +146,13 @@ class ProgramSelectionViewModel @Inject constructor(
         }
     }
 
+
+
+
+
+
+
+
     /**
      * Повторює спробу завантаження програм у випадку помилки.
      * Викликається коли користувач натискає на кнопку "Спробувати ще раз".
@@ -147,6 +160,10 @@ class ProgramSelectionViewModel @Inject constructor(
     fun retryLoadPrograms() {
         loadPrograms()
     }
+
+
+
+
 
     /**
      * Оновлює вибраний день тренування з новими даними
@@ -156,6 +173,8 @@ class ProgramSelectionViewModel @Inject constructor(
             selectedGymDay = gymDayUiModel
         )}
     }
+
+
 
     /**
      * Оновлює стан завантаження.

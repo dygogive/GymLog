@@ -33,16 +33,21 @@ class WorkoutCoordinatorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WorkoutUiState())
     val uiState = _uiState.asStateFlow()
 
+
+
+
+
     // Відстеження окремих станів для зручності
     val timerState: StateFlow<TimerState> = timerViewModel.timerState
     val programSelectionState: StateFlow<ProgramSelectionState> = programSelectionViewModel.programSelectionState
     val trainingBlocksState: StateFlow<TrainingBlocksState> = trainingBlocksViewModel.trainingBlocksState
     val gymDayState: StateFlow<GymDayState> = resultsViewModel.gymDayState
 
-    // Дата і час тренування (запасний варіант якщо в timerState буде null)
-    private var workoutDateTime: String = ""
+
+
 
     init {
+
         // Комбінуємо всі стани в один загальний стан
         viewModelScope.launch {
             combine(
@@ -62,12 +67,13 @@ class WorkoutCoordinatorViewModel @Inject constructor(
             }
         }
 
+
+
         // Ініціалізуємо дату і час тренування при створенні ViewModel
         viewModelScope.launch {
             val datetime: String = getCurrentDateTime().first + " " + getCurrentDateTime().second
-            workoutDateTime = datetime
             timerViewModel.setWorkoutDateTime(datetime)
-            Log.d("datetime", "WorkoutCoordinatorViewModel.init: workoutDateTime = $workoutDateTime")
+            Log.d("datetime", "WorkoutCoordinatorViewModel.init: workoutDateTime = $datetime")
         }
 
         // Реагуємо на вибір нового дня тренування
@@ -79,6 +85,9 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 }
             }
         }
+
+
+
     }
 
     // ========================================================================================
@@ -146,7 +155,7 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 val timeFromStart = timerViewModel.getCurrentWorkoutTimeMs()
 
                 // Передаємо поточну дату і час тренування з timerViewModel або використовуємо запасний варіант
-                val currentDateTime = timerState.value.dateTimeThisTraining ?: workoutDateTime
+                val currentDateTime = timerState.value.dateTimeThisTraining ?: "null. error"
 
                 Log.d("datetime", "WorkoutCoordinatorViewModel.saveResult: currentDateTime = $currentDateTime")
 

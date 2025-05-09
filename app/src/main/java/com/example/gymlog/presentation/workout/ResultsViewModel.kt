@@ -29,6 +29,11 @@ class ResultsViewModel @Inject constructor(
     val gymDayState = _gymDayState.asStateFlow()
 
 
+
+
+
+
+
     /**
      * Зберігає результат підходу.
      * @param gymDayId ID дня тренування
@@ -79,6 +84,10 @@ class ResultsViewModel @Inject constructor(
         }
     }
 
+
+
+
+
     /**
      * Збільшує лічильник доданих результатів.
      */
@@ -87,6 +96,10 @@ class ResultsViewModel @Inject constructor(
             currentState.copy(resultsAdded = currentState.resultsAdded + 1)
         }
     }
+
+
+
+
 
     /**
      * Встановлює максимальну кількість результатів для вправи.
@@ -97,6 +110,10 @@ class ResultsViewModel @Inject constructor(
             currentState.copy(maxResultsPerExercise = maxResults)
         }
     }
+
+
+
+
 
     /**
      * Скидає кількість доданих результатів.
