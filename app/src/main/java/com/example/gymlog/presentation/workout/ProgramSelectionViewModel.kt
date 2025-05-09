@@ -156,4 +156,12 @@ class ProgramSelectionViewModel @Inject constructor(
             selectedGymDay = gymDayUiModel
         )}
     }
+
+    /**
+     * Оновлює стан завантаження.
+     * @param isLoading Чи відбувається завантаження
+     */
+    fun updateLoadingState(isLoading: Boolean) {
+        _programSelectionState.update { it.copy(isLoading = isLoading) }
+    }
 }

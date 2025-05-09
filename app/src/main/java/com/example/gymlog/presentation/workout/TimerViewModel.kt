@@ -3,6 +3,7 @@ package com.example.gymlog.presentation.workout
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,8 +18,7 @@ import javax.inject.Inject
  * Відповідає за відстеження загального часу тренування та часу окремих підходів.
  */
 class TimerViewModel @Inject constructor(
-    application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     // Стан таймера для UI
     private val _timerState = MutableStateFlow(TimerState())
@@ -126,7 +126,10 @@ class TimerViewModel @Inject constructor(
         timerJob?.cancel()
     }
 
-
+    /** Оновити таймер */
+    fun setWorkoutDateTime(datetime: String) {
+        _timerState.update { it.copy(dateTimeThisTraining = datetime) }
+    }
 
     //оновити ід розгорнутої вправи
     fun onClickExpandExercise(exerciseId: Long) {

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,12 +33,14 @@ class WorkoutCoordinatorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WorkoutUiState())
     val uiState = _uiState.asStateFlow()
 
-
     // Відстеження окремих станів для зручності
     val timerState: StateFlow<TimerState> = timerViewModel.timerState
     val programSelectionState: StateFlow<ProgramSelectionState> = programSelectionViewModel.programSelectionState
     val trainingBlocksState: StateFlow<TrainingBlocksState> = trainingBlocksViewModel.trainingBlocksState
     val gymDayState: StateFlow<GymDayState> = resultsViewModel.gymDayState
+
+    // Дата і час тренування (запасний варіант якщо в timerState буде null)
+    private var workoutDateTime: String = ""
 
     init {
         // Комбінуємо всі стани в один загальний стан
@@ -49,25 +50,25 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 programSelectionState,
                 trainingBlocksState,
                 gymDayState,
-            ) { timer, selection, blocks, gymDay ->
+            ) { timerState, programSelectionState, trainingBlocksState, gymDayState ->
                 WorkoutUiState(
-                    timerState = timer,
-                    programSelectionState = selection,
-                    trainingBlocksState = blocks,
-                    gymDayState = gymDay
+                    timerState = timerState,
+                    programSelectionState = programSelectionState,
+                    trainingBlocksState = trainingBlocksState,
+                    gymDayState = gymDayState
                 )
             }.collectLatest { combinedState ->
                 _uiState.value = combinedState
             }
         }
 
-
+        // Ініціалізуємо дату і час тренування при створенні ViewModel
         viewModelScope.launch {
             val datetime: String = getCurrentDateTime().first + " " + getCurrentDateTime().second
-            timerState.value.copy(dateTimeThisTraining = datetime)
+            workoutDateTime = datetime
+            timerViewModel.setWorkoutDateTime(datetime)
+            Log.d("datetime", "WorkoutCoordinatorViewModel.init: workoutDateTime = $workoutDateTime")
         }
-
-
 
         // Реагуємо на вибір нового дня тренування
         viewModelScope.launch {
@@ -139,10 +140,15 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Запускаємо індикатор завантаження
-                programSelectionViewModel.programSelectionState.value.copy(isLoading = true)
+                programSelectionViewModel.updateLoadingState(true)
 
                 // Отримуємо час від початку тренування
                 val timeFromStart = timerViewModel.getCurrentWorkoutTimeMs()
+
+                // Передаємо поточну дату і час тренування з timerViewModel або використовуємо запасний варіант
+                val currentDateTime = timerState.value.dateTimeThisTraining ?: workoutDateTime
+
+                Log.d("datetime", "WorkoutCoordinatorViewModel.saveResult: currentDateTime = $currentDateTime")
 
                 // Зберігаємо результат
                 val result = resultsViewModel.saveResult(
@@ -151,7 +157,8 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                     weight = weight,
                     iterations = iterations,
                     workTime = workTime,
-                    timeFromStart = timeFromStart
+                    timeFromStart = timeFromStart,
+                    workoutDateTime = currentDateTime
                 )
 
                 // Обробляємо результат
@@ -163,20 +170,17 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                     },
                     onFailure = { error ->
                         // Обробляємо помилку
+                        Log.e("WorkoutCoordinator", "Error saving result", error)
                     }
                 )
             } finally {
                 // Прибираємо індикатор завантаження
-                programSelectionViewModel.programSelectionState.value.copy(isLoading = false)
+                programSelectionViewModel.updateLoadingState(false)
             }
         }
     }
 
-
-
     fun onClickExpandExercise(exerciseId: Long) {
         timerViewModel.onClickExpandExercise(exerciseId)
     }
-
-
 }

@@ -28,9 +28,6 @@ class ResultsViewModel @Inject constructor(
     private val _gymDayState = MutableStateFlow(GymDayState())
     val gymDayState = _gymDayState.asStateFlow()
 
-    // Стан дня тренування для UI
-    private val _timerState = MutableStateFlow(TimerState())
-    val timerState = _timerState.asStateFlow()
 
     /**
      * Зберігає результат підходу.
@@ -40,6 +37,7 @@ class ResultsViewModel @Inject constructor(
      * @param iterations Кількість повторень
      * @param workTime Час виконання
      * @param timeFromStart Час від початку тренування
+     * @param workoutDateTime Дата і час тренування
      * @return Оновлений день тренування з новим результатом
      */
     suspend fun saveResult(
@@ -48,14 +46,14 @@ class ResultsViewModel @Inject constructor(
         weight: Int?,
         iterations: Int?,
         workTime: Int?,
-        timeFromStart: Long
+        timeFromStart: Long,
+        workoutDateTime: String
     ): Result<GymDayUiModel> {
         return try {
-
             // Визначаємо порядковий номер результату в дні тренування
             val sequenceInGymDay = _gymDayState.value.resultsAdded
 
-            Log.d("datetime", "updateTrainingBlocks:3 ${timerState.value.dateTimeThisTraining}")
+            Log.d("datetime", "ResultsViewModel.saveResult: workoutDateTime = $workoutDateTime")
 
             // Зберігаємо результат
             val updatedGymDay = saveResultUseCase(
@@ -67,7 +65,7 @@ class ResultsViewModel @Inject constructor(
                 workTime = workTime,
                 sequenceInGymDay = sequenceInGymDay,
                 timeFromStart = timeFromStart,
-                workoutDateTime = timerState.value.dateTimeThisTraining?: "09.05.2025 03:03:03",
+                workoutDateTime = workoutDateTime
             )
 
             // Оновлюємо лічильник доданих результатів
