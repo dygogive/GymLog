@@ -3,6 +3,7 @@ package com.example.gymlog.presentation.workout
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
@@ -26,8 +27,7 @@ class WorkoutCoordinatorViewModel @Inject constructor(
     private val programSelectionViewModel: ProgramSelectionViewModel,
     private val trainingBlocksViewModel: TrainingBlocksViewModel,
     private val resultsViewModel: ResultsViewModel,
-    application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     // Загальний стан для всього екрану тренування
     private val _uiState = MutableStateFlow(WorkoutUiState())

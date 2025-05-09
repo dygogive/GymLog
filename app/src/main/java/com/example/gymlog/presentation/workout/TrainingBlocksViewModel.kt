@@ -3,6 +3,7 @@ package com.example.gymlog.presentation.workout
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.TrainingBlockUiModel
@@ -19,8 +20,8 @@ import javax.inject.Inject
  * Відповідає за відображення та взаємодію з блоками вправ.
  */
 class TrainingBlocksViewModel @Inject constructor(
-    application: Application
-) : AndroidViewModel(application) {
+
+) : ViewModel() {
 
     // Стан блоків тренування для UI
     private val _trainingBlocksState = MutableStateFlow(TrainingBlocksState())
