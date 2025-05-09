@@ -34,13 +34,7 @@ fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseBlockUI = ExerciseBl
     linkId = linkId,
     name = this.getNameOnly(context),
     description = this.description,
-    results = this.workoutResults
-        .sortedWith(
-            compareByDescending<WorkoutResult> { it.weight ?: 0 }
-                .thenByDescending { it.iteration ?: 0 }
-        )
-        .take(3)
-        .map { it.toUiModel() }
+    results = this.workoutResults.map { it.toUiModel() }
 )
 
 /**

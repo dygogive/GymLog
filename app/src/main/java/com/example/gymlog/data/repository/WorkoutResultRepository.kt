@@ -1,11 +1,14 @@
 package com.example.gymlog.data.repository
 
+import android.util.Log
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toEntity
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.domain.repository.WorkoutResultRepositoryInterface
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class WorkoutResultRepository @Inject constructor(
@@ -18,27 +21,32 @@ class WorkoutResultRepository @Inject constructor(
         resultsNumber: Int
     ): List<WorkoutResult> {
         val allResults = workoutResultDao.getResultsForExercise(exerciseInBlockId)
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
 
         return allResults
-            // Групуємо за датою тренування
+            // Групуємо по workoutDateTime
             .groupBy { it.workoutDateTime }
-            // Для кожної дати беремо результат з максимальною вагою
+            // Вибираємо найкращий результат з кожної групи
             .map { (_, results) ->
-                results.maxWithOrNull(
-                    compareBy(
-                        { it.weight ?: 0 },
-                        { it.iteration ?: 0 }
+                results
+                    .sortedWith(
+                        compareByDescending<WorkoutResultEntity> { it.weight ?: 0 }
+                            .thenByDescending { it.iteration ?: 0 }
+                            .thenBy { it.workTime ?: Int.MAX_VALUE }
                     )
-                ) ?: throw IllegalStateException("Empty group")
+                    .firstOrNull() ?: throw IllegalStateException("Empty group")
             }
-            // Сортуємо за вагою та ітераціями
-            .sortedWith(
-                compareByDescending<WorkoutResultEntity> { it.weight ?: 0 }
-                    .thenByDescending { it.iteration ?: 0 }
-            )
-            // Обмежуємо кількість результатів
+            // Сортуємо по workoutDateTime від нових до старих
+            .sortedByDescending {
+                try {
+                    LocalDateTime.parse(it.workoutDateTime, formatter)
+                } catch (e: Exception) {
+                    LocalDateTime.MIN
+                }
+            }
+            // Обрізаємо до кількості
             .take(resultsNumber)
-            // Конвертуємо в domain-модель
+            // Мапимо в domain-модель
             .map { it.toDomain() }
     }
 

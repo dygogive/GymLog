@@ -14,9 +14,11 @@ class GetGymDayWithResultsUseCase  @Inject constructor(
         gymDayId: Long,
         maxResultsPerExercise: Int
     ): GymDayNew {
-        //
+
+        //get needed GymDay from repository
         val gymDay = repository.getSelectedGymDayNew(gymDayId)
 
+        //insert results in GymDay
         return gymDay.copy(
             trainingBlocks = gymDay.trainingBlocks.map { block ->
                 block.copy(

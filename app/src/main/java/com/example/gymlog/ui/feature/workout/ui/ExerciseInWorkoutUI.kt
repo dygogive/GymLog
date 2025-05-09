@@ -364,11 +364,54 @@ private fun ResultDetail(
 @Preview(showBackground = true, name = "Превью екрану тренування")
 @Composable
 fun Preview_ExerciseInWorkoutUI() {
+
+    val result1 = ResultOfSet(
+        0,
+      0,
+        200,
+        0,
+        0,
+        "05.02.2025",
+        "00:00",
+    )
+    val result2 = ResultOfSet(
+        0,
+        0,
+        200,
+        0,
+        0,
+        "02.02.2025",
+        "00:00",
+    )
+    val result3 = ResultOfSet(
+        0,
+        0,
+        250,
+        0,
+        0,
+        "03.02.2025",
+        "00:00",
+    )
+    val result4 = ResultOfSet(
+        0,
+        0,
+        200,
+        0,
+        0,
+        "04.02.2025",
+        "00:00",
+    )
+
+
     MyAppTheme {
         // Приклад блоку тренування для превью
         ExerciseInWorkoutUI(
             onConfirmResult = {},
-            ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
+            ExerciseBlockUI(
+                0,
+                "Присідання",
+                "Присідання зі штангою",
+                listOf(result1,result2,result3,result4)),
             expandedExeId = 0,
             { }
         )
