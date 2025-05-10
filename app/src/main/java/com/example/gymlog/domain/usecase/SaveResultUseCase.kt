@@ -42,6 +42,7 @@ class SaveResultUseCase @Inject constructor(
         return getGymDayWithResultsUseCase(
             gymDayId = gymDayId,
             maxResultsPerExercise = maxResultsPerExercise,
+            currentWorkoutDateTime = workoutDateTime
         )
     }
 }

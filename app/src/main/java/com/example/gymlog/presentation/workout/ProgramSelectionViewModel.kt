@@ -119,6 +119,7 @@ class ProgramSelectionViewModel @Inject constructor(
                 val gymDayWithResults = getGymDayWithResultsUseCase(
                     gymDayId = gymDay.id,
                     maxResultsPerExercise = maxResultsPerExercise,
+                    "nope"
                 )
 
                 val uiModelGymDay = gymDayWithResults.toUiModel(getApplication())
