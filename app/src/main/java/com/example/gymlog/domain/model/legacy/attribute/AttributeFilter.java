@@ -7,7 +7,7 @@ import com.example.gymlog.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum AttributeFilter implements TypeAttributeExercises {
+public enum AttributeFilter implements DescriptionAttribute {
 
     EQUIPMENT(R.string.equipment_type),
     MUSCLE_GROUP(R.string.muscle_group),

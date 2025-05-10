@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
+import com.example.gymlog.domain.model.legacy.attribute.DescriptionAttribute;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.legacy.attribute.TypeAttributeExercises;
 import com.example.gymlog.ui.legacy.exercise.adapters.AttributeAdapter;
 
 import java.util.List;
 
 
 //базовий фрагмент для екрану з вправами
-public abstract class BaseListFragment<E extends Enum<E> & TypeAttributeExercises> extends Fragment {
+public abstract class BaseListFragment<E extends Enum<E> & DescriptionAttribute> extends Fragment {
 
     //рециклер що буде у фрагменті
     private RecyclerView recyclerView;

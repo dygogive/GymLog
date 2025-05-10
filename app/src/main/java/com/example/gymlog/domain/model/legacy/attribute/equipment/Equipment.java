@@ -6,12 +6,12 @@ import com.example.gymlog.R;
 import com.example.gymlog.domain.model.legacy.attribute.AttributeItem;
 import com.example.gymlog.domain.model.legacy.attribute.HeaderItem;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.legacy.attribute.TypeAttributeExercises;
+import com.example.gymlog.domain.model.legacy.attribute.DescriptionAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Equipment implements TypeAttributeExercises {
+public enum Equipment implements DescriptionAttribute {
 
     // Вільна вага
     BARBELL(R.string.equipment_barbell), // Штанга

@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Description -->
+        <!-- DescriptionAttribute -->
         <EditText
             android:id="@+id/editTextExerciseDescription"
             android:layout_width="0dp"

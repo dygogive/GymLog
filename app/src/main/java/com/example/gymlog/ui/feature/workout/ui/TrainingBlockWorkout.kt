@@ -137,7 +137,7 @@ private fun BlockHeader(
             )
         )
 
-        // Description (if available)
+        // DescriptionAttribute (if available)
         if (trainBlockInfo.description.isNotBlank()) {
             Text(
                 text = trainBlockInfo.description,

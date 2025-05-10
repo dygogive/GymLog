@@ -15,12 +15,12 @@ import com.example.gymlog.domain.model.legacy.attribute.AttributeItem;
 import com.example.gymlog.domain.model.legacy.attribute.FiltreAttributes;
 import com.example.gymlog.domain.model.legacy.attribute.HeaderItem;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.legacy.attribute.TypeAttributeExercises;
+import com.example.gymlog.domain.model.legacy.attribute.DescriptionAttribute;
 
 
 import java.util.List;
 
-public class AttributeAdapter<E extends Enum<E> & TypeAttributeExercises> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AttributeAdapter<E extends Enum<E> & DescriptionAttribute> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<ListHeaderAndAttribute> items;
     private final OnItemClickListener listener;

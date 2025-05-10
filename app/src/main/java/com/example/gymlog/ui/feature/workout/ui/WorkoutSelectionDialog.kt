@@ -364,7 +364,7 @@ fun WorkoutSelectionDialogPreview() {
     val dummyPrograms = listOf(
         ProgramInfo(
             name = "Program A",
-            description = "Description A",
+            description = "DescriptionAttribute A",
             gymDayUiModels = listOf(
                 GymDayUiModel(
                     name = "Workout 1",
@@ -382,7 +382,7 @@ fun WorkoutSelectionDialogPreview() {
         ),
         ProgramInfo(
             name = "Program B",
-            description = "Description B",
+            description = "DescriptionAttribute B",
             gymDayUiModels = listOf(
                 GymDayUiModel(
                     name = "Workout 3",

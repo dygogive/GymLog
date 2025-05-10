@@ -33,10 +33,11 @@
 
     <!-- Жими руками -->
     <string name="motion_press_upwards">Press Upwards</string> <!-- Жим вгору -->
-    <string name="motion_press_downwards">Press Downwards</string> <!-- Жим вниз -->
-    <string name="motion_press_middle">Press Middle</string> <!-- Жим горизонтальний -->
     <string name="motion_press_up_middle">Press Up to Middle</string> <!-- Жим між верхом і серединою -->
+    <string name="motion_press_middle">Press Middle</string> <!-- Жим горизонтальний -->
     <string name="motion_press_down_middle">Press Down to Middle</string> <!-- Жим між низом і серединою -->
+    <string name="motion_press_downwards">Press Downwards</string> <!-- Жим вниз -->
+
 
     <!-- Тяги руками -->
     <string name="motion_pull_upwards">Pull Upwards</string> <!-- Тяга вгору -->

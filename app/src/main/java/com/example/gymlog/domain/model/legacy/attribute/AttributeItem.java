@@ -1,6 +1,6 @@
 package com.example.gymlog.domain.model.legacy.attribute;
 
-public class AttributeItem<E extends Enum<E> & TypeAttributeExercises> extends ListHeaderAndAttribute {
+public class AttributeItem<E extends Enum<E> & DescriptionAttribute> extends ListHeaderAndAttribute {
     private final E attributeEnum;
 
     public AttributeItem(E attributeEnum) {

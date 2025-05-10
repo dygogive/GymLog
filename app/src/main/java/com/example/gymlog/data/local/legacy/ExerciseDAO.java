@@ -189,7 +189,7 @@ public class ExerciseDAO {
             Log.d("ExerciseLog",
                     "ID: " + exercise.getId() + " --- " +
                             "Name: " + exercise.getName() + " --- " +
-                            "Description: " + exercise.getDescription() + " --- " +
+                            "DescriptionAttribute: " + exercise.getDescription() + " --- " +
                             "Motion: " + exercise.getMotion() + " --- " +
                             "Equipment: " + exercise.getEquipment() + " --- " +
                             "Muscle Groups: " + exercise.getMuscleGroupList() + " --- " +
@@ -328,7 +328,7 @@ public class ExerciseDAO {
                         int isCustom = cursor.getInt(isCustomIndex);
 
                         @SuppressLint("DefaultLocale") String logMessage = String.format(
-                                "ID: %d | Name: %s | Description: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
+                                "ID: %d | Name: %s | DescriptionAttribute: %s | Motion: %s | Muscle Groups: %s | Equipment: %s | Custom: %d",
                                 id, name, description, motion, muscleGroups, equipment, isCustom
                         );
 

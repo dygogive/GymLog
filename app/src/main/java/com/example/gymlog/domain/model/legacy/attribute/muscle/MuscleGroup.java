@@ -4,20 +4,20 @@ import android.content.Context;
 
 import com.example.gymlog.R;
 import com.example.gymlog.domain.model.legacy.attribute.AttributeItem;
+import com.example.gymlog.domain.model.legacy.attribute.DescriptionAttribute;
 import com.example.gymlog.domain.model.legacy.attribute.HeaderItem;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
-import com.example.gymlog.domain.model.legacy.attribute.TypeAttributeExercises;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public enum MuscleGroup implements TypeAttributeExercises {
+public enum MuscleGroup implements DescriptionAttribute {
 
-    CHEST_LOWER(R.string.muscle_chest_lower),
-    CHEST_UPPER(R.string.muscle_chest_upper),
-    CHEST(R.string.muscle_chest),
     TRICEPS(R.string.muscle_triceps),
+    CHEST_LOWER(R.string.muscle_chest_lower),
+    CHEST(R.string.muscle_chest),
+    CHEST_UPPER(R.string.muscle_chest_upper),
     BICEPS(R.string.muscle_biceps_arms),
     TRAPS_UPPER(R.string.muscle_traps_upper),
     TRAPS_MIDDLE(R.string.muscle_traps_middle),
