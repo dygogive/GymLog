@@ -1,9 +1,5 @@
 package com.example.gymlog.ui.legacy.exercise.fragments;
 
-import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.EQUIPMENT;
-import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.MOTION;
-import static com.example.gymlog.domain.model.legacy.attribute.AttributeFilter.MUSCLE_GROUP;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,15 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
 
 import java.util.List;
 
-
-public class AttributeListFragment extends BaseListFragment {
-
-
+public class AttributeListFragment extends BaseListFragment<AttributesForFilterExercises> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -32,36 +25,38 @@ public class AttributeListFragment extends BaseListFragment {
         title.setText(R.string.head_sorting_exercises);
     }
 
-
     @Override
-    protected Class getClassEnumAttribute() {
-        return AttributeFilter.class;
+    protected Class<AttributesForFilterExercises> getClassEnumAttribute() {
+        return AttributesForFilterExercises.class;
     }
 
     @Override
     public List<ListHeaderAndAttribute> getItems() {
-        return AttributeFilter.getGroupedEquipmentItems(requireContext());
+        return AttributesForFilterExercises.getGroupedEquipmentItems(requireContext());
     }
 
     @Override
     protected void onItemSelected(Object item) {
-        if (!(item instanceof AttributeFilter)) {
-            Log.d("enumTest", "Clicked header or unknown item type");
-            return;  // Пропускаємо, якщо натиснуто заголовок
+        if (!(item instanceof AttributesForFilterExercises)) {
+            Log.d("AttributesForFilterExercises", "Clicked header or unknown item type");
+            return;
         }
 
-        AttributeFilter attributeFilter = (AttributeFilter) item;
-
+        AttributesForFilterExercises attributesForFilterExercises = (AttributesForFilterExercises) item;
         Fragment fragment;
 
-        if (attributeFilter.equals(MUSCLE_GROUP)) {
-            fragment = new MusclesFragment();
-        } else if (attributeFilter.equals(EQUIPMENT)) {
-            fragment = new EquipmentFragment();
-        } else if (attributeFilter.equals(MOTION)) {
-            fragment = new MotionsFragment();
-        } else {
-            throw new IllegalStateException("Несподіване значення: " + attributeFilter);
+        switch (attributesForFilterExercises) {
+            case MUSCLE_GROUP:
+                fragment = new MusclesFragment();
+                break;
+            case EQUIPMENT:
+                fragment = new EquipmentFragment();
+                break;
+            case MOTION:
+                fragment = new MotionsFragment();
+                break;
+            default:
+                throw new IllegalStateException("Несподіване значення: " + attributesForFilterExercises);
         }
 
         requireActivity().getSupportFragmentManager()
@@ -70,5 +65,4 @@ public class AttributeListFragment extends BaseListFragment {
                 .addToBackStack(null)
                 .commit();
     }
-
 }

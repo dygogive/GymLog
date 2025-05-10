@@ -58,15 +58,13 @@ fun MainScreen(navController: NavController) {
             //modifier = Modifier.padding(top = 16.dp)
         )
 
-        // Редактор вправ
+
+        // Почати тренування
         HomeCard(
-            title = stringResource(R.string.exe_editor),
-            onClick = {
-                context.startActivity(
-                    Intent(context, ExerciseManagementActivity::class.java)
-                )
-            }
+            title = stringResource(R.string.workout),
+            onClick = { navController.navigate("workout") }
         )
+
 
         // Програми
         HomeCard(
@@ -78,11 +76,17 @@ fun MainScreen(navController: NavController) {
             }
         )
 
-        // Почати тренування
+
+        // Редактор вправ
         HomeCard(
-            title = stringResource(R.string.workout),
-            onClick = { navController.navigate("workout") }
+            title = stringResource(R.string.exe_editor),
+            onClick = {
+                context.startActivity(
+                    Intent(context, ExerciseManagementActivity::class.java)
+                )
+            }
         )
+
     }
 
 }

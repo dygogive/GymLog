@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.exercise.Exercise;
 import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
@@ -158,9 +158,9 @@ public class ExerciseDAO {
     /**
      * Пошук вправ за певним атрибутом (Motion, MuscleGroup, Equipment).
      */
-    public List<Exercise> getExercisesByAttribute(AttributeFilter attributeFilter, String attribute) {
+    public List<Exercise> getExercisesByAttribute(AttributesForFilterExercises attributesForFilterExercises, String attribute) {
         String query;
-        switch (attributeFilter) {
+        switch (attributesForFilterExercises) {
             case EQUIPMENT:
                 query = "SELECT * FROM Exercise WHERE equipment = ?";
                 break;

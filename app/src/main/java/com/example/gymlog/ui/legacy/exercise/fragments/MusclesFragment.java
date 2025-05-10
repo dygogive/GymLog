@@ -6,20 +6,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
 import com.example.gymlog.domain.model.legacy.attribute.muscle.MuscleGroup;
 
 import java.util.List;
 
-
-// MusclesFragment.java
-public class MusclesFragment extends BaseListFragment {
-
-
+public class MusclesFragment extends BaseListFragment<MuscleGroup> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -30,7 +25,7 @@ public class MusclesFragment extends BaseListFragment {
     }
 
     @Override
-    protected Class getClassEnumAttribute() {
+    protected Class<MuscleGroup> getClassEnumAttribute() {
         return MuscleGroup.class;
     }
 
@@ -39,27 +34,20 @@ public class MusclesFragment extends BaseListFragment {
         return MuscleGroup.getGroupedEquipmentItems(requireContext());
     }
 
-    //що робити якщо ітем вибраний
     @Override
     protected void onItemSelected(Object item) {
-        MuscleGroup muscleGroup  = (MuscleGroup) item;
-
-
-        MuscleGroup[] enums = MuscleGroup.values();
-        MuscleGroup enumMuscleGroup = null;
-
-        int count = 0;
-        for(MuscleGroup muscleGroup1 : enums) {
-            if(muscleGroup1.equals(muscleGroup)) enumMuscleGroup = enums[count];
-            else count++;
+        if (!(item instanceof MuscleGroup)) {
+            return;
         }
 
+        MuscleGroup muscleGroup = (MuscleGroup) item;
+        openExercisesFragment(AttributesForFilterExercises.MUSCLE_GROUP, muscleGroup);
+    }
 
-        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.MUSCLE_GROUP, enumMuscleGroup);
-
+    private void openExercisesFragment(AttributesForFilterExercises attributeType, MuscleGroup muscleGroup) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, ExercisesFragment.newInstance(attributeType, muscleGroup))
                 .addToBackStack(null)
                 .commit();
     }

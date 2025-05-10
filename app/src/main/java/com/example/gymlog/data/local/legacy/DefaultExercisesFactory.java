@@ -3,7 +3,7 @@ package com.example.gymlog.data.local.legacy;
 
 import android.util.Log;
 
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.exercise.Exercise;
 import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class DefaultExercisesFactory {
 
-    public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributeFilter attributeFilter, String attribute) {
+    public static List<Exercise> getExercisesForAttribute(ExerciseDAO exerciseDAO, AttributesForFilterExercises attributesForFilterExercises, String attribute) {
         // Отримуємо список вправ за атрибутом через ExerciseDAO
-        return exerciseDAO.getExercisesByAttribute(attributeFilter, attribute);
+        return exerciseDAO.getExercisesByAttribute(attributesForFilterExercises, attribute);
     }
 
 

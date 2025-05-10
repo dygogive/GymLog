@@ -7,7 +7,7 @@ public class AttributeItem<E extends Enum<E> & DescriptionAttribute> extends Lis
         this.attributeEnum = attributeEnum;
     }
 
-    public E getEquipment() {
+    public E getAttribute() {
         return attributeEnum;
     }
 

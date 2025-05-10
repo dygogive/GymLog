@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.example.gymlog.R;
 import com.example.gymlog.data.local.legacy.ExerciseDAO;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.BundleKeys;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.exercise.Exercise;
@@ -36,18 +36,25 @@ public class ExercisesFragment extends Fragment {
     private RecyclerView recyclerView;
     private ExerciseAdapter adapter;
 
-    public static ExercisesFragment newInstance(AttributeFilter attributeFilter, Enum attribute) {
+    /**
+     * Створює новий екземпляр фрагменту з вказаними параметрами фільтрації
+     */
+    public static <T extends Enum<T>> ExercisesFragment newInstance(AttributesForFilterExercises filterType, T attributeValue) {
         ExercisesFragment fragment = new ExercisesFragment();
-
-        // Передача аргументів до фрагмента
         Bundle args = new Bundle();
-        args.putString(BundleKeys.ATTRIBUTE_TYPE, attributeFilter.name());
-        args.putString(BundleKeys.ATTRIBUTE, attribute.name());
-
+        args.putString(BundleKeys.ATTRIBUTE_TYPE, filterType.name());
+        args.putString(BundleKeys.ATTRIBUTE, attributeValue.name());
         fragment.setArguments(args);
         return fragment;
-
     }
+
+    /**
+     * Оновлює список вправ
+     */
+    public void refreshExerciseList() {
+        // Реалізація оновлення списку вправ
+    }
+
 
 
 
@@ -68,23 +75,23 @@ public class ExercisesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Отримуємо аргументи
-        AttributeFilter attributeFilter = AttributeFilter.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
+        AttributesForFilterExercises attributesForFilterExercises = AttributesForFilterExercises.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
         String attributeName = requireArguments().getString(BundleKeys.ATTRIBUTE);
 
         TextView title = view.findViewById(R.id.textViewTitle);
 
         // Отримуємо опис enum
-        String description = getEnumDescription(attributeFilter, attributeName);
+        String description = getEnumDescription(attributesForFilterExercises, attributeName);
 
         // Встановлюємо заголовок
         title.setText(getString(R.string.exercises) + " - " + description);
     }
 
     // Метод для отримання опису елемента enum
-    private String getEnumDescription(AttributeFilter attributeFilter, String attributeName) {
+    private String getEnumDescription(AttributesForFilterExercises attributesForFilterExercises, String attributeName) {
         Context context = requireContext();
 
-        switch (attributeFilter) {
+        switch (attributesForFilterExercises) {
             case MOTION:
                 for (Motion motion : Motion.values()) {
                     if (motion.name().equals(attributeName)) {
@@ -137,7 +144,7 @@ public class ExercisesFragment extends Fragment {
     }
 
     private List<Exercise> getExercises() {
-        AttributeFilter attributeFilter = AttributeFilter.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
+        AttributesForFilterExercises attributesForFilterExercises = AttributesForFilterExercises.valueOf(requireArguments().getString(BundleKeys.ATTRIBUTE_TYPE));
         String attribute = requireArguments().getString(BundleKeys.ATTRIBUTE);
 
         // Ініціалізація DAO
@@ -146,7 +153,7 @@ public class ExercisesFragment extends Fragment {
         // Виклик методу для отримання вправ
         List<Exercise> exercises = DefaultExercisesFactory.getExercisesForAttribute(
                 exerciseDAO,
-                attributeFilter, // Тип атрибуту
+                attributesForFilterExercises, // Тип атрибуту
                 attribute // Значення атрибуту
         );
 
@@ -189,13 +196,7 @@ public class ExercisesFragment extends Fragment {
         }
     }
 
-    public void refreshExerciseList() {
-        // Оновлюємо список вправ
-        List<Exercise> updatedExercises = getExercises();
 
-        // Оновлюємо адаптер з новими даними
-        adapter.updateExercises(updatedExercises);
-    }
 
 
 }

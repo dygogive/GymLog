@@ -6,19 +6,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
 
 import java.util.List;
 
-
-public class EquipmentFragment extends BaseListFragment {
-
-
+public class EquipmentFragment extends BaseListFragment<Equipment> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -29,7 +25,7 @@ public class EquipmentFragment extends BaseListFragment {
     }
 
     @Override
-    protected Class getClassEnumAttribute() {
+    protected Class<Equipment> getClassEnumAttribute() {
         return Equipment.class;
     }
 
@@ -38,27 +34,20 @@ public class EquipmentFragment extends BaseListFragment {
         return Equipment.getGroupedEquipmentItems(requireContext());
     }
 
-
     @Override
     protected void onItemSelected(Object item) {
-        Equipment equipment = (Equipment) item;
-
-        Equipment[] enums = Equipment.values();
-        Equipment enumEquip = null;
-
-        int count = 0;
-        for(Equipment equipment1 : enums) {
-            if(equipment1.equals(item)) enumEquip = enums[count];
-            else count++;
+        if (!(item instanceof Equipment)) {
+            return;
         }
 
+        Equipment equipment = (Equipment) item;
+        openExercisesFragment(AttributesForFilterExercises.EQUIPMENT, equipment);
+    }
 
-
-        Fragment fragment = ExercisesFragment.newInstance(AttributeFilter.EQUIPMENT, enumEquip);
-
+    private void openExercisesFragment(AttributesForFilterExercises attributeType, Equipment equipment) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, ExercisesFragment.newInstance(attributeType, equipment))
                 .addToBackStack(null)
                 .commit();
     }

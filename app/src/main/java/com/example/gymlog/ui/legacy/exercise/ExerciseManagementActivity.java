@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.gymlog.R;
-import com.example.gymlog.domain.model.legacy.attribute.AttributeFilter;
+import com.example.gymlog.domain.model.legacy.attribute.AttributesForFilterExercises;
 import com.example.gymlog.domain.model.legacy.attribute.BundleKeys;
 import com.example.gymlog.domain.model.legacy.attribute.equipment.Equipment;
 import com.example.gymlog.domain.model.legacy.attribute.motion.Motion;
@@ -64,18 +64,18 @@ public class ExerciseManagementActivity extends AppCompatActivity {
                 String attributeValue = args.getString(BundleKeys.ATTRIBUTE);
 
                 // В залежності від типу фільтра передаємо відповідні параметри в діалог
-                if (AttributeFilter.MOTION.name().equals(attributeType)) {
+                if (AttributesForFilterExercises.MOTION.name().equals(attributeType)) {
                     Motion motion = Motion.valueOf(attributeValue);
                     // Передаємо список з одним елементом для MotionStateList, а для інших параметрів дефолтні значення
                     dialog.showWithPreselectedFilters(null, Collections.singletonList(motion), new ArrayList<>(), null);
                     return;
-                } else if (AttributeFilter.MUSCLE_GROUP.name().equals(attributeType)) {
+                } else if (AttributesForFilterExercises.MUSCLE_GROUP.name().equals(attributeType)) {
                     MuscleGroup muscleGroup = MuscleGroup.valueOf(attributeValue);
                     List<MuscleGroup> muscleGroupList = new ArrayList<>();
                     muscleGroupList.add(muscleGroup);
                     dialog.showWithPreselectedFilters(null, null, muscleGroupList, null);
                     return;
-                } else if (AttributeFilter.EQUIPMENT.name().equals(attributeType)) {
+                } else if (AttributesForFilterExercises.EQUIPMENT.name().equals(attributeType)) {
                     Equipment equipment = Equipment.valueOf(attributeValue);
                     // Передаємо список з одним елементом для EquipmentStateList
                     dialog.showWithPreselectedFilters(null, null, new ArrayList<>(), Collections.singletonList(equipment));

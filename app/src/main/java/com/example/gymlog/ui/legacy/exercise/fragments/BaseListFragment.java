@@ -18,49 +18,44 @@ import com.example.gymlog.ui.legacy.exercise.adapters.AttributeAdapter;
 
 import java.util.List;
 
-
-//базовий фрагмент для екрану з вправами
 public abstract class BaseListFragment<E extends Enum<E> & DescriptionAttribute> extends Fragment {
-
-    //рециклер що буде у фрагменті
     private RecyclerView recyclerView;
-    //адаптер для рециклера
     private AttributeAdapter adapter;
 
+    /**
+     * Повертає клас перерахування атрибутів
+     */
     protected abstract Class<E> getClassEnumAttribute();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutResource(), container, false);
-
-        //ініціалізація recyclerView
         setupRecyclerView(view);
-
-
         return view;
     }
-
 
     private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new AttributeAdapter(
-                getItems(),
-                this::onItemSelected
-        );
+        adapter = new AttributeAdapter(getItems(), this::onItemSelected);
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Повертає список елементів для відображення
+     */
     public abstract List<ListHeaderAndAttribute> getItems();
 
-
-    //взяти ресурс - це канва на якій буде прорисовано елемент списку
+    /**
+     * Повертає ID макету для фрагмента
+     */
     protected int getLayoutResource() {
         return R.layout.fragment_item_exercises;
     }
 
-    //Реалізація методу слухача натискання на елемент списку
+    /**
+     * Обробляє вибір елемента у списку
+     */
     protected abstract void onItemSelected(Object item);
-
 }

@@ -96,7 +96,7 @@
     <string name="yes">Так</string>
     <string name="no">Ні</string>
     <string name="expand_details">Показати деталі</string>
-    <string name="exe_editor">Вправи</string>
+    <string name="exe_editor">Редактор вправ</string>
     <string name="description">Опис</string>
     <string name="plan_management_title">Програми тренувань</string>
     <string name="add_new_day">Додати нове тренування</string>
@@ -155,7 +155,7 @@
     <string name="context_menu">Контекстне меню</string>
     <string name="clone_exercise">Клонування вправи</string>
     <string name="clone">Клонування</string>
-    <string name="edit_programs">Програми</string>
+    <string name="edit_programs">Редактор програм</string>
     <string name="select_motion">Вибрати рух</string>
     <string name="select_muscle_groups">Вибрати групи м\'язів</string>
     <string name="select_equipment">Вибрати інвертар</string>

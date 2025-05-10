@@ -1,7 +1,6 @@
 package com.example.gymlog.ui.legacy.exercise.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,85 +11,123 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymlog.R;
 import com.example.gymlog.domain.model.legacy.attribute.AttributeItem;
-import com.example.gymlog.domain.model.legacy.attribute.FiltreAttributes;
+import com.example.gymlog.domain.model.legacy.attribute.FilterItem;
 import com.example.gymlog.domain.model.legacy.attribute.HeaderItem;
 import com.example.gymlog.domain.model.legacy.attribute.ListHeaderAndAttribute;
 import com.example.gymlog.domain.model.legacy.attribute.DescriptionAttribute;
 
-
 import java.util.List;
 
+/**
+ * Адаптер для відображення атрибутів вправ у RecyclerView
+ * @param <E> тип перерахування, що реалізує DescriptionAttribute
+ */
 public class AttributeAdapter<E extends Enum<E> & DescriptionAttribute> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<ListHeaderAndAttribute> items;
     private final OnItemClickListener listener;
+    private Context context;
 
-    Context context;
-
+    /**
+     * Інтерфейс для обробки натискань на елементи списку
+     */
     public interface OnItemClickListener {
         void onItemClick(Object item);
     }
 
+    /**
+     * Конструктор адаптера
+     * @param items список елементів для відображення
+     * @param listener обробник натискань
+     */
     public AttributeAdapter(List<ListHeaderAndAttribute> items, OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
 
-    // 1) Створюємо View з вашого item_attribute.xml
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-        if (viewType == ListHeaderAndAttribute.TYPE_HEADER) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_attributes_header, parent, false);
-            return new HeaderViewHolder(view);
+        switch (viewType) {
+            case ListHeaderAndAttribute.TYPE_HEADER:
+                return new HeaderViewHolder(
+                        inflater.inflate(R.layout.item_attributes_header, parent, false));
+
+            case ListHeaderAndAttribute.TYPE_ITEM:
+                return new ItemViewHolder(
+                        inflater.inflate(R.layout.item_attribute, parent, false));
+
+            case ListHeaderAndAttribute.TYPE_FILTER:
+                return new FilterAttributeHolder(
+                        inflater.inflate(R.layout.item_filtre_attributes, parent, false));
+
+            default:
+                // Запасний варіант
+                return new ItemViewHolder(
+                        inflater.inflate(R.layout.item_attribute, parent, false));
         }
-
-        else if (viewType == ListHeaderAndAttribute.TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_attribute, parent, false);
-            return new ItemViewHolder(view);
-        }
-
-        else if (viewType == ListHeaderAndAttribute.TYPE_FILTER) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_filtre_attributes, parent, false);
-            return new FiltreAttributeHolder(view);
-        }
-
-
-
-        return new ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item_filtre_attributes, parent, false));
     }
 
-
-
-    // 2) Прив’язуємо дані (іконка + текст) до ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ListHeaderAndAttribute item = items.get(position);
 
-        Log.d("errAttribute", "1 - " );
-
-
-        if (holder instanceof HeaderViewHolder && item instanceof HeaderItem) {
-            ((HeaderViewHolder) holder).titleHoldersAttribure.setText(((HeaderItem) item).getTitle());
-            holder.itemView.setOnClickListener(null); // Заголовки неклікабельні
-        }
-
-
-        else if (holder instanceof ItemViewHolder && item instanceof AttributeItem<?>) {
-             E attribute = (E) ((AttributeItem<?>) item).getEquipment();
-             ((ItemViewHolder) holder).titleTextView.setText(attribute.getDescription(context));
-             holder.itemView.setOnClickListener(v -> listener.onItemClick(attribute));
-        }
-
-        else if (holder instanceof FiltreAttributeHolder && item instanceof FiltreAttributes<?>) {
-            E filtre = (E) ((FiltreAttributes<?>) item).getEquipment();
-            ((FiltreAttributeHolder) holder).titleFiltreAttribure.setText(filtre.getDescription(context));
-            holder.itemView.setOnClickListener(v -> listener.onItemClick(filtre));
+        try {
+            if (holder instanceof HeaderViewHolder && item instanceof HeaderItem) {
+                bindHeaderViewHolder((HeaderViewHolder) holder, (HeaderItem) item);
+            }
+            else if (holder instanceof ItemViewHolder && item instanceof AttributeItem<?>) {
+                bindItemViewHolder((ItemViewHolder) holder, (AttributeItem<?>) item);
+            }
+            else if (holder instanceof FilterAttributeHolder && item instanceof FilterItem<?>) {
+                bindFilterViewHolder((FilterAttributeHolder) holder, (FilterItem<?>) item);
+            }
+        } catch (ClassCastException e) {
+            // Обробка помилок приведення типів
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Прив'язує дані до ViewHolder заголовка
+     */
+    private void bindHeaderViewHolder(HeaderViewHolder holder, HeaderItem item) {
+        holder.titleHeaderAttribute.setText(item.getTitle());
+        holder.itemView.setOnClickListener(null); // Заголовки неклікабельні
+    }
+
+    /**
+     * Прив'язує дані до ViewHolder елемента
+     */
+    @SuppressWarnings("unchecked")
+    private void bindItemViewHolder(ItemViewHolder holder, AttributeItem<?> item) {
+        try {
+            E attribute = (E) item.getAttribute();
+            holder.titleTextView.setText(attribute.getDescription(context));
+            holder.itemView.setOnClickListener(v -> listener.onItemClick(attribute));
+        } catch (ClassCastException e) {
+            // Обробка помилки приведення типу
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Прив'язує дані до ViewHolder фільтра
+     */
+    @SuppressWarnings("unchecked")
+    private void bindFilterViewHolder(FilterAttributeHolder holder, FilterItem<?> item) {
+        try {
+            E filter = (E) item.getAttribute();
+            holder.titleFilterAttribute.setText(filter.getDescription(context));
+            holder.itemView.setOnClickListener(v -> listener.onItemClick(filter));
+        } catch (ClassCastException e) {
+            // Обробка помилки приведення типу
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -102,41 +139,39 @@ public class AttributeAdapter<E extends Enum<E> & DescriptionAttribute> extends 
         return items.get(position).getType();
     }
 
-
-    // Холдер для заголовків
+    /**
+     * ViewHolder для заголовків у списку
+     */
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        TextView titleHoldersAttribure;
+        TextView titleHeaderAttribute;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            titleHoldersAttribure = itemView.findViewById(R.id.titleHoldersAttribure);
+            titleHeaderAttribute = itemView.findViewById(R.id.titleHoldersAttribure);
         }
     }
 
-    //Холдер для ітемів
-    public static class ItemViewHolder  extends RecyclerView.ViewHolder {
-
+    /**
+     * ViewHolder для звичайних елементів списку
+     */
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
 
-        public ItemViewHolder (@NonNull View itemView) {
+        public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
         }
     }
 
+    /**
+     * ViewHolder для елементів фільтрів
+     */
+    public static class FilterAttributeHolder extends RecyclerView.ViewHolder {
+        TextView titleFilterAttribute;
 
-    //Окремий Холдер для назв атрибутів
-    public static class FiltreAttributeHolder extends RecyclerView.ViewHolder {
-
-        TextView titleFiltreAttribure;
-
-        public FiltreAttributeHolder(@NonNull View itemView) {
+        public FilterAttributeHolder(@NonNull View itemView) {
             super(itemView);
-            titleFiltreAttribure = itemView.findViewById(R.id.titleFiltreAttribure);
+            titleFilterAttribute = itemView.findViewById(R.id.titleFiltreAttribure);
         }
     }
-
-
 }
