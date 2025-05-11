@@ -61,7 +61,7 @@ data class TimerState(
 data class GymDayState(
     val resultsAdded: Int = 0,
     val errorSaveResult: String = "error",
-    val maxResultsPerExercise: Int = 10,
-
+    val maxResultsPerExercise: Int = 5,
+    val isEditDialogVisible: Boolean = false,
 )
 

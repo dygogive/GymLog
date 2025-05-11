@@ -3,16 +3,14 @@ package com.example.gymlog.presentation.workout
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import com.example.gymlog.core.utils.getCurrentDateTime
+import com.example.gymlog.domain.usecase.DeleteResultUseCase
 import com.example.gymlog.domain.usecase.SaveResultUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -21,6 +19,7 @@ import javax.inject.Inject
  */
 class ResultsViewModel @Inject constructor(
     private val saveResultUseCase: SaveResultUseCase,
+    private val deleteResultUseCase: DeleteResultUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -57,8 +56,6 @@ class ResultsViewModel @Inject constructor(
         return try {
             // Визначаємо порядковий номер результату в дні тренування
             val sequenceInGymDay = _gymDayState.value.resultsAdded
-
-            Log.d("datetime", "ResultsViewModel.saveResult: workoutDateTime = $workoutDateTime")
 
             // Зберігаємо результат
             val updatedGymDay = saveResultUseCase(
@@ -97,6 +94,15 @@ class ResultsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Зменшити лічильник доданих результатів.
+     */
+    private fun decrementResultsAdded() {
+        _gymDayState.update { currentState ->
+            currentState.copy(resultsAdded = currentState.resultsAdded - 1)
+        }
+    }
+
 
 
 
@@ -122,6 +128,39 @@ class ResultsViewModel @Inject constructor(
     fun resetResultsAdded() {
         _gymDayState.update { currentState ->
             currentState.copy(resultsAdded = 0)
+        }
+    }
+
+
+
+    //здійснити видалення результату
+    suspend fun onDeleteResult(
+        resultOfSet: ResultOfSet,
+        gymDayId: Long,
+        workoutDateTime: String,
+    ): Result<GymDayUiModel> {
+        return try {
+            Log.d("onDeleteResult", "onDeleteResult: 3")
+            val updatedGymDay = deleteResultUseCase(
+                idResult = resultOfSet.id,
+                gymDayId = gymDayId,
+                maxResultsPerExercise = gymDayState.value.maxResultsPerExercise,
+                workoutDateTime = workoutDateTime
+            )
+            Log.d("onDeleteResult", "onDeleteResult: 4")
+
+            val currentWorkoutDateTime = "${resultOfSet.currentDate} ${resultOfSet.currentTime}"
+            if (currentWorkoutDateTime == workoutDateTime) {
+                decrementResultsAdded()
+            }
+
+            Log.d("onDeleteResult1", _gymDayState.value.resultsAdded.toString())
+            Log.d("onDeleteResult1", currentWorkoutDateTime)
+            Log.d("onDeleteResult1", workoutDateTime)
+
+            Result.success(updatedGymDay.toUiModel(getApplication()))
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

@@ -35,7 +35,9 @@ fun WorkoutScreenContent(
     onConfirmResult: (ResultOfSet) -> Unit,
     expandedExeId: Long,
     onClickExpandExercise: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    onDeleteResult: (ResultOfSet) -> Unit,
+    modifier: Modifier = Modifier,
+
 ) {
     Column(
         modifier = modifier
@@ -66,6 +68,7 @@ fun WorkoutScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
+                    onDeleteResult = onDeleteResult,
                 )
             }
         }
@@ -102,6 +105,7 @@ fun Preview_WorkoutScreenContent() {
             infoBlocks = listOf(sampleBlock),
             onConfirmResult = {},
             0,
+            {},
             {}
         )
     }

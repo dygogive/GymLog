@@ -1,6 +1,7 @@
 package com.example.gymlog.data.local.room.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
@@ -23,4 +24,10 @@ interface WorkoutResultDao {
 
     @Insert
     suspend fun insert(result: WorkoutResultEntity)
+
+
+    @Query("""
+        DELETE FROM workout_result WHERE id = :id
+    """)
+    suspend fun deleteById(id: Long)
 }

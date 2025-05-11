@@ -1,5 +1,6 @@
 package com.example.gymlog.data.repository
 
+import android.util.Log
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toEntity
@@ -18,5 +19,11 @@ class WorkoutResultRepository @Inject constructor(
 
     override suspend fun saveWorkoutResult(result: WorkoutResult) {
         workoutResultDao.insert(result.toEntity())
+    }
+
+    override suspend fun deleteResultById(idResult: Long?) {
+        Log.d("deleteResultById", "deleteResultById: 1 - $idResult")
+        workoutResultDao.deleteById(idResult!!)
+        Log.d("deleteResultById", "deleteResultById: 2 - $idResult")
     }
 }

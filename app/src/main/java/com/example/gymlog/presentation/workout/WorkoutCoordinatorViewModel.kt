@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
+import com.example.gymlog.ui.feature.workout.model.ResultOfSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -191,5 +192,44 @@ class WorkoutCoordinatorViewModel @Inject constructor(
 
     fun onClickExpandExercise(exerciseId: Long) {
         timerViewModel.onClickExpandExercise(exerciseId)
+    }
+
+
+    //видалити результат
+    fun onDeleteResult(resultOfSet: ResultOfSet) {
+        val thisGymDay = programSelectionState.value.selectedGymDay ?: return
+        val workoutDateTime = timerState.value.dateTimeThisTraining ?: return
+
+        Log.d("onDeleteResult", "onDeleteResult: 1")
+
+
+
+        viewModelScope.launch {
+            try {
+                val result = resultsViewModel.onDeleteResult(
+                    resultOfSet = resultOfSet,
+                    gymDayId = thisGymDay.id,
+                    workoutDateTime = workoutDateTime
+                )
+
+                Log.d("onDeleteResult", "onDeleteResult: 2")
+
+                result.fold(
+                    onSuccess = { updatedGymDay ->
+                        Log.d("onDeleteResult", "onDeleteResult: 33")
+                        programSelectionViewModel.updateSelectedGymDay(updatedGymDay)
+                        Log.d("onDeleteResult", "onDeleteResult: 44")
+                        trainingBlocksViewModel.updateTrainingBlocks(updatedGymDay.trainingBlocksUiModel)
+                        Log.d("onDeleteResult", "onDeleteResult: 55")
+                    },
+                    onFailure = { error ->
+                        Log.e("WorkoutCoordinator", "Error saving result", error)
+                    }
+                )
+                Log.d("onDeleteResult", "onDeleteResult: 6")
+            } finally {
+                programSelectionViewModel.updateLoadingState(false)
+            }
+        }
     }
 }

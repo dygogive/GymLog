@@ -8,4 +8,7 @@ interface WorkoutResultRepositoryInterface {
 
 
     suspend fun saveWorkoutResult(result: WorkoutResult)
+
+    //Delete result in database
+    suspend fun deleteResultById(idResult: Long?)
 }

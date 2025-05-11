@@ -86,7 +86,8 @@ fun WorkoutScreen(
                     )
                 },
                 expandedExeId = state.timerState.expandedExerciseId,
-                onClickExpandExercise = viewModel::onClickExpandExercise
+                onClickExpandExercise = viewModel::onClickExpandExercise,
+                onDeleteResult = viewModel::onDeleteResult,
             )
         }
 
@@ -220,6 +221,7 @@ fun Preview_WorkoutScreenContent() {
             infoBlocks = listOf(sampleBlock),
             onConfirmResult = {},
             0,
+            {},
             {}
         )
     }

@@ -55,6 +55,7 @@ fun ExerciseInWorkoutUI(
     exerciseInBlockUI: ExerciseBlockUI,
     expandedExeId: Long,
     onClickExpandExercise: (Long)->Unit,
+    onDeleteResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
 ) {
@@ -113,7 +114,10 @@ fun ExerciseInWorkoutUI(
                     Spacer(Modifier.height(8.dp))
 
                     // Results section - either current or historical
-                    DisplayResults(exerciseInBlockUI.results)
+                    DisplayResults(
+                        exerciseInBlockUI.results,
+                        onDeleteResult = onDeleteResult
+                        )
 
                     // Position the add button after results when expanded
                     Spacer(Modifier.height(12.dp))
@@ -237,10 +241,14 @@ private fun AddResultButton(
 
 @Composable
 private fun DisplayResults(
-    results: List<ResultOfSet>
+    results: List<ResultOfSet>,
+    onDeleteResult: (ResultOfSet) -> Unit,
 ) {
     if (results.isNotEmpty()) {
-        Results(results)
+        Results(
+            results,
+            onDeleteResult = onDeleteResult
+        )
     } else {
         EmptyResultsMessage()
     }
@@ -266,6 +274,7 @@ private fun EmptyResultsMessage() {
 @Composable
 private fun Results(
     workoutResult: List<ResultOfSet>,
+    onDeleteResult: (ResultOfSet) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -275,16 +284,35 @@ private fun Results(
                 Spacer(modifier = Modifier.height(6.dp))
             }
 
-            ResultItem(result)
+            ResultItem(
+                result,
+                onDeleteClick = {
+                    onDeleteResult(result)
+                }
+            )
         }
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+/***  RESULT  ***/
+
+
+
 @Composable
 private fun ResultItem(
     result: ResultOfSet,
-    onEditClick: (ResultOfSet) -> Unit = {},
-    onDeleteClick: (ResultOfSet) -> Unit = {}
+    onEditClick: () -> Unit = {},
+    onDeleteClick: () -> Unit
 ) {
     val onesIterations = stringResource(R.string.ones_iterations)
     val onesWeight = stringResource(R.string.ones_weight)
@@ -346,7 +374,7 @@ private fun ResultItem(
 
                 EditDeleteButtonMenu(
                     {},
-                    {}
+                    onDeleteClick = onDeleteClick
                 )
 
             }
@@ -423,7 +451,8 @@ fun Preview_ExerciseInWorkoutUI() {
                 "Присідання зі штангою",
                 listOf(result1,result2,result3,result4)),
             expandedExeId = 0,
-            { }
+            { },
+            {}
         )
     }
 }
