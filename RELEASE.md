@@ -1,4 +1,4 @@
-# GymLog – Version 1.0 MVP (2025-05-11)
+# GymLogX – Version 1.0 MVP (2025-05-11)
 
 ## ✅ Core Features Implemented:
 
