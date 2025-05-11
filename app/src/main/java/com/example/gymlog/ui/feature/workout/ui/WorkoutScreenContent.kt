@@ -36,6 +36,7 @@ fun WorkoutScreenContent(
     expandedExeId: Long,
     onClickExpandExercise: (Long) -> Unit,
     onDeleteResult: (ResultOfSet) -> Unit,
+    onEditResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier,
 
 ) {
@@ -69,6 +70,7 @@ fun WorkoutScreenContent(
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
                     onDeleteResult = onDeleteResult,
+                    onEditResult = onEditResult,
                 )
             }
         }
@@ -106,7 +108,8 @@ fun Preview_WorkoutScreenContent() {
             onConfirmResult = {},
             0,
             {},
-            {}
+            {},
+            {},
         )
     }
 }

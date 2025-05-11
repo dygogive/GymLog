@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.gymlog.domain.usecase.DeleteResultUseCase
+import com.example.gymlog.domain.usecase.EditResultUseCase
 import com.example.gymlog.domain.usecase.SaveResultUseCase
 import com.example.gymlog.presentation.mappers.toUiModel
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class ResultsViewModel @Inject constructor(
     private val saveResultUseCase: SaveResultUseCase,
     private val deleteResultUseCase: DeleteResultUseCase,
+    private val editResultUseCase: EditResultUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -82,6 +84,76 @@ class ResultsViewModel @Inject constructor(
     }
 
 
+    suspend fun onEditResult(
+        idResult: Long?,
+        gymDayId: Long,
+        weight: Int?,
+        iterations: Int?,
+        workTime: Int?,
+        workoutDateTime: String,
+    ): Result<GymDayUiModel> {
+        return try {
+            // Визначаємо порядковий номер результату в дні тренування
+            val sequenceInGymDay = _gymDayState.value.resultsAdded
+
+            // Зберігаємо результат
+            val updatedGymDay = editResultUseCase(
+                idResult = idResult,
+                gymDayId = gymDayId,
+                weight = weight,
+                iterations = iterations,
+                workTime = workTime,
+                workoutDateTime = workoutDateTime,
+                maxResultsPerExercise = _gymDayState.value.maxResultsPerExercise,
+            )
+
+            // Оновлюємо лічильник доданих результатів
+            incrementResultsAdded()
+
+            // Повертаємо успішний результат з оновленим днем тренування
+            return Result.success(updatedGymDay.toUiModel(getApplication()))
+        } catch (e: Exception) {
+            // Повертаємо помилку
+            Result.failure(e)
+        }
+    }
+
+
+
+
+
+    //здійснити видалення результату
+    suspend fun onDeleteResult(
+        resultOfSet: ResultOfSet,
+        gymDayId: Long,
+        workoutDateTime: String,
+    ): Result<GymDayUiModel> {
+        return try {
+            Log.d("onDeleteResult", "onDeleteResult: 3")
+            val updatedGymDay = deleteResultUseCase(
+                idResult = resultOfSet.id,
+                gymDayId = gymDayId,
+                maxResultsPerExercise = gymDayState.value.maxResultsPerExercise,
+                workoutDateTime = workoutDateTime
+            )
+            Log.d("onDeleteResult", "onDeleteResult: 4")
+
+            val currentWorkoutDateTime = "${resultOfSet.currentDate} ${resultOfSet.currentTime}"
+            if (currentWorkoutDateTime == workoutDateTime) {
+                decrementResultsAdded()
+            }
+
+            Log.d("onDeleteResult1", _gymDayState.value.resultsAdded.toString())
+            Log.d("onDeleteResult1", currentWorkoutDateTime)
+            Log.d("onDeleteResult1", workoutDateTime)
+
+            Result.success(updatedGymDay.toUiModel(getApplication()))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
 
 
 
@@ -133,36 +205,7 @@ class ResultsViewModel @Inject constructor(
 
 
 
-    //здійснити видалення результату
-    suspend fun onDeleteResult(
-        resultOfSet: ResultOfSet,
-        gymDayId: Long,
-        workoutDateTime: String,
-    ): Result<GymDayUiModel> {
-        return try {
-            Log.d("onDeleteResult", "onDeleteResult: 3")
-            val updatedGymDay = deleteResultUseCase(
-                idResult = resultOfSet.id,
-                gymDayId = gymDayId,
-                maxResultsPerExercise = gymDayState.value.maxResultsPerExercise,
-                workoutDateTime = workoutDateTime
-            )
-            Log.d("onDeleteResult", "onDeleteResult: 4")
 
-            val currentWorkoutDateTime = "${resultOfSet.currentDate} ${resultOfSet.currentTime}"
-            if (currentWorkoutDateTime == workoutDateTime) {
-                decrementResultsAdded()
-            }
-
-            Log.d("onDeleteResult1", _gymDayState.value.resultsAdded.toString())
-            Log.d("onDeleteResult1", currentWorkoutDateTime)
-            Log.d("onDeleteResult1", workoutDateTime)
-
-            Result.success(updatedGymDay.toUiModel(getApplication()))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
 
 }

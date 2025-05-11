@@ -35,12 +35,23 @@ import com.example.gymlog.ui.theme.MyAppTheme
 
 @Composable
 fun LogResultDialog(
+    result: ResultOfSet? = null,
     onDismiss: () -> Unit,
     onConfirmResult: (ResultOfSet) -> Unit
 ) {
+
+    var resultId: Long? = null
     var reps by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
     var secs by remember { mutableStateOf("") }
+
+    if (result != null){
+        resultId = result.id
+        reps = result.iteration.toString()
+        weight = result.weight.toString()
+        secs = result.workTime.toString()
+    }
+
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -96,6 +107,7 @@ fun LogResultDialog(
                         onDone = {
                             onConfirmResult(
                                 ResultOfSet(
+                                    id = resultId,
                                     weight = weight.toIntOrNull(),
                                     iteration = reps.toIntOrNull(),
                                     workTime = secs.toIntOrNull()
@@ -113,6 +125,7 @@ fun LogResultDialog(
                 onClick = {
                     onConfirmResult(
                         ResultOfSet(
+                            id = resultId,
                             weight = weight.toIntOrNull(),
                             iteration = reps.toIntOrNull(),
                             workTime = secs.toIntOrNull()

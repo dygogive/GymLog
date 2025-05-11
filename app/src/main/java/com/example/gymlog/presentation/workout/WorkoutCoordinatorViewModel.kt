@@ -158,7 +158,6 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 // Передаємо поточну дату і час тренування з timerViewModel або використовуємо запасний варіант
                 val currentDateTime = timerState.value.dateTimeThisTraining ?: "null. error"
 
-                Log.d("datetime", "WorkoutCoordinatorViewModel.saveResult: currentDateTime = $currentDateTime")
 
                 // Зберігаємо результат
                 val result = resultsViewModel.saveResult(
@@ -190,19 +189,61 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         }
     }
 
-    fun onClickExpandExercise(exerciseId: Long) {
-        timerViewModel.onClickExpandExercise(exerciseId)
-    }
+
+    fun onEditResult(
+        resultOfSet: ResultOfSet
+    ) {
+
+        // Запускаємо індикатор завантаження
+        programSelectionViewModel.updateLoadingState(true)
 
 
-    //видалити результат
-    fun onDeleteResult(resultOfSet: ResultOfSet) {
         val thisGymDay = programSelectionState.value.selectedGymDay ?: return
         val workoutDateTime = timerState.value.dateTimeThisTraining ?: return
 
-        Log.d("onDeleteResult", "onDeleteResult: 1")
+
+        viewModelScope.launch {
+            try {
 
 
+                // Зберігаємо результат
+                val result = resultsViewModel.onEditResult(
+                    idResult = resultOfSet.id,
+                    gymDayId = thisGymDay.id,
+                    weight = resultOfSet.weight,
+                    iterations = resultOfSet.iteration,
+                    workTime = resultOfSet.workTime,
+                    workoutDateTime = workoutDateTime
+                )
+
+                // Обробляємо результат
+                result.fold(
+                    onSuccess = { updatedGymDay ->
+                        // Оновлюємо програму і блоки
+                        programSelectionViewModel.updateSelectedGymDay(updatedGymDay)
+                        trainingBlocksViewModel.updateTrainingBlocks(updatedGymDay.trainingBlocksUiModel)
+                    },
+                    onFailure = { error ->
+                        // Обробляємо помилку
+                        Log.e("WorkoutCoordinator", "Error saving result", error)
+                    }
+                )
+            } finally {
+                // Прибираємо індикатор завантаження
+                programSelectionViewModel.updateLoadingState(false)
+            }
+        }
+    }
+
+    //видалити результат
+    fun onDeleteResult(resultOfSet: ResultOfSet) {
+
+        // Запускаємо індикатор завантаження
+        programSelectionViewModel.updateLoadingState(true)
+
+
+        val thisGymDay = programSelectionState.value.selectedGymDay ?: return
+        val workoutDateTime = timerState.value.dateTimeThisTraining ?: return
 
         viewModelScope.launch {
             try {
@@ -212,24 +253,28 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                     workoutDateTime = workoutDateTime
                 )
 
-                Log.d("onDeleteResult", "onDeleteResult: 2")
 
                 result.fold(
                     onSuccess = { updatedGymDay ->
-                        Log.d("onDeleteResult", "onDeleteResult: 33")
                         programSelectionViewModel.updateSelectedGymDay(updatedGymDay)
-                        Log.d("onDeleteResult", "onDeleteResult: 44")
                         trainingBlocksViewModel.updateTrainingBlocks(updatedGymDay.trainingBlocksUiModel)
-                        Log.d("onDeleteResult", "onDeleteResult: 55")
                     },
                     onFailure = { error ->
-                        Log.e("WorkoutCoordinator", "Error saving result", error)
                     }
                 )
-                Log.d("onDeleteResult", "onDeleteResult: 6")
             } finally {
                 programSelectionViewModel.updateLoadingState(false)
             }
         }
     }
+
+
+
+
+    fun onClickExpandExercise(exerciseId: Long) {
+        timerViewModel.onClickExpandExercise(exerciseId)
+    }
+
+
+
 }

@@ -47,6 +47,7 @@ fun TrainingBlockWorkout(
     expandedExeId: Long,
     onClickExpandExercise: (Long) -> Unit,
     onDeleteResult: (ResultOfSet) -> Unit,
+    onEditResult: (ResultOfSet) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -116,6 +117,7 @@ fun TrainingBlockWorkout(
                     expandedExeId = expandedExeId,
                     onClickExpandExercise = onClickExpandExercise,
                     onDeleteResult = onDeleteResult,
+                    onEditResult = onEditResult,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -202,7 +204,8 @@ fun Preview_ScreenContent() {
             onConfirmResult = {},
             0,
             {},
-            {}
+            {},
+            {},
         )
     }
 }

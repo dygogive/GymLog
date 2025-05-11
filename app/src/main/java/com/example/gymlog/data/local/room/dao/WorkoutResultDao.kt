@@ -30,4 +30,13 @@ interface WorkoutResultDao {
         DELETE FROM workout_result WHERE id = :id
     """)
     suspend fun deleteById(id: Long)
+
+
+
+    @Query("""
+        UPDATE workout_result
+        SET weight = :weight, iteration = :iteration, workTime = :workTime
+        WHERE id = :id
+    """)
+    suspend fun updateResultFields(id: Long?, weight: Int?, iteration: Int?, workTime: Int?)
 }

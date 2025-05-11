@@ -22,8 +22,11 @@ class WorkoutResultRepository @Inject constructor(
     }
 
     override suspend fun deleteResultById(idResult: Long?) {
-        Log.d("deleteResultById", "deleteResultById: 1 - $idResult")
         workoutResultDao.deleteById(idResult!!)
-        Log.d("deleteResultById", "deleteResultById: 2 - $idResult")
+    }
+
+
+    override suspend fun updateResultById(id: Long?, weight: Int?, iteration: Int?, workTime: Int?) {
+        workoutResultDao.updateResultFields(id, weight, iteration, workTime)
     }
 }

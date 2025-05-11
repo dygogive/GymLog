@@ -11,4 +11,6 @@ interface WorkoutResultRepositoryInterface {
 
     //Delete result in database
     suspend fun deleteResultById(idResult: Long?)
+
+    suspend fun updateResultById(id: Long?, weight: Int?, iteration: Int?, workTime: Int?)
 }
