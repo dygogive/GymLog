@@ -281,7 +281,11 @@ private fun Results(
 }
 
 @Composable
-private fun ResultItem(result: ResultOfSet) {
+private fun ResultItem(
+    result: ResultOfSet,
+    onEditClick: (ResultOfSet) -> Unit = {},
+    onDeleteClick: (ResultOfSet) -> Unit = {}
+) {
     val onesIterations = stringResource(R.string.ones_iterations)
     val onesWeight = stringResource(R.string.ones_weight)
     val onesSeconds = stringResource(R.string.ones_seconds)
@@ -304,7 +308,7 @@ private fun ResultItem(result: ResultOfSet) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(6.dp)),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
         tonalElevation = 0.dp
     ) {
         Column(
@@ -339,6 +343,12 @@ private fun ResultItem(result: ResultOfSet) {
                     value = timeText,
                     modifier = Modifier.weight(1f)
                 )
+
+                EditDeleteButtonMenu(
+                    {},
+                    {}
+                )
+
             }
         }
     }
