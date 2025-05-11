@@ -112,12 +112,14 @@ private fun DialogOverlay(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
         contentAlignment = Alignment.Center
+
     ) {
 
         if (programSelectionState.isLoading) {
             CircularProgressIndicator(// Відображення індикатора завантаження
                 modifier = Modifier.size(48.dp)
             )
+
         } else if (programSelectionState.errorMessage != null) {
             ErrorContent(// Відображення повідомлення про помилку
                 errorMessage = programSelectionState.errorMessage,
