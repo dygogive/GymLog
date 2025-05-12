@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -240,84 +239,7 @@ private fun AddResultButton(
     }
 }
 
-@Composable
-private fun DisplayResults(
-    results: List<ResultOfSet>,
-    onDeleteResult: (ResultOfSet) -> Unit,
-    onEditResult: (ResultOfSet) -> Unit,
-) {
-    if (results.isNotEmpty()) {
-        Results(
-            results,
-            onDeleteResult = onDeleteResult,
-            onEditResult = onEditResult,
-        )
-    } else {
-        EmptyResultsMessage()
-    }
-}
 
-@Composable
-private fun EmptyResultsMessage() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(R.string.no_results),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-private fun Results(
-    workoutResult: List<ResultOfSet>,
-    onDeleteResult: (ResultOfSet) -> Unit,
-    onEditResult: (ResultOfSet) -> Unit,
-) {
-    var showDialogEditResult by remember { mutableStateOf(false) }
-
-
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        workoutResult.forEachIndexed { index, result ->
-            if (index > 0) {
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-
-            ResultItem(
-                result,
-                onEditClick = {
-                    showDialogEditResult = true
-                },
-                onDeleteClick = {
-                    onDeleteResult(result)
-                }
-            )
-
-
-            // Dialog for editing results
-            if (showDialogEditResult) {
-                LogResultDialog(
-                    result = result,
-                    onDismiss = { showDialogEditResult = false },
-                    onConfirmResult = {result ->
-                        onEditResult(result)
-                    }
-                )
-            }
-        }
-
-
-    }
-}
 
 /**
  * Preview of main workout screen content

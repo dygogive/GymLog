@@ -47,9 +47,9 @@ fun LogResultDialog(
 
     if (result != null){
         resultId = result.id
-        reps = result.iteration.toString()
-        weight = result.weight.toString()
-        secs = result.workTime.toString()
+        reps = (result.iteration?: "-").toString()
+        weight = (result.weight?: "-").toString()
+        secs = (result.workTime?: "-").toString()
     }
 
 
