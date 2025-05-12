@@ -275,9 +275,9 @@ class DialogForExerciseEdit(
         }
     }
 
-    /**
-     * Shows a confirmation dialog before deleting an exercise
-     */
+    // Цей код уже правильно реалізований в класі DialogForExerciseEdit.kt
+// При видаленні вправи викликається колбек onExerciseEditedListener.onExerciseSaved()
+
     private fun showDeleteConfirmationDialog(exercise: Exercise, parentDialog: AlertDialog) {
         val confirmDialog = AlertDialog.Builder(context, R.style.RoundedDialogTheme2)
             .setTitle(R.string.confirm_delete_title)
@@ -285,7 +285,7 @@ class DialogForExerciseEdit(
             .setPositiveButton(R.string.yes) { _, _ ->
                 if (exerciseDAO.deleteExercise(exercise)) {
                     Toast.makeText(context, R.string.exercise_deleted, Toast.LENGTH_SHORT).show()
-                    onExerciseEditedListener.onExerciseSaved()
+                    onExerciseEditedListener.onExerciseSaved() // Цей рядок викликає оновлення списку
                     parentDialog.dismiss()
                 } else {
                     Toast.makeText(context, R.string.delete_failed, Toast.LENGTH_SHORT).show()
