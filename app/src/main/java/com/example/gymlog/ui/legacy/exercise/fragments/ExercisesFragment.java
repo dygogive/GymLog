@@ -51,10 +51,18 @@ public class ExercisesFragment extends Fragment {
     /**
      * Оновлює список вправ
      */
+    /**
+     * Оновлює список вправ
+     */
     public void refreshExerciseList() {
-        // Реалізація оновлення списку вправ
-    }
+        // Отримуємо оновлений список вправ
+        List<Exercise> updatedExercises = getExercises();
 
+        // Оновлюємо адаптер новими даними
+        if (adapter != null) {
+            adapter.updateExercises(updatedExercises);
+        }
+    }
 
 
 
