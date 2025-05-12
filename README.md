@@ -1,6 +1,6 @@
 # GymLogX
 
-**GymLog** is a native Android application for tracking workouts and building structured training programs.  
+**GymLogX** is a native Android application for tracking workouts and building structured training programs.  
 The app is currently in its **MVP stage** and fully functional for personal training purposes.
 
 ---
@@ -49,5 +49,5 @@ See `LICENSE.md` for full terms.
 
 ---
 
-> GymLog is a fully working MVP created for personal gym use by natural lifters.  
+> GymLogX is a fully working MVP created for personal gym use by natural lifters.  
 > Designed with clean architecture, Jetpack Compose, MVVM, and modern Android principles.
