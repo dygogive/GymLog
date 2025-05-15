@@ -32,13 +32,34 @@ public class FitnessProgramsActivity extends AppCompatActivity {
     // DAO для роботи з базою
     private PlanManagerDAO planManagerDAO;
 
+
+
+
+
+
     // RecyclerView + адаптер
     private RecyclerView recyclerView;
     private BasePlanAdapter<FitnessProgram> fitnessProgramAdapter;
-    private List<FitnessProgram> fitnessPrograms;
+    private List<FitnessProgram> fitnessPrograms = new ArrayList<>();;
+
+
+
+
+
+
+
+
+
+
 
     // FloatingActionButton для додавання нової програми
     private FloatingActionButton floatingActionButton;
+
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +73,12 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         // Ініціалізація UI
         initializeUI();
 
-        // Ініціалізація DAO
-        planManagerDAO = new PlanManagerDAO(this);
+
 
         // Створюємо список програм і налаштовуємо адаптер
-        fitnessPrograms = new ArrayList<>();
         setupRecyclerView();
+
+
 
         // Створюємо ItemTouchHelper для drag & drop
         setupDragAndDrop();
@@ -66,16 +87,31 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         loadPlanCycles();
 
         planManagerDAO.logAllData();
+
+    }
+
+    /**
+     * Завантажуємо всі програми (FitnessProgram) із бази даних
+     *
+     */
+    private void loadPlanCycles() {
+        fitnessPrograms.clear();
+        fitnessPrograms.addAll(planManagerDAO.getAllPlans());
+        fitnessProgramAdapter.notifyDataSetChanged();
     }
 
     /**
      * Ініціалізація UI елементів (RecyclerView, FloatingActionButton) та обробників натискання
      */
     private void initializeUI() {
+        // init  DAO
+        planManagerDAO = new PlanManagerDAO(this);
+
+        //init UI
         recyclerView = findViewById(R.id.recyclerViewPlans);
         floatingActionButton = findViewById(R.id.fabAddPlan);
 
-        // Клік на FAB для додавання нової програми
+        // setOnClickListener fot fab
         floatingActionButton.setOnClickListener(v -> addNewPlanByFAB());
     }
 
@@ -85,8 +121,8 @@ public class FitnessProgramsActivity extends AppCompatActivity {
      * - передаємо слухач подій (редагувати, видалити, натиснути)
      */
     private void setupRecyclerView() {
-        // Створюємо адаптер із анонімним слухачем
-        fitnessProgramAdapter = new BasePlanAdapter<>(fitnessPrograms,new OnItemsRecyclerListener());
+        // Створюємо адаптер із  слухачем OnItemsRecyclerListener()
+        fitnessProgramAdapter = new BasePlanAdapter<>(fitnessPrograms, new OnItemsRecyclerListener());
         // Прив'язуємо адаптер до RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(fitnessProgramAdapter);
@@ -113,7 +149,7 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 fitnessProgramAdapter.moveItem(fromPosition, toPosition);
 
                 // За бажанням зберігаємо новий порядок у базі
-                updateTrainingBlockPositionsInDB();
+                planManagerDAO.updatePlansPositions(fitnessProgramAdapter.getItems());
 
                 return true;
             }
@@ -126,21 +162,9 @@ public class FitnessProgramsActivity extends AppCompatActivity {
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerView);
     }
 
-    /**
-     * Метод викликається для збереження оновлених позицій у базі
-     */
-    private void updateTrainingBlockPositionsInDB() {
-        planManagerDAO.updatePlansPositions(fitnessProgramAdapter.getItems());
-    }
 
-    /**
-     * Завантажуємо всі програми (FitnessProgram) із бази даних
-     */
-    private void loadPlanCycles() {
-        fitnessPrograms.clear();
-        fitnessPrograms.addAll(planManagerDAO.getAllPlans());
-        fitnessProgramAdapter.notifyDataSetChanged();
-    }
+
+
 
     /**
      * Створення нової програми тренувань через діалог
@@ -155,20 +179,21 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 getString(R.string.new_program),
                 newFitnessProgram.getName(),
                 newFitnessProgram.getDescription(),
+                //send anonim class to dialog for apply new name and description to object of new program
                 (newName, newDescription) -> {
                     // Оновлюємо тимчасовий об'єкт і записуємо в базу
 
-
+                    // set new name and description
                     newFitnessProgram.setName(newName);
                     newFitnessProgram.setDescription(newDescription);
 
+                    //send new program to SQLite database
                     long newPlanId = planManagerDAO.addFitProgram(newFitnessProgram);
                     if (newPlanId != -1) {
                         // Якщо успішно додано, створюємо об'єкт із реальним id
-                        FitnessProgram newlyAddedProgram = new FitnessProgram(
-                                newPlanId, newName, newDescription, new ArrayList<>()
-                        );
-                        fitnessPrograms.add(newlyAddedProgram);
+                        newFitnessProgram.setId(newPlanId);
+                        //add plat to Recycler Adapter
+                        fitnessPrograms.add(newFitnessProgram);
                         fitnessProgramAdapter.notifyDataSetChanged();
                         Toast.makeText(this, "План додано!", Toast.LENGTH_SHORT).show();
                     } else {
@@ -237,7 +262,10 @@ public class FitnessProgramsActivity extends AppCompatActivity {
                 fitnessProgramAdapter.notifyDataSetChanged();
                 Toast.makeText(FitnessProgramsActivity.this, "План клоновано!", Toast.LENGTH_SHORT).show();
             } else Toast.makeText(FitnessProgramsActivity.this, "Помилка при клонуванні плану", Toast.LENGTH_SHORT).show();
+
         }
+
+
 
         @Override
         public void onDeleteClick(FitnessProgram fitnessProgram) {

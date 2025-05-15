@@ -157,7 +157,8 @@ public class GymSessionsActivity extends AppCompatActivity {
                 gymSessionAdapter.moveItem(fromPosition, toPosition);
 
                 // За бажанням зберігаємо новий порядок у базі
-                updateGymSessionPositionsInDB();
+                planManagerDAO.updateGymDaysPositions(gymSessionAdapter.getItems());
+
 
                 return true;
             }
@@ -170,12 +171,7 @@ public class GymSessionsActivity extends AppCompatActivity {
         new ItemTouchHelper(callback).attachToRecyclerView(recyclerViewDays);
     }
 
-    /**
-     * Метод викликається для збереження оновлених позицій у базі
-     */
-    private void updateGymSessionPositionsInDB() {
-        planManagerDAO.updateGymDaysPositions(gymSessionAdapter.getItems());
-    }
+
 
     /**
      * Завантажуємо список GymDay з бази даних і оновлюємо адаптер
