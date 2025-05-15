@@ -14,11 +14,15 @@ import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
 interface WorkoutResultDao {
     @Query("""
         SELECT * FROM workout_result
-        WHERE exerciseInBlockId = :exerciseInBlockId
+        WHERE programUuid = :programUuid
+        AND exerciseId = :exerciseId
+        AND (:trainingBlockUuid is NULL OR trainingBlockUuid = :trainingBlockUuid)
         ORDER BY workoutDateTime DESC, weight DESC, iteration DESC
     """)
     suspend fun getResultsForExercise(
-        exerciseInBlockId: Long
+        programUuid: String,
+        exerciseId: Long,
+        trainingBlockUuid: String? = null
     ): List<WorkoutResultEntity>
 
 

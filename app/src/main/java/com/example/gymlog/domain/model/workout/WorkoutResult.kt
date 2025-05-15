@@ -1,8 +1,10 @@
 package com.example.gymlog.domain.model.workout
 
 data class WorkoutResult(
-    val id: Long? = 0,
-    val exerciseInBlockId: Long,
+    val id: Long? = null,
+    val programUuid: String,
+    val trainingBlockUuid: String?,  // Може бути null, якщо не прив'язано
+    val exerciseId: Long,            // Це вже не exerciseInBlockId
     val weight: Int?,
     val iteration: Int?,
     val workTime: Int?,

@@ -117,7 +117,9 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         // Updated workout_result table
         db.execSQL("CREATE TABLE IF NOT EXISTS workout_result (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "exerciseInBlockId INTEGER NOT NULL, " +
+                "programUuid TEXT, " +
+                "trainingBlockUuid TEXT NOT NULL, " +
+                "exerciseId INTEGER NOT NULL, " +
                 "weight INTEGER, " +
                 "iteration INTEGER, " +
                 "workTime INTEGER, " +
@@ -136,7 +138,9 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         db.execSQL("CREATE INDEX IF NOT EXISTS index_TrainingBlockExercises_exerciseId ON TrainingBlockExercises(exerciseId)");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_TrainingBlock_gym_day_id ON TrainingBlock(gym_day_id)");
         db.execSQL("CREATE INDEX IF NOT EXISTS index_GymDays_plan_id ON GymDays(plan_id)");
-        db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_exerciseInBlockId ON workout_result(exerciseInBlockId);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_programUuid ON workout_result(programUuid);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_trainingBlockUuid ON workout_result(trainingBlockUuid);");
+        db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_exerciseId ON workout_result(exerciseId);");
     }
 
 
