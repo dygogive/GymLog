@@ -4,7 +4,11 @@ import com.example.gymlog.domain.model.workout.WorkoutResult
 
 interface WorkoutResultRepositoryInterface {
 
-    suspend fun getAllResultsForExercise(exerciseInBlockId: Long): List<WorkoutResult>
+    suspend fun getAllResultsForExercise(
+        programUuid: String,
+        exerciseId: Long,
+        trainingBlockUuid: String? = null
+    ): List<WorkoutResult>
 
 
     suspend fun saveWorkoutResult(result: WorkoutResult)

@@ -1,6 +1,5 @@
 package com.example.gymlog.data.repository
 
-import android.util.Log
 import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toEntity
@@ -12,8 +11,16 @@ class WorkoutResultRepository @Inject constructor(
     private val workoutResultDao: WorkoutResultDao
 ): WorkoutResultRepositoryInterface {
 
-    override suspend fun getAllResultsForExercise(exerciseInBlockId: Long): List<WorkoutResult> {
-        return workoutResultDao.getResultsForExercise(exerciseInBlockId).map { it.toDomain() }
+    override suspend fun getAllResultsForExercise(
+        programUuid: String,
+        exerciseId: Long,
+        trainingBlockUuid: String?
+    ): List<WorkoutResult> {
+        return workoutResultDao.getResultsForExercise(
+            programUuid = programUuid,
+            exerciseId = exerciseId,
+            trainingBlockUuid = trainingBlockUuid
+        ).map { it.toDomain() }
     }
 
 

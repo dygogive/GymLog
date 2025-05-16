@@ -17,16 +17,13 @@ class DeleteResultUseCase @Inject constructor(
         maxResultsPerExercise: Int,
         workoutDateTime: String
     ): GymDayNew {
-        Log.d("onDeleteResult", "onDeleteResult: 5 - $idResult")
         // 1. Видалимо результат через репозиторій
         workoutResultRepositoryInterface.deleteResultById(idResult)
-        Log.d("onDeleteResult", "onDeleteResult: 6")
         // 2. Отримуємо оновлену програму
         return getGymDayWithResultsUseCase(
             gymDayId = gymDayId,
             maxResultsPerExercise = maxResultsPerExercise,
             currentWorkoutDateTime = workoutDateTime
         )
-        Log.d("onDeleteResult", "onDeleteResult: 7")
     }
 }
