@@ -12,7 +12,7 @@ class GetGymDayWithResultsUseCase  @Inject constructor(
         programUuid: String,
         gymDayId: Long,
         maxResultsPerExercise: Int,
-        currentWorkoutDateTime: String?
+        currentWorkoutDateTime: String? = "no data and time"
     ): GymDayNew {
 
         //get needed GymDay from repository

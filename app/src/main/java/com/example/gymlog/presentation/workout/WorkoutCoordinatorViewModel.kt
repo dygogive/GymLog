@@ -140,7 +140,8 @@ class WorkoutCoordinatorViewModel @Inject constructor(
      * Зберігає результат підходу
      */
     fun saveResult(
-        exerciseInBlockId: Long,
+        trainingBlockUuid: String,
+        exerciseId: Long,
         weight: Int?,
         iterations: Int?,
         workTime: Int?
@@ -158,16 +159,19 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 // Передаємо поточну дату і час тренування з timerViewModel або використовуємо запасний варіант
                 val currentDateTime = timerState.value.dateTimeThisTraining ?: "null. error"
 
+                val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
 
                 // Зберігаємо результат
                 val result = resultsViewModel.saveResult(
+                    programUuid = programUuid,
+                    trainingBlockUuid = trainingBlockUuid,
                     gymDayId = selectedGymDay.id,
-                    exerciseInBlockId = exerciseInBlockId,
+                    exerciseId = exerciseId,
                     weight = weight,
                     iterations = iterations,
                     workTime = workTime,
                     timeFromStart = timeFromStart,
-                    workoutDateTime = currentDateTime
+                    workoutDateTime = currentDateTime,
                 )
 
                 // Обробляємо результат
@@ -205,9 +209,11 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         viewModelScope.launch {
             try {
 
+                val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
 
                 // Зберігаємо результат
                 val result = resultsViewModel.onEditResult(
+                    programUuid = programUuid,
                     idResult = resultOfSet.id,
                     gymDayId = thisGymDay.id,
                     weight = resultOfSet.weight,
@@ -245,9 +251,12 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         val thisGymDay = programSelectionState.value.selectedGymDay ?: return
         val workoutDateTime = timerState.value.dateTimeThisTraining ?: return
 
+        val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
+
         viewModelScope.launch {
             try {
                 val result = resultsViewModel.onDeleteResult(
+                    programUuid = programUuid,
                     resultOfSet = resultOfSet,
                     gymDayId = thisGymDay.id,
                     workoutDateTime = workoutDateTime

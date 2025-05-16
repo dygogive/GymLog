@@ -25,14 +25,10 @@ class ResultsViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
+
     // Стан дня тренування для UI
     private val _gymDayState = MutableStateFlow(GymDayState())
     val gymDayState = _gymDayState.asStateFlow()
-
-
-
-
-
 
 
     /**
@@ -47,13 +43,15 @@ class ResultsViewModel @Inject constructor(
      * @return Оновлений день тренування з новим результатом
      */
     suspend fun saveResult(
+        programUuid: String,
+        trainingBlockUuid: String,
         gymDayId: Long,
-        exerciseInBlockId: Long,
+        exerciseId: Long,
         weight: Int?,
         iterations: Int?,
         workTime: Int?,
         timeFromStart: Long,
-        workoutDateTime: String
+        workoutDateTime: String,
     ): Result<GymDayUiModel> {
         return try {
             // Визначаємо порядковий номер результату в дні тренування
@@ -63,7 +61,9 @@ class ResultsViewModel @Inject constructor(
             val updatedGymDay = saveResultUseCase(
                 gymDayId = gymDayId,
                 maxResultsPerExercise = _gymDayState.value.maxResultsPerExercise,
-                exerciseInBlockId = exerciseInBlockId,
+                programUuid = programUuid,
+                trainingBlockUuid = trainingBlockUuid,
+                exerciseId = exerciseId,
                 weight = weight,
                 iterations = iterations,
                 workTime = workTime,
@@ -85,6 +85,7 @@ class ResultsViewModel @Inject constructor(
 
 
     suspend fun onEditResult(
+        programUuid: String,
         idResult: Long?,
         gymDayId: Long,
         weight: Int?,
@@ -99,6 +100,7 @@ class ResultsViewModel @Inject constructor(
             // Зберігаємо результат
             val updatedGymDay = editResultUseCase(
                 idResult = idResult,
+                programUuid = programUuid,
                 gymDayId = gymDayId,
                 weight = weight,
                 iterations = iterations,
@@ -124,6 +126,7 @@ class ResultsViewModel @Inject constructor(
 
     //здійснити видалення результату
     suspend fun onDeleteResult(
+        programUuid: String,
         resultOfSet: ResultOfSet,
         gymDayId: Long,
         workoutDateTime: String,
@@ -132,6 +135,7 @@ class ResultsViewModel @Inject constructor(
             Log.d("onDeleteResult", "onDeleteResult: 3")
             val updatedGymDay = deleteResultUseCase(
                 idResult = resultOfSet.id,
+                programUuid = programUuid,
                 gymDayId = gymDayId,
                 maxResultsPerExercise = gymDayState.value.maxResultsPerExercise,
                 workoutDateTime = workoutDateTime

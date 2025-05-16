@@ -115,11 +115,16 @@ class ProgramSelectionViewModel @Inject constructor(
                 isLoading = true
             )}
 
+            val programUuid: String? = programSelectionState.value.selectedProgram?.uuid
+
             try {
+                if(programUuid == null ) {
+                    throw Exception("programUuid is null")
+                }
                 val gymDayWithResults = getGymDayWithResultsUseCase(
+                    programUuid = programUuid,
                     gymDayId = gymDay.id,
                     maxResultsPerExercise = maxResultsPerExercise,
-                    "nope"
                 )
 
                 val uiModelGymDay = gymDayWithResults.toUiModel(getApplication())

@@ -24,7 +24,8 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
         muscleStateList = MusclesStateList(this.muscleGroups.map { it.getDescription(context) }),
         equipmentStateList = EquipmentStateList(this.equipment.map { it.getDescription(context) }),
     ),
-    infoExercises = this.exercises.map { it.toUiModel(context) }
+    infoExercises = this.exercises.map { it.toUiModel(context) },
+    uuid = uuid,
 )
 
 /**
@@ -112,18 +113,24 @@ fun FitnessProgramNew.toUiModel(context: Context): ProgramInfo = ProgramInfo(
     id = id,
     name = this.name,
     description = this.description,
-    gymDayUiModels = this.gymDays.map { it.toUiModel(context) }
+    gymDayUiModels = this.gymDays.map { it.toUiModel(context) },
+    uuid = uuid,
 )
+
+
+
 
 
 
 // Domain to UI
 fun WorkoutResult.toUiModel(): ResultOfSet = ResultOfSet(
     id = id,
-    exeInBlockId = exerciseInBlockId,
+    programUuid = programUuid,
+    trainingBlockUuid = trainingBlockUuid,
+    exerciseId = exerciseId,
     weight = this.weight,
     iteration = this.iteration,
     workTime = this.workTime,
     currentDate = this.workoutDateTime.substringBefore(" "),
-    currentTime = this.workoutDateTime.substringAfter(" ")
+    currentTime = this.workoutDateTime.substringAfter(" "),
 )

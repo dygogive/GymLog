@@ -6,6 +6,7 @@ data class TrainingBlockUiModel (
     val description: String = "",
     val attributesInfo: AttributesInfo,
     val infoExercises: List<ExerciseBlockUI>,
+    val uuid: String,
 )
 
 

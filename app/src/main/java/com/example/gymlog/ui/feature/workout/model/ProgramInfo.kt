@@ -5,5 +5,6 @@ data class ProgramInfo(
     val id: Long = 0,
     val name: String,
     val description: String?,
-    val gymDayUiModels: List<GymDayUiModel>
+    val gymDayUiModels: List<GymDayUiModel>,
+    val uuid: String,
 )
