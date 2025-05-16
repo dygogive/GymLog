@@ -79,7 +79,8 @@ fun WorkoutScreen(
                 infoBlocks = state.trainingBlocksState.blocks,
                 onConfirmResult = { result ->
                     viewModel.saveResult(
-                        exerciseInBlockId = result.exeInBlockId,
+                        trainingBlockUuid = result.trainingBlockUuid!!,
+                        exerciseId = result.exerciseId,
                         weight = result.weight,
                         iterations = result.iteration,
                         workTime = result.workTime,

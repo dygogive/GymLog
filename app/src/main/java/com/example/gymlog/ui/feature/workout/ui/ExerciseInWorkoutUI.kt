@@ -84,13 +84,13 @@ fun ExerciseInWorkoutUI(
 
                 // Toggle button for expanding/collapsing details
                 ExpandToggleButton(
-                    expanded = (exerciseInBlockUI.linkId == expandedExeId),
-                    onClick = { onClickExpandExercise(exerciseInBlockUI.linkId) }
+                    expanded = (exerciseInBlockUI.exerciseId == expandedExeId),
+                    onClick = { onClickExpandExercise(exerciseInBlockUI.exerciseId) }
                 )
             }
 
             // Animated visibility for description and results
-            AnimatedVisibility(visible = (exerciseInBlockUI.linkId == expandedExeId)) {
+            AnimatedVisibility(visible = (exerciseInBlockUI.exerciseId == expandedExeId)) {
                 Column {
                     // Show description if available
                     if (exerciseInBlockUI.description.isNotBlank()) {
@@ -133,7 +133,7 @@ fun ExerciseInWorkoutUI(
         LogResultDialog(
             onDismiss = { showDialogAddResult = false },
             onConfirmResult = { result ->
-                result.exeInBlockId = exerciseInBlockUI.linkId
+                result.exerciseId = exerciseInBlockUI.exerciseId
                 onConfirmResult(result)
             }
         )
@@ -250,6 +250,8 @@ fun Preview_ExerciseInWorkoutUI() {
 
     val result1 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,
@@ -259,6 +261,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result2 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,
@@ -268,6 +272,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result3 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         250,
         0,
@@ -277,6 +283,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result4 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,

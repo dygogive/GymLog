@@ -32,7 +32,7 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
  * Конвертація нової вправи з доменної моделі в UI модель
  */
 fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseBlockUI = ExerciseBlockUI(
-    linkId = linkId,
+    exerciseId = exerciseId,
     name = this.getNameOnly(context),
     description = this.description,
     results = this.workoutResults.map { it.toUiModel() }

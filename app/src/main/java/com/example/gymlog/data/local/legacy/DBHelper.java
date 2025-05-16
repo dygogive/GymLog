@@ -119,8 +119,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
         // Updated workout_result table
         db.execSQL("CREATE TABLE IF NOT EXISTS workout_result (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "programUuid TEXT, " +
-                "trainingBlockUuid TEXT NOT NULL, " +
+                "programUuid TEXT NOT NULL, " +
+                "trainingBlockUuid TEXT, " +
                 "exerciseId INTEGER NOT NULL, " +
                 "weight INTEGER, " +
                 "iteration INTEGER, " +
@@ -129,7 +129,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "position INTEGER NOT NULL, " +
                 "timeFromStart INTEGER NOT NULL, " +
                 "workoutDateTime TEXT NOT NULL, " +  // Додано нову колонку
-                "FOREIGN KEY (exerciseInBlockId) REFERENCES TrainingBlockExercises(id) ON DELETE CASCADE" +
+                "FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE CASCADE" +
                 ");");
 
         // Create indexes

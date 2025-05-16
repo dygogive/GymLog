@@ -1,6 +1,5 @@
 package com.example.gymlog.data.repository
 
-import com.example.gymlog.core.utils.EnumMapper
 import com.example.gymlog.data.local.room.dao.ExerciseInBlockDao
 import com.example.gymlog.data.local.room.dao.GymPlansDao
 import com.example.gymlog.data.local.room.dao.GymSessionDao
@@ -10,12 +9,8 @@ import com.example.gymlog.data.local.room.dao.WorkoutResultDao
 import com.example.gymlog.data.local.room.mappers.BlockFiltersMapper.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomain
 import com.example.gymlog.data.local.room.mappers.toDomainNew
-import com.example.gymlog.data.local.room.mappers.toEntity
 import com.example.gymlog.domain.exceptions.DataLoadingException
 import com.example.gymlog.domain.exceptions.GymDayNotFoundException
-import com.example.gymlog.domain.model.attribute.EquipmentNew
-import com.example.gymlog.domain.model.attribute.MotionNew
-import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.FitnessProgramNew
 import com.example.gymlog.domain.model.plan.GymDayNew
 import com.example.gymlog.domain.model.workout.WorkoutResult
@@ -67,8 +62,16 @@ class FitnessProgramNewRepository @Inject constructor(
         }
     }
 
-    override suspend fun getWorkoutResultsForExercise(exerciseInBlockId: Long): List<WorkoutResult> {
-        return workoutResultDao.getResultsForExercise(exerciseInBlockId)
+    override suspend fun getWorkoutResultsForExercise(
+        programUuid: String,
+        exerciseId: Long,
+        trainingBlockUuid: String,
+        ): List<WorkoutResult> {
+        return workoutResultDao.getResultsForExercise(
+            programUuid = programUuid,
+            exerciseId = exerciseId,
+            trainingBlockUuid = trainingBlockUuid,
+            )
             .map { it.toDomain() }
     }
 

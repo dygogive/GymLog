@@ -3,9 +3,9 @@ package com.example.gymlog.ui.feature.workout.model
 //Один результат виконання сету
 data class ResultOfSet(
     val id: Long? = 0,
-    val programUuid: String,
-    val trainingBlockUuid: String?,  // Може бути null, якщо не прив'язано
-    val exerciseId: Long,            // Це вже не exerciseInBlockId
+    val programUuid: String = "null",
+    val trainingBlockUuid: String? = "null",  // Може бути null, якщо не прив'язано
+    var exerciseId: Long = -1,            // Це вже не exerciseInBlockId
     val weight:      Int?   = null,
     val iteration:   Int?   = null,
     val workTime:    Int?   = null,

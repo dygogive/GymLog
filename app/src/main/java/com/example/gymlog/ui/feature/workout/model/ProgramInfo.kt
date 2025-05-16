@@ -6,5 +6,5 @@ data class ProgramInfo(
     val name: String,
     val description: String?,
     val gymDayUiModels: List<GymDayUiModel>,
-    val uuid: String,
+    val uuid: String = "null",
 )
