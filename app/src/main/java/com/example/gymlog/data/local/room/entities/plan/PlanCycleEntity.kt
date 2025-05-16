@@ -13,5 +13,6 @@ data class PlanCycleEntity(
     val creation_date: String?,             // nullable
     val position: Int?,
     @ColumnInfo(defaultValue = "0")         // <‑‑ Room тепер очікує DEFAULT 0
-    val is_active: Int? = 0
+    val is_active: Int? = 0,
+    val uuid: String
 )

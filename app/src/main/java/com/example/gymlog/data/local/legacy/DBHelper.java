@@ -62,7 +62,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    description  TEXT," +
                 "    creation_date TEXT," +
                 "    position     INTEGER," +
-                "    is_active    INTEGER DEFAULT 0" +
+                "    is_active    INTEGER DEFAULT 0," +
+                "    uuid         TEXT  NOT NULL" +
                 ");");
 
         // GymDays remains the same
@@ -82,6 +83,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 "    name        TEXT    NOT NULL," +
                 "    description TEXT," +
                 "    position    INTEGER," +
+                "    uuid        TEXT  NOT NULL," +
                 "    FOREIGN KEY (gym_day_id) REFERENCES GymDays(id) ON DELETE CASCADE" +
                 ");");
 

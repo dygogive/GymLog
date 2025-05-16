@@ -44,7 +44,7 @@ public class TrainingBlock {
 
     // Конструктори
 
-    public TrainingBlock(long id, long gymDayId, String name, String description) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -53,9 +53,10 @@ public class TrainingBlock {
         this.motions = new ArrayList<>();
         this.muscleGroupList = new ArrayList<>();
         this.equipmentList = new ArrayList<>();
+        this.uuid = uuid;
     }
 
-    public TrainingBlock(long id, long gymDayId, String name, String description, List<ExerciseInBlock> exerciseInBlocks) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, List<ExerciseInBlock> exerciseInBlocks, String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -64,12 +65,14 @@ public class TrainingBlock {
         this.motions = new ArrayList<>();
         this.muscleGroupList = new ArrayList<>();
         this.equipmentList = new ArrayList<>();
+        this.uuid = uuid;
     }
 
     public TrainingBlock(long id, long gymDayId, String name, String description,
                          List<Motion> motions, List<MuscleGroup> muscleGroupList,
                          List<Equipment> equipmentList, int position,
-                         List<ExerciseInBlock> exerciseInBlocks) {
+                         List<ExerciseInBlock> exerciseInBlocks,
+                         String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -79,6 +82,7 @@ public class TrainingBlock {
         this.equipmentList = equipmentList != null ? equipmentList : new ArrayList<>();
         this.position = position;
         this.exerciseInBlocks = exerciseInBlocks != null ? exerciseInBlocks : new ArrayList<>();
+        this.uuid = uuid;
     }
 
     // Геттери

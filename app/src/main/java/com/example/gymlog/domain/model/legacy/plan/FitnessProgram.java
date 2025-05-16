@@ -43,22 +43,24 @@ public class FitnessProgram implements BasePlanItem {
 
 
     // Конструктори
-    public FitnessProgram(long id, String name, String description, String creation_date, int position, int is_active) {
+    public FitnessProgram(long id, String name, String description, String creation_date, int position, int is_active, String uuid) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.creation_date = creation_date;
         this.position = position;
         this.is_active = is_active;
+        this.uuid = uuid;
     }
 
-    public FitnessProgram(long id, String name, String description, List<GymDay> gymDays) {
+    public FitnessProgram(long id, String name, String description, List<GymDay> gymDays, String uuid) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.creation_date = "///";
         this.gymDays = gymDays;
         this.position = -1;
+        this.uuid = uuid;
     }
 
 

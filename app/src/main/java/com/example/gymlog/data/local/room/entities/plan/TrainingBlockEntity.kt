@@ -17,5 +17,6 @@ data class TrainingBlockEntity(
     val gym_day_id: Long,                   // NOT NULL
     val name: String,                       // NOT NULL
     val description: String?,
-    val position: Int?
+    val position: Int?,
+    val uuid: String,
 )

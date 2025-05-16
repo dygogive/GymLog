@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -263,7 +264,15 @@ public class DialogBlocCreator extends Dialog {
         long blockId;
         if (trainingBlock == null) {
             // Створення нового блоку тренування
-            TrainingBlock block = new TrainingBlock(0, gymDayId, name, description, new ArrayList<>());
+            TrainingBlock block = new TrainingBlock(
+                    0,
+                    gymDayId,
+                    name,
+                    description,
+                    new ArrayList<>(),
+                    UUID.randomUUID().toString()
+            );
+
             blockId = planManagerDAO.addTrainingBlock(block);
             trainingBlock = block;
             trainingBlock.setId(blockId);

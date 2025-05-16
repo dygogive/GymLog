@@ -4,7 +4,6 @@ import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
 import com.example.gymlog.domain.model.workout.WorkoutResult
 
 
-
 // Entity to Domain
 fun WorkoutResultEntity.toDomain(): WorkoutResult = WorkoutResult(
     id = this.id,
@@ -19,6 +18,8 @@ fun WorkoutResultEntity.toDomain(): WorkoutResult = WorkoutResult(
     timeFromStart = this.timeFromStart,
     workoutDateTime = this.workoutDateTime
 )
+
+
 
 // Domain to Entity
 fun WorkoutResult.toEntity(): WorkoutResultEntity = WorkoutResultEntity(

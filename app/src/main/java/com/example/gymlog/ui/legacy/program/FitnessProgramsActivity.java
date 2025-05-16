@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Активність для відображення і редагування (створення, редагування, видалення) списку
@@ -172,7 +173,13 @@ public class FitnessProgramsActivity extends AppCompatActivity {
     @SuppressLint("NotifyDataSetChanged")
     private void addNewPlanByFAB() {
         // Створюємо тимчасовий об'єкт (поки без назви/опису)
-        FitnessProgram newFitnessProgram = new FitnessProgram(0, "", "", new ArrayList<>());
+        FitnessProgram newFitnessProgram = new FitnessProgram(
+                0,
+                "",
+                "",
+                new ArrayList<>(),
+                UUID.randomUUID().toString());
+
 
         DialogCreateEditNameDesc editDialog = new DialogCreateEditNameDesc(
                 this,

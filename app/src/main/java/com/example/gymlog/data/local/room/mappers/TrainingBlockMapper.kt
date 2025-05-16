@@ -22,7 +22,8 @@ fun TrainingBlockEntity.toDomain(): TrainingBlock {
         emptyList<MuscleGroup>(),               // muscleGroupList
         emptyList<Equipment>(),               // equipmentList
         position ?: 0,
-        emptyList<ExerciseInBlock>()           // exercises
+        emptyList<ExerciseInBlock>(),           // exercises
+        uuid
     )
 }
 
@@ -32,7 +33,8 @@ fun TrainingBlock.toEntity(): TrainingBlockEntity {
         gym_day_id = this.gymDayId,
         name = this.name,
         description = this.description,
-        position = this.position
+        position = this.position,
+        uuid = this.uuid
     )
 }
 
@@ -44,6 +46,7 @@ fun TrainingBlockEntity.toDomainNew(
 ): TrainingBlockNew {
     return TrainingBlockNew(
         id = id ?: 0,
+        uuid = uuid,
         name = name,
         description = description ?: "",
         position = position,
