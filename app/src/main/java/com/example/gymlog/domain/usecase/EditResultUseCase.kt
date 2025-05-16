@@ -13,6 +13,7 @@ class EditResultUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         idResult: Long?,
+        programUuid: String,
         gymDayId: Long,
         maxResultsPerExercise: Int,
         workoutDateTime: String,
@@ -26,6 +27,7 @@ class EditResultUseCase @Inject constructor(
 
         // 3. Отримуємо оновлений список результатів для цієї вправи
         return getGymDayWithResultsUseCase(
+            programUuid = programUuid,
             gymDayId = gymDayId,
             maxResultsPerExercise = maxResultsPerExercise,
             currentWorkoutDateTime = workoutDateTime

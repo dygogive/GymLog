@@ -11,6 +11,27 @@ import java.util.List;
 public class TrainingBlock {
     private long id;
     private long gymDayId;
+
+
+
+
+    public void setExerciseInBlocks(List<ExerciseInBlock> exerciseInBlocks) {
+        this.exerciseInBlocks = exerciseInBlocks;
+    }
+
+    private String uuid = "nope";
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    public List<ExerciseInBlock> getExerciseInBlocks() {
+        return exerciseInBlocks;
+    }
+
     private String name;
     private String description;
     private List<ExerciseInBlock> exerciseInBlocks;

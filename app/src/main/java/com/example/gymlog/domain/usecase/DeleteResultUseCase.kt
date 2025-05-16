@@ -13,6 +13,7 @@ class DeleteResultUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         idResult: Long?,
+        programUuid: String,
         gymDayId: Long,
         maxResultsPerExercise: Int,
         workoutDateTime: String
@@ -21,6 +22,7 @@ class DeleteResultUseCase @Inject constructor(
         workoutResultRepositoryInterface.deleteResultById(idResult)
         // 2. Отримуємо оновлену програму
         return getGymDayWithResultsUseCase(
+            programUuid = programUuid,
             gymDayId = gymDayId,
             maxResultsPerExercise = maxResultsPerExercise,
             currentWorkoutDateTime = workoutDateTime

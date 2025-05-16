@@ -1,6 +1,5 @@
 package com.example.gymlog.domain.usecase
 
-import androidx.compose.runtime.currentComposer
 import com.example.gymlog.domain.model.plan.GymDayNew
 import com.example.gymlog.domain.repository.FitnessProgramNewRepositoryInterface
 import javax.inject.Inject
@@ -10,6 +9,7 @@ class GetGymDayWithResultsUseCase  @Inject constructor(
     private val getBestUniqueResultsUseCase: GetBestUniqueResultsUseCase
 ) {
     suspend operator fun invoke(
+        programUuid: String,
         gymDayId: Long,
         maxResultsPerExercise: Int,
         currentWorkoutDateTime: String?
@@ -24,7 +24,9 @@ class GetGymDayWithResultsUseCase  @Inject constructor(
                 block.copy(
                     exercises = block.exercises.map { exercise ->
                         val results = getBestUniqueResultsUseCase(
-                            exerciseInBlockId = exercise.linkId,
+                            programUuid = programUuid,
+                            exerciseId = exercise.exerciseId,
+                            trainingBlockUuid = block.uuid,
                             resultsNumber = maxResultsPerExercise,
                             currentWorkoutDateTime = currentWorkoutDateTime
                         )

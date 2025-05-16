@@ -5,6 +5,17 @@ import java.util.List;
 public class FitnessProgram implements BasePlanItem {
     private long id; // Унікальний ідентифікатор програми
     private String name; // Назва програми
+
+
+    private String uuid = "nope";
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    public String getUuid() {
+        return uuid;
+    }
+
+
     private String description; //опис
 
     public void setCreation_date(String creation_date) {
