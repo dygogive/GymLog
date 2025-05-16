@@ -65,6 +65,7 @@ public class PlanManagerDAO {
         values.put("creation_date", System.currentTimeMillis());
         values.put("position", newPosition);
         values.put("is_active", 0);
+        values.put("uuid", fitnessProgram.getUuid());
 
         long id = db.insert("PlanCycles", null, values);
         db.close();
@@ -86,7 +87,7 @@ public class PlanManagerDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, name, description, position FROM PlanCycles ORDER BY position ASC",
+                "SELECT id, name, description, position, uuid FROM PlanCycles ORDER BY position ASC",
                 null
         );
         if (cursor.moveToFirst()) {
@@ -95,9 +96,10 @@ public class PlanManagerDAO {
                 String name     = cursor.getString(1);
                 String desc     = cursor.getString(2);
                 int position    = cursor.getInt(3);
+                String uuid    = cursor.getString(4);
 
                 List<GymDay> sessions = getGymDaysByPlanId(id);
-                FitnessProgram plan = new FitnessProgram(id, name, desc, sessions);
+                FitnessProgram plan = new FitnessProgram(id, name, desc, sessions,uuid);
                 plan.setPosition(position);
                 plans.add(plan);
             } while (cursor.moveToNext());
@@ -346,6 +348,7 @@ public class PlanManagerDAO {
         values.put("name",        block.getName());
         values.put("description", block.getDescription());
         values.put("position",    newPosition);
+        values.put("uuid",        block.getUuid());
 
         long id = db.insert("TrainingBlock", null, values);
         db.close();
@@ -395,7 +398,7 @@ public class PlanManagerDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, name, description, position FROM TrainingBlock WHERE gym_day_id = ? ORDER BY position ASC",
+                "SELECT id, name, description, position, uuid FROM TrainingBlock WHERE gym_day_id = ? ORDER BY position ASC",
                 new String[]{String.valueOf(gymDayId)}
         );
 
@@ -405,11 +408,14 @@ public class PlanManagerDAO {
                 String name    = cursor.getString(1);
                 String desc    = cursor.getString(2);
                 int position   = cursor.getInt(3);
+                String uuid    = cursor.getString(4);
 
                 TrainingBlock block = new TrainingBlock(
                         id, gymDayId, name, desc,
-                        null, new ArrayList<>(), null,
-                        position, new ArrayList<>()
+                        null, new ArrayList<>(),
+                        null,
+                        position, new ArrayList<>(),
+                        uuid
                 );
 
                 loadBlockFilters(block);
@@ -631,7 +637,6 @@ public class PlanManagerDAO {
      * - TrainingBlockMotion (motionType)
      * - TrainingBlockEquipment (equipment)
      * - TrainingBlockMuscleGroup (muscleGroup)
-     *
      * Якщо хоча б один з цих фільтрів присутній, повертаються вправи,
      * які відповідають усім заданим умовам.
      * Якщо фільтрів немає – повертається порожній список.
@@ -937,7 +942,8 @@ public class PlanManagerDAO {
                 0,
                 program.getName() + " (C)",
                 program.getDescription(),
-                new ArrayList<>() // дні додамо пізніше
+                new ArrayList<>(), // дні додамо пізніше
+                program.getUuid()
         );
 
         // 3) Додаємо в базу
@@ -947,6 +953,7 @@ public class PlanManagerDAO {
         values.put("creation_date", System.currentTimeMillis());
         values.put("position",     newPosition);
         values.put("is_active",    0);
+        values.put("uuid", clone.getUuid());
 
         long newId = db.insert("PlanCycles", null, values);
         if (newId == -1) {
@@ -1067,7 +1074,8 @@ public class PlanManagerDAO {
                 new ArrayList<>(block.getMuscleGroupList()),
                 new ArrayList<>(block.getEquipmentList()),     // нове: додаємо список фільтрів
                 newPosition,
-                new ArrayList<>()
+                new ArrayList<>(),
+                block.getUuid()
         );
 
         // 3) Вставляємо його в базу
@@ -1076,6 +1084,7 @@ public class PlanManagerDAO {
         values.put("name",        clone.getName());
         values.put("description", clone.getDescription());
         values.put("position",    clone.getPosition());
+        values.put("uuid",        clone.getUuid());
 
         long newId = db.insert("TrainingBlock", null, values);
         if (newId == -1) {
@@ -1220,15 +1229,16 @@ public class PlanManagerDAO {
         Log.d("logAllData", "========== START: logAllData() ==========");
 
         try (SQLiteDatabase db = dbHelper.getReadableDatabase();
-             Cursor cursorPlans = db.rawQuery("SELECT id, name, description FROM PlanCycles", null)) {
+             Cursor cursorPlans = db.rawQuery("SELECT id, name, description, uuid FROM PlanCycles", null)) {
 
             while (cursorPlans.moveToNext()) {
                 long planId = cursorPlans.getLong(0);
                 String planName = cursorPlans.getString(1);
                 String planDesc = cursorPlans.getString(2);
+                String uuid = cursorPlans.getString(3);
 
                 Log.d("logAllData",
-                        "PlanCycle [id=" + planId + ", name=" + planName + ", desc=" + planDesc + "]"
+                        "PlanCycle [id=" + planId + ", name=" + planName + ", desc=" + planDesc + ", uuid=" + uuid + "]"
                 );
 
                 // ----- GymDays -----
@@ -1247,16 +1257,17 @@ public class PlanManagerDAO {
 
                         // ----- TrainingBlocks -----
                         try (Cursor cursorBlocks = db.rawQuery(
-                                "SELECT id, name, description FROM TrainingBlock WHERE gym_day_id = ?",
+                                "SELECT id, name, description, uuid FROM TrainingBlock WHERE gym_day_id = ?",
                                 new String[]{String.valueOf(dayId)}
                         )) {
                             while (cursorBlocks.moveToNext()) {
                                 long blockId = cursorBlocks.getLong(0);
                                 String blockName = cursorBlocks.getString(1);
                                 String blockDesc = cursorBlocks.getString(2);
+                                String uuid1 = cursorBlocks.getString(3);
 
                                 Log.d("logAllData",
-                                        "    TrainingBlock [id=" + blockId + ", name=" + blockName + ", desc=" + blockDesc + "]"
+                                        "    TrainingBlock [id=" + blockId + ", name=" + blockName + ", desc=" + blockDesc + ", uuid=" + uuid1 + "]"
                                 );
 
                                 // ----- Exercises in block -----
