@@ -9,6 +9,7 @@ import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.ui.LogResultDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -146,6 +147,9 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         iterations: Int?,
         workTime: Int?
     ) {
+
+        Log.d("notSavedResults", "saveResult: 1,  trainingBlockUuid: $trainingBlockUuid $exerciseId $weight $iterations $workTime")
+
         val selectedGymDay = programSelectionState.value.selectedGymDay ?: return
 
         viewModelScope.launch {

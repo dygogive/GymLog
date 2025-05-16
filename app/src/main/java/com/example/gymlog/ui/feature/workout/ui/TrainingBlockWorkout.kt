@@ -112,7 +112,10 @@ fun TrainingBlockWorkout(
             // Exercises in block
             trainBlockInfo.infoExercises.forEach { exerciseUImodel ->
                 ExerciseInWorkoutUI(
-                    onConfirmResult = onConfirmResult,
+                    onConfirmResult = { result ->
+                        result.trainingBlockUuid = trainBlockInfo.uuid
+                        onConfirmResult(result)
+                                      },
                     exerciseInBlockUI = exerciseUImodel,
                     expandedExeId = expandedExeId,
                     onClickExpandExercise = onClickExpandExercise,

@@ -4,7 +4,7 @@ package com.example.gymlog.ui.feature.workout.model
 data class ResultOfSet(
     val id: Long? = 0,
     val programUuid: String = "null",
-    val trainingBlockUuid: String? = "null",  // Може бути null, якщо не прив'язано
+    var trainingBlockUuid: String? = "null",  // Може бути null, якщо не прив'язано
     var exerciseId: Long = -1,            // Це вже не exerciseInBlockId
     val weight:      Int?   = null,
     val iteration:   Int?   = null,
