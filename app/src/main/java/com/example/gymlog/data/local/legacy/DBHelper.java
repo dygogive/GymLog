@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Версія бази (збільшено до 7 через видалення таблиць ExercisesGroups і ExercisesGroupExercises)
     private static final String DATABASE_NAME = "GymLog.db";
-    public static final int VERSION = 22;
+    public static final int VERSION = 23;
     private final Context context;
 
     // Конструктор
@@ -152,7 +152,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
     // Оновлення таблиць
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 22) {
+        if (oldVersion < 23) {
             // Додаємо колонку uuid до таблиці PlanCycles
             db.execSQL("ALTER TABLE PlanCycles ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
 
