@@ -12,7 +12,8 @@ fun PlanCycleEntity.toDomain() = FitnessProgram(
     description,
     creation_date,
     position?: -1,
-    is_active?: 0
+    is_active?: 0,
+    uuid
 )
 
 fun FitnessProgram.toEntity() = PlanCycleEntity(
@@ -21,7 +22,8 @@ fun FitnessProgram.toEntity() = PlanCycleEntity(
     description = this.description,
     creation_date = this.creation_date,
     position = this.position,
-    is_active = this.is_active
+    is_active = this.is_active,
+    uuid = this.uuid
 )
 
 
@@ -34,5 +36,6 @@ fun PlanCycleEntity.toDomainNew(
     description = description,
     position = position,
     creationDate = creation_date,
-    gymDays = gymDays
+    gymDays = gymDays,
+    uuid = uuid
 )

@@ -49,7 +49,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     // Data
     private final List<TrainingBlock> blocks = new ArrayList<>();
-    private PlanManagerDAO dao;
+    private PlanManagerDAO planManagerDAO;
     private long gymDayId;
 
     @Inject
@@ -62,9 +62,11 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_training_block_edit);
 
         if (!retrieveIntentData()) return;
-        dao = new PlanManagerDAO(this);
+        planManagerDAO = new PlanManagerDAO(this);
 
         bindViews();
+        setupHeader();
+
         configureRecyclerView();
         configureDragAndDrop();
         loadBlocks();
@@ -85,8 +87,6 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewTrainingBlocks);
         FloatingActionButton fab = findViewById(R.id.buttonAddTrainingBlock);
         fab.setOnClickListener(v -> openBlockDialog(null));
-
-        setupHeader();
     }
 
     private void setupHeader() {
@@ -118,7 +118,9 @@ public class TrainingBlocksActivity extends AppCompatActivity {
     private void configureRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TrainingBlockAdapter(
-                this, blocks, dao,
+                this,
+                blocks,
+                planManagerDAO,
                 new BlockMenuListener(),
                 holder -> touchHelper.startDrag(holder)
         );
@@ -137,7 +139,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                 int from = vh.getBindingAdapterPosition();
                 int to   = target.getBindingAdapterPosition();
                 adapter.moveItem(from, to);
-                dao.updateTrainingBlockPositions(blocks);
+                planManagerDAO.updateTrainingBlockPositions(blocks);
                 return true;
             }
             @Override public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int dir) { /* no-op */ }
@@ -191,7 +193,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                     TrainingBlocksActivity.this,
                     block.getName(),
                     () -> {
-                        dao.deleteTrainingBlock(block.getId());
+                        planManagerDAO.deleteTrainingBlock(block.getId());
                         blocks.remove(block);
                         adapter.notifyDataSetChanged();
                         showToast("Блок видалено");
@@ -204,7 +206,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
                     TrainingBlocksActivity.this, TrainingBlocksActivity.this::loadBlocks
             );
             dialog.setOnExerciseCreatedListener(ex -> {
-                dao.addExerciseToBlock(block.getId(), ex.getId());
+                planManagerDAO.addExerciseToBlock(block.getId(), ex.getId());
                 loadBlocks();
             });
             dialog.showWithPreselectedFilters(
@@ -217,7 +219,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         }
 
         @Override public void onCloneTrainingBlock(TrainingBlock block) {
-            TrainingBlock clone = dao.onStartCloneTrainingBlock(block);
+            TrainingBlock clone = planManagerDAO.onStartCloneTrainingBlock(block);
             if (clone != null) {
                 showToast("План клоновано!");
                 loadBlocks();
@@ -227,8 +229,8 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
     // === Exercise Selection Dialog ===
     private void showExerciseSelection(TrainingBlock block) {
-        List<Exercise> all = dao.recommendExercisesForTrainingBlock(block.getId());
-        List<ExerciseInBlock> selected = dao.getBlockExercises(block.getId());
+        List<Exercise> all = planManagerDAO.recommendExercisesForTrainingBlock(block.getId());
+        List<ExerciseInBlock> selected = planManagerDAO.getBlockExercises(block.getId());
         Set<Long> ids = new HashSet<>();
         selected.forEach(e -> ids.add(e.getId()));
 
@@ -255,7 +257,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
         for (int i = 0; i < all.size(); i++) if (checks[i]) newIds.add(all.get(i).getId());
 
         // Keep existing
-        dao.getBlockExercises(block.getId()).forEach(old -> {
+        planManagerDAO.getBlockExercises(block.getId()).forEach(old -> {
             if (newIds.remove(old.getId())) result.add(old);
         });
         // Add new
@@ -265,7 +267,7 @@ public class TrainingBlocksActivity extends AppCompatActivity {
 
         // Reassign positions
         for (int i = 0; i < result.size(); i++) result.get(i).setPosition(i);
-        dao.updateTrainingBlockExercises(block.getId(), result);
+        planManagerDAO.updateTrainingBlockExercises(block.getId(), result);
         loadBlocks();
     }
 }

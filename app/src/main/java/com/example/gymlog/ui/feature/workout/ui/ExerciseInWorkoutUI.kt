@@ -133,7 +133,7 @@ fun ExerciseInWorkoutUI(
         LogResultDialog(
             onDismiss = { showDialogAddResult = false },
             onConfirmResult = { result ->
-                result.exeInBlockId = exerciseInBlockUI.linkId
+                result.exerciseId = exerciseInBlockUI.exerciseId
                 onConfirmResult(result)
             }
         )
@@ -250,6 +250,8 @@ fun Preview_ExerciseInWorkoutUI() {
 
     val result1 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,
@@ -259,6 +261,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result2 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,
@@ -268,6 +272,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result3 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         250,
         0,
@@ -277,6 +283,8 @@ fun Preview_ExerciseInWorkoutUI() {
     )
     val result4 = ResultOfSet(
         0,
+        "",
+        "",
         0,
         200,
         0,
@@ -291,6 +299,7 @@ fun Preview_ExerciseInWorkoutUI() {
         ExerciseInWorkoutUI(
             onConfirmResult = {},
             ExerciseBlockUI(
+                0,
                 0,
                 "Присідання",
                 "Присідання зі штангою",

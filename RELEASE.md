@@ -4,7 +4,7 @@
 
 - **Exercise Editor** – create and customize your own exercises.
 - **Training Program Editor** – design structured workout programs with days, blocks, and exercises.
-- **Workout Log** – intuitive interface for logging and editing workout results, including sets and weights.
+- **Workout Log** – intuitive interface for logging and editing workout results, including sets, weights, seconds.
 
 ## 📌 Project Status:
 This is the first fully functional **Minimal Viable Product (MVP)** version. It is already usable for personal training purposes.

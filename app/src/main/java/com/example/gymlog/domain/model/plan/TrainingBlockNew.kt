@@ -7,6 +7,7 @@ import com.example.gymlog.domain.model.exercise.ExerciseInBlockNew
 
 data class TrainingBlockNew(
     val id: Long = 0,
+    val uuid: String,
     val name: String,
     val description: String,
     val position: Int?,

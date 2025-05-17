@@ -112,7 +112,10 @@ fun TrainingBlockWorkout(
             // Exercises in block
             trainBlockInfo.infoExercises.forEach { exerciseUImodel ->
                 ExerciseInWorkoutUI(
-                    onConfirmResult = onConfirmResult,
+                    onConfirmResult = { result ->
+                        result.trainingBlockUuid = trainBlockInfo.uuid
+                        onConfirmResult(result)
+                                      },
                     exerciseInBlockUI = exerciseUImodel,
                     expandedExeId = expandedExeId,
                     onClickExpandExercise = onClickExpandExercise,
@@ -193,8 +196,8 @@ fun Preview_ScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseBlockUI(0,"Випади", "Випади з кроком", emptyList())
+                ExerciseBlockUI(0,0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseBlockUI(0,0,"Випади", "Випади з кроком", emptyList())
             )
         )
 

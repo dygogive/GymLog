@@ -8,6 +8,8 @@ import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.*
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.ui.feature.workout.model.*
+import java.util.UUID
+import kotlin.random.Random
 
 /**
  * Маппери для конвертації нових доменних моделей у UI моделі
@@ -24,7 +26,8 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
         muscleStateList = MusclesStateList(this.muscleGroups.map { it.getDescription(context) }),
         equipmentStateList = EquipmentStateList(this.equipment.map { it.getDescription(context) }),
     ),
-    infoExercises = this.exercises.map { it.toUiModel(context) }
+    infoExercises = this.exercises.map { it.toUiModel(context) },
+    uuid = uuid,
 )
 
 /**
@@ -32,6 +35,7 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
  */
 fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseBlockUI = ExerciseBlockUI(
     linkId = linkId,
+    exerciseId = exerciseId,
     name = this.getNameOnly(context),
     description = this.description,
     results = this.workoutResults.map { it.toUiModel() }
@@ -112,18 +116,24 @@ fun FitnessProgramNew.toUiModel(context: Context): ProgramInfo = ProgramInfo(
     id = id,
     name = this.name,
     description = this.description,
-    gymDayUiModels = this.gymDays.map { it.toUiModel(context) }
+    gymDayUiModels = this.gymDays.map { it.toUiModel(context) },
+    uuid = uuid,
 )
+
+
+
 
 
 
 // Domain to UI
 fun WorkoutResult.toUiModel(): ResultOfSet = ResultOfSet(
     id = id,
-    exeInBlockId = exerciseInBlockId,
+    programUuid = programUuid,
+    trainingBlockUuid = trainingBlockUuid,
+    exerciseId = exerciseId,
     weight = this.weight,
     iteration = this.iteration,
     workTime = this.workTime,
     currentDate = this.workoutDateTime.substringBefore(" "),
-    currentTime = this.workoutDateTime.substringAfter(" ")
+    currentTime = this.workoutDateTime.substringAfter(" "),
 )

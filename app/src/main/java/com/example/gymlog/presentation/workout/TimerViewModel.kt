@@ -144,12 +144,12 @@ class TimerViewModel @Inject constructor(
     }
 
     //оновити ід розгорнутої вправи
-    fun onClickExpandExercise(exerciseId: Long) {
+    fun onClickExpandExercise(linkId: Long) {
 
-        val newExpandedExeId = if (timerState.value.expandedExerciseId == exerciseId) {
+        val newExpandedExeId = if (timerState.value.expandedExerciseId == linkId) {
             -1L
         } else {
-            exerciseId
+            linkId
         }
 
         _timerState.update { timerState ->

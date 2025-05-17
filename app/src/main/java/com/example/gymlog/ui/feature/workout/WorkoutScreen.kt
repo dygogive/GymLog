@@ -79,7 +79,8 @@ fun WorkoutScreen(
                 infoBlocks = state.trainingBlocksState.blocks,
                 onConfirmResult = { result ->
                     viewModel.saveResult(
-                        exerciseInBlockId = result.exeInBlockId,
+                        trainingBlockUuid = result.trainingBlockUuid!!,
+                        exerciseId = result.exerciseId,
                         weight = result.weight,
                         iterations = result.iteration,
                         workTime = result.workTime,
@@ -214,8 +215,8 @@ fun Preview_WorkoutScreenContent() {
                 equipmentStateList = EquipmentStateList(listOf("Штанга", "Стійка"))
             ),
             infoExercises = listOf(
-                ExerciseBlockUI(0,"Присідання", "Присідання зі штангою", emptyList()),
-                ExerciseBlockUI(0,"Випади", "Випади з кроком", emptyList())
+                ExerciseBlockUI(0,0,"Присідання", "Присідання зі штангою", emptyList()),
+                ExerciseBlockUI(0,0,"Випади", "Випади з кроком", emptyList())
             )
         )
 

@@ -11,6 +11,27 @@ import java.util.List;
 public class TrainingBlock {
     private long id;
     private long gymDayId;
+
+
+
+
+    public void setExerciseInBlocks(List<ExerciseInBlock> exerciseInBlocks) {
+        this.exerciseInBlocks = exerciseInBlocks;
+    }
+
+    private String uuid = "nope";
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+    public String getUuid() {
+        return uuid;
+    }
+
+
+    public List<ExerciseInBlock> getExerciseInBlocks() {
+        return exerciseInBlocks;
+    }
+
     private String name;
     private String description;
     private List<ExerciseInBlock> exerciseInBlocks;
@@ -23,7 +44,7 @@ public class TrainingBlock {
 
     // Конструктори
 
-    public TrainingBlock(long id, long gymDayId, String name, String description) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -32,9 +53,10 @@ public class TrainingBlock {
         this.motions = new ArrayList<>();
         this.muscleGroupList = new ArrayList<>();
         this.equipmentList = new ArrayList<>();
+        this.uuid = uuid;
     }
 
-    public TrainingBlock(long id, long gymDayId, String name, String description, List<ExerciseInBlock> exerciseInBlocks) {
+    public TrainingBlock(long id, long gymDayId, String name, String description, List<ExerciseInBlock> exerciseInBlocks, String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -43,12 +65,14 @@ public class TrainingBlock {
         this.motions = new ArrayList<>();
         this.muscleGroupList = new ArrayList<>();
         this.equipmentList = new ArrayList<>();
+        this.uuid = uuid;
     }
 
     public TrainingBlock(long id, long gymDayId, String name, String description,
                          List<Motion> motions, List<MuscleGroup> muscleGroupList,
                          List<Equipment> equipmentList, int position,
-                         List<ExerciseInBlock> exerciseInBlocks) {
+                         List<ExerciseInBlock> exerciseInBlocks,
+                         String uuid) {
         this.id = id;
         this.gymDayId = gymDayId;
         this.name = name;
@@ -58,6 +82,7 @@ public class TrainingBlock {
         this.equipmentList = equipmentList != null ? equipmentList : new ArrayList<>();
         this.position = position;
         this.exerciseInBlocks = exerciseInBlocks != null ? exerciseInBlocks : new ArrayList<>();
+        this.uuid = uuid;
     }
 
     // Геттери

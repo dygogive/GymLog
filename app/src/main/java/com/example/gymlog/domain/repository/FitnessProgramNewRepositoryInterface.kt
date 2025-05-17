@@ -8,5 +8,9 @@ interface FitnessProgramNewRepositoryInterface {
     suspend fun getAllFitnessPrograms(): List<FitnessProgramNew>
     suspend fun getAllGymDays(idProgram: Long): List<GymDayNew>
     suspend fun getSelectedGymDayNew(idGymDay: Long): GymDayNew
-    suspend fun getWorkoutResultsForExercise(exerciseInBlockId: Long): List<WorkoutResult>
+    suspend fun getWorkoutResultsForExercise(
+        programUuid: String,
+        exerciseId: Long,
+        trainingBlockUuid: String,
+    ): List<WorkoutResult>
 }

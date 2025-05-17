@@ -9,6 +9,7 @@ import com.example.gymlog.core.utils.getCurrentDateTime
 import com.example.gymlog.ui.feature.workout.model.GymDayUiModel
 import com.example.gymlog.ui.feature.workout.model.ProgramInfo
 import com.example.gymlog.ui.feature.workout.model.ResultOfSet
+import com.example.gymlog.ui.feature.workout.ui.LogResultDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -140,11 +141,15 @@ class WorkoutCoordinatorViewModel @Inject constructor(
      * Зберігає результат підходу
      */
     fun saveResult(
-        exerciseInBlockId: Long,
+        trainingBlockUuid: String,
+        exerciseId: Long,
         weight: Int?,
         iterations: Int?,
         workTime: Int?
     ) {
+
+        Log.d("notSavedResults", "saveResult: 1,  trainingBlockUuid: $trainingBlockUuid $exerciseId $weight $iterations $workTime")
+
         val selectedGymDay = programSelectionState.value.selectedGymDay ?: return
 
         viewModelScope.launch {
@@ -158,16 +163,19 @@ class WorkoutCoordinatorViewModel @Inject constructor(
                 // Передаємо поточну дату і час тренування з timerViewModel або використовуємо запасний варіант
                 val currentDateTime = timerState.value.dateTimeThisTraining ?: "null. error"
 
+                val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
 
                 // Зберігаємо результат
                 val result = resultsViewModel.saveResult(
+                    programUuid = programUuid,
+                    trainingBlockUuid = trainingBlockUuid,
                     gymDayId = selectedGymDay.id,
-                    exerciseInBlockId = exerciseInBlockId,
+                    exerciseId = exerciseId,
                     weight = weight,
                     iterations = iterations,
                     workTime = workTime,
                     timeFromStart = timeFromStart,
-                    workoutDateTime = currentDateTime
+                    workoutDateTime = currentDateTime,
                 )
 
                 // Обробляємо результат
@@ -205,9 +213,11 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         viewModelScope.launch {
             try {
 
+                val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
 
                 // Зберігаємо результат
                 val result = resultsViewModel.onEditResult(
+                    programUuid = programUuid,
                     idResult = resultOfSet.id,
                     gymDayId = thisGymDay.id,
                     weight = resultOfSet.weight,
@@ -245,9 +255,12 @@ class WorkoutCoordinatorViewModel @Inject constructor(
         val thisGymDay = programSelectionState.value.selectedGymDay ?: return
         val workoutDateTime = timerState.value.dateTimeThisTraining ?: return
 
+        val programUuid: String = programSelectionState.value.selectedProgram!!.uuid
+
         viewModelScope.launch {
             try {
                 val result = resultsViewModel.onDeleteResult(
+                    programUuid = programUuid,
                     resultOfSet = resultOfSet,
                     gymDayId = thisGymDay.id,
                     workoutDateTime = workoutDateTime
@@ -271,8 +284,8 @@ class WorkoutCoordinatorViewModel @Inject constructor(
 
 
 
-    fun onClickExpandExercise(exerciseId: Long) {
-        timerViewModel.onClickExpandExercise(exerciseId)
+    fun onClickExpandExercise(linkId: Long) {
+        timerViewModel.onClickExpandExercise(linkId)
     }
 
 
