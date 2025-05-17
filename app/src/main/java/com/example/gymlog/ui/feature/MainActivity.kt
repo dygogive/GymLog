@@ -5,8 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.gymlog.core.di.DatabaseModule.MIGRATION_21_22
+import com.example.gymlog.data.local.legacy.DBHelper
 import com.example.gymlog.data.local.legacy.ExerciseDAO
 import com.example.gymlog.data.local.legacy.PlanManagerDAO
+import com.example.gymlog.data.local.room.WorkoutDatabase
 import com.example.gymlog.ui.theme.MyAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +21,9 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private lateinit var dbHelper: DBHelper
+    private lateinit var roomDb: WorkoutDatabase
 
     /**
      * Життєвий цикл Activity - створення.
@@ -30,15 +37,11 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        // 2. Робота з базою даних
-        // Ініціалізація DAO для вправ
-        val exerciseDAO = ExerciseDAO(this)
-        //і для програм
-        val planManagerDAO = PlanManagerDAO(this)
-        // Логування всіх вправ для дебагінгу
-        exerciseDAO.logAllExercises()
-        planManagerDAO.logAllData()
+        // 1. Спочатку ініціалізуємо Room для міграції
+        initRoomDatabase()
 
+        // 2. Потім ініціалізуємо OpenHelper
+        initOpenHelper()
 
 
         // 2. Налаштування UI з Jetpack Compose
@@ -51,5 +54,34 @@ class MainActivity : ComponentActivity() {
                 AppNavHost(navHostController = navController)
             }
         }
+    }
+
+
+
+    private fun initRoomDatabase() {
+        roomDb = Room.databaseBuilder(
+            applicationContext,
+            WorkoutDatabase::class.java,
+            "GymLog.db"
+        )
+            .addMigrations(MIGRATION_21_22) // Додайте всі необхідні міграції
+            .allowMainThreadQueries() // Тимчасово для ініціалізації
+            .build()
+
+        // Виконуємо простий запит, щоб активувати міграцію
+        roomDb.query("SELECT 1", null).use { /* Просто щоб викликати міграцію */ }
+    }
+
+    private fun initOpenHelper() {
+        dbHelper = DBHelper(this)
+
+        // Відкриваємо БД для активації перевірки версії
+        val db = dbHelper.writableDatabase
+        db.close() // Закриваємо після перевірки
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        roomDb.close() // Не забудьте закрити Room базу
     }
 }

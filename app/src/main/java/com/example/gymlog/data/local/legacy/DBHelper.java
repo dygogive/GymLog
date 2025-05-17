@@ -149,90 +149,149 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
     }
 
 
-    // Оновлення таблиць
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 22) {
-            // Додаємо колонку uuid до таблиці PlanCycles
-            db.execSQL("ALTER TABLE PlanCycles ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
+            // 1. Перевіряємо та додаємо колонку uuid до PlanCycles, якщо її немає
+            if (!isColumnExists(db, "PlanCycles", "uuid")) {
+                db.execSQL("ALTER TABLE PlanCycles ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
 
-            // Генеруємо UUID для всіх існуючих записів у PlanCycles
-            Cursor planCursor = db.rawQuery("SELECT id FROM PlanCycles", null);
-            if (planCursor != null && planCursor.moveToFirst()) {
-                do {
-                    int id = planCursor.getInt(0);
-                    String uuid = UUID.randomUUID().toString();
-                    db.execSQL("UPDATE PlanCycles SET uuid = ? WHERE id = ?",
-                            new Object[]{uuid, id});
-                } while (planCursor.moveToNext());
-                planCursor.close();
+                // Генеруємо UUID для існуючих записів
+                Cursor planCursor = db.rawQuery("SELECT id FROM PlanCycles", null);
+                if (planCursor != null) {
+                    try {
+                        while (planCursor.moveToNext()) {
+                            int id = planCursor.getInt(0);
+                            String uuid = UUID.randomUUID().toString();
+                            db.execSQL("UPDATE PlanCycles SET uuid = ? WHERE id = ?",
+                                    new Object[]{uuid, id});
+                        }
+                    } finally {
+                        planCursor.close();
+                    }
+                }
             }
 
-            // Додаємо колонку uuid до таблиці TrainingBlock
-            db.execSQL("ALTER TABLE TrainingBlock ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
+            // 2. Перевіряємо та додаємо колонку uuid до TrainingBlock
+            if (!isColumnExists(db, "TrainingBlock", "uuid")) {
+                db.execSQL("ALTER TABLE TrainingBlock ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
 
-            // Генеруємо UUID для всіх існуючих записів у TrainingBlock
-            Cursor blockCursor = db.rawQuery("SELECT id FROM TrainingBlock", null);
-            if (blockCursor != null && blockCursor.moveToFirst()) {
-                do {
-                    int id = blockCursor.getInt(0);
-                    String uuid = UUID.randomUUID().toString();
-                    db.execSQL("UPDATE TrainingBlock SET uuid = ? WHERE id = ?",
-                            new Object[]{uuid, id});
-                } while (blockCursor.moveToNext());
-                blockCursor.close();
+                // Генеруємо UUID для існуючих записів
+                Cursor blockCursor = db.rawQuery("SELECT id FROM TrainingBlock", null);
+                if (blockCursor != null) {
+                    try {
+                        while (blockCursor.moveToNext()) {
+                            int id = blockCursor.getInt(0);
+                            String uuid = UUID.randomUUID().toString();
+                            db.execSQL("UPDATE TrainingBlock SET uuid = ? WHERE id = ?",
+                                    new Object[]{uuid, id});
+                        }
+                    } finally {
+                        blockCursor.close();
+                    }
+                }
             }
 
-            // Міграція таблиці workout_result
-            db.execSQL("CREATE TABLE IF NOT EXISTS workout_result_new (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "programUuid TEXT NOT NULL, " +
-                    "trainingBlockUuid TEXT, " +
-                    "exerciseId INTEGER NOT NULL, " +
-                    "weight INTEGER, " +
-                    "iteration INTEGER, " +
-                    "workTime INTEGER, " +
-                    "sequenceInGymDay INTEGER NOT NULL, " +
-                    "position INTEGER NOT NULL, " +
-                    "timeFromStart INTEGER NOT NULL, " +
-                    "workoutDateTime TEXT NOT NULL, " +
-                    "FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE CASCADE" +
-                    ");");
+            // 3. Перевіряємо структуру workout_result
+            if (!isTableExists(db, "workout_result") ||
+                    !isColumnExists(db, "workout_result", "programUuid")) {
 
-            // Переносимо дані зі старої таблиці workout_result до нової
-            db.execSQL("INSERT INTO workout_result_new (" +
-                    "id, exerciseId, weight, iteration, workTime, sequenceInGymDay, " +
-                    "position, timeFromStart, workoutDateTime, programUuid, trainingBlockUuid) " +
-                    "SELECT wr.id, tbe.exerciseId, wr.weight, wr.iteration, wr.workTime, " +
-                    "wr.sequenceInGymDay, wr.position, wr.timeFromStart, wr.workoutDateTime, " +
-                    "pc.uuid, tb.uuid " +
-                    "FROM workout_result wr " +
-                    "JOIN TrainingBlockExercises tbe ON wr.exerciseInBlockId = tbe.id " +
-                    "JOIN TrainingBlock tb ON tbe.trainingBlockId = tb.id " +
-                    "JOIN GymDays gd ON tb.gym_day_id = gd.id " +
-                    "JOIN PlanCycles pc ON gd.plan_id = pc.id");
+                // Створюємо нову таблицю
+                db.execSQL("CREATE TABLE IF NOT EXISTS workout_result_new (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "programUuid TEXT NOT NULL, " +
+                        "trainingBlockUuid TEXT, " +
+                        "exerciseId INTEGER NOT NULL, " +
+                        "weight INTEGER, " +
+                        "iteration INTEGER, " +
+                        "workTime INTEGER, " +
+                        "sequenceInGymDay INTEGER NOT NULL, " +
+                        "position INTEGER NOT NULL, " +
+                        "timeFromStart INTEGER NOT NULL, " +
+                        "workoutDateTime TEXT NOT NULL, " +
+                        "FOREIGN KEY (exerciseId) REFERENCES Exercise(id) ON DELETE CASCADE);");
 
-            // Видаляємо стару таблицю та перейменовуємо нову
-            db.execSQL("DROP TABLE workout_result");
-            db.execSQL("ALTER TABLE workout_result_new RENAME TO workout_result");
+                // Переносимо дані, якщо стара таблиця існує
+                if (isTableExists(db, "workout_result")) {
+                    try {
+                        db.execSQL("INSERT INTO workout_result_new (" +
+                                "id, exerciseId, weight, iteration, workTime, sequenceInGymDay, " +
+                                "position, timeFromStart, workoutDateTime, programUuid, trainingBlockUuid) " +
+                                "SELECT wr.id, tbe.exerciseId, wr.weight, wr.iteration, wr.workTime, " +
+                                "wr.sequenceInGymDay, wr.position, wr.timeFromStart, wr.workoutDateTime, " +
+                                "pc.uuid, tb.uuid " +
+                                "FROM workout_result wr " +
+                                "JOIN TrainingBlockExercises tbe ON wr.exerciseInBlockId = tbe.id " +
+                                "JOIN TrainingBlock tb ON tbe.trainingBlockId = tb.id " +
+                                "JOIN GymDays gd ON tb.gym_day_id = gd.id " +
+                                "JOIN PlanCycles pc ON gd.plan_id = pc.id");
+                    } catch (Exception e) {
+                        // Якщо помилка міграції даних - продовжуємо з порожньою таблицею
+                    }
 
-            // Створюємо нові індекси
-            db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_programUuid ON workout_result(programUuid)");
-            db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_trainingBlockUuid ON workout_result(trainingBlockUuid)");
-            db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_exerciseId ON workout_result(exerciseId)");
+                    db.execSQL("DROP TABLE workout_result");
+                }
+
+                db.execSQL("ALTER TABLE workout_result_new RENAME TO workout_result");
+
+                // Створюємо індекси
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_programUuid ON workout_result(programUuid)");
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_trainingBlockUuid ON workout_result(trainingBlockUuid)");
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_exerciseId ON workout_result(exerciseId)");
+            }
         } else {
-            // Якщо версія вже актуальна, просто перестворюємо таблиці
-            db.execSQL("DROP TABLE IF EXISTS Workout");
-            db.execSQL("DROP TABLE IF EXISTS WorkoutSet");
-            db.execSQL("DROP TABLE IF EXISTS Exercise");
-            db.execSQL("DROP TABLE IF EXISTS PlanCycles");
-            db.execSQL("DROP TABLE IF EXISTS GymDays");
-            db.execSQL("DROP TABLE IF EXISTS TrainingBlock");
-            db.execSQL("DROP TABLE IF EXISTS TrainingBlockMotion");
-            db.execSQL("DROP TABLE IF EXISTS TrainingBlockMuscleGroup");
-            db.execSQL("DROP TABLE IF EXISTS TrainingBlockEquipment");
-            db.execSQL("DROP TABLE IF EXISTS workout_result");
-            onCreate(db);
+            // Якщо версія вже 22+, просто перевіряємо цілісність БД
+            try {
+                // Швидка перевірка доступу до ключових таблиць
+                db.rawQuery("SELECT 1 FROM PlanCycles LIMIT 1", null).close();
+                db.rawQuery("SELECT 1 FROM workout_result LIMIT 1", null).close();
+            } catch (Exception e) {
+                // У разі проблем - перестворюємо БД
+                recreateDatabase(db);
+            }
         }
+    }
+
+    // Допоміжні методи
+    private boolean isColumnExists(SQLiteDatabase db, String table, String column) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("PRAGMA table_info(" + table + ")", null);
+            while (cursor != null && cursor.moveToNext()) {
+                if (cursor.getString(1).equals(column)) {
+                    return true;
+                }
+            }
+            return false;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private boolean isTableExists(SQLiteDatabase db, String table) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='" + table + "'",
+                    null
+            );
+            return cursor != null && cursor.getCount() > 0;
+        } finally {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private void recreateDatabase(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS Workout");
+        db.execSQL("DROP TABLE IF EXISTS WorkoutSet");
+        db.execSQL("DROP TABLE IF EXISTS Exercise");
+        db.execSQL("DROP TABLE IF EXISTS PlanCycles");
+        db.execSQL("DROP TABLE IF EXISTS GymDays");
+        db.execSQL("DROP TABLE IF EXISTS TrainingBlock");
+        db.execSQL("DROP TABLE IF EXISTS TrainingBlockMotion");
+        db.execSQL("DROP TABLE IF EXISTS TrainingBlockMuscleGroup");
+        db.execSQL("DROP TABLE IF EXISTS TrainingBlockEquipment");
+        db.execSQL("DROP TABLE IF EXISTS workout_result");
+        onCreate(db);
     }
 }
