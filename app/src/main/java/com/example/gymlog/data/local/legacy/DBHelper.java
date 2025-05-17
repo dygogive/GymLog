@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -152,8 +153,11 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 22) {
+            Log.d("onUpgradeCheck", "Message: " + 1 );
             // 1. Перевіряємо та додаємо колонку uuid до PlanCycles, якщо її немає
             if (!isColumnExists(db, "PlanCycles", "uuid")) {
+                Log.d("onUpgradeCheck", "Message: " + 2 );
+
                 db.execSQL("ALTER TABLE PlanCycles ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
 
                 // Генеруємо UUID для існуючих записів
@@ -174,6 +178,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
 
             // 2. Перевіряємо та додаємо колонку uuid до TrainingBlock
             if (!isColumnExists(db, "TrainingBlock", "uuid")) {
+                Log.d("onUpgradeCheck", "Message: " + 3 );
                 db.execSQL("ALTER TABLE TrainingBlock ADD COLUMN uuid TEXT NOT NULL DEFAULT ''");
 
                 // Генеруємо UUID для існуючих записів
@@ -196,6 +201,8 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
             if (!isTableExists(db, "workout_result") ||
                     !isColumnExists(db, "workout_result", "programUuid")) {
 
+                Log.d("onUpgradeCheck", "Message: " + 4 );
+
                 // Створюємо нову таблицю
                 db.execSQL("CREATE TABLE IF NOT EXISTS workout_result_new (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -213,6 +220,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
 
                 // Переносимо дані, якщо стара таблиця існує
                 if (isTableExists(db, "workout_result")) {
+
                     try {
                         db.execSQL("INSERT INTO workout_result_new (" +
                                 "id, exerciseId, weight, iteration, workTime, sequenceInGymDay, " +
@@ -240,6 +248,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 db.execSQL("CREATE INDEX IF NOT EXISTS index_workout_result_exerciseId ON workout_result(exerciseId)");
             }
         } else {
+            Log.d("onUpgradeCheck", "Message: " + 5 );
             // Якщо версія вже 22+, просто перевіряємо цілісність БД
             try {
                 // Швидка перевірка доступу до ключових таблиць
@@ -249,6 +258,7 @@ FOREIGN KEY (plan_id) REFERENCES PlanCycles(id) ON DELETE CASCADE
                 // У разі проблем - перестворюємо БД
                 recreateDatabase(db);
             }
+            Log.d("onUpgradeCheck", "Message: " + 6 );
         }
     }
 
