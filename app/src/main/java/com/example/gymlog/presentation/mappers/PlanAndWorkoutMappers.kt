@@ -8,6 +8,8 @@ import com.example.gymlog.domain.model.attribute.MuscleGroupNew
 import com.example.gymlog.domain.model.plan.*
 import com.example.gymlog.domain.model.workout.WorkoutResult
 import com.example.gymlog.ui.feature.workout.model.*
+import java.util.UUID
+import kotlin.random.Random
 
 /**
  * Маппери для конвертації нових доменних моделей у UI моделі
@@ -32,6 +34,7 @@ fun TrainingBlockNew.toUiModel(context: Context): TrainingBlockUiModel = Trainin
  * Конвертація нової вправи з доменної моделі в UI модель
  */
 fun ExerciseInBlockNew.toUiModel(context: Context): ExerciseBlockUI = ExerciseBlockUI(
+    linkId = linkId,
     exerciseId = exerciseId,
     name = this.getNameOnly(context),
     description = this.description,

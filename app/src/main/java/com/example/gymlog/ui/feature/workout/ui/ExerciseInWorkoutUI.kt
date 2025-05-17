@@ -84,13 +84,13 @@ fun ExerciseInWorkoutUI(
 
                 // Toggle button for expanding/collapsing details
                 ExpandToggleButton(
-                    expanded = (exerciseInBlockUI.exerciseId == expandedExeId),
-                    onClick = { onClickExpandExercise(exerciseInBlockUI.exerciseId) }
+                    expanded = (exerciseInBlockUI.linkId == expandedExeId),
+                    onClick = { onClickExpandExercise(exerciseInBlockUI.linkId) }
                 )
             }
 
             // Animated visibility for description and results
-            AnimatedVisibility(visible = (exerciseInBlockUI.exerciseId == expandedExeId)) {
+            AnimatedVisibility(visible = (exerciseInBlockUI.linkId == expandedExeId)) {
                 Column {
                     // Show description if available
                     if (exerciseInBlockUI.description.isNotBlank()) {
@@ -299,6 +299,7 @@ fun Preview_ExerciseInWorkoutUI() {
         ExerciseInWorkoutUI(
             onConfirmResult = {},
             ExerciseBlockUI(
+                0,
                 0,
                 "Присідання",
                 "Присідання зі штангою",

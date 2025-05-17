@@ -284,8 +284,8 @@ class WorkoutCoordinatorViewModel @Inject constructor(
 
 
 
-    fun onClickExpandExercise(exerciseId: Long) {
-        timerViewModel.onClickExpandExercise(exerciseId)
+    fun onClickExpandExercise(linkId: Long) {
+        timerViewModel.onClickExpandExercise(linkId)
     }
 
 
