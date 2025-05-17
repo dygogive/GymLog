@@ -11,7 +11,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.gymlog.test"
+        applicationId = "com.example.gymlog"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
