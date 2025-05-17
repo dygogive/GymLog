@@ -29,17 +29,6 @@ import dagger.hilt.components.SingletonComponent
 object DatabaseModule {
 
 
-    val MIGRATION_21_22 = object : Migration(21, 22) {  // Нова міграція
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // Логіка міграції (якщо потрібна)
-        }
-    }
-
-    val MIGRATION_22_23 = object : Migration(22, 23) {  // Нова міграція
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // Логіка міграції (якщо потрібна)
-        }
-    }
 
     /**
      * Провайдер для створення екземпляра бази даних Room.
@@ -55,9 +44,7 @@ object DatabaseModule {
             ctx,
             WorkoutDatabase::class.java,
             "GymLog.db"
-        )
-            .addMigrations(MIGRATION_21_22, MIGRATION_22_23) // Додаємо всі міграції
-            .build()
+        ).build()
     }
 
     /**

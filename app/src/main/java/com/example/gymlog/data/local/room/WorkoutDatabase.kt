@@ -40,7 +40,7 @@ import com.example.gymlog.data.local.room.entities.WorkoutResultEntity
         TrainingBlockEquipmentEntity::class,   // Таблиця обладнання для блоків
         TrainingBlockExerciseEntity::class     // Таблиця вправ у тренувальних блоках
     ],
-    version = 23,
+    version = 22,
     exportSchema = false // ДОДАЙ ОЦЕ
 )
 abstract class WorkoutDatabase: RoomDatabase() {
