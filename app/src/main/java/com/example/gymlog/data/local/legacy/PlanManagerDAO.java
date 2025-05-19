@@ -20,6 +20,7 @@ import com.example.gymlog.domain.model.legacy.plan.TrainingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -936,6 +937,9 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
+        //Create UUID of cloned object
+        String uuid = UUID.randomUUID().toString();
+
         // 2) Створюємо об'єкт-програму з новими полями
         //    (при бажанні можна додати суфікс " (C)" у назві)
         FitnessProgram clone = new FitnessProgram(
@@ -943,7 +947,7 @@ public class PlanManagerDAO {
                 program.getName() + " (C)",
                 program.getDescription(),
                 new ArrayList<>(), // дні додамо пізніше
-                program.getUuid()
+                uuid
         );
 
         // 3) Додаємо в базу
@@ -1064,6 +1068,10 @@ public class PlanManagerDAO {
         }
         cursor.close();
 
+        //create new uuid of Training Block
+        String uuid = UUID.randomUUID().toString();
+
+
         // 2) Створюємо клонований блок
         TrainingBlock clone = new TrainingBlock(
                 0,
@@ -1075,7 +1083,7 @@ public class PlanManagerDAO {
                 new ArrayList<>(block.getEquipmentList()),     // нове: додаємо список фільтрів
                 newPosition,
                 new ArrayList<>(),
-                block.getUuid()
+                uuid
         );
 
         // 3) Вставляємо його в базу
