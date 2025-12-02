@@ -1,53 +1,83 @@
 # GymLogX
 
 **GymLogX** is a native Android application for tracking workouts and building structured training programs.  
-The app is currently in its **MVP stage** and fully functional for personal training purposes.
+Available on **Google Play Store** (coming soon).
 
 ---
 
 ## ✨ Features
 
-- 🏋️ Exercise manager with filtering by attributes (muscles, movement type, equipment)
-- ➕ Create, edit, and delete custom exercises
-- 🧠 Visual grouping of items by selected filters
-- 📦 Build training blocks and full programs from reusable components
-- ↕️ Drag-and-drop support for sorting exercises and blocks
-- ✅ Intuitive workout log with editable sets, weights, and results
-- 🔘 Dialogs with multi-selection of attributes and improved UX
+- 🏋️ **Exercise Database** with filtering by muscles, movement type, and equipment
+- 💪 **Custom Training Programs** - Build your own workout splits
+- 🎯 **Training Blocks System** - Organize exercises into reusable blocks
+- ⏱️ **Built-in Timer** - Track workout duration and rest periods
+- 📊 **Results Tracking** - Log weight, reps, and see your best performances
+- 💾 **Data Backup/Restore** - Export and import your data as JSON
+- 🎨 **Dark & Light Themes** - Beautiful, modern interface
+- 🌍 **Multilingual** - English and Ukrainian supported
 
 ---
 
-## ⚠️ Code Structure Note
+## 📱 Download
 
-> This repository contains **legacy code** developed in earlier project phases before applying modern architectural practices.  
-> The current implementation follows **Clean Architecture** with MVVM, Jetpack Compose, and a clear separation into data, domain, and presentation layers.  
-> Older parts of the code are retained for reference and comparison purposes.
+**Google Play Store:** [Coming Soon]
 
 ---
 
-## 🚀 Installation
+## 🆓 Free Version
 
-1. Open the project in **Android Studio**.
-2. Let Gradle sync dependencies.
-3. Run the app on an emulator or physical device.
+- 3 training programs (2 ready-made + 1 custom)
+- Up to 2 workouts per program
+- Up to 2 training blocks per workout
+- Basic exercise database
+- Complete results tracking
+- Manual data backup
+
+## 💎 Premium Version
+
+- Unlimited programs, workouts, and blocks
+- Priority support
+- Future updates included
 
 ---
 
-## 📱 Requirements
+## 🏗️ Architecture
 
-- Android Studio Flamingo or newer
-- Android SDK 24+
-- Java 8+
+This app is built with:
+- **Clean Architecture** - Domain, Data, Presentation layers
+- **MVVM** pattern with ViewModels
+- **Jetpack Compose** - Modern declarative UI
+- **Room Database** - Local data persistence
+- **Kotlin Coroutines & Flow** - Asynchronous operations
+- **Dagger Hilt** - Dependency injection
+
+---
+
+## 🚀 Building from Source
+
+1. Clone the repository
+2. Open in **Android Studio Hedgehog** or newer
+3. Sync Gradle dependencies
+4. Run on emulator or physical device (Android 8.0+)
+
+**Requirements:**
+- Android Studio Hedgehog or newer
+- Android SDK 26+
+- JDK 17+
 
 ---
 
 ## 📄 License
 
-This project is released for **personal review and use only**.  
-Redistribution, modification, or commercial use is **not allowed without prior written permission**.  
 See `LICENSE.md` for full terms.
 
 ---
 
-> GymLogX is a fully working MVP created for personal gym use by natural lifters.  
-> Designed with clean architecture, Jetpack Compose, MVVM, and modern Android principles.
+## 📧 Contact
+
+**Support:** gymlogx.team@gmail.com
+
+---
+
+> 🇺🇦 Made in Ukraine with 💪  
+> Built by a scientist with 14 years of training experience in gym.
